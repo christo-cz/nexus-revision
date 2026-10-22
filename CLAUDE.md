@@ -23,6 +23,8 @@ Une page d'accueil (hub) qui liste les matières, et un « lab » par matière.
 /favicon.svg       logo N de Nexus (dégradé bleu → violet → rose)
 /macro/index.html  lab « Macroeconomics » (Business Economics, semestre 1). Nom interne `flow` gardé pour les clés de stockage et l'API des avis.
 /management/index.html  lab « Fundamentals of Management and Organizations » (S1). Nom interne `mgmt` (stockage `mgmt-v1`, avis `lab: "mgmt"`).
+/404.html          page « introuvable » servie par Netlify : « 404/20 » entouré au stylo rouge sur papier quadrillé, liens vers les labs
+/og.jpg, /macro/og.jpg, /management/og.jpg   images d'aperçu des liens partagés (1200 × 630, < 100 Ko pour WhatsApp), balises og: et twitter: dans chaque page. Adresses absolues vers le site en production : elles ne s'affichent qu'une fois `main` mis en ligne. Générées avec Playwright à partir d'une maquette HTML (pas d'étape de build dans le dépôt)
 /CLAUDE.md         ce fichier
 /package.json      dépendance de la fonction des avis
 /netlify/functions/reviews.mjs   API des avis (GET liste + résumé, POST avis, POST suppression admin)
