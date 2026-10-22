@@ -4,6 +4,7 @@ Site public de révision pour la promo EDHEC BBA1 (track anglais, campus de Lill
 Une page d'accueil (hub) qui liste les matières, et un « lab » par matière.
 
 - En ligne : https://nexus-revision-bba1.netlify.app (projet Netlify `nexus-revision-bba1`, public, relié à ce dépôt). Chaque push sur `main` est mis en ligne automatiquement.
+- **Crédits Netlify (plan gratuit, 300 crédits par mois, cycle du 22 au 21) : chaque mise en ligne sur `main` coûte 15 crédits.** Si les crédits sont épuisés, le site est mis en pause jusqu'au cycle suivant. Règle : travailler et pousser sur la branche `dev` (aperçu gratuit sur https://dev--nexus-revision-bba1.netlify.app une fois les branch deploys activés). Ne fusionner `dev` dans `main` qu'en lot, et seulement avec l'accord explicite d'Alexi. Le 22 octobre, 10 mises en ligne ont consommé environ 150 crédits.
 - Le site est statique : du HTML, CSS et JS écrits à la main, sans framework et sans étape de build. Ne rien ajouter qui demande une étape de build.
 - Seule exception côté serveur, validée par Alexi : la fonction Netlify des avis (`netlify/functions/reviews.mjs`, route `/api/reviews`), qui stocke dans Netlify Blobs (store `reviews`). Dépendance unique : `@netlify/blobs`, déclarée dans `package.json`.
 - Modèle d'inspiration : le site d'un camarade (midterms-work.netlify.app), en particulier son « IT-4U Ledger Lab ». On s'en inspire pour l'ergonomie, sans copier ni son code ni son identité visuelle.
