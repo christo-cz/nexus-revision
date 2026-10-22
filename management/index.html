@@ -3763,12 +3763,24 @@ function render(){
     if (r.view === "chapter") landOnNote();
   } else {
     app.replaceChildren(viewHome());
-    const fh = app.querySelector(".fhero"); if (fh) STAGE.stops.push(mountSwarm(fh));
+    const fh = app.querySelector(".fhero"); if (fh){ STAGE.stops.push(mountSwarm(fh)); STAGE.stops.push(heroTilt(fh)); }
     const rs = app.querySelector("#reviews"); if (rs) mountReviewSection(rs);
     document.title = "Fundamentals of Management and Organizations · Nexus";
     if (location.hash === "#reviews") setTimeout(() => { const s = $("#reviews"); if (s) s.scrollIntoView(); }, 60); else window.scrollTo(0, 0);
     STAGE.stops.push(mountReveal(app));
   }
+}
+/* the hero scene tips back and fades as you scroll past it */
+function heroTilt(hero){
+  const cv = hero && hero.querySelector("canvas"); if (!cv || matchMedia("(prefers-reduced-motion: reduce)").matches) return () => {};
+  cv.style.transformOrigin = "50% 100%";
+  let raf = 0;
+  const upd = () => { raf = 0; const p = Math.min(1, Math.max(0, scrollY / Math.max(1, hero.offsetHeight))), e = p * p * (3 - 2 * p);
+    cv.style.transform = e ? `perspective(1400px) rotateX(${(e * 30).toFixed(2)}deg) translateY(${(e * 40).toFixed(1)}px) scale(${(1 - e * .1).toFixed(3)})` : "";
+    cv.style.opacity = (1 - e * .85).toFixed(3); };
+  const q = () => { if (!raf) raf = requestAnimationFrame(upd); };
+  addEventListener("scroll", q, { passive: true }); q();
+  return () => { removeEventListener("scroll", q); cancelAnimationFrame(raf); cv.style.transform = ""; cv.style.opacity = ""; };
 }
 /* blocks ease in as they enter the view, once */
 function mountReveal(app){

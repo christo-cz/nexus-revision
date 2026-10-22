@@ -2848,7 +2848,7 @@ function render(){
     if (r.view === "chapter") landOnNote();
   } else {
     app.replaceChildren(r.view === "cases" ? viewCases() : viewHome());
-    const fh = app.querySelector(".fhero"); if (fh) STAGE.stops.push(mountFlow(fh, { compact: r.view === "cases" }));
+    const fh = app.querySelector(".fhero"); if (fh){ STAGE.stops.push(mountFlow(fh, { compact: r.view === "cases" })); STAGE.stops.push(heroTilt(fh)); }
     app.querySelectorAll(".casecard").forEach(c => {
       c.addEventListener("pointermove", e => { if (e.pointerType !== "mouse") return; const b = c.getBoundingClientRect(); c.style.setProperty("--ry", (((e.clientX - b.left) / b.width - .5) * 12).toFixed(1) + "deg"); c.style.setProperty("--rx", ((.5 - (e.clientY - b.top) / b.height) * 12).toFixed(1) + "deg"); });
       c.addEventListener("pointerleave", () => { c.style.removeProperty("--rx"); c.style.removeProperty("--ry"); });
@@ -2858,6 +2858,18 @@ function render(){
     if (location.hash === "#reviews") setTimeout(() => { const s = $("#reviews"); if (s) s.scrollIntoView(); }, 60); else window.scrollTo(0, 0);
     STAGE.stops.push(mountReveal(app));
   }
+}
+/* the hero scene tips back and fades as you scroll past it */
+function heroTilt(hero){
+  const cv = hero && hero.querySelector("canvas"); if (!cv || matchMedia("(prefers-reduced-motion: reduce)").matches) return () => {};
+  cv.style.transformOrigin = "50% 100%";
+  let raf = 0;
+  const upd = () => { raf = 0; const p = Math.min(1, Math.max(0, scrollY / Math.max(1, hero.offsetHeight))), e = p * p * (3 - 2 * p);
+    cv.style.transform = e ? `perspective(1400px) rotateX(${(e * 30).toFixed(2)}deg) translateY(${(e * 40).toFixed(1)}px) scale(${(1 - e * .1).toFixed(3)})` : "";
+    cv.style.opacity = (1 - e * .85).toFixed(3); };
+  const q = () => { if (!raf) raf = requestAnimationFrame(upd); };
+  addEventListener("scroll", q, { passive: true }); q();
+  return () => { removeEventListener("scroll", q); cancelAnimationFrame(raf); cv.style.transform = ""; cv.style.opacity = ""; };
 }
 /* blocks ease in as they enter the view, once */
 function mountReveal(app){

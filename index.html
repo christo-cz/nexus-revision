@@ -136,6 +136,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .tile:is(:hover,:focus-visible,.on) .vb :is(.grow-y,.pop){transform:none}
 .tile:is(:hover,:focus-visible,.on) .vb .draw{stroke-dashoffset:0}
 .tile:is(:hover,:focus-visible,.on) .vb .drop{transform:none;opacity:1}
+.vb .fly{transform-box:fill-box;transform:translate(var(--fx),var(--fy)) scale(.6);opacity:.25;transition:transform .8s cubic-bezier(.2,.85,.2,1) var(--d,0ms),opacity .5s var(--d,0ms)}
+.tile:is(:hover,:focus-visible,.on) .vb .fly{transform:none;opacity:1}
 @media (max-width:820px){
   .hero{min-height:auto}
   .hero .wrap{padding-block:104px 64px}
@@ -286,6 +288,29 @@ main{display:flex;flex-direction:column;gap:110px;padding-block:72px 48px}
         <span class="glare" aria-hidden="true"></span>
       </a>
 
+      <a class="tile" href="/management/" style="--c:var(--mgmt)">
+        <div class="vis" aria-hidden="true">
+          <svg class="va" viewBox="0 0 300 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M150 46v16M90 62h120M90 62v18M150 62v18M210 62v18" opacity=".7"/>
+            <rect x="128" y="22" width="44" height="24" rx="6" fill="currentColor" fill-opacity=".18"/>
+            <rect x="70" y="80" width="40" height="22" rx="6"/><rect x="130" y="80" width="40" height="22" rx="6"/><rect x="190" y="80" width="40" height="22" rx="6"/>
+            <path d="M90 102v12M150 102v12M210 102v12" opacity=".5"/>
+          </svg>
+          <svg class="vb" viewBox="0 0 300 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <!-- a crowd that settles into an organization -->
+            <g opacity=".7"><path class="draw" d="M150 28 88 74" style="--len:70;--d:380ms"/><path class="draw" d="M150 28 150 74" style="--len:70;--d:410ms"/><path class="draw" d="M150 28 212 74" style="--len:70;--d:440ms"/><path class="draw" d="M88 74 62 120" style="--len:70;--d:470ms"/><path class="draw" d="M88 74 100 120" style="--len:70;--d:500ms"/><path class="draw" d="M150 74 132 120" style="--len:70;--d:530ms"/><path class="draw" d="M150 74 168 120" style="--len:70;--d:560ms"/><path class="draw" d="M212 74 200 120" style="--len:70;--d:590ms"/><path class="draw" d="M212 74 238 120" style="--len:70;--d:620ms"/></g>
+            <g fill="currentColor" stroke="none"><circle class="fly" cx="150" cy="28" r="9" fill-opacity="1" style="--fx:90px;--fy:-27px;--d:0ms"/><circle class="fly" cx="88" cy="74" r="7" fill-opacity="1" style="--fx:-34px;--fy:-26px;--d:40ms"/><circle class="fly" cx="150" cy="74" r="7" fill-opacity="1" style="--fx:-88px;--fy:-16px;--d:80ms"/><circle class="fly" cx="212" cy="74" r="7" fill-opacity="1" style="--fx:-57px;--fy:17px;--d:120ms"/><circle class="fly" cx="62" cy="120" r="5" fill-opacity=".85" style="--fx:-35px;--fy:16px;--d:160ms"/><circle class="fly" cx="100" cy="120" r="5" fill-opacity=".85" style="--fx:-90px;--fy:-35px;--d:200ms"/><circle class="fly" cx="132" cy="120" r="5" fill-opacity=".85" style="--fx:-66px;--fy:16px;--d:240ms"/><circle class="fly" cx="168" cy="120" r="5" fill-opacity=".85" style="--fx:-32px;--fy:-24px;--d:280ms"/><circle class="fly" cx="200" cy="120" r="5" fill-opacity=".85" style="--fx:39px;--fy:-33px;--d:320ms"/><circle class="fly" cx="238" cy="120" r="5" fill-opacity=".85" style="--fx:65px;--fy:-18px;--d:360ms"/></g>
+          </svg>
+        </div>
+        <div class="info">
+          <h3>Management and Organizations</h3>
+          <p class="what">People, decisions, motivation, the classic schools</p>
+          <p class="status" id="mgmtStatus">8 cases · 4 labs</p>
+        </div>
+        <span class="open" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <span class="glare" aria-hidden="true"></span>
+      </a>
+
       <div class="tile soon" tabindex="0" role="group" aria-label="Financial Accounting, coming soon" style="--c:var(--acc)">
         <div class="vis" aria-hidden="true">
           <svg class="va" viewBox="0 0 300 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -315,34 +340,6 @@ main{display:flex;flex-direction:column;gap:110px;padding-block:72px 48px}
         <span class="glare" aria-hidden="true"></span>
       </div>
 
-      <a class="tile" href="/management/" style="--c:var(--mgmt)">
-        <div class="vis" aria-hidden="true">
-          <svg class="va" viewBox="0 0 300 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M150 46v16M90 62h120M90 62v18M150 62v18M210 62v18" opacity=".7"/>
-            <rect x="128" y="22" width="44" height="24" rx="6" fill="currentColor" fill-opacity=".18"/>
-            <rect x="70" y="80" width="40" height="22" rx="6"/><rect x="130" y="80" width="40" height="22" rx="6"/><rect x="190" y="80" width="40" height="22" rx="6"/>
-            <path d="M90 102v12M150 102v12M210 102v12" opacity=".5"/>
-          </svg>
-          <svg class="vb" viewBox="0 0 300 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <g opacity=".75">
-              <path class="draw" d="M150 75 98 44M150 75l52-31M150 75 92 104M150 75l58 29M150 75v-50M98 44l104 0M92 104h116" style="--len:120"/>
-            </g>
-            <g fill="currentColor" stroke="none">
-              <circle class="pop" cx="150" cy="75" r="11" style="--d:0ms"/>
-              <circle class="pop" cx="98" cy="44" r="7" style="--d:120ms"/><circle class="pop" cx="202" cy="44" r="7" style="--d:180ms"/>
-              <circle class="pop" cx="92" cy="104" r="7" style="--d:240ms"/><circle class="pop" cx="208" cy="104" r="7" style="--d:300ms"/>
-              <circle class="pop" cx="150" cy="25" r="7" style="--d:360ms"/>
-            </g>
-          </svg>
-        </div>
-        <div class="info">
-          <h3>Management and Organizations</h3>
-          <p class="what">People, decisions, motivation, the classic schools</p>
-          <p class="status" id="mgmtStatus">8 cases · 4 labs</p>
-        </div>
-        <span class="open" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-        <span class="glare" aria-hidden="true"></span>
-      </a>
     </nav>
   </div>
   <p class="hint" aria-hidden="true">
@@ -511,7 +508,7 @@ FS.bind(document.getElementById("fsBtn"));
 FS.invite(document.getElementById("fsBtn"));
 /* two colours over the whole descent, ending on a warm ecru that stays: night navy → ecru (dark), paper → ecru (light).
    When the background turns light in dark mode, the text switches to ink (class tint-light). */
-scrollTint(dark => dark ? ["#0D1024", "#EEE3CC"] : ["#F5F6FB", "#F1E6D0"], () => document.getElementById("hero").offsetHeight * 0.12, 0.92,
+scrollTint(dark => dark ? ["#0D1024", "#3A2140", "#EEE3CC"] : ["#F5F6FB", "#F1E6D0"], () => document.getElementById("hero").offsetHeight * 0.12, 0.92,
   c => { const lum = (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255; document.documentElement.classList.toggle("tint-light", lum > 0.52); });
 applyTheme();
 
@@ -732,6 +729,20 @@ void main(){
   else wake();
 })();
 
+
+/* the hero scene tips back and fades as you scroll past it */
+function heroTilt(hero){
+  const cv = hero && hero.querySelector("canvas"); if (!cv || matchMedia("(prefers-reduced-motion: reduce)").matches) return () => {};
+  cv.style.transformOrigin = "50% 100%";
+  let raf = 0;
+  const upd = () => { raf = 0; const p = Math.min(1, Math.max(0, scrollY / Math.max(1, hero.offsetHeight))), e = p * p * (3 - 2 * p);
+    cv.style.transform = e ? `perspective(1400px) rotateX(${(e * 30).toFixed(2)}deg) translateY(${(e * 40).toFixed(1)}px) scale(${(1 - e * .1).toFixed(3)})` : "";
+    cv.style.opacity = (1 - e * .85).toFixed(3); };
+  const q = () => { if (!raf) raf = requestAnimationFrame(upd); };
+  addEventListener("scroll", q, { passive: true }); q();
+  return () => { removeEventListener("scroll", q); cancelAnimationFrame(raf); cv.style.transform = ""; cv.style.opacity = ""; };
+}
+heroTilt(document.getElementById("hero"));
 
 /* ---------- pick up where you left off (reads the progress each lab keeps in this browser) ---------- */
 (function(){
