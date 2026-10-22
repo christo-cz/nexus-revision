@@ -633,6 +633,59 @@ kbd{font-family:var(--f-mono);font-size:.72rem;border:1px solid currentColor;bor
 .tdlist{perspective:1200px}
 :is(.modt,.chtile,.tdcard)::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s;background:radial-gradient(340px circle at var(--gx,50%) var(--gy,50%),rgb(255 255 255 / .2),transparent 62%)}
 :is(.modt,.chtile,.tdcard):hover::after{opacity:1}
+/* search */
+.srch{position:fixed;inset:0;z-index:95;display:flex;justify-content:center;align-items:flex-start;padding:max(10vh,24px) var(--gut-r) 24px var(--gut);background:rgb(0 0 0 / .42);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:srIn .18s ease both}
+.srch.out{animation:srOut .16s ease both}
+@keyframes srIn{from{opacity:0}}
+@keyframes srOut{to{opacity:0}}
+.srch-panel{width:min(700px,100%);max-height:min(640px,78vh);display:flex;flex-direction:column;border-radius:20px;border:1px solid var(--glass-line);background:color-mix(in srgb,var(--bg) 94%,transparent);box-shadow:0 40px 100px -30px rgb(0 0 0 / .65);overflow:hidden;animation:srPop .26s cubic-bezier(.2,.9,.3,1.2) both}
+@keyframes srPop{from{transform:translateY(-10px) scale(.98);opacity:0}}
+.srch-in{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.srch-in svg{width:22px;height:22px;color:var(--muted);flex:none}
+.srch-in input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:1.12rem;color:var(--fg);outline:none}
+.srch-in input::-webkit-search-cancel-button{display:none}
+.srch-in kbd{font-family:var(--f-mono);font-size:.72rem;border:1px solid var(--line-2);border-radius:5px;padding:1px 6px;color:var(--faint)}
+.srch-res{list-style:none;margin:0;padding:8px;overflow:auto;display:flex;flex-direction:column;gap:2px}
+.srch-res li[data-i]{display:grid;grid-template-columns:118px minmax(0,1fr);gap:0 14px;align-items:baseline;padding:10px 12px;border-radius:12px;cursor:pointer}
+.srch-res li[aria-selected="true"]{background:color-mix(in srgb,var(--c) 15%,transparent)}
+.srch-res .sk{grid-row:span 2;font-size:.72rem;font-weight:700;color:var(--c)}
+.srch-res b{font-weight:600;line-height:1.35}
+.srch-res .sw{font-size:.8rem;color:var(--muted)}
+.srch-res mark{background:color-mix(in srgb,var(--c) 34%,transparent);color:inherit;border-radius:3px;padding:0 1px}
+.srch-none{padding:14px 12px;color:var(--muted);font-size:.95rem;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.srch-none button{border:1px solid var(--line-2);background:transparent;border-radius:99px;padding:4px 11px;font-size:.86rem;font-weight:600;color:var(--fg)}
+.srch-none button:hover{border-color:var(--fg)}
+.srch-foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0;padding:10px 18px;border-top:1px solid var(--line);font-size:.78rem;color:var(--faint)}
+@media (max-width:560px){.srch{padding-top:12px}.srch-res li[data-i]{grid-template-columns:1fr}.srch-res .sk{grid-row:auto}.srch-panel{max-height:86vh}.srch-foot span:first-child{display:none}}
+#srchBtn .sk2{font-family:var(--f-mono);font-size:.7rem;border:1px solid currentColor;border-radius:5px;padding:0 5px;opacity:.6;margin-left:2px}
+@media (max-width:980px){#srchBtn .tl,#srchBtn .sk2{display:none}}
+/* recap */
+.recap{max-width:1320px}
+.recap-tools{gap:8px}
+.recap-f{max-width:440px;flex:1 1 260px;padding-left:12px;gap:4px}
+.recap-f svg{width:18px;height:18px;color:var(--muted);flex:none}
+.recap-f input{font-family:var(--f-body);font-size:.96rem}
+.rc{display:flex;flex-direction:column;gap:44px}
+.rc-ch h2{display:flex;align-items:baseline;gap:14px;font-size:clamp(1.5rem,3vw,2.1rem);letter-spacing:-.03em;margin-bottom:16px;border-bottom:2px solid var(--c);padding-bottom:10px}
+.rc-ch h2 .num{font-family:var(--f-display);color:var(--c)}
+.rc-cols{columns:3 300px;column-gap:22px}
+.rc-sec{break-inside:avoid;margin-bottom:22px;display:flex;flex-direction:column;gap:6px}
+.rc-sec h3{font-size:.82rem;font-weight:700;color:var(--c)}
+.rc-it{display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:12px;border:1px solid var(--glass-line);background:var(--glass);text-decoration:none;break-inside:avoid;transition:border-color .2s,transform .2s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.rc-it:hover{border-color:var(--c);transform:translateX(3px)}
+.rc-it b{font-family:var(--f-display);font-size:1rem;line-height:1.25}
+.rc-it span{font-size:.88rem;color:var(--muted);line-height:1.45}
+.rc-it code{font-family:var(--f-mono);font-size:.76rem;white-space:pre-wrap;color:var(--fg);background:color-mix(in srgb,var(--c) 10%,transparent);border-radius:8px;padding:6px 8px;margin-top:4px}
+@media print{
+  .hdr,.aura,.mini3d,.recap-tools,.recap-n,.fsinv,.credit,.foot,#live{display:none!important}
+  :root{--bg:#fff!important;--fg:#000;--muted:#333;--glass:#fff;--glass-line:#ccc}
+  body{background:#fff!important;color:#000}
+  .mod{padding:0}
+  .mhead .lede{display:none}
+  .rc-cols{columns:3;column-gap:14pt}
+  .rc-it{border:0;padding:2pt 0;backdrop-filter:none}
+  .rc-it span{color:#222}
+}
 /* micro-interactions */
 .burst{position:fixed;z-index:80;pointer-events:none;width:0;height:0}
 .burst i{position:absolute;left:-3.5px;top:-3.5px;width:7px;height:7px;border-radius:50%;animation:burst .75s cubic-bezier(.15,.8,.25,1) both}
@@ -951,6 +1004,55 @@ details.oans[open] summary{margin-bottom:8px}
 .exq .tdmodel{align-items:start}
 
 @view-transition{navigation:auto}
+
+/* group project */
+.pjbanner{margin-top:4px;max-width:none}
+.pj-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:860px){.pj-steps{grid-template-columns:1fr}}
+.pj-step{border:1px solid var(--glass-line);background:var(--glass);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.pj-n{font-family:var(--f-mono);font-size:.76rem;font-weight:700;color:var(--pri)}
+.pj-step h2{font-size:1.35rem;letter-spacing:-.02em}
+.pj-step p{color:var(--muted);font-size:.94rem}
+.pj-step .pj-ex{color:var(--fg);border-left:3px solid var(--pri);padding-left:10px;font-size:.9rem}
+.pjf{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:16px;align-items:start}
+@media (max-width:820px){.pjf{grid-template-columns:1fr}}
+.pjf-l{display:flex;flex-direction:column;gap:8px}
+.pjf-l button{display:flex;flex-direction:column;gap:2px;text-align:left;border:1.5px solid var(--glass-line);background:var(--glass);border-radius:14px;padding:12px 14px;transition:border-color .2s,background-color .2s,transform .2s;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.pjf-l button b{font-family:var(--f-display);font-size:1.05rem}
+.pjf-l button span{font-size:.84rem;color:var(--muted)}
+.pjf-l button:hover{transform:translateX(3px);border-color:var(--line-2)}
+.pjf-l button[aria-pressed="true"]{border-color:var(--pri);background:color-mix(in srgb,var(--pri) 14%,transparent)}
+.pjf-r{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.pjf-r{grid-template-columns:1fr}}
+.pjt{display:flex;flex-direction:column;gap:6px;border:1px solid var(--glass-line);border-left:3px solid var(--c);background:var(--glass);border-radius:14px;padding:14px;text-decoration:none;animation:pjIn .4s cubic-bezier(.2,.8,.2,1) both;transition:transform .2s,border-color .2s;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.pjt:nth-child(2){animation-delay:.05s} .pjt:nth-child(3){animation-delay:.1s} .pjt:nth-child(4){animation-delay:.15s}
+@keyframes pjIn{from{opacity:0;transform:translateY(10px)}}
+.pjt:hover{transform:translateY(-3px);border-color:var(--c)}
+.pjt-ch{font-size:.72rem;font-weight:700;color:var(--c)}
+.pjt b{font-family:var(--f-display);font-size:1.08rem;line-height:1.25}
+.pjt > span:last-child{font-size:.88rem;color:var(--muted)}
+.pj-struct{list-style:none;counter-reset:pj;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.pj-struct li{counter-increment:pj;border-top:2px solid var(--fg);padding-top:10px;display:flex;flex-direction:column;gap:2px}
+.pj-struct li::before{content:counter(pj);font-family:var(--f-mono);font-weight:700;color:var(--pri)}
+.pj-struct b{font-family:var(--f-display);font-size:1.05rem}
+.pj-struct span{font-size:.88rem;color:var(--muted)}
+.pj-dates{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1px solid var(--glass-line);border-radius:18px;overflow:hidden;background:var(--glass)}
+@media (max-width:820px){.pj-dates{grid-template-columns:1fr 1fr}}
+.pj-dates li{padding:14px 16px;display:flex;flex-direction:column;gap:2px;border-right:1px solid var(--glass-line)}
+.pj-dates li:last-child{border-right:0;background:color-mix(in srgb,var(--pri) 12%,transparent)}
+.pj-dates .num{font-family:var(--f-mono);font-weight:700;color:var(--pri);font-size:.86rem}
+.pj-dates b{font-family:var(--f-display)}
+.pj-dates small{color:var(--muted)}
+.pj-checks ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 18px}
+@media (max-width:760px){.pj-checks ul{grid-template-columns:1fr}}
+.pj-checks label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;padding:8px 10px;border-radius:10px;line-height:1.45}
+.pj-checks label:hover{background:var(--sunk)}
+.pj-checks input{accent-color:var(--ok);width:18px;height:18px;margin-top:2px;flex:none}
+.pj-qa{display:flex;flex-direction:column;gap:8px;max-width:900px}
+.pj-qa details{border:1px solid var(--glass-line);background:var(--glass);border-radius:14px;padding:12px 16px}
+.pj-qa summary{cursor:pointer;font-weight:600}
+.pj-qa details p{margin-top:8px;color:var(--muted)}
+.chapter > .mini3d{width:min(42%,520px);opacity:.75}
 </style>
 </head>
 <body>
@@ -967,6 +1069,7 @@ details.oans[open] summary{margin-bottom:8px}
     <a href="#open" data-route="open">Exam questions</a>
   </nav>
   <span class="grow"></span>
+  <button class="theme" id="srchBtn" type="button" aria-label="Search the course (/)"></button>
   <button class="theme" id="fsBtn" type="button"></button>
   <button class="theme" id="themeBtn" type="button"></button>
 </div></header>
@@ -2196,7 +2299,7 @@ function viewLearn(){
   const all = learnStats();
   return h("div", { class: "mod", html: `
   ${mhead("Management and Organizations", "Learn the course", "Four lectures and two tutorials, cut into short cards: the idea in one line, the key points, an example, the trap, and what the exam wants. Tick each card when you know it.",
-    `<div class="mprog"><div class="mbar"><i style="width:${all.total ? all.known / all.total * 100 : 0}%"></i></div><span>${all.known} of ${all.total} cards known</span></div>`)}
+    `<div class="mprog"><div class="mbar"><i style="width:${all.total ? all.known / all.total * 100 : 0}%"></i></div><span>${all.known} of ${all.total} cards known</span></div><div class="row"><a class="btn glassy small" href="#recap">One-page recap</a><button class="btn glassy small" type="button" data-search>Search the course</button></div>`)}
   <section class="chgrid">${COURSE.map(c => { const s = learnStats(c.id), started = s.known > 0;
     return `<a class="chtile" href="#learn-${c.id}" style="--c:${c.c}">
       <span class="chn">${String(c.n).padStart(2, "0")}</span>
@@ -2236,7 +2339,7 @@ function viewChapter(id){
       <div class="toc-h"><span class="chn">${String(c.n).padStart(2, "0")}</span><b>${c.title}</b></div>
       <div class="mprog sm"><div class="mbar"><i data-chbar style="width:${s.known / s.total * 100}%"></i></div><span data-chcount>${s.known}/${s.total} known</span></div>
       <nav class="toc-l">${c.sections.map((sec, i) => `<button type="button" data-sec="${i}"><span>${sec.title}</span><em data-seccount="${i}"></em></button>`).join("")}</nav>
-      <div class="toc-act"><a class="btn primary small" href="#quiz-${c.id}">Quiz this lecture</a><a class="btn glassy small" href="#cards-${c.id}">Flashcards</a></div>
+      <div class="toc-act"><a class="btn primary small" href="#quiz-${c.id}">Quiz this lecture</a><a class="btn glassy small" href="#cards-${c.id}">Flashcards</a><a class="btn glassy small" href="#recap">Recap</a></div>
     </aside>
     <div class="chbody">
       ${mhead(`Lecture ${c.n}`, c.title, c.intro)}
@@ -2585,6 +2688,8 @@ function route(){
   if (hs === "open") return { view: "open" };
   if (/^open-\w+$/.test(hs)) return { view: "openq", id: hs.slice(5) };
   if (hs === "exam") return { view: "exam" };
+  if (hs === "recap") return { view: "recap" };
+  if (hs === "project") return { view: "project" };
   return { view: "home" };
 }
 function go(hash){ if (location.hash === "#" + hash) render(); else location.hash = hash; }
@@ -2622,7 +2727,8 @@ function modulesHtml(){
     ["#exam", "Mock exam", "90 minutes, timed: explain the theories, then apply them to a case.", ex && ex.score != null ? `last ${ex.score}%` : "90 min", "var(--c4)", "exam"]
   ];
   return `<section class="sec"><div class="sec-h"><h2>Revise</h2><p>Learn the course, then train in every format the exam can take.</p></div>
-    <div class="mods mods4">${M.map(m => `<a class="modt" href="${m[0]}" style="--c:${m[4]}"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${MOD_ICONS[m[5]]}</svg></span><b>${m[1]}</b><span class="md">${m[2]}</span><span class="ms">${m[3]}</span></a>`).join("")}</div></section>`;
+    <div class="mods mods4">${M.map(m => `<a class="modt" href="${m[0]}" style="--c:${m[4]}"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${MOD_ICONS[m[5]]}</svg></span><b>${m[1]}</b><span class="md">${m[2]}</span><span class="ms">${m[3]}</span></a>`).join("")}</div>
+    <a class="tdfull pjbanner" href="#project"><span><b>Group project, 40% of the grade</b><span>The brief from lecture 1, a theory finder for your problem, the expected structure, a checklist and the Q&amp;A to rehearse.</span></span>${ICO.arrow}</a></section>`;
 }
 
 /* ---------- overview ---------- */
@@ -3405,6 +3511,99 @@ function viewExam(){
   return root;
 }
 
+/* =====================================================================
+   GROUP PROJECT (40%): the brief from lecture 1, a theory finder, a checklist and Q&A practice.
+   ===================================================================== */
+const PJ_STEPS = [
+  { h: "Find a real people problem", t: "A real organization, a problem about people and behavior (not mainly finance, marketing or operations). Specific enough to analyze why it happens, with enough reliable information.", ex: "Low morale or enthusiasm (motivation) · high turnover or a mismatch with the organization's values (personality, values) · a slow decision process (decision-making)." },
+  { h: "Connect it to OB theory", t: "Use class notes, OB textbooks (those of the syllabus), academic articles (Google Scholar), respected business publications (HBR, MIT Sloan Review, Forbes) and case studies.", ex: "Diagnose with at least two frameworks: each one should explain part of the mechanism." },
+  { h: "Recommend, theory in hand", t: "For each recommendation: what the organization should do, which theory or concept supports it, why it should work (the mechanism), and evidence or examples from other organizations or research when you can." }
+];
+const PJ_STRUCT = [["Organization overview", "Industry, size, context."], ["Problem statement", "Clear and concise: the gap. Say why it matters."], ["Diagnosis with OB theory", "At least two frameworks."], ["Theory-based recommendations", "Specific and realistic."], ["Implementation plan", "Timeline, steps, resources. Optional."], ["Expected outcomes and challenges", "What should change, and what could go wrong."], ["Q&A", "5 minutes with the whole group."]];
+const PJ_DATES = [["September 25", "Organization name and problem", "Checkpoint 1, Blackboard"], ["October 9", "Theory-to-problem connection", "Checkpoint, Blackboard"], ["October 18", "Final presentation slides", "Submission, Blackboard"], ["Session 9", "Final presentation", "In class, by 2 team members drawn at random"]];
+/* symptom → theories of the course that can explain it */
+const PJ_FINDER = [
+  { s: "People have lost their drive", sub: "low morale, low engagement, effort only when watched", th: [
+    ["Self-Determination Theory", "Are competence, autonomy and relatedness met? Is motivation controlled (rewards, monitoring) rather than autonomous?", "motiv", "m-sdt"],
+    ["Herzberg's two-factor theory", "Did the organization fix hygiene factors (pay, conditions) and expect motivation from them?", "motiv", "m-herz"],
+    ["Job Characteristics Model", "Which core dimension is low: variety, identity, significance, autonomy, feedback?", "motiv", "m-jcm"],
+    ["Goal-setting theory", "Are goals vague or easy? Is there feedback and commitment?", "motiv", "m-goal"]] },
+  { s: "People leave, or do not fit", sub: "turnover, weak commitment, value mismatch", th: [
+    ["Values and value congruence (Schwartz)", "Do the organization's priorities clash with what employees value?", "person", "p-schwartz"],
+    ["Workplace attitudes", "Which attitude dropped: satisfaction, engagement, commitment, perceived support?", "person", "p-four"],
+    ["Personality and job fit", "Do the job's demands fit people's traits? Were they selected on a weak tool (MBTI)?", "person", "p-select"],
+    ["Equity theory", "Do people compare their outcomes/inputs ratio with someone else and feel short-changed?", "motiv", "m-equity"]] },
+  { s: "Decisions are slow or poor", sub: "endless meetings, bad bets, nobody objects", th: [
+    ["Groupthink and social influence", "Does the group value agreement over evaluation? Does the leader speak first?", "decide", "d-groupthink"],
+    ["Decision biases", "Sunk costs, overconfidence, anchoring, framing: which one shows in the facts?", "decide", "d-sunk"],
+    ["Bounded rationality (Simon)", "Are people trying to evaluate every option instead of satisficing?", "decide", "d-simon"],
+    ["When intuition works", "Is someone deciding by gut on a task that can be broken into steps, without expertise?", "decide", "d-intuition"]] },
+  { s: "People feel treated unfairly", sub: "complaints about pay, promotions, the way decisions are made", th: [
+    ["Equity theory", "Who is the referent? Which of the six reactions are people choosing?", "motiv", "m-equity"],
+    ["Organizational justice", "Is the problem the outcome (distributive), the process (procedural) or the treatment (interactional)?", "motiv", "m-justice"],
+    ["Attribution errors", "Are managers blaming people (fundamental attribution error) for problems caused by the situation?", "decide", "d-fae"]] },
+  { s: "Appraisals or hiring go wrong", sub: "biased ratings, the wrong people promoted or hired", th: [
+    ["Halo and contrast effects", "Does one impression, or the previous person, color the rating?", "decide", "d-person"],
+    ["Kelley's attribution model", "Distinctiveness, consensus, consistency: person or situation?", "decide", "d-kelley"],
+    ["Using personality tests", "MBTI for selection, social desirability, no interviews or references?", "person", "p-select"]] },
+  { s: "Nobody knows who does what", sub: "duplicated work, inconsistent decisions, growth pains", th: [
+    ["Five criteria of an organization", "Which is weak: goals, coordination, roles, rules, continuity?", "org", "o-five"],
+    ["Bureaucracy (Weber)", "Would clearer roles, rules and merit-based promotion help, where predictability matters?", "org", "o-weber"],
+    ["Contingency approach", "Does the structure fit the task, the people, the technology, the environment?", "org", "o-contingency"]] }
+];
+const PJ_CHECK = [
+  "The problem is stated as a gap (desired ≠ actual), not as a cause or a solution",
+  "The problem is about people and behavior, not mainly finance, marketing or operations",
+  "We have enough reliable information (interview, observation, articles, reports)",
+  "At least two OB frameworks in the diagnosis",
+  "Each framework explains part of the mechanism, with facts from the case",
+  "Each recommendation names its theory and says why it should work",
+  "Recommendations are specific and realistic (who, what, when)",
+  "Expected outcomes and potential challenges are on a slide",
+  "The talk fits in 10 minutes, rehearsed with a timer",
+  "Every member can present: two of us are drawn at random"
+];
+const PJ_QA = [
+  ["Why these two frameworks and not others?", "Show that each one explains a different part of the facts, and say which alternative you ruled out and why."],
+  ["How do you know this is the real cause?", "Point to the evidence: interviews, figures, quotes. Contrast with a cause the facts do not support."],
+  ["Is this really a people problem?", "Show the behavioral mechanism (motivation, perception, group dynamics) behind the business symptom."],
+  ["What could go wrong with your recommendation?", "Name one limit (cost, moderators such as growth need strength, resistance) and how to reduce it."],
+  ["How would you measure success?", "One indicator per recommendation: turnover, engagement survey, error rate, time to decide."],
+  ["What would a manager do first on Monday?", "Give the first concrete step of your implementation plan."]
+];
+function viewProject(){
+  const st = MS.get("project", { ticks: [] }), ticks = new Set(st.ticks || []);
+  let sym = 0;
+  const root = h("div", { class: "mod project", html: `
+  ${mhead("Management and Organizations", "Group project", "40% of the grade: a 10-minute presentation in session 9, then 5 minutes of questions. Here is the brief from lecture 1, a tool to find the right theories, a checklist and the questions to rehearse.")}
+  <section class="pj-steps">${PJ_STEPS.map((s, i) => `<article class="pj-step"><span class="pj-n">Step ${i + 1}</span><h2>${s.h}</h2><p>${s.t}</p>${s.ex ? `<p class="pj-ex">${s.ex}</p>` : ""}</article>`).join("")}</section>
+  <section class="sec pj-finder"><div class="sec-h"><h2>Theory finder</h2><p>Pick what you observe. Each theory comes with the question to ask and a link to its card.</p></div>
+    <div class="pjf"><div class="pjf-l" role="group" aria-label="Symptoms">${PJ_FINDER.map((f, i) => `<button type="button" data-sym="${i}"><b>${f.s}</b><span>${f.sub}</span></button>`).join("")}</div><div class="pjf-r" aria-live="polite"></div></div></section>
+  <section class="sec"><div class="sec-h"><h2>The structure that is expected</h2><p>10 minutes + 5 minutes of Q&amp;A.</p></div>
+    <ol class="pj-struct">${PJ_STRUCT.map(([a, b]) => `<li><b>${a}</b><span>${b}</span></li>`).join("")}</ol></section>
+  <section class="sec"><div class="sec-h"><h2>Checkpoints</h2><p>Groups of 5 from your tutorial section. One member submits for the group, with every name on it.</p></div>
+    <ol class="pj-dates">${PJ_DATES.map(([d, a, b]) => `<li><span class="num">${d}</span><b>${a}</b><small>${b}</small></li>`).join("")}</ol></section>
+  <section class="sec pj-checks"><div class="sec-h"><h2>Before you present</h2><p data-pjn></p></div>
+    <ul>${PJ_CHECK.map((c, i) => `<li><label><input type="checkbox" data-pj="${i}" ${ticks.has(i) ? "checked" : ""}><span>${c}</span></label></li>`).join("")}</ul></section>
+  <section class="sec"><div class="sec-h"><h2>Rehearse the Q&amp;A</h2><p>Answer out loud, then open the tip.</p></div>
+    <div class="pj-qa">${PJ_QA.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join("")}</div></section>
+  ${creditHtml()}` });
+  const out = root.querySelector(".pjf-r");
+  const paint = () => {
+    root.querySelectorAll("[data-sym]").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.sym === sym)));
+    const f = PJ_FINDER[sym];
+    out.innerHTML = f.th.map(([t, q, ch, note]) => `<a class="pjt" href="#learn-${ch}" data-note="${note}" style="--c:${CH[ch].c}"><span class="pjt-ch">${CH[ch].short}</span><b>${t}</b><span>${q}</span></a>`).join("");
+  };
+  const count = () => { root.querySelector("[data-pjn]").textContent = `${ticks.size} of ${PJ_CHECK.length} done`; };
+  root.addEventListener("click", e => {
+    const b = e.target.closest("[data-sym]"); if (b){ sym = +b.dataset.sym; paint(); }
+    const a = e.target.closest(".pjt"); if (a) GOTO.note = a.dataset.note;
+  });
+  root.addEventListener("change", e => { const cb = e.target.closest("[data-pj]"); if (!cb) return; const k = +cb.dataset.pj; if (cb.checked){ ticks.add(k); burst(cb, ["--ok", "--pri"]); } else ticks.delete(k); MS.set("project", { ticks: [...ticks] }); count(); });
+  paint(); count();
+  return root;
+}
+
 function focusCard(card, instant){
   if (!card) return;
   if (card.classList.contains("card")) card.dispatchEvent(new CustomEvent("focuscard", { bubbles: true, detail: card }));
@@ -3413,12 +3612,125 @@ function focusCard(card, instant){
   if (target) setTimeout(() => target.focus({ preventScroll: true }), instant ? 0 : 380);
 }
 
+/* search and recap settings for this lab */
+const LAB_NAME = "Management and Organizations";
+const SEARCH_HINT = "Search: a theory, an author, a bias…";
+const SEARCH_TRY = ["Kelley", "halo effect", "Herzberg", "Weber", "groupthink", "SMART"];
+const SEARCH_EXTRA = () => [
+  ...CASES.map(c => ({ kind: "Case", t: c.title, s: [c.org, c.intro, ...c.sheet.map(b => b.h + " " + b.t)].join(" "), href: "#case-" + c.id, c: CH[c.ch[0]].c, where: c.org })),
+  ...LABS.map(l => ({ kind: "Lab", t: l.title, s: l.sub + " " + l.what, href: "#lab-" + l.id, c: l.c, where: l.sub })),
+  { kind: "Page", t: "Mock exam", s: "90 minutes timed exam practice", href: "#exam", c: "var(--c4)", where: "Exam questions" },
+  { kind: "Page", t: "Spot it", s: "scenes bias need factor justice sprint", href: "#spot", c: "var(--c3)", where: "Practice" },
+  { kind: "Page", t: "Group project", s: "presentation 40% session 9 structure checklist theory finder checkpoints Q&A", href: "#project", c: "var(--pri)", where: "Group presentation" },
+  { kind: "Page", t: "Recap", s: "one page summary cheat sheet all cards", href: "#recap", c: "var(--c1)", where: "Learn" }
+];
+
+/* ---------- search: every card, exam question and case, one keystroke away (/ or Ctrl K) ---------- */
+const norm = s => String(s == null ? "" : s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/<[^>]+>/g, " ");
+const GOTO = { note: null };
+let SEARCH_INDEX = null;
+function searchIndex(){
+  if (SEARCH_INDEX) return SEARCH_INDEX;
+  const out = [];
+  COURSE.forEach(c => c.sections.forEach(sec => sec.cards.forEach(k => out.push({ kind: "Card", t: k.title, s: [k.line, ...(k.points || []), k.example || "", k.formula || "", k.trap || ""].join(" "), href: "#learn-" + c.id, note: k.id, c: c.c, where: `${c.short} · ${sec.title}` }))));
+  OPEN.forEach(o => out.push({ kind: "Exam question", t: o.q, s: o.points.join(" "), href: "#open-" + o.id, c: CH[o.ch].c, where: CH[o.ch].short }));
+  CARDS.forEach(([ch, f, bk]) => out.push({ kind: "Definition", t: f, s: bk, href: "#cards-" + ch, c: CH[ch].c, where: bk }));
+  SEARCH_EXTRA().forEach(x => out.push(x));
+  out.forEach(x => { x.nt = norm(x.t); x.ns = norm(x.s); });
+  return (SEARCH_INDEX = out);
+}
+function searchFind(q){
+  const words = norm(q).split(/[\s,.;:!?()"']+/).filter(w => w.length > 1 || /\d/.test(w)); if (!words.length) return [];
+  const res = [];
+  for (const x of searchIndex()){
+    let sc = 0, ok = true;
+    for (const w of words){ const it = x.nt.indexOf(w), is = x.ns.indexOf(w); if (it < 0 && is < 0){ ok = false; break; } sc += it === 0 ? 7 : it > 0 ? (/\W/.test(x.nt[it - 1] || " ") ? 5 : 3) : 1; }
+    if (ok) res.push([sc + (x.kind === "Card" ? .6 : x.kind === "Definition" ? .5 : 0), x]);
+  }
+  return res.sort((a, b) => b[0] - a[0]).slice(0, 14).map(r => r[1]);
+}
+function markIn(text, q){
+  const words = norm(q).split(/\s+/).filter(w => w.length > 1); if (!words.length) return esc(text);
+  const n = norm(text); const hits = [];
+  words.forEach(w => { let i = n.indexOf(w); while (i >= 0){ hits.push([i, i + w.length]); i = n.indexOf(w, i + w.length); } });
+  if (!hits.length) return esc(text);
+  hits.sort((a, b) => a[0] - b[0]); let out = "", at = 0;
+  for (const [a, b] of hits){ if (a < at) continue; out += esc(text.slice(at, a)) + "<mark>" + esc(text.slice(a, b)) + "</mark>"; at = b; }
+  return out + esc(text.slice(at));
+}
+const SRCH_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>';
+function openSearch(){
+  if (document.querySelector(".srch")) return;
+  const back = document.activeElement;
+  const box = h("div", { class: "srch", role: "dialog", "aria-modal": "true", "aria-label": "Search the course" });
+  box.innerHTML = `<div class="srch-panel"><label class="srch-in">${SRCH_ICON}<input type="search" placeholder="${SEARCH_HINT}" aria-label="Search the course" autocomplete="off" spellcheck="false" enterkeyhint="go"><kbd>Esc</kbd></label><ul class="srch-res" role="listbox" aria-label="Results"></ul><p class="srch-foot"><span>↑ ↓ to move · Enter to open</span><span>${searchIndex().length} cards, questions and cases</span></p></div>`;
+  document.body.append(box);
+  const inp = box.querySelector("input"), list = box.querySelector(".srch-res");
+  let items = [], sel = 0;
+  const paint = () => {
+    const q = inp.value;
+    items = q.trim() ? searchFind(q) : [];
+    if (sel >= items.length) sel = 0;
+    list.innerHTML = items.length ? items.map((x, i) => `<li role="option" id="sr-${i}" aria-selected="${i === sel}" data-i="${i}" style="--c:${x.c}"><span class="sk">${x.kind}</span><b>${markIn(x.t, q)}</b><span class="sw">${esc(x.where)}</span></li>`).join("")
+      : q.trim() ? `<li class="srch-none">Nothing found for “${esc(q)}”. Try one word, an author or a model.</li>`
+      : `<li class="srch-none">Try ${SEARCH_TRY.map(w => `<button type="button" data-try="${esc(w)}">${esc(w)}</button>`).join(" ")}</li>`;
+    if (items.length) inp.setAttribute("aria-activedescendant", "sr-" + sel); else inp.removeAttribute("aria-activedescendant");
+  };
+  const close = () => { box.classList.add("out"); document.removeEventListener("keydown", onKey, true); setTimeout(() => box.remove(), 160); if (back && back.focus) back.focus({ preventScroll: true }); };
+  const pick = x => { close(); if (!x) return; if (x.note) GOTO.note = x.note; if (location.hash === x.href) render(); else location.hash = x.href.slice(1); };
+  const onKey = e => {
+    if (e.key === "Escape"){ e.preventDefault(); close(); return; }
+    if (e.key === "ArrowDown" || e.key === "ArrowUp"){ e.preventDefault(); if (!items.length) return; sel = (sel + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length; list.querySelectorAll("li[data-i]").forEach(li => li.setAttribute("aria-selected", String(+li.dataset.i === sel))); const cur = list.querySelector(`[data-i="${sel}"]`); if (cur) cur.scrollIntoView({ block: "nearest" }); inp.setAttribute("aria-activedescendant", "sr-" + sel); return; }
+    if (e.key === "Enter" && e.target === inp){ e.preventDefault(); pick(items[sel]); }
+  };
+  document.addEventListener("keydown", onKey, true);
+  inp.addEventListener("input", () => { sel = 0; paint(); });
+  list.addEventListener("click", e => { const t = e.target.closest("[data-try]"); if (t){ inp.value = t.dataset.try; paint(); inp.focus(); return; } const li = e.target.closest("li[data-i]"); if (li) pick(items[+li.dataset.i]); });
+  list.addEventListener("pointermove", e => { const li = e.target.closest("li[data-i]"); if (li && +li.dataset.i !== sel){ sel = +li.dataset.i; list.querySelectorAll("li[data-i]").forEach(x => x.setAttribute("aria-selected", String(+x.dataset.i === sel))); } });
+  box.addEventListener("pointerdown", e => { if (e.target === box) close(); });
+  paint(); requestAnimationFrame(() => inp.focus());
+}
+(function(){
+  const b = $("#srchBtn"); if (b){ b.innerHTML = SRCH_ICON + `<span class="tl">Search</span><kbd class="sk2">/</kbd>`; b.addEventListener("click", openSearch); }
+  document.addEventListener("keydown", e => {
+    const typing = e.target.closest && e.target.closest("input,textarea,select,[contenteditable]");
+    if ((e.key === "k" || e.key === "K") && (e.metaKey || e.ctrlKey)){ e.preventDefault(); openSearch(); return; }
+    if (e.key === "/" && !typing && !e.metaKey && !e.ctrlKey && !e.altKey){ e.preventDefault(); openSearch(); }
+  });
+})();
+/* after a search, the chapter scrolls to the card and lights it up */
+function landOnNote(){
+  if (!GOTO.note) return;
+  const id = GOTO.note; GOTO.note = null;
+  requestAnimationFrame(() => requestAnimationFrame(() => { const el = document.getElementById("n-" + id); if (!el) return; el.classList.add("rv-on"); el.scrollIntoView({ block: "center", behavior: "smooth" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1800); }));
+}
+
+/* ---------- RECAP: every idea of the course on one page ---------- */
+function viewRecap(){
+  const root = h("div", { class: "mod recap", html: `${mhead(LAB_NAME, "Recap", "Every idea of the course on one page: the rule in one line, and the formula when there is one. Filter it, print it, revise from it the night before.",
+    `<div class="row recap-tools"><label class="field recap-f">${SRCH_ICON}<input type="search" placeholder="Filter: a word, an author, a model" aria-label="Filter the recap" autocomplete="off"></label><button class="btn glassy small" type="button" data-print>Print</button><a class="btn glassy small" href="#learn">Back to Learn</a></div><p class="muted small recap-n" aria-live="polite"></p>`)}
+  <div class="rc">${COURSE.map(c => `<section class="rc-ch" style="--c:${c.c}"><h2><span class="num">${String(c.n).padStart(2, "0")}</span>${c.title}</h2><div class="rc-cols">${c.sections.map(sec => `<div class="rc-sec"><h3>${sec.title}</h3>${sec.cards.map(k => `<a class="rc-it" href="#learn-${c.id}" data-note="${k.id}" data-txt="${esc(norm([k.title, k.line, k.formula || "", ...(k.points || [])].join(" ")))}"><b>${k.title}</b><span>${k.line}</span>${k.formula ? `<code>${k.formula}</code>` : ""}</a>`).join("")}</div>`).join("")}</div></section>`).join("")}</div>
+  ${creditHtml()}` });
+  const inp = root.querySelector(".recap-f input"), n = root.querySelector(".recap-n"), all = [...root.querySelectorAll(".rc-it")];
+  const filter = () => {
+    const words = norm(inp.value).split(/\s+/).filter(Boolean); let shown = 0;
+    all.forEach(a => { const on = words.every(w => a.dataset.txt.includes(w)); a.hidden = !on; if (on) shown++; });
+    root.querySelectorAll(".rc-sec").forEach(s => { s.hidden = !s.querySelector(".rc-it:not([hidden])"); });
+    root.querySelectorAll(".rc-ch").forEach(s => { s.hidden = !s.querySelector(".rc-it:not([hidden])"); });
+    n.textContent = words.length ? `${shown} of ${all.length} cards` : `${all.length} cards`;
+  };
+  inp.addEventListener("input", filter); filter();
+  root.addEventListener("click", e => { const a = e.target.closest(".rc-it"); if (a){ GOTO.note = a.dataset.note; if (location.hash === a.getAttribute("href")){ e.preventDefault(); render(); } } if (e.target.closest("[data-print]")) window.print(); });
+  return root;
+}
+
+document.addEventListener("click", e => { if (e.target.closest("[data-search]")) openSearch(); });
 /* ---------- render ---------- */
-const MODVIEWS = { learn: viewLearn, chapter: viewChapter, cases: viewCases, spot: viewSpot, labs: viewLabs, lab: viewLab, quiz: viewQuiz, cards: viewCards, open: viewOpen, openq: viewOpenQ, exam: viewExam };
-const TITLES = { learn: "Learn", chapter: "Learn", cases: "Cases", spot: "Spot it", labs: "Labs", lab: "Labs", quiz: "Quiz", cards: "Flashcards", open: "Exam questions", openq: "Exam questions", exam: "Mock exam" };
+const MODVIEWS = { learn: viewLearn, chapter: viewChapter, cases: viewCases, spot: viewSpot, labs: viewLabs, lab: viewLab, quiz: viewQuiz, cards: viewCards, open: viewOpen, openq: viewOpenQ, exam: viewExam, recap: viewRecap, project: viewProject };
+const TITLES = { learn: "Learn", chapter: "Learn", cases: "Cases", spot: "Spot it", labs: "Labs", lab: "Labs", quiz: "Quiz", cards: "Flashcards", open: "Exam questions", openq: "Exam questions", exam: "Mock exam", recap: "Recap", project: "Group project" };
 /* the formation that lives in the header of each module page (same people as on the overview) */
 const MINI = {
-  learn: { mode: 3 }, cases: { mode: 2 }, spot: { mode: 1 }, labs: { mode: 0, vivid: true }, quiz: { mode: 3 }, cards: { mode: 1 }, open: { mode: 2 },
+  learn: { mode: 3 }, recap: { mode: 3 }, project: { mode: 2 }, cases: { mode: 2 }, spot: { mode: 1 }, labs: { mode: 0, vivid: true }, quiz: { mode: 3 }, cards: { mode: 1 }, open: { mode: 2 },
   chapter: id => ({ org: { mode: 3 }, person: { mode: 0, vivid: true }, decide: { mode: 1 }, motiv: { mode: 2 } })[id] || { mode: 3 },
   lab: id => ({ kelley: { mode: 1 }, equity: { mode: 2 }, bigfive: { mode: 0, vivid: true }, who: { mode: 3 } })[id] || { mode: 0 }
 };
@@ -3429,7 +3741,7 @@ function render(){
   STAGE.stops.forEach(f => f && f()); STAGE.stops = [];
   STAGE.view = r.view; AURA.set(r.view !== "case"); TINT();
   document.body.dataset.view = r.view;
-  const NAVOF = { case: "cases", chapter: "learn", openq: "open", exam: "open", lab: "labs" };
+  const NAVOF = { case: "cases", chapter: "learn", openq: "open", exam: "open", lab: "labs", recap: "learn" };
   document.querySelectorAll(".nav a").forEach(a => { const on = a.dataset.route === (NAVOF[r.view] || r.view); a.setAttribute("aria-current", on ? "page" : "false"); if (on) a.scrollIntoView({ block: "nearest", inline: "nearest" }); });
   const app = $("#app");
   if (r.view === "case"){
@@ -3448,6 +3760,7 @@ function render(){
       STAGE.stops.push(mountSwarm(box, { mini: true, N: innerWidth < 700 ? 48 : 76, ...mini }));
     }
     STAGE.stops.push(mountReveal(app));
+    if (r.view === "chapter") landOnNote();
   } else {
     app.replaceChildren(viewHome());
     const fh = app.querySelector(".fhero"); if (fh) STAGE.stops.push(mountSwarm(fh));

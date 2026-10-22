@@ -58,6 +58,17 @@ Une nouvelle matière = un dossier `/<matiere>/index.html` autonome, plus une li
 
 Chaque page est un fichier unique : CSS et JS dans la page. Seules dépendances externes autorisées : Google Fonts.
 
+## Effets ajoutés le 22 octobre (labs)
+
+- En-tête de chaque module : une petite scène 3D derrière le titre (`.mini3d`, canvas sous le contenu, masque radial, `pointer-events: none`). Macroeconomics : le circuit économique incliné qui tourne (`mountFlow(box, { mini: true })`). Management : la foule / organisation (`mountSwarm(box, { mini: true, mode })`), forme choisie par module (objet `MINI`). Pas de scène dans la vue d'un cas, l'examen blanc ni les pages d'écriture.
+- Tuiles qui s'inclinent vers la souris avec un reflet (`--rx`, `--ry`, `--gx`, `--gy`), blocs qui apparaissent au défilement (`.rv-in` / `.rv-on`, avec `translate` pour ne pas casser l'inclinaison).
+- Transitions de vue : `document.startViewTransition` entre les vues d'un lab (sauf vers un cas), et `@view-transition { navigation: auto }` entre les pages (hub ⇄ labs). L'en-tête garde `view-transition-name: hdr`.
+- Éclats de couleur sur les bonnes réponses (`burst()`), compteur de série qui rebondit (`bump()`), paquet de flashcards en 3D qui part à droite (connue) ou à l'arrière (à revoir).
+- Recherche dans chaque lab : bouton dans l'en-tête, touche `/` ou Ctrl/Cmd+K. Index : fiches, définitions des flashcards, questions d'examen, cas, labs, pages. Choisir une fiche ouvre le chapitre et l'allume (`GOTO.note`, `landOnNote()`).
+- `#recap` dans chaque lab : toutes les fiches sur une page, filtrable et imprimable (CSS `@media print`).
+- Hub : « Pick up where you left off » lit `flow-v1` et `mgmt-v1` pour proposer de reprendre (la liste des cas Management et leur nombre d'étapes est recopiée dans le hub, à tenir à jour si on ajoute un cas).
+- Le texte posé sur une pastille pleine verte ou rouge utilise `var(--bg)` (dans `.mod`, `--surface` est un verre transparent).
+
 ## Principes de contenu (ce qui fait la qualité du site)
 
 1. **Fidélité au cours.** Tout part des vrais supports (slides, feuilles de TD, annales, consignes d'examen). On calque le format réel de l'examen.
