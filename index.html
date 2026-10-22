@@ -192,6 +192,22 @@ html.theme-vt::view-transition-new(root){animation:themeReveal .65s cubic-bezier
 .pt .sq{width:30px;height:30px;border:1.5px solid var(--fg);border-radius:4px;position:relative;grid-row:span 2}
 .pt .sq::after{content:"";position:absolute;inset:6px;border-radius:1px;background:linear-gradient(135deg,var(--b1),var(--b2),var(--b3))}
 .pt h3{font-size:1.2rem}
+/* a live specimen: one question drawn by the generators, on a strip of exam paper */
+.spec{margin:36px 0 0;max-width:880px;position:relative;border:1.5px solid var(--fg);border-radius:6px;padding:18px 20px 20px 66px;display:flex;flex-direction:column;gap:10px;background-color:var(--surface);background-image:linear-gradient(90deg,transparent 44px,color-mix(in srgb,var(--b3) 65%,transparent) 44px,color-mix(in srgb,var(--b3) 65%,transparent) 46px,transparent 46px),linear-gradient(rgb(var(--grid) / .13) 1px,transparent 1px),linear-gradient(90deg,rgb(var(--grid) / .13) 1px,transparent 1px);background-size:100% 100%,16px 16px,16px 16px;box-shadow:0 26px 50px -34px rgb(var(--grid) / .9)}
+.spec figcaption{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap;font-size:.84rem;color:var(--muted)}
+.spec-lab{font-weight:700;color:var(--c)}
+.spec-r{margin-left:auto;border:1px solid var(--line-2);background:var(--bg);color:var(--fg);border-radius:99px;padding:5px 13px;font:inherit;font-weight:700;cursor:pointer;transition:border-color .2s}
+.spec-r:hover{border-color:var(--c)}
+.spec-q{margin:0;font-size:1.1rem;font-weight:500;line-height:1.5;max-width:62ch}
+.spec-a{margin:0;font-family:var(--f-mono);font-size:.9rem;line-height:1.7;color:var(--muted);display:flex;flex-wrap:wrap;gap:0 .7em}
+.spec-a span{white-space:nowrap}
+.spec-a span:last-child{white-space:normal}
+.spec-a span + span::before{content:"→";color:var(--faint);padding-right:.7em}
+@media (max-width:640px){.spec-a{flex-direction:column}.spec-a span{white-space:normal}.spec-a span + span::before{content:"→ "}}
+.spec b{color:var(--c);font-weight:700}
+.spec-q,.spec-a{transition:opacity .35s,translate .45s cubic-bezier(.2,.8,.2,1)}
+.spec.swap .spec-q,.spec.swap .spec-a,.spec-a.wait{opacity:0;translate:0 -8px}
+@media (max-width:640px){.spec{padding:16px 14px 18px 50px;background-image:linear-gradient(90deg,transparent 32px,color-mix(in srgb,var(--b3) 65%,transparent) 32px,color-mix(in srgb,var(--b3) 65%,transparent) 34px,transparent 34px),linear-gradient(rgb(var(--grid) / .13) 1px,transparent 1px),linear-gradient(90deg,rgb(var(--grid) / .13) 1px,transparent 1px)}.spec-r{margin-left:0}}
 .pt p{color:var(--muted)}
 .labline{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;border-left:3px solid var(--c);padding:4px 0 4px 14px;text-decoration:none}
 .labline .nm{font-family:var(--f-display);font-weight:700;font-size:1.05rem;color:var(--c)}
@@ -367,6 +383,11 @@ html.theme-vt::view-transition-new(root){animation:themeReveal .65s cubic-bezier
       <div class="pt"><span class="sq" aria-hidden="true"></span><h3>Every answer explained</h3><p>Calculations shown with your numbers, written answers compared with a model answer and its key points.</p></div>
       <div class="pt"><span class="sq" aria-hidden="true"></span><h3>Never the same twice</h3><p>Numbers and scenes are generated, so you learn the method and not the answer.</p></div>
     </div>
+    <figure class="spec" id="spec">
+      <figcaption><span class="spec-lab" id="specLab"></span><span>A question drawn for you just now</span><button class="spec-r" type="button" id="specR">Draw another</button></figcaption>
+      <p class="spec-q" id="specQ"></p>
+      <p class="spec-a" id="specA"></p>
+    </figure>
   </section>
 
   <section class="wrap" id="reviews" aria-labelledby="voicesH">
@@ -791,11 +812,43 @@ heroTilt(document.getElementById("hero"));
 (function(){
   if (matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
   const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting){ en.target.classList.add("rv-on"); io.unobserve(en.target); } }), { rootMargin: "0px 0px -8% 0px" });
-  document.querySelectorAll("main .sh, main .pt, main .resume, #voicesBody, main .credit").forEach((e, i) => {
+  document.querySelectorAll("main .sh, main .pt, main .spec, main .resume, #voicesBody, main .credit").forEach((e, i) => {
     if (e.getBoundingClientRect().top < innerHeight * .9) return;
     e.classList.add("rv-in"); if (e.matches(".pt")) e.style.transitionDelay = ([...e.parentElement.children].indexOf(e) * 90) + "ms";
     io.observe(e);
   });
+})();
+
+/* ---------- a question drawn live: the same kind of generators the labs use ---------- */
+(function(){
+  const box = document.getElementById("spec"); if (!box) return;
+  const q = document.getElementById("specQ"), a = document.getElementById("specA"), lab = document.getElementById("specLab");
+  const RI = (lo, hi, st = 1) => lo + st * Math.floor(Math.random() * ((hi - lo) / st + 1)), PICK = x => x[Math.floor(Math.random() * x.length)];
+  const f = (n, d = 0) => n.toLocaleString("en-GB", { minimumFractionDigits: d, maximumFractionDigits: d });
+  const GEN = [
+    () => { const c = PICK([0.6, 0.7, 0.75, 0.8, 0.9]), dI = RI(4, 30) * 10, k = 1 / (1 - c);
+      return ["Macroeconomics", "var(--macro)", `The marginal propensity to consume is <b>${c}</b> and investment rises by <b>${dI}</b>. How much does output rise?`, [`k = 1 / (1 − ${c}) = ${f(k, 2)}`, `ΔY = ${f(k, 2)} × ${dI} = <b>${f(k * dI, 0)}</b>`]]; },
+    () => { const C0 = RI(5, 30) * 10, c = PICK([0.6, 0.7, 0.75, 0.8]), Yd = RI(10, 40) * 100, C = C0 + c * Yd;
+      return ["Macroeconomics", "var(--macro)", `Consumption is <b>C = ${C0} + ${c}Yd</b> and disposable income is <b>${f(Yd)}</b>. What share of income is consumed?`, [`C = ${C0} + ${c} × ${f(Yd)} = ${f(C, 0)}`, `APC = ${f(C, 0)} / ${f(Yd)} = <b>${f(C / Yd, 2)}</b>`]]; },
+    () => { const w = RI(4, 12) * 50, fl = w + RI(3, 10) * 50, br = fl + RI(4, 14) * 50;
+      return ["Macroeconomics", "var(--macro)", `A farmer sells wheat for <b>€${f(w)}</b> to a miller, who sells the flour for <b>€${f(fl)}</b> to a baker, who sells bread for <b>€${f(br)}</b>. What is the contribution to GDP?`, [`Values added: ${f(w)} + (${f(fl)} − ${f(w)}) + (${f(br)} − ${f(fl)})`, `GDP = <b>€${f(br)}</b>, the value of the final good`]]; },
+    () => { let p1, h1, p2, h2, r1, r2; do { h1 = RI(30, 40); h2 = RI(30, 40); p1 = RI(18, 32) * 100; p2 = RI(18, 32) * 100; r1 = p1 / h1; r2 = p2 / h2; } while (Math.abs(r1 / r2 - 1) < .04);
+      const under = r1 < r2;
+      return ["Management", "var(--mgmt)", `You are paid <b>€${f(p1)}</b> a month for a <b>${h1}-hour</b> week. Your colleague is paid <b>€${f(p2)}</b> for a <b>${h2}-hour</b> week. What does equity theory predict?`, [`You: ${f(p1)} / ${h1} = ${f(r1, 1)}`, `Colleague: ${f(p2)} / ${h2} = ${f(r2, 1)}`, `<b>${under ? "under-rewarded" : "over-rewarded"}</b>: ${under ? "less effort, a request for more, or another referent" : "guilt, more effort, or a new reading of the inputs"}`]]; }
+  ];
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let last = -1, timer = 0, seen = false, hover = false;
+  function draw(first){
+    let i; do { i = Math.floor(Math.random() * GEN.length); } while (i === last && GEN.length > 1); last = i;
+    const [ln, c, qq, aa] = GEN[i]();
+    const put = () => { box.style.setProperty("--c", c); lab.textContent = ln; q.innerHTML = qq; a.innerHTML = aa.map(x => `<span>${x}</span>`).join(""); box.classList.remove("swap"); if (!reduce){ a.classList.add("wait"); setTimeout(() => a.classList.remove("wait"), 1100); } };
+    if (first || reduce) put(); else { box.classList.add("swap"); setTimeout(put, 360); }
+  }
+  const loop = () => { clearTimeout(timer); if (reduce) return; timer = setTimeout(() => { if (seen && !hover && !document.hidden) draw(); loop(); }, 7500); };
+  document.getElementById("specR").addEventListener("click", () => { draw(); loop(); });
+  box.addEventListener("pointerenter", () => { hover = true; }); box.addEventListener("pointerleave", () => { hover = false; });
+  if ("IntersectionObserver" in window) new IntersectionObserver(es => { seen = es[0].isIntersecting; }).observe(box); else seen = true;
+  draw(true); loop();
 })();
 
 /* ---------- reviews (from /api/reviews) ---------- */

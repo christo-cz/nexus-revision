@@ -434,6 +434,7 @@ details.oans[open] summary{margin-bottom:8px}
 /* the mock exam banner looks like an exam sheet: squared paper, ink, a margin rule */
 .tdfull.mkbanner{position:relative;overflow:hidden;background-color:var(--fg);color:var(--bg);box-shadow:0 22px 46px -26px var(--fg);background-image:linear-gradient(90deg,transparent 46px,color-mix(in srgb,var(--leak) 70%,transparent) 46px,color-mix(in srgb,var(--leak) 70%,transparent) 48px,transparent 48px),linear-gradient(color-mix(in srgb,var(--bg) 9%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--bg) 9%,transparent) 1px,transparent 1px);background-size:100% 100%,14px 14px,14px 14px;padding-left:66px}
 .mkbanner b{letter-spacing:-.02em}
+@media (hover:hover) and (prefers-reduced-motion:no-preference){.tdfull.mkbanner{transform:rotate(-.6deg);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}.tdfull.mkbanner:hover{transform:rotate(0deg) translateY(-4px);box-shadow:0 30px 56px -28px var(--fg)}}
 .mkbanner > span > span{opacity:.82}
 .mods + .mkbanner,.sec .mkbanner{margin-top:14px;max-width:none}
 /* tutorials */

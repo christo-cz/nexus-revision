@@ -2803,6 +2803,8 @@ function mountSwarm(hero, o = {}){
     const cs = getComputedStyle(document.documentElement);
     dark = document.documentElement.dataset.theme !== "light";
     col = { fg: hx(cs.getPropertyValue("--fg")), muted: hx(cs.getPropertyValue("--faint")), pri: hx(cs.getPropertyValue("--pri")), c1: hx(cs.getPropertyValue("--c1")), c3: hx(cs.getPropertyValue("--c3")), c4: hx(cs.getPropertyValue("--c4")) };
+    /* in the crowd, everyone keeps a hint of their own colour: individuals, not yet a structure */
+    col.crowd = [col.pri, col.c1, col.c3, col.c4].map(c => c.map((v, k) => col.muted[k] + (v - col.muted[k]) * .55));
   }
   /* each person: 3D position, a home in the crowd, a cluster, a ring slot, a role in the hierarchy */
   const perDept = Math.ceil((N - 5) / DEPTS), ringN = 11;
@@ -2835,7 +2837,7 @@ function mountSwarm(hero, o = {}){
     return [mx + Math.cos(b) * .24, .23 + lv * .21, mz + Math.sin(b) * .24];
   }
   function tcol(p){
-    if (mode === 0) return o.vivid ? [col.pri, col.c1, col.c3, col.c4][p.i % 4] : col.muted;
+    if (mode === 0) return o.vivid ? [col.pri, col.c1, col.c3, col.c4][p.i % 4] : col.crowd[p.i % 4];
     if (mode === 1) return [col.pri, col.c1, col.c3, col.c4, col.fg][p.cl];
     if (mode === 2) return col.pri;
     if (p.lvl === 0) return col.fg;
@@ -2878,7 +2880,11 @@ function mountSwarm(hero, o = {}){
     if (dark) ctx.globalCompositeOperation = "lighter";
     /* links */
     if (settle > 0){
-      if (mode === 1){
+      if (mode === 0){
+        /* passers-by: two people who come close exchange a glance, then move on */
+        ctx.lineWidth = .8;
+        for (let a = 0; a < N; a++){ const p = P[a]; for (let b = a + 1; b < N; b++){ const q = P[b], dx = p.x - q.x; if (dx > .27 || dx < -.27) continue; const d = Math.hypot(dx, p.y - q.y, p.z - q.z); if (d < .27){ ctx.strokeStyle = rgba(p.c, settle * .36 * (1 - d / .27) * depthA(p)); ctx.beginPath(); ctx.moveTo(X(p), Y(p)); ctx.lineTo(X(q), Y(q)); ctx.stroke(); } } }
+      } else if (mode === 1){
         ctx.lineWidth = 1;
         clusters.forEach(cl => { for (let a = 0; a < cl.length; a++) for (let b = a + 1; b < cl.length; b++){ const p = cl[a], q = cl[b], d = Math.hypot(p.x - q.x, p.y - q.y, p.z - q.z); if (d < .3){ ctx.strokeStyle = rgba(p.c, settle * .28 * (1 - d / .3) * depthA(p)); ctx.beginPath(); ctx.moveTo(X(p), Y(p)); ctx.lineTo(X(q), Y(q)); ctx.stroke(); } } });
       } else if (mode === 2){
