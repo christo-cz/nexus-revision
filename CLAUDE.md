@@ -37,7 +37,7 @@ Chaque page est un fichier unique : CSS et JS dans la page. Seules dépendances 
    - le bloc de données utilisé par la question courante s'allume à gauche (IntersectionObserver) ;
    - sur téléphone, colonne unique, case sheet repliable, et chaque question rappelle ses données (`.snip`).
 5. **Saisie tolérante.** Les nombres acceptent `1600`, `1,600`, `1 600`, `0,75`, `0.75`, `4.2%` (fonction `parseNum`). La tolérance d'erreur est définie par question.
-6. **Progression** enregistrée uniquement dans le navigateur (`localStorage`, clé `flow-v1` pour la macro, `nexus-theme` pour le thème du hub). Chaque lecture et écriture est protégée par un try/catch. Pas de compte utilisateur.
+6. **Progression** enregistrée uniquement dans le navigateur (`localStorage`, clé `flow-v1` pour la macro, `nexus-theme` pour le thème, partagé par le hub et tous les labs). Chaque lecture et écriture est protégée par un try/catch. Pas de compte utilisateur.
 7. **Juridique.** Pas de logo ni de charte EDHEC. Garder la mention « A student project to help with revision. Not an official EDHEC website. » Ne pas reprendre mot pour mot de longs passages des slides : reformuler.
 
 ## Identité visuelle
