@@ -25,7 +25,7 @@
   --bg:#F5F6FB; --surface:#FFFFFF; --sunk:#E9EBF5; --line:#D9DCEA; --line-2:#C2C6DB;
   --fg:#12142B; --muted:#565B78; --faint:#8A8FA8;
   --grid:70 92 190; --grid-a:.16; --grid-major:.30;
-  --b1:#3B5BFF; --b2:#8E6CFF; --b3:#FF5FA2;
+  --b1:#3B5BFF; --b2:#8E6CFF; --b3:#FF5FA2; --b4:#22C4D6;
   --macro:#0B7472; --acc:#4453D0; --mgmt:#B5386F; --on-c:#FFFFFF;
   --star:#B06F07; --bad:#B4372E;
   --scrim:245 246 251;
@@ -365,45 +365,76 @@ function applyTheme(){
 }
 themeBtn.addEventListener("click", () => { theme = THEME.next[theme]; try { localStorage.setItem("nexus-theme", theme); } catch (e) {} applyTheme(); });
 
-/* ---------- full screen (kept across pages: the first tap on the next page restores it) ---------- */
+/* ---------- full screen that survives page changes ----------
+   Browsers always leave full screen when the page changes. So while in full screen, links to another Nexus page
+   open inside a full-screen frame of the current page. Leaving full screen reloads the page you were on, normally. */
 const FS = (() => {
-  const d = document, el = d.documentElement;
+  const framed = (() => { try { return window.top !== window && window.top.location.origin === location.origin; } catch (e) { return false; } })();
+  const T = framed ? window.top : window, d = T.document, el = d.documentElement;
   const can = !!(d.fullscreenEnabled || d.webkitFullscreenEnabled);
   const isOn = () => !!(d.fullscreenElement || d.webkitFullscreenElement);
-  let leaving = false;
-  const want = v => { try { v ? sessionStorage.setItem("nexus-fs", "1") : sessionStorage.removeItem("nexus-fs"); } catch (e) {} };
-  const wanted = () => { try { return sessionStorage.getItem("nexus-fs") === "1"; } catch (e) { return false; } };
   const enter = () => { try { const r = (el.requestFullscreen || el.webkitRequestFullscreen).call(el, { navigationUI: "hide" }); if (r && r.catch) r.catch(() => {}); } catch (e) {} };
   const exit = () => { try { (d.exitFullscreen || d.webkitExitFullscreen).call(d); } catch (e) {} };
-  const toggle = () => { if (isOn()){ want(false); exit(); } else { want(true); enter(); } };
+  const toggle = () => isOn() ? exit() : enter();
   const ENTER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
   const EXIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>';
+  function openShell(url){
+    let f = document.getElementById("nxShell");
+    if (!f){
+      const st = document.createElement("style");
+      st.textContent = "html.shelled,html.shelled body{overflow:hidden!important}html.shelled body>:not(#nxShell){display:none!important}#nxShell{position:fixed;inset:0;width:100%;height:100%;border:0;z-index:2147483647;background:transparent}";
+      document.head.append(st);
+      f = document.createElement("iframe"); f.id = "nxShell"; f.title = "Nexus"; f.allow = "fullscreen";
+      f.addEventListener("load", () => { try { document.title = f.contentDocument.title; } catch (e) {} });
+      document.body.append(f); document.documentElement.classList.add("shelled");
+    }
+    f.src = url;
+  }
+  if (!framed){
+    document.addEventListener("click", e => {
+      if (!isOn() || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = e.target.closest && e.target.closest("a[href]"); if (!a || (a.target && a.target !== "_self") || a.hasAttribute("download")) return;
+      const u = new URL(a.href, location.href);
+      if (u.origin !== location.origin || (u.pathname === location.pathname && u.search === location.search)) return;
+      e.preventDefault(); openShell(u.href);
+    });
+    const back = () => { if (isOn()) return; const f = document.getElementById("nxShell"); if (!f) return; let u = null; try { u = f.contentWindow.location.href; } catch (e) {} location.href = u || location.href; };
+    d.addEventListener("fullscreenchange", back); d.addEventListener("webkitfullscreenchange", back);
+  }
   function bind(btn){
     if (!can){ btn.hidden = true; return; }
-    const paint = () => { const on = isOn(); btn.innerHTML = (on ? EXIT : ENTER) + `<span class="tl">${on ? "Exit full screen" : "Full screen"}</span>`; btn.setAttribute("aria-label", on ? "Exit full screen" : "Full screen (F)"); btn.title = on ? "Exit full screen (F)" : "Full screen (F)"; btn.setAttribute("aria-pressed", String(on)); };
+    const paint = () => { const on = isOn(); btn.innerHTML = (on ? EXIT : ENTER) + `<span class="tl">${on ? "Exit full screen" : "Full screen"}</span>`; btn.setAttribute("aria-label", on ? "Exit full screen" : "Full screen (F)"); btn.title = on ? "Exit full screen (F or Esc)" : "Full screen (F)"; btn.setAttribute("aria-pressed", String(on)); };
     btn.addEventListener("click", toggle);
-    const changed = () => { paint(); if (!isOn() && !leaving) want(false); };
-    d.addEventListener("fullscreenchange", changed); d.addEventListener("webkitfullscreenchange", changed);
-    addEventListener("beforeunload", () => { leaving = true; }); addEventListener("pagehide", () => { leaving = true; });
-    d.addEventListener("keydown", e => { if ((e.key === "f" || e.key === "F") && !e.metaKey && !e.ctrlKey && !e.altKey && !(e.target.closest && e.target.closest("input,textarea,select,[contenteditable]"))){ e.preventDefault(); toggle(); } });
-    if (wanted() && !isOn()){ const again = e => { if (e.target.closest && e.target.closest("#" + btn.id)) return; enter(); }; d.addEventListener("pointerup", again, { once: true }); }
+    d.addEventListener("fullscreenchange", paint); d.addEventListener("webkitfullscreenchange", paint);
+    addEventListener("pagehide", () => { d.removeEventListener("fullscreenchange", paint); d.removeEventListener("webkitfullscreenchange", paint); });
+    document.addEventListener("keydown", e => { if ((e.key === "f" || e.key === "F") && !e.metaKey && !e.ctrlKey && !e.altKey && !(e.target.closest && e.target.closest("input,textarea,select,[contenteditable]"))){ e.preventDefault(); toggle(); } });
     paint();
   }
   return { bind };
 })();
 
-/* ---------- background colour that follows the scroll ---------- */
-function scrollTint(getStops, getStart){
-  const root = document.documentElement, hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+/* ---------- background colour that follows the scroll ----------
+   Two or three colours, blended in OKLab so the fade looks even. The last colour is reached at `end` of the scroll
+   and then stays. */
+function scrollTint(getStops, getStart, end = 0.85){
+  const root = document.documentElement;
   const dark = () => { const t = root.dataset.theme; return t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches); };
+  const lin = c => { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+  const gam = c => { c = c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055; return Math.round(Math.min(1, Math.max(0, c)) * 255); };
+  const toLab = h => { const [r, g, b] = [1, 3, 5].map(i => lin(parseInt(h.slice(i, i + 2), 16)));
+    const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b), m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b), s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+    return [0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s, 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s, 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s]; };
+  const toRGB = ([L, A, B]) => { const l = (L + 0.3963377774 * A + 0.2158037573 * B) ** 3, m = (L - 0.1055613458 * A - 0.0638541728 * B) ** 3, s = (L - 0.0894841775 * A - 1.2914855480 * B) ** 3;
+    return [gam(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s), gam(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s), gam(-0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s)]; };
   let raf = 0;
   function upd(){
     raf = 0;
     const stops = getStops(dark());
     if (!stops){ root.style.removeProperty("--bg"); root.style.removeProperty("--scrim"); return; }
-    const start = getStart(), max = Math.max(1, root.scrollHeight - innerHeight - start);
-    const p = Math.min(1, Math.max(0, (scrollY - start) / max)), x = p * (stops.length - 1), i = Math.min(stops.length - 2, Math.floor(x)), f = x - i, e = f * f * (3 - 2 * f);
-    const a = hex(stops[i]), b = hex(stops[i + 1]), c = a.map((v, k) => Math.round(v + (b[k] - v) * e));
+    const start = getStart(), span = Math.max(1, (root.scrollHeight - innerHeight) * end - start);
+    const p = Math.min(1, Math.max(0, (scrollY - start) / span)), e = p * p * (3 - 2 * p);
+    const x = e * (stops.length - 1), i = Math.min(stops.length - 2, Math.floor(x)), f = x - i;
+    const a = toLab(stops[i]), b = toLab(stops[i + 1]), c = toRGB(a.map((v, k) => v + (b[k] - v) * f));
     root.style.setProperty("--bg", `rgb(${c.join(" ")})`); root.style.setProperty("--scrim", c.join(" "));
   }
   const q = () => { if (!raf) raf = requestAnimationFrame(upd); };
@@ -413,8 +444,8 @@ function scrollTint(getStops, getStart){
 }
 
 FS.bind(document.getElementById("fsBtn"));
-/* paper → violet → plum → ink (dark); paper → lilac → blush → sand (light) */
-scrollTint(dark => dark ? ["#0D1024", "#1C1550", "#36123F", "#0A0B17"] : ["#F5F6FB", "#ECE8FF", "#FDE8F1", "#F7F1E8"], () => document.getElementById("hero").offsetHeight * 0.3);
+/* two colours over the whole descent: night navy → deep wine (dark), paper → rose (light). The last one stays. */
+scrollTint(dark => dark ? ["#0D1024", "#4A0F35"] : ["#F5F6FB", "#FFD3E3"], () => document.getElementById("hero").offsetHeight * 0.12, 0.92);
 applyTheme();
 
 /* ---------- course tiles: progress, 3D tilt, centred tile on phones ---------- */
@@ -441,68 +472,89 @@ applyTheme();
   narrow.addEventListener("change", () => { if (!narrow.matches) tiles.forEach(t => t.classList.remove("on")); });
 })();
 
-/* ---------- the exam paper (WebGL, no library) ---------- */
+/* ---------- the exam paper (WebGL, no library) ----------
+   Alive on its own: the well wanders on a path that never repeats (sum of slow sines with unrelated periods),
+   coloured waves are born at random places, and now and then a small electric arc snaps across the squares.
+   The pointer takes over the well; a click or a tap sends a wave. */
 (function(){
   const hero = document.getElementById("hero"), cv = document.getElementById("paper");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
   let gl; try { gl = cv.getContext("webgl", { antialias: true, alpha: true, premultipliedAlpha: false }); } catch (e) {}
   if (!gl) return;
+  const NR = 5;
   const VS = `
 attribute vec2 aPos; attribute float aMajor;
-uniform mat4 uProj; uniform vec2 uRot; uniform vec2 uMouse; uniform float uWell; uniform float uT;
-uniform vec2 uRip; uniform float uRipAge; uniform float uDist;
-varying float vMajor; varying float vHeat; varying vec2 vP;
+uniform mat4 uProj; uniform vec2 uRot; uniform vec2 uMouse; uniform float uWell; uniform float uT; uniform float uDist;
+uniform vec4 uRip[${NR}]; uniform vec3 uRipC[${NR}]; uniform float uGlow;
+varying float vMajor; varying float vHeat; varying vec2 vP; varying vec3 vRc; varying float vRh;
 void main(){
   vec2 p = aPos;
   vec2 d = p - uMouse; float g = exp(-dot(d, d) / 0.32);
   p -= d * 0.22 * g * uWell;
   float z = -0.62 * g * uWell;
-  z += 0.035 * sin(aPos.x * 2.1 + uT * 0.55) * cos(aPos.y * 1.7 - uT * 0.42);
-  float rd = length(aPos - uRip);
-  float ring = exp(-pow((rd - uRipAge * 1.5) * 4.5, 2.0)) * exp(-uRipAge * 1.1) * step(0.0, uRipAge);
-  z += 0.16 * ring;
+  z += 0.045 * sin(aPos.x * 1.7 + uT * 0.53) * cos(aPos.y * 1.3 - uT * 0.37);
+  z += 0.03 * sin((aPos.x * 0.8 + aPos.y * 1.1) * 2.3 - uT * 0.91);
+  vec3 rc = vec3(0.0); float rh = 0.0;
+  for (int i = 0; i < ${NR}; i++){
+    vec4 r = uRip[i];
+    if (r.z >= 0.0){
+      float rd = length(aPos - r.xy);
+      float ring = exp(-pow((rd - r.z * r.w) * 3.2, 2.0)) * exp(-r.z * 0.62);
+      z += 0.2 * ring; rc += ring * uRipC[i]; rh += ring;
+    }
+  }
   vec3 q = vec3(p, z);
   float cx = cos(uRot.x), sx = sin(uRot.x), cy = cos(uRot.y), sy = sin(uRot.y);
   q = vec3(q.x, q.y * cx - q.z * sx, q.y * sx + q.z * cx);
   q = vec3(q.x * cy + q.z * sy, q.y, -q.x * sy + q.z * cy);
   q.z -= uDist;
   gl_Position = uProj * vec4(q, 1.0);
-  vMajor = aMajor; vHeat = clamp(g * uWell * 1.25 + ring * 1.4, 0.0, 1.0); vP = aPos;
+  gl_PointSize = aMajor > 2.5 ? uGlow : 1.0;
+  vMajor = aMajor; vHeat = clamp(g * uWell * 1.2, 0.0, 1.0); vP = aPos; vRc = rc; vRh = rh;
 }`;
   const FS = `
 precision mediump float;
 uniform vec3 uLine; uniform float uA; uniform float uAMajor; uniform vec2 uExt;
-uniform vec3 uB1; uniform vec3 uB2; uniform vec3 uB3;
-varying float vMajor; varying float vHeat; varying vec2 vP;
+uniform vec3 uB1; uniform vec3 uB2; uniform vec3 uB3; uniform float uArcA; uniform vec3 uArcC; uniform float uArcWhite;
+varying float vMajor; varying float vHeat; varying vec2 vP; varying vec3 vRc; varying float vRh;
 void main(){
-  float t = clamp(vP.x / uExt.x * 0.5 + 0.5 + vP.y / uExt.y * 0.15, 0.0, 1.0);
-  vec3 brand = t < 0.5 ? mix(uB1, uB2, t * 2.0) : mix(uB2, uB3, t * 2.0 - 1.0);
   vec2 e = abs(vP / uExt);
   float fade = (1.0 - smoothstep(0.62, 1.0, e.x)) * (1.0 - smoothstep(0.55, 1.0, e.y));
+  if (vMajor > 2.5){ float r = length(gl_PointCoord - 0.5); gl_FragColor = vec4(uArcC, uArcA * 0.6 * smoothstep(0.5, 0.0, r) * fade); return; }
+  if (vMajor > 1.5){ gl_FragColor = vec4(mix(uArcC, vec3(1.0), uArcWhite), uArcA * fade); return; }
+  float t = clamp(vP.x / uExt.x * 0.5 + 0.5 + vP.y / uExt.y * 0.15, 0.0, 1.0);
+  vec3 brand = t < 0.5 ? mix(uB1, uB2, t * 2.0) : mix(uB2, uB3, t * 2.0 - 1.0);
   float a = mix(uA, uAMajor, vMajor);
   vec3 col = mix(uLine, brand, vHeat);
-  gl_FragColor = vec4(col, min(1.0, a + vHeat * 0.85) * fade);
+  float rr = clamp(vRh * 2.2, 0.0, 1.0);
+  col = mix(col, vRc / max(vRh, 0.001), rr);
+  gl_FragColor = vec4(col, min(1.0, a + vHeat * 0.85 + rr * 0.95) * fade);
 }`;
   function sh(type, src){ const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; }
   let prog;
   try { prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog); if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw 0; }
-  catch (e) { return; }
+  catch (e) { console.warn(e); return; }
   hero.classList.add("gl");
   gl.useProgram(prog);
   const U = n => gl.getUniformLocation(prog, n);
-  const u = { proj: U("uProj"), rot: U("uRot"), mouse: U("uMouse"), well: U("uWell"), t: U("uT"), rip: U("uRip"), ripAge: U("uRipAge"), dist: U("uDist"), line: U("uLine"), a: U("uA"), aMajor: U("uAMajor"), ext: U("uExt"), b1: U("uB1"), b2: U("uB2"), b3: U("uB3") };
+  const u = { proj: U("uProj"), rot: U("uRot"), mouse: U("uMouse"), well: U("uWell"), t: U("uT"), dist: U("uDist"), rip: U("uRip"), ripC: U("uRipC"),
+    line: U("uLine"), a: U("uA"), aMajor: U("uAMajor"), ext: U("uExt"), b1: U("uB1"), b2: U("uB2"), b3: U("uB3"), arcA: U("uArcA"), arcC: U("uArcC"), arcW: U("uArcWhite"), glow: U("uGlow") };
   const aPos = gl.getAttribLocation(prog, "aPos"), aMajor = gl.getAttribLocation(prog, "aMajor");
-  const buf = gl.createBuffer();
+  const buf = gl.createBuffer(), arcBuf = gl.createBuffer();
   const FOV = 40 * Math.PI / 180, DIST = 3, HALF_H = Math.tan(FOV / 2) * DIST;
-  let W = 0, H = 0, count = 0, ext = [1, 1], halfW = 1, low = false, slow = 0, frames = 0;
-  const hex = h => [parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255];
+  let W = 0, H = 0, count = 0, ext = [1, 1], halfW = 1, low = false, slow = 0, frames = 0, skip = false;
+  const hex = h => { h = h.trim(); return [parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255]; };
+  let PAL = [[.23, .36, 1], [.56, .42, 1], [1, .37, .64], [.13, .77, .84]], darkMode = true;
   function colors(){
     const cs = getComputedStyle(document.documentElement);
-    const g = cs.getPropertyValue("--grid").trim().split(/[\s,]+/).map(x => +x / 255);
-    gl.uniform3fv(u.line, g);
+    gl.uniform3fv(u.line, cs.getPropertyValue("--grid").trim().split(/[\s,]+/).map(x => +x / 255));
     gl.uniform1f(u.a, +cs.getPropertyValue("--grid-a") * 1.25);
     gl.uniform1f(u.aMajor, +cs.getPropertyValue("--grid-major") * 1.25);
-    gl.uniform3fv(u.b1, hex(cs.getPropertyValue("--b1").trim())); gl.uniform3fv(u.b2, hex(cs.getPropertyValue("--b2").trim())); gl.uniform3fv(u.b3, hex(cs.getPropertyValue("--b3").trim()));
+    const b1 = hex(cs.getPropertyValue("--b1")), b2 = hex(cs.getPropertyValue("--b2")), b3 = hex(cs.getPropertyValue("--b3")), b4 = hex(cs.getPropertyValue("--b4") || "#22C4D6");
+    gl.uniform3fv(u.b1, b1); gl.uniform3fv(u.b2, b2); gl.uniform3fv(u.b3, b3);
+    PAL = [b1, b2, b3, b4];
+    const t = document.documentElement.dataset.theme; darkMode = t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches);
+    gl.uniform1f(u.arcW, darkMode ? 0.55 : 0.0);
     draw();
   }
   function build(){
@@ -511,7 +563,7 @@ void main(){
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
     gl.viewport(0, 0, cv.width, cv.height);
     const aspect = W / H; halfW = HALF_H * aspect;
-    const cell = HALF_H * (W < 640 ? 24 : 30) / (H / 2);         /* one square of exam paper, about 30 css px */
+    const cell = HALF_H * (W < 640 ? 24 : 30) / (H / 2);           /* one square of exam paper, about 30 css px */
     const ex = Math.ceil(halfW * 1.35 / cell) * cell, ey = Math.ceil(HALF_H * 1.4 / cell) * cell;
     ext = [ex, ey];
     const seg = low ? 40 : 90, v = [];
@@ -520,50 +572,81 @@ void main(){
     for (let j = -ny; j <= ny; j++){ const y = j * cell, m = j % 5 === 0 ? 1 : 0; for (let s = 0; s < seg; s++){ const x0 = -ex + 2 * ex * s / seg, x1 = -ex + 2 * ex * (s + 1) / seg; v.push(x0, y, m, x1, y, m); } }
     count = v.length / 3;
     gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(v), gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(aPos); gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 12, 0);
-    gl.enableVertexAttribArray(aMajor); gl.vertexAttribPointer(aMajor, 1, gl.FLOAT, false, 12, 8);
     const f = 1 / Math.tan(FOV / 2), n = 0.1, fa = 20;
     gl.uniformMatrix4fv(u.proj, false, new Float32Array([f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (fa + n) / (n - fa), -1, 0, 0, 2 * fa * n / (n - fa), 0]));
     gl.uniform2f(u.ext, ex, ey); gl.uniform1f(u.dist, DIST);
     draw();
   }
-  /* state, smoothed every frame */
-  const S = { mx: 0.55, my: 0.1, tx: 0.55, ty: 0.1, well: 0, twell: 0.55, rx: 0, ry: 0, rip: [0, 0], ripT: -1, active: false, last: 0, t: 0 };
+  /* ---- state ---- */
+  const S = { mx: 0.6, my: 0.1, tx: 0.6, ty: 0.1, well: 0, twell: 0.6, rx: 0, ry: 0, active: false, last: 0, t: Math.random() * 1000 };
+  const R = Array.from({ length: NR }, () => ({ x: 0, y: 0, age: -1, sp: 1.3, c: [1, 1, 1] }));
+  let nextWave = 0.5, nextArc = 1.6 + Math.random() * 2;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  function wave(x, y, sp){ const slot = R.find(q => q.age < 0) || R.reduce((o, q) => q.age > o.age ? q : o); slot.x = x; slot.y = y; slot.age = 0; slot.sp = sp || rnd(0.9, 1.6); slot.c = PAL[Math.floor(Math.random() * PAL.length)]; }
+  /* arcs: short jagged strands that hug the paper, flicker, then vanish */
+  const ARC = { life: -1, a: [0, 0], b: [0, 0], c: [1, 1, 1], data: new Float32Array(0), n: 0, regen: 0 };
+  function arcStrand(out, a, b, jag){ const N = 16, dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, px = -dy / L, py = dx / L; for (let i = 0; i <= N; i++){ const t = i / N, j = (i === 0 || i === N) ? 0 : (Math.random() - .5) * jag * Math.sin(Math.PI * t); out.push(a[0] + dx * t + px * j, a[1] + dy * t + py * j, 2); } }
+  function arcBuild(){ const v = []; arcStrand(v, ARC.a, ARC.b, 0.12); for (let k = 0; k < 2; k++){ const o = (k ? 1 : -1) * 0.004; v.push(...v.slice(0, 51).map((x, i) => i % 3 === 2 ? x : x + o)); } arcStrand(v, ARC.a, ARC.b, 0.07); if (Math.random() < .6){ const m = [(ARC.a[0] + ARC.b[0]) / 2, (ARC.a[1] + ARC.b[1]) / 2]; arcStrand(v, m, [m[0] + rnd(-.25, .25), m[1] + rnd(-.25, .25)], 0.06); } ARC.n = v.length / 3; const g = []; for (let i = 0; i < v.length; i += 3){ g.push(v[i], v[i + 1], 3); } ARC.data = new Float32Array(v.concat(g)); }
+  function spark(){
+    const ang = Math.random() * Math.PI * 2, r0 = rnd(0.15, 0.5), len = rnd(0.35, 0.8);
+    ARC.a = Math.random() < .5 ? [S.mx + Math.cos(ang) * r0, Math.max(0.05, S.my + Math.sin(ang) * r0 * .7)] : [rnd(0.05, 0.85) * halfW, rnd(0.05, 0.8) * HALF_H];
+    const ang2 = ang + rnd(-1.2, 1.2); ARC.b = [ARC.a[0] + Math.cos(ang2) * len, Math.max(0.02, ARC.a[1] + Math.sin(ang2) * len * .6)];
+    ARC.c = PAL[Math.floor(Math.random() * PAL.length)]; ARC.life = 0; ARC.regen = 0; arcBuild();
+    wave(ARC.b[0], ARC.b[1], rnd(1.4, 2));
+  }
   function setTarget(cx, cy){
     const r = hero.getBoundingClientRect();
     const nx = (cx - r.left) / r.width * 2 - 1, ny = -((cy - r.top) / r.height * 2 - 1);
     S.tx = nx * halfW; S.ty = ny * HALF_H; S.twell = 1; S.active = true; S.last = performance.now();
-    if (reduce.matches) { S.mx = S.tx; S.my = S.ty; S.well = 1; draw(); }
+    if (reduce.matches){ S.mx = S.tx; S.my = S.ty; S.well = 1; draw(); }
   }
-  hero.addEventListener("pointermove", e => { setTarget(e.clientX, e.clientY); wake(); });
+  hero.addEventListener("pointermove", e => { if (e.pointerType === "mouse") setTarget(e.clientX, e.clientY); wake(); });
   hero.addEventListener("pointerdown", e => {
     if (e.target.closest("a,button,.tile")) return;
-    setTarget(e.clientX, e.clientY); S.rip = [S.tx, S.ty]; S.ripT = 0; wake();
+    setTarget(e.clientX, e.clientY); wave(S.tx, S.ty, 1.5); if (Math.random() < .5) spark(); wake();
   });
-  hero.addEventListener("pointerleave", () => { S.active = false; S.twell = 0.55; });
+  hero.addEventListener("pointerleave", () => { S.active = false; });
+  function setAttribs(b){ gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.enableVertexAttribArray(aPos); gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 12, 0); gl.enableVertexAttribArray(aMajor); gl.vertexAttribPointer(aMajor, 1, gl.FLOAT, false, 12, 8); }
+  const ripU = new Float32Array(NR * 4), ripC = new Float32Array(NR * 3);
   function draw(){
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    gl.uniform2f(u.mouse, S.mx, S.my); gl.uniform1f(u.well, S.well); gl.uniform1f(u.t, S.t);
-    gl.uniform2f(u.rot, S.rx, S.ry); gl.uniform2f(u.rip, S.rip[0], S.rip[1]); gl.uniform1f(u.ripAge, S.ripT);
-    gl.drawArrays(gl.LINES, 0, count);
+    gl.uniform2f(u.mouse, S.mx, S.my); gl.uniform1f(u.well, S.well); gl.uniform1f(u.t, S.t); gl.uniform2f(u.rot, S.rx, S.ry);
+    R.forEach((r, i) => { ripU.set([r.x, r.y, r.age, r.sp], i * 4); ripC.set(r.c, i * 3); });
+    gl.uniform4fv(u.rip, ripU); gl.uniform3fv(u.ripC, ripC);
+    setAttribs(buf); gl.drawArrays(gl.LINES, 0, count);
+    if (ARC.life >= 0 && ARC.n){
+      const flick = (Math.sin(ARC.life * 90) * .5 + .5) * .5 + .5, fade = Math.max(0, 1 - ARC.life / 0.6);
+      gl.uniform1f(u.arcA, flick * fade); gl.uniform3fv(u.arcC, ARC.c);
+      if (darkMode) gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+      gl.bindBuffer(gl.ARRAY_BUFFER, arcBuf); gl.bufferData(gl.ARRAY_BUFFER, ARC.data, gl.DYNAMIC_DRAW); setAttribs(arcBuf);
+      gl.uniform1f(u.glow, (W < 640 ? 14 : 18) * Math.min(devicePixelRatio || 1, 1.75));
+      gl.drawArrays(gl.POINTS, ARC.n, ARC.n);
+      const per = 17; for (let s = 0; s * per < ARC.n; s++) gl.drawArrays(gl.LINE_STRIP, s * per, Math.min(per, ARC.n - s * per));
+    }
   }
   let raf = 0, prev = 0, visible = true;
   function frame(now){
     raf = 0;
     const dt = Math.min(0.05, (now - (prev || now)) / 1000); prev = now;
-    S.t += dt;
-    /* slow machine: after 90 frames, drop resolution, then only animate while the pointer moves */
-    if (frames >= 0){ frames++; slow += dt; if (slow > 1.2){ if (slow / frames > 0.04 && !low){ low = true; build(); } frames = -1; } }
-    const idle = !S.active || now - S.last > 2500;
-    if (low && idle && S.ripT < 0 && Math.abs(S.well - S.twell) < 0.01) { draw(); return; }
-    if (idle){                       /* idle: the well drifts on its own */
-      S.tx = halfW * (0.35 + 0.28 * Math.sin(S.t * 0.23)); S.ty = HALF_H * 0.45 * Math.sin(S.t * 0.31 + 1); S.twell = 0.6;
+    if (frames >= 0){ frames++; slow += dt; if (slow > 1.5){ if (slow / frames > 0.045 && !low){ low = true; build(); } frames = -1; } }
+    if (low && (skip = !skip)){ raf = requestAnimationFrame(frame); return; }  /* slow machine: half the frames, same motion */
+    const step = low ? dt * 2 : dt;
+    S.t += step;
+    const idle = !S.active || now - S.last > 2600;
+    if (idle){
+      const t = S.t;
+      S.tx = halfW * (0.3 + 0.32 * Math.sin(t * 0.173) + 0.16 * Math.sin(t * 0.0713 + 1.7) + 0.08 * Math.sin(t * 0.0317 + 0.4));
+      S.ty = HALF_H * (0.34 * Math.sin(t * 0.137 + 1.1) + 0.18 * Math.sin(t * 0.0591 + 2.3) + 0.1 * Math.cos(t * 0.0233));
+      S.twell = 0.55 + 0.2 * Math.sin(t * 0.21) * Math.sin(t * 0.083);
     }
-    const k = 1 - Math.pow(0.0009, dt);                         /* frame-rate independent easing */
+    const k = 1 - Math.pow(0.0009, step);
     S.mx += (S.tx - S.mx) * k; S.my += (S.ty - S.my) * k; S.well += (S.twell - S.well) * k * 0.6;
     S.rx += (-S.my / HALF_H * 0.16 - 0.12 - S.rx) * k * 0.5; S.ry += (S.mx / halfW * 0.14 - S.ry) * k * 0.5;
-    if (S.ripT >= 0){ S.ripT += dt; if (S.ripT > 4) S.ripT = -1; }
+    R.forEach(r => { if (r.age >= 0){ r.age += step; if (r.age > 4.5) r.age = -1; } });
+    nextWave -= step; if (nextWave <= 0){ nextWave = rnd(1.1, 3.4); const near = Math.random() < .55; wave(near ? S.mx + rnd(-.4, .4) : rnd(-halfW, halfW) * .9, near ? S.my + rnd(-.3, .3) : rnd(-HALF_H, HALF_H) * .85); }
+    nextArc -= step; if (nextArc <= 0){ nextArc = rnd(2.8, 8); spark(); }
+    if (ARC.life >= 0){ ARC.life += step; ARC.regen += step; if (ARC.regen > 0.05){ ARC.regen = 0; arcBuild(); } if (ARC.life > 0.6) ARC.life = -1; }
     draw();
     if (visible && !document.hidden && !reduce.matches) raf = requestAnimationFrame(frame);
   }
@@ -574,6 +657,7 @@ void main(){
   let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(build, 120); });
   window.addEventListener("nexus-theme", colors);
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", colors);
+  window.__nexusSpark = () => { spark(); wake(); };
   build(); colors();
   if (reduce.matches){ S.mx = halfW * 0.45; S.my = HALF_H * 0.1; S.well = 0.8; S.rx = -0.12; draw(); }
   else wake();
