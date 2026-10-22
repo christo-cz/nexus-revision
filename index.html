@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nexus Revision</title>
+<meta name="description" content="Revision labs for EDHEC BBA1 courses: full cases, drills and mock exams built from the course material. Free, no account needed.">
+<meta property="og:title" content="Nexus Revision">
+<meta property="og:description" content="Revision labs for EDHEC BBA1 courses: full cases, drills and mock exams. Free, no account needed.">
+<meta name="theme-color" content="#14112A">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Hub: one column of subject cards. Each subject keeps its own colour; the hub itself stays neutral ink with the Nexus gradient as its only flourish. */
+:root{
+  color-scheme:light;
+  --bg:#F4F4F8; --surface:#FFFFFF; --sunk:#EAEAF1; --line:#DADAE5; --fg:#14112A; --muted:#5C5A70; --faint:#8D8BA0;
+  --brand1:#3B5BFF; --brand2:#8E6CFF; --brand3:#FF5FA2;
+  --flow:#0B7472; --flow-soft:#DCEFEC;
+  --f-display:"Familjen Grotesk","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"Public Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F0E19; --surface:#18172A; --sunk:#211F36; --line:#2D2B45; --fg:#ECEBF7; --muted:#A8A6BF; --faint:#76748E;
+  --flow:#4CC2BC; --flow-soft:#13302F; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0F0E19; --surface:#18172A; --sunk:#211F36; --line:#2D2B45; --fg:#ECEBF7; --muted:#A8A6BF; --faint:#76748E;
+  --flow:#4CC2BC; --flow-soft:#13302F; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.08;text-wrap:balance;letter-spacing:-.015em}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--brand2);outline-offset:3px}
+.wrap{max-width:1040px;margin:0 auto;padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:44px}
+.top{display:flex;align-items:center;gap:12px}
+.top img{width:34px;height:34px}
+.top b{font-family:var(--f-display);font-size:1.25rem}
+.top .grow{flex:1}
+.theme{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:8px;padding:6px 10px;font:inherit;font-size:.82rem;font-weight:600;cursor:pointer}
+.label{font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.hero h1{font-size:clamp(2.3rem,7vw,4.6rem);margin-top:12px}
+.hero h1 span{background:linear-gradient(100deg,var(--brand1),var(--brand2) 55%,var(--brand3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:58ch;color:var(--muted);margin-top:16px;font-size:1.02rem}
+.subjects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:720px){.subjects{grid-template-columns:1fr}}
+.subj{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden;text-decoration:none}
+.subj-h{padding:20px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.subj-h .label{color:var(--c)}
+.subj-h h2{font-size:1.6rem}
+.subj-b{padding:20px;display:flex;flex-direction:column;gap:14px;flex:1}
+.subj-b p{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.74rem;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--sunk);color:var(--muted)}
+.chip.on{background:var(--soft);color:var(--c)}
+.go{margin-top:auto;align-self:flex-start;display:inline-flex;gap:8px;align-items:center;border-radius:10px;padding:11px 16px;font-weight:700;background:var(--c);color:var(--surface)}
+.subj:hover .go{filter:brightness(1.08)}
+.subj.soon{border-style:dashed;background:transparent}
+.subj.soon .subj-h{border-bottom-style:dashed}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:720px){.facts{grid-template-columns:1fr}}
+.fact{border-top:2px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:4px}
+.fact h3{font-size:1rem}
+.fact p{font-size:.9rem;color:var(--muted)}
+.foot{border-top:1px solid var(--line);padding-top:18px;font-size:.82rem;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <img src="/favicon.svg" alt="">
+    <b>Nexus</b>
+    <span class="grow"></span>
+    <button class="theme" id="theme" type="button">Theme: system</button>
+  </header>
+
+  <section class="hero">
+    <span class="label">EDHEC BBA1 · Revision labs</span>
+    <h1>Practise the way <span>the exam asks.</span></h1>
+    <p>One lab per course, built from the course material: full cases with every answer checked and explained, new numbers every time, and mock exams in the real format. Free, and no account needed.</p>
+  </section>
+
+  <section class="subjects" aria-label="Subjects">
+    <a class="subj" href="/macro/" style="--c:var(--flow);--soft:var(--flow-soft)">
+      <div class="subj-h"><span class="label">Business Economics · Macroeconomics</span><h2>Flow</h2></div>
+      <div class="subj-b">
+        <p>GDP three ways, the circular flow, the Keynesian consumption function, the multiplier and growth.</p>
+        <div class="chips"><span class="chip on">10 full cases</span><span class="chip">Endless new cases</span><span class="chip">Chapters 2–4</span></div>
+        <span class="go">Open Flow →</span>
+      </div>
+    </a>
+    <div class="subj soon">
+      <div class="subj-h"><span class="label">Coming next</span><h2>More courses</h2></div>
+      <div class="subj-b"><p>New labs are added during the semester. Flow will grow with each new chapter of the macro course.</p></div>
+    </div>
+  </section>
+
+  <section class="facts">
+    <div class="fact"><h3>Always up to date</h3><p>Open the labs from this page and you always get the latest version.</p></div>
+    <div class="fact"><h3>Your progress stays with you</h3><p>Scores are saved in your browser on this device. No account.</p></div>
+    <div class="fact"><h3>Works on your phone</h3><p>Use "Add to Home Screen" to open Nexus in one tap.</p></div>
+  </section>
+
+  <footer class="foot">
+    <span>A student project to help with revision. Not an official EDHEC website.</span>
+  </footer>
+</div>
+<script>
+(function(){
+  const KEY = "nexus-theme", T = ["system", "light", "dark"], b = document.getElementById("theme");
+  let t = "system"; try { t = localStorage.getItem(KEY) || "system"; } catch (e) {}
+  const apply = () => { if (t === "system") delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = t; b.textContent = "Theme: " + t; };
+  apply();
+  b.addEventListener("click", () => { t = T[(T.indexOf(t) + 1) % 3]; try { localStorage.setItem(KEY, t); } catch (e) {} apply(); });
+})();
+</script>
+</body>
+</html>

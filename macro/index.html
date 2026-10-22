@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Revision site for EDHEC BBA1 Business Economics: full cases on GDP, the circular flow, consumption, the multiplier and growth.">
+<meta name="theme-color" content="#0B7472">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Flow Macro Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: a national-accounts workbook. Case sheet pinned on the left, questions scrolling on the right and snapping to the centre.
+   Colour carries economics: teal = output and income, amber = injections (I, G, X), coral = leakages (S, T, M). */
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --sunk:#E8ECE7; --line:#D5DCD5; --fg:#152024; --muted:#56656A; --faint:#8A979B;
+  --flow:#0B7472; --flow-soft:#DCEFEC; --on-flow:#FFFFFF;
+  --inj:#B9770E; --inj-soft:#F7EAD2; --leak:#C2493A; --leak-soft:#F8E1DD;
+  --ok:#23794E; --ok-soft:#DCF0E3; --bad:#B4372E; --bad-soft:#F7DFDC;
+  --f-display:"Familjen Grotesk","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"Public Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --hdr:58px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1416; --surface:#162024; --sunk:#1D292E; --line:#2A383D; --fg:#E6EEEC; --muted:#9FB0B2; --faint:#6E8084;
+  --flow:#4CC2BC; --flow-soft:#13302F; --on-flow:#06201F;
+  --inj:#E9AE4C; --inj-soft:#33280F; --leak:#F08473; --leak-soft:#3A1F1B;
+  --ok:#6FD39C; --ok-soft:#14301F; --bad:#F08A80; --bad-soft:#3A1D1A; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0E1416; --surface:#162024; --sunk:#1D292E; --line:#2A383D; --fg:#E6EEEC; --muted:#9FB0B2; --faint:#6E8084;
+  --flow:#4CC2BC; --flow-soft:#13302F; --on-flow:#06201F;
+  --inj:#E9AE4C; --inj-soft:#33280F; --leak:#F08473; --leak-soft:#3A1F1B;
+  --ok:#6FD39C; --ok-soft:#14301F; --bad:#F08A80; --bad-soft:#3A1D1A; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.12;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--flow);outline-offset:2px}
+.mono,.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.label{font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+
+/* header */
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.hdr-in{height:var(--hdr);display:flex;align-items:center;gap:18px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.brand{display:flex;align-items:baseline;gap:8px;font-family:var(--f-display);font-weight:700;font-size:1.2rem;white-space:nowrap}
+.brand b{color:var(--flow)}
+.brand .hub{color:var(--muted);text-decoration:none;font-weight:600}.brand .hub:hover{color:var(--fg)}.brand .sl{color:var(--faint);font-weight:500}
+.brand small{font-family:var(--f-body);font-size:.8rem;font-weight:500;color:var(--muted)}
+.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:0;background:none;padding:8px 12px;border-radius:8px;color:var(--muted);font-weight:600;font-size:.9rem;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--fg);background:var(--sunk)}
+.tab .soon{font-size:.66rem;font-weight:700;color:var(--faint);margin-left:4px}
+.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 10px;font-size:.82rem;font-weight:600;color:var(--muted);white-space:nowrap}
+@media (max-width:640px){.brand small{display:none}.brand .full{display:none}.hdr-in{gap:10px}.iconbtn .tl{display:none}}
+.iconbtn .ts{display:none}@media (max-width:640px){.iconbtn .ts{display:inline}}
+
+/* overview */
+.wrap{max-width:1080px;margin:0 auto;padding-block:40px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:40px}
+.hero{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px;align-items:end}
+@media (max-width:860px){.hero{grid-template-columns:1fr}}
+.eq{font-family:var(--f-display);font-weight:700;font-size:clamp(2.1rem,6.4vw,4.4rem);line-height:1.02;letter-spacing:-.03em}
+.eq .i{color:var(--inj)} .eq .l{color:var(--leak)} .eq .y{color:var(--flow)}
+.eq2{font-family:var(--f-mono);font-size:clamp(.95rem,2.2vw,1.15rem);margin-top:14px;color:var(--muted)}
+.eq2 .i{color:var(--inj);font-weight:700} .eq2 .l{color:var(--leak);font-weight:700}
+.lede{max-width:56ch;color:var(--muted);margin-top:16px}
+.exam{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.exam .big{font-family:var(--f-display);font-size:2.4rem;font-weight:700;line-height:1}
+.split{display:flex;height:10px;border-radius:99px;overflow:hidden;background:var(--sunk)}
+.split i{display:block}
+.legend{display:flex;flex-direction:column;gap:6px;font-size:.88rem}
+.legend span{display:flex;gap:8px;align-items:baseline}
+.legend .sw{width:10px;height:10px;border-radius:3px;flex:none;transform:translateY(1px)}
+.cta{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:10px;padding:11px 16px;font-weight:700;background:var(--flow);color:var(--on-flow)}
+.cta.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.modules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:860px){.modules{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.modules{grid-template-columns:1fr}}
+.mod{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--surface);display:flex;flex-direction:column;gap:6px}
+.mod h3{font-size:1.02rem}
+.mod p{font-size:.88rem;color:var(--muted)}
+.chip{align-self:flex-start;font-size:.7rem;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:99px;background:var(--sunk);color:var(--muted)}
+.chip.live{background:var(--flow-soft);color:var(--flow)}
+.cases{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+@media (max-width:640px){.cases{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.casebtn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;text-align:left;display:flex;flex-direction:column;gap:2px}
+.casebtn b{font-family:var(--f-display);font-size:1rem}
+.casebtn span{font-size:.78rem;color:var(--muted)}
+.casebtn.done{border-color:var(--flow)}
+.foot{border-top:1px solid var(--line);padding-top:18px;font-size:.82rem;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+
+/* case workbook */
+.book{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);height:calc(100dvh - var(--hdr) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
+.sheet{overflow-y:auto;border-right:1px solid var(--line);background:var(--surface);padding-block:22px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:22px;display:flex;flex-direction:column;gap:18px}
+.qs{overflow-y:auto;scroll-snap-type:y mandatory;scroll-padding-block:90px;padding-block:24px 45vh;padding-left:22px;padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px;position:relative}
+.sheet-h{display:flex;flex-direction:column;gap:6px}
+.sheet-h h1{font-size:1.7rem}
+.rules{font-size:.86rem;color:var(--muted);display:flex;flex-direction:column;gap:3px}
+.blk{border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;transition:border-color .2s,background-color .2s}
+.blk.on{border-color:var(--flow);background:var(--flow-soft)}
+.blk h2{font-size:1rem;display:flex;gap:10px;align-items:baseline}
+.blk h2 .tagl{font-family:var(--f-mono);font-size:.78rem;color:var(--flow)}
+.blk p{font-size:.9rem}
+.tbl{width:100%;border-collapse:collapse;font-size:.88rem}
+.tbl th{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;font-weight:700;padding:4px 6px;border-bottom:1px solid var(--line)}
+.tbl td{padding:5px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl td.n,.tbl th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl tr:last-child td{border-bottom:0}
+.tw{overflow-x:auto}
+.k-inj{color:var(--inj);font-weight:700} .k-leak{color:var(--leak);font-weight:700}
+.scorebar{position:sticky;top:0;z-index:5;margin-top:-24px;padding-block:12px;background:var(--bg);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px}
+.scorebar .pct{font-family:var(--f-display);font-size:1.6rem;font-weight:700;line-height:1}
+.scorebar .meter{flex:1;height:6px;border-radius:99px;background:var(--sunk);overflow:hidden}
+.scorebar .meter i{display:block;height:100%;background:var(--flow);transition:width .3s}
+.scorebar small{font-size:.8rem;color:var(--muted);white-space:nowrap}
+.card{scroll-snap-align:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px;transition:border-color .2s,box-shadow .2s}
+.card.cur{border-color:var(--flow);box-shadow:0 0 0 3px var(--flow-soft)}
+.card.ok{border-left:4px solid var(--ok)} .card.bad{border-left:4px solid var(--bad)}
+.qhead{display:flex;align-items:center;gap:10px}
+.qn{font-family:var(--f-mono);font-size:.78rem;font-weight:700;border:1px solid var(--line);border-radius:99px;min-width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;padding:0 8px}
+.card.ok .qn{background:var(--ok);border-color:var(--ok);color:var(--surface)} .card.bad .qn{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.qtag{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.pts{margin-left:auto;font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+.qtext{font-size:1rem;font-weight:500}
+.snip{display:none;font-size:.82rem;color:var(--muted);background:var(--sunk);border-radius:8px;padding:8px 10px}
+.ans{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
+.field{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);overflow:hidden;flex:1;min-width:160px;max-width:300px}
+.field:focus-within{border-color:var(--flow)}
+.field input{border:0;background:transparent;padding:10px 12px;font-family:var(--f-mono);font-size:1rem;width:100%;min-width:0;outline:none}
+.field .unit{padding:0 12px;font-size:.82rem;color:var(--muted);white-space:nowrap}
+.check{border:0;border-radius:10px;padding:10px 16px;font-weight:700;background:var(--fg);color:var(--bg)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;border:1.5px solid var(--line);background:var(--bg);border-radius:10px;padding:10px 12px;font-size:.92rem}
+.opt .k{font-family:var(--f-mono);font-weight:700;color:var(--muted)}
+.opt:hover{border-color:var(--flow)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)} .opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt:disabled{cursor:default}
+.verdict{display:flex;flex-direction:column;gap:8px;border-radius:10px;padding:12px 14px;font-size:.9rem}
+.verdict.ok{background:var(--ok-soft)} .verdict.bad{background:var(--bad-soft)}
+.verdict b.v{font-family:var(--f-display);font-size:1rem}
+.verdict .calc{font-family:var(--f-mono);font-size:.85rem;overflow-wrap:anywhere}
+.next{align-self:flex-start;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 12px;font-weight:600;font-size:.86rem}
+.endcard{scroll-snap-align:center;text-align:center;padding:28px;border:1px dashed var(--line);border-radius:14px;display:flex;flex-direction:column;gap:10px;align-items:center}
+.sheet-toggle{display:none}
+@media (max-width:960px){
+  .book{display:block;height:auto}
+  .sheet{border-right:0;border-bottom:1px solid var(--line);padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px}
+  .sheet.closed .blk,.sheet.closed .rules{display:none}
+  .sheet-toggle{display:inline-flex}
+  .qs{overflow:visible;scroll-snap-type:none;padding-block:18px 64px;padding-left:max(16px,env(safe-area-inset-left,0px))}
+  .scorebar{top:calc(var(--hdr) + env(safe-area-inset-top,0px));margin-top:0}
+  .snip{display:block}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="hdr"><div class="hdr-in">
+  <div class="brand"><a href="/" class="hub" title="All subjects">Nexus</a><span class="sl">/</span><b>Flow</b><span class="full">Macro Lab</span> <small>Business Economics · EDHEC BBA1</small></div>
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" data-view="home">Overview</button>
+    <button class="tab" role="tab" data-view="case">Full cases</button>
+  </nav>
+  <button class="iconbtn" id="themeBtn" type="button" aria-label="Change theme">Theme: system</button>
+</div></header>
+<main id="app"></main>
+
+<script>
+/* ---------- utilities ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const h = (tag, attrs = {}, ...kids) => { const e = document.createElement(tag); for (const k in attrs){ const v = attrs[k]; if (v == null || v === false) continue; if (k === "class") e.className = v; else if (k === "html") e.innerHTML = v; else if (k.startsWith("on")) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v === true ? "" : v); } kids.flat().forEach(c => c != null && e.append(c.nodeType ? c : String(c))); return e; };
+const store = { get(){ try { return JSON.parse(localStorage.getItem("flow-v1")) || {}; } catch (e) { return {}; } }, set(v){ try { localStorage.setItem("flow-v1", JSON.stringify(v)); } catch (e) {} } };
+const fmt = (n, d = 0) => (Math.round(n * 10 ** d) / 10 ** d).toLocaleString("en-GB", { minimumFractionDigits: d, maximumFractionDigits: d });
+const eur = (n, d = 0) => (n < 0 ? "−€" : "€") + fmt(Math.abs(n), d);
+function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function parseNum(s){
+  s = String(s || "").trim().replace(/[€$%\s]/g, "").replace(/−/g, "-");
+  if (!s) return NaN;
+  if (s.includes(",") && s.includes(".")) s = s.replace(/,/g, "");
+  else if (/^-?\d{1,3}(,\d{3})+$/.test(s)) s = s.replace(/,/g, "");
+  else s = s.replace(",", ".");
+  return Number(s);
+}
+
+/* ---------- theme ---------- */
+const THEMES = ["system", "light", "dark"];
+function applyTheme(t){ if (t === "system") delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = t; const b = $("#themeBtn"); b.innerHTML = `<span class="tl">Theme: ${t}</span><span class="ts">${t === "dark" ? "Dark" : t === "light" ? "Light" : "Auto"}</span>`; b.setAttribute("aria-label", "Theme: " + t + ". Change theme"); }
+let theme = store.get().theme || "system"; applyTheme(theme);
+$("#themeBtn").addEventListener("click", () => { theme = THEMES[(THEMES.indexOf(theme) + 1) % 3]; applyTheme(theme); const s = store.get(); s.theme = theme; store.set(s); });
+
+/* ---------- case generator: every answer is computed, never typed by hand ---------- */
+const COUNTRIES = ["Norland", "Valdoria", "Kestria", "Marenia", "Sorvik", "Elbara", "Quarvia", "Lumeria", "Drevon", "Saltera", "Brevia", "Tarnis"];
+const CHAINS = [
+  ["A gold mine", "raw gold", "A jewellery maker", "gold bars", "A jeweller's shop", "necklaces"],
+  ["A wheat farm", "wheat", "A flour mill", "flour", "A bakery", "bread"],
+  ["A forestry firm", "timber", "A sawmill", "planks", "A furniture maker", "tables"],
+  ["A cotton farm", "raw cotton", "A spinning mill", "yarn", "A clothing brand", "shirts"],
+  ["A vineyard", "grapes", "A winery", "bulk wine", "A wine merchant", "bottled wine"],
+  ["A lithium mine", "lithium ore", "A battery plant", "battery cells", "A bike maker", "e-bikes"]
+];
+const GOODS = [["Laptops", "Coffee"], ["Bicycles", "Haircuts"], ["Smartphones", "Bread"], ["Cars", "Cinema tickets"], ["Washing machines", "Train tickets"]];
+const MPCS = [0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9];
+const tolAbs = { eur: 0.5, bn: 0.5, ratio: 0.006, pct: 0.06, k: 0.011, per: 1 };
+
+function makeCase(seed){
+  const R = mulberry32(seed * 7919 + 17), int = (a, b, step = 1) => a + step * Math.floor(R() * ((b - a) / step + 1)), pick = a => a[Math.floor(R() * a.length)];
+  const country = COUNTRIES[(seed - 1) % COUNTRIES.length] || pick(COUNTRIES);
+  /* A. production chain, € thousand */
+  const ch = pick(CHAINS);
+  const s1 = int(60, 160, 5) * 1000, s2 = s1 + int(40, 180, 5) * 1000, s3 = s2 + int(120, 420, 10) * 1000;
+  const va = [s1, s2 - s1, s3 - s2];
+  const wages = va.map(v => Math.round(v * (0.35 + 0.4 * R()) / 1000) * 1000);
+  const W = wages.reduce((a, b) => a + b, 0), P = s3 - W;
+  /* B. national economy, € billion */
+  const C = int(900, 1500, 10), I = int(220, 420, 5), G = int(260, 480, 5), X = int(260, 520, 5), M = int(250, 540, 5);
+  const Y = C + I + G + X - M;
+  const T = Math.min(int(240, 480, 5), Y - C - 40), S = Y - C - T;
+  /* C. a household, € per month */
+  const inc = int(2400, 4200, 50), tax = Math.round(inc * (0.12 + 0.1 * R()) / 10) * 10, Yd = inc - tax;
+  const c = pick(MPCS), C0 = int(200, 600, 50), Cons = C0 + c * Yd, Sav = Yd - Cons, s = Math.round((1 - c) * 100) / 100, YR = C0 / s;
+  /* D. multiplier */
+  const dI = int(10, 45, 5), k = 1 / s, dY = k * dI;
+  /* E. growth with two goods, base year n */
+  const [g1, g2] = pick(GOODS);
+  const p1 = int(400, 1400, 50), p2 = int(2, 30, 1), q1 = int(2, 9, 1), q2 = int(80, 400, 10);
+  const pr1 = p1 * (1 + int(1, 9, 1) / 100), pr2 = p2 * (1 + int(0, 12, 1) / 100), qn1 = q1 + int(0, 2, 1), qn2 = Math.round(q2 * (1 + int(-3, 8, 1) / 100));
+  const p1b = Math.round(pr1), p2b = Math.round(pr2 * 10) / 10;
+  const NomN = p1 * q1 + p2 * q2, NomN1 = p1b * qn1 + p2b * qn2, RealN1 = p1 * qn1 + p2 * qn2;
+  const gNom = (NomN1 - NomN) / NomN * 100, gReal = (RealN1 - NomN) / NomN * 100;
+  const pop = int(4, 18, 1) / 2, perCap = NomN1 / pop, rec = int(20, 90, 5) / 10, paid = int(10, 70, 5) / 10, GNP = NomN1 + rec - paid;
+  const quarters = pick([[0.6, 0.4, 0.2, 0.1], [0.4, -0.2, -0.3, 0.1], [0.5, 0.2, -0.1, 0.3], [-0.2, -0.4, -0.3, -0.1], [0.8, 0.5, 0.3, 0.1]]);
+  const qPattern = quarters.filter(x => x < 0).length === 4 ? "recession" : quarters.some((x, i) => x < 0 && quarters[i + 1] < 0) ? "recession" : quarters.every(x => x > 0) && quarters[3] < quarters[0] ? "slowdown" : "none";
+  return { seed, country, ch, s1, s2, s3, va, wages, W, P, C, I, G, X, M, Y, T, S, inc, tax, Yd, c, C0, Cons, Sav, s, YR, dI, k, dY, g1, g2, p1, p2, q1, q2, p1b, p2b, qn1, qn2, NomN, NomN1, RealN1, gNom, gReal, pop, perCap, rec, paid, GNP, quarters, qPattern };
+}
+
+function questions(K){
+  const q = [];
+  const num = (id, blk, text, ans, unit, tol, why, calc, snip) => q.push({ id, blk, kind: "num", text, ans, unit, tol, why, calc, snip });
+  const mcq = (id, blk, text, opts, right, why, snip) => q.push({ id, blk, kind: "mcq", text, opts, right, why, snip });
+  const [f1, , f2, , f3] = K.ch;
+  /* A */
+  num("a1", "A", `What is the value added of ${f2.toLowerCase()}?`, K.va[1], "€", tolAbs.eur, "Value added = sales − intermediate consumption bought from other firms.", `VA₂ = ${eur(K.s2)} − ${eur(K.s1)} = ${eur(K.va[1])}`, `Sales: ${eur(K.s1)} → ${eur(K.s2)} → ${eur(K.s3)}`);
+  num("a2", "A", "What is GDP with the production approach?", K.s3, "€", tolAbs.eur, "GDP is the sum of the values added. It equals the value of the final good.", `${eur(K.va[0])} + ${eur(K.va[1])} + ${eur(K.va[2])} = ${eur(K.s3)}`, `Sales: ${eur(K.s1)} → ${eur(K.s2)} → ${eur(K.s3)}`);
+  mcq("a3", "A", `A classmate adds up all the sales: ${eur(K.s1)} + ${eur(K.s2)} + ${eur(K.s3)} = ${eur(K.s1 + K.s2 + K.s3)}. What is wrong?`,
+    ["The intermediate goods are counted several times (double counting).", "Imports are missing from the total.", "Wages should be subtracted from the sales.", "Nothing: GDP is the sum of all sales."], 0,
+    "The value of the raw material is already included in the price of each later stage. Only value added, or the final good, is counted.");
+  num("a4", "A", "Using the income approach, what are total profits in the chain?", K.P, "€", tolAbs.eur, "With the income approach, GDP = wages + profits. So profits = GDP − total wages.", `${eur(K.s3)} − (${K.wages.map(w => eur(w)).join(" + ")}) = ${eur(K.P)}`, `Wages: ${K.wages.map(w => eur(w)).join(", ")}`);
+  num("a5", "A", "What share of GDP goes to labour income (wages)?", K.W / K.s3 * 100, "%", tolAbs.pct, "Share = total wages ÷ GDP × 100.", `${eur(K.W)} ÷ ${eur(K.s3)} × 100 = ${fmt(K.W / K.s3 * 100, 2)}%`, `Total wages ${eur(K.W)}`);
+  /* B */
+  const bn = n => eur(n) + " bn";
+  num("b1", "B", "What is GDP with the expenditure approach?", K.Y, "€ bn", tolAbs.bn, "Y = C + I + G + (X − M).", `${K.C} + ${K.I} + ${K.G} + (${K.X} − ${K.M}) = ${fmt(K.Y)}`, `C ${K.C} · I ${K.I} · G ${K.G} · X ${K.X} · M ${K.M}`);
+  num("b2", "B", "What is net foreign demand?", K.X - K.M, "€ bn", tolAbs.bn, "Net foreign demand is the trade balance X − M. It can be negative.", `${K.X} − ${K.M} = ${fmt(K.X - K.M)}`, `X ${K.X} · M ${K.M}`);
+  num("b3", "B", "What is aggregate domestic demand?", K.C + K.I + K.G, "€ bn", tolAbs.bn, "Domestic demand is C + I + G. It leaves out the external balance.", `${K.C} + ${K.I} + ${K.G} = ${fmt(K.C + K.I + K.G)}`, `C ${K.C} · I ${K.I} · G ${K.G}`);
+  num("b4", "B", "What are total leakages W?", K.S + K.T + K.M, "€ bn", tolAbs.bn, "Leakages are the income that leaves the circuit: W = S + T + M.", `${K.S} + ${K.T} + ${K.M} = ${fmt(K.S + K.T + K.M)}`, `S ${K.S} · T ${K.T} · M ${K.M}`);
+  num("b5", "B", "What are total injections J?", K.I + K.G + K.X, "€ bn", tolAbs.bn, "Injections are the demand that does not come from households: J = I + G + X.", `${K.I} + ${K.G} + ${K.X} = ${fmt(K.I + K.G + K.X)}`, `I ${K.I} · G ${K.G} · X ${K.X}`);
+  mcq("b6", "B", "Compare your two answers: leakages and injections. What do you notice?",
+    ["They are equal: the identity Y = C + I + G + X − M implies S + T + M = I + G + X.", "Leakages are larger, so the economy shrinks.", "Injections are larger, so the economy is in equilibrium only if G = T.", "They can never be equal in an open economy."], 0,
+    "The pairs are unequal one by one (S ≠ I, T ≠ G, M ≠ X), but in the national accounts the totals always match, because Y = C + S + T and Y = C + I + G + X − M.");
+  const gov = K.G > K.T ? 0 : K.G < K.T ? 1 : 2;
+  mcq("b7", "B", `With G = ${K.G} and T = ${K.T}, what is the government's position?`,
+    ["A budget deficit: it spends more than it collects (G > T).", "A budget surplus: it collects more than it spends (G < T).", "A balanced budget (G = T).", "We cannot tell without the interest rate."], gov,
+    "Compare public spending G with taxes T. G > T means a deficit, which a Keynesian would accept in a recession.");
+  /* C */
+  num("c1", "C", "What is the household's disposable income?", K.Yd, "€", tolAbs.eur, "Yd = Y − T.", `${eur(K.inc)} − ${eur(K.tax)} = ${eur(K.Yd)}`, `Income ${eur(K.inc)} · taxes ${eur(K.tax)}`);
+  num("c2", "C", "How much does it consume?", K.Cons, "€", tolAbs.eur, `Plug Yd into the Keynesian consumption function C = C₀ + cYd.`, `${K.C0} + ${K.c} × ${fmt(K.Yd)} = ${eur(K.Cons, 2)}`, `C = ${K.C0} + ${K.c}Yd`);
+  num("c3", "C", "How much does it save?", K.Sav, "€", tolAbs.eur, "Saving is the residual: S = Yd − C.", `${fmt(K.Yd)} − ${fmt(K.Cons, 2)} = ${eur(K.Sav, 2)}`, `C = ${K.C0} + ${K.c}Yd`);
+  num("c4", "C", "What is its average propensity to consume (APC)? Give two decimals.", K.Cons / K.Yd, "", tolAbs.ratio, "APC = C ÷ Yd: the share of disposable income that is consumed.", `${fmt(K.Cons, 2)} ÷ ${fmt(K.Yd)} = ${fmt(K.Cons / K.Yd, 3)}`, `C = ${K.C0} + ${K.c}Yd`);
+  num("c5", "C", "What is its marginal propensity to save (MPS)?", K.s, "", tolAbs.ratio, "c + s = 1, so s = 1 − c.", `1 − ${K.c} = ${fmt(K.s, 2)}`, `MPC c = ${K.c}`);
+  num("c6", "C", "At what disposable income does saving become positive (break-even income Y_R)?", K.YR, "€", tolAbs.eur, "At Y_R, C = Yd, so S = 0. Y_R = C₀ ÷ (1 − c) = C₀ ÷ s.", `${K.C0} ÷ ${fmt(K.s, 2)} = ${eur(K.YR, 2)}`, `C = ${K.C0} + ${K.c}Yd`);
+  mcq("c7", "C", "This household's disposable income rises. According to Keynes, what happens to its APC?",
+    ["It falls: consumption rises by less than income.", "It rises: richer households consume a larger share.", "It stays equal to the MPC.", "It does not change, because the interest rate is fixed."], 0,
+    "Keynes' psychological law: 0 < ΔC < ΔY. The APC falls and the APS rises as income grows. Kuznets found this holds in the short run, while the APC is stable in the long run.");
+  /* D */
+  num("d1", "D", `Firms invest ${eur(K.dI)} bn more. With the MPC c = ${K.c}, what is the Keynesian multiplier k? Give two decimals.`, K.k, "", tolAbs.k, "k = 1 ÷ (1 − c) = 1 ÷ s.", `1 ÷ (1 − ${K.c}) = 1 ÷ ${fmt(K.s, 2)} = ${fmt(K.k, 2)}`, `ΔI ${eur(K.dI)} bn · c = ${K.c}`);
+  num("d2", "D", "By how much does national income rise?", K.dY, "€ bn", 0.3, "ΔY = k × ΔI.", `${fmt(K.k, 2)} × ${K.dI} = ${fmt(K.dY, 2)}`, `ΔI ${eur(K.dI)} bn · c = ${K.c}`);
+  mcq("d3", "D", "In which situation would this multiplier effect be the weakest?",
+    ["A very open economy where much of the extra income buys imports.", "An economy with high unemployment and idle factories.", "An economy where households save very little of extra income.", "An economy with a low degree of openness."], 0,
+    "The multiplier is stronger when the MPS is low, the economy is not very open, and capacity is underused. Imports are a leakage: spending flows abroad instead of creating domestic income.");
+  /* E */
+  num("e1", "E", "What is nominal GDP in year n+1?", K.NomN1, "€ m", tolAbs.bn, "Nominal GDP uses each year's own (current) prices: Σ p(n+1) × q(n+1).", `${fmt(K.p1b)} × ${K.qn1} + ${fmt(K.p2b, 1)} × ${K.qn2} = ${fmt(K.NomN1, 1)}`, `${K.g1}: ${K.qn1} m units at €${fmt(K.p1b)} · ${K.g2}: ${K.qn2} m at €${fmt(K.p2b, 1)}`);
+  num("e2", "E", "What is the nominal growth rate between year n and year n+1?", K.gNom, "%", tolAbs.pct, "Growth rate = (GDP n+1 − GDP n) ÷ GDP n × 100.", `(${fmt(K.NomN1, 1)} − ${fmt(K.NomN)}) ÷ ${fmt(K.NomN)} × 100 = ${fmt(K.gNom, 2)}%`, `GDP year n = ${fmt(K.NomN)} (€ m)`);
+  num("e3", "E", "What is real GDP in year n+1, at year-n prices?", K.RealN1, "€ m", tolAbs.bn, "Real GDP values year n+1 quantities at the prices of the base year n. This removes the effect of inflation.", `${fmt(K.p1)} × ${K.qn1} + ${K.p2} × ${K.qn2} = ${fmt(K.RealN1)}`, `Base-year prices: €${fmt(K.p1)} and €${K.p2}`);
+  num("e4", "E", "What is the real growth rate?", K.gReal, "%", tolAbs.pct, "Use real GDP n+1 against GDP n (in year n, real and nominal GDP are equal).", `(${fmt(K.RealN1)} − ${fmt(K.NomN)}) ÷ ${fmt(K.NomN)} × 100 = ${fmt(K.gReal, 2)}%`, `GDP year n = ${fmt(K.NomN)} (€ m)`);
+  mcq("e5", "E", "Why is nominal growth higher than real growth here?",
+    ["Prices rose between the two years, and nominal GDP counts those price increases.", "The population grew.", "Real GDP includes imports and nominal GDP does not.", "Real GDP is measured per inhabitant."], 0,
+    "Nominal GDP mixes changes in prices and in quantities. Real GDP keeps prices fixed at the base year, so it shows only the change in production.");
+  num("e6", "E", `With ${fmt(K.pop, 1)} million inhabitants, what is nominal GDP per capita in year n+1?`, K.perCap, "€", tolAbs.per, "GDP per capita = GDP ÷ population. Both are in millions here, so the result is in euros.", `${fmt(K.NomN1, 1)} ÷ ${fmt(K.pop, 1)} = ${eur(K.perCap, 2)}`, `Population ${fmt(K.pop, 1)} m`);
+  num("e7", "E", `Residents earn €${fmt(K.rec, 1)} m from factors abroad and pay €${fmt(K.paid, 1)} m to foreign factors. What is GNP in year n+1?`, K.GNP, "€ m", 0.06, "GNP = GDP + income received from the rest of the world − income paid to the rest of the world. GDP is territorial, GNP follows nationality.", `${fmt(K.NomN1, 1)} + ${fmt(K.rec, 1)} − ${fmt(K.paid, 1)} = ${fmt(K.GNP, 1)}`, `Received ${fmt(K.rec, 1)} · paid ${fmt(K.paid, 1)}`);
+  const qs = K.quarters.map(x => (x > 0 ? "+" : "") + fmt(x, 1) + "%").join(", ");
+  const qi = { recession: 1, slowdown: 0, none: 2 }[K.qPattern];
+  mcq("e8", "E", `Quarterly real GDP growth over the next year: ${qs}. How do economists describe this year?`,
+    ["An economic slowdown: growth stays positive but weakens.", "A recession: at least two consecutive quarters of falling GDP.", "Neither: growth does not weaken steadily and never falls two quarters in a row.", "A depression."], qi,
+    "Slowdown: growth falls but stays positive. Recession (INSEE): at least two consecutive quarters of falling GDP. Depression: a recession that lasts several years.");
+  return q;
+}
+
+/* ---------- sheet (left) ---------- */
+function sheetHtml(K){
+  const [f1, g1, f2, g2, f3, g3] = K.ch;
+  const row = (a, b, cls = "") => `<tr><td>${a}</td><td class="n ${cls}">${b}</td></tr>`;
+  return `
+  <div class="sheet-h"><span class="label">Case ${K.seed <= 10 ? K.seed + " of 10" : "· practice"}</span><h1>The economy of ${K.country}</h1>
+    <button class="iconbtn sheet-toggle" type="button" data-act="sheet">Show the case sheet</button></div>
+  <div class="rules"><span>Answer in the unit shown next to each box. Commas and dots are both accepted.</span><span>Round ratios to two decimals and rates to two decimals of a percent.</span></div>
+  <section class="blk" data-blk="A"><h2><span class="tagl">A</span>A production chain (€)</h2>
+    <p>${f1} sells ${g1} to ${f2.toLowerCase()} for ${eur(K.s1)}; it buys no inputs. ${f2} turns it into ${g2} and sells them to ${f3.toLowerCase()} for ${eur(K.s2)}. ${f3} sells ${g3} to households for ${eur(K.s3)}.</p>
+    <div class="tw"><table class="tbl"><thead><tr><th>Firm</th><th class="n">Sales</th><th class="n">Wages paid</th></tr></thead><tbody>
+      <tr><td>${f1}</td><td class="n">${eur(K.s1)}</td><td class="n">${eur(K.wages[0])}</td></tr>
+      <tr><td>${f2}</td><td class="n">${eur(K.s2)}</td><td class="n">${eur(K.wages[1])}</td></tr>
+      <tr><td>${f3}</td><td class="n">${eur(K.s3)}</td><td class="n">${eur(K.wages[2])}</td></tr></tbody></table></div></section>
+  <section class="blk" data-blk="B"><h2><span class="tagl">B</span>National accounts (€ bn)</h2>
+    <div class="tw"><table class="tbl"><tbody>
+      ${row("Household consumption C", fmt(K.C))}${row("Investment I", fmt(K.I), "k-inj")}${row("Public spending G", fmt(K.G), "k-inj")}${row("Exports X", fmt(K.X), "k-inj")}${row("Imports M", fmt(K.M), "k-leak")}${row("Taxes net of transfers T", fmt(K.T), "k-leak")}${row("Saving S", fmt(K.S), "k-leak")}
+    </tbody></table></div></section>
+  <section class="blk" data-blk="C"><h2><span class="tagl">C</span>A household (€ per month)</h2>
+    <p>Gross income ${eur(K.inc)}, taxes ${eur(K.tax)}. Its consumption follows the Keynesian function <span class="mono">C = ${K.C0} + ${K.c}·Yd</span>.</p></section>
+  <section class="blk" data-blk="D"><h2><span class="tagl">D</span>An investment boost (€ bn)</h2>
+    <p>Firms raise investment by ${eur(K.dI)} bn. Across the economy, the marginal propensity to consume is ${K.c}. Assume spare capacity and no change in imports.</p></section>
+  <section class="blk" data-blk="E"><h2><span class="tagl">E</span>Growth: two goods, base year n</h2>
+    <div class="tw"><table class="tbl"><thead><tr><th>Good</th><th class="n">Price n</th><th class="n">Qty n (m)</th><th class="n">Price n+1</th><th class="n">Qty n+1 (m)</th></tr></thead><tbody>
+      <tr><td>${K.g1}</td><td class="n">€${fmt(K.p1)}</td><td class="n">${K.q1}</td><td class="n">€${fmt(K.p1b)}</td><td class="n">${K.qn1}</td></tr>
+      <tr><td>${K.g2}</td><td class="n">€${fmt(K.p2)}</td><td class="n">${K.q2}</td><td class="n">€${fmt(K.p2b, 1)}</td><td class="n">${K.qn2}</td></tr></tbody></table></div>
+    <p class="muted" style="font-size:.84rem">Nominal GDP in year n: €${fmt(K.NomN)} m. Population in year n+1: ${fmt(K.pop, 1)} m.</p></section>`;
+}
+
+/* ---------- views ---------- */
+const S = { view: "home", seed: 1 };
+function progress(seed){ const st = store.get(); return (st.cases || {})[seed] || { ans: {} }; }
+function saveProgress(seed, p){ const st = store.get(); st.cases = st.cases || {}; st.cases[seed] = p; store.set(st); }
+
+function viewHome(){
+  const st = store.get().cases || {};
+  const done = Object.values(st).filter(p => p.pct != null).length;
+  return h("div", { class: "wrap", html: `
+  <section class="hero">
+    <div>
+      <span class="label">Business Economics · Macroeconomics · Semester 1</span>
+      <div class="eq" style="margin-top:12px"><span class="y">Y</span> = C + <span class="i">I</span> + <span class="i">G</span><br>+ (<span class="i">X</span> − <span class="l">M</span>)</div>
+      <div class="eq2">Leakages <span class="l">S + T + M</span> = <span class="i">I + G + X</span> injections</div>
+      <p class="lede">Chapters 2 to 4 turned into exercises: GDP three ways, the circular flow, the Keynesian consumption function, the multiplier and growth. Every case has new numbers, and every answer is checked with the working shown.</p>
+      <div class="row" style="margin-top:20px"><button class="cta" data-act="start">Start case 1</button><button class="cta ghost" data-act="random">New random case</button></div>
+    </div>
+    <aside class="exam" aria-label="How the course is graded">
+      <span class="label">How you are graded</span>
+      <div class="big num">60%</div><p>Final exam: open-ended questions on the lectures, plus an exercise like the tutorials.</p>
+      <div class="split" aria-hidden="true"><i style="width:60%;background:var(--flow)"></i><i style="width:30%;background:var(--inj)"></i><i style="width:10%;background:var(--leak)"></i></div>
+      <div class="legend"><span><i class="sw" style="background:var(--flow)"></i>Final exam · 60%</span><span><i class="sw" style="background:var(--inj)"></i>Group project and debate · 30%</span><span><i class="sw" style="background:var(--leak)"></i>Tutorials, one exercise drawn at random · 10%</span></div>
+    </aside>
+  </section>
+  <section style="display:flex;flex-direction:column;gap:14px">
+    <div class="row" style="justify-content:space-between"><h2>Full cases</h2><span class="muted" style="font-size:.88rem">${done} of 10 finished on this device</span></div>
+    <div class="cases">${Array.from({ length: 10 }, (_, i) => { const p = st[i + 1]; return `<button class="casebtn ${p && p.pct != null ? "done" : ""}" data-act="open" data-seed="${i + 1}"><b>Case ${i + 1}</b><span>${COUNTRIES[i]}${p && p.pct != null ? " · " + p.pct + "%" : " · 30 questions"}</span></button>`; }).join("")}</div>
+  </section>
+  <section style="display:flex;flex-direction:column;gap:14px">
+    <h2>What the site will cover</h2>
+    <div class="modules">
+      <div class="mod"><span class="chip live">Ready</span><h3>Full cases</h3><p>Five blocks per case, in the order of the slides: production chain, national accounts, household, multiplier, growth.</p></div>
+      <div class="mod"><span class="chip">Next</span><h3>Learn</h3><p>Each chapter as short cards: the rule in one line, the formula, an example and the classic trap.</p></div>
+      <div class="mod"><span class="chip">Next</span><h3>Drills</h3><p>Quick rounds: leakage or injection, MPC and APC, real or nominal, which school said it.</p></div>
+      <div class="mod"><span class="chip">Next</span><h3>Schools of thought</h3><p>Mercantilists to Keynes on one timeline, with their view of wealth, the State and money.</p></div>
+      <div class="mod"><span class="chip">Next</span><h3>Open-question trainer</h3><p>Exam-style questions such as "Classical vs Keynesian view of saving", with a model answer and a checklist.</p></div>
+      <div class="mod"><span class="chip">Next</span><h3>Flashcards</h3><p>Definitions and formulas, weakest cards first.</p></div>
+    </div>
+  </section>
+  <footer class="foot"><span>Part of <a href="/" style="color:inherit">Nexus</a>, a student project to help with revision. Not an official EDHEC website.</span><span>Built from the Business Economics slides, chapters 2 to 4. Progress is saved in this browser only.</span></footer>` });
+}
+
+function viewCase(){
+  const K = makeCase(S.seed), Q = questions(K), P = progress(S.seed);
+  const root = h("div", { class: "book" });
+  const sheet = h("aside", { class: "sheet closed", "aria-label": "Case sheet", html: sheetHtml(K) });
+  const qs = h("section", { class: "qs", "aria-label": "Questions" });
+  const total = Q.length;
+  const bar = h("div", { class: "scorebar", html: `<span class="pct num" id="pct">0%</span><div class="meter"><i id="meter" style="width:0%"></i></div><small id="cnt"></small>` });
+  qs.append(bar);
+  const cards = Q.map((q, i) => cardFor(q, i, K, P));
+  qs.append(...cards, h("div", { class: "endcard", html: `<h3>End of the case</h3><p class="muted" id="endtxt"></p><div class="row" style="justify-content:center"><button class="cta" data-act="next-case">Next case</button><button class="cta ghost" data-act="reset-case">Start this case again</button></div>` }));
+  root.append(sheet, qs);
+  function refresh(){
+    const done = Q.filter(q => P.ans[q.id]).length, right = Q.filter(q => P.ans[q.id] && P.ans[q.id].ok).length;
+    const pct = Math.round(right / total * 100);
+    $("#pct", root).textContent = pct + "%"; $("#meter", root).style.width = (done / total * 100) + "%";
+    $("#cnt", root).textContent = `${right} right · ${done} of ${total} answered`;
+    $("#endtxt", root).textContent = done < total ? `${total - done} question${total - done > 1 ? "s" : ""} left. Your score so far: ${pct}%.` : `Final score: ${pct}% (${right} of ${total}).`;
+    if (done === total){ P.pct = pct; } saveProgress(S.seed, P);
+  }
+  root.addEventListener("answered", refresh);
+  root.addEventListener("click", e => {
+    const t = e.target.closest("[data-act]"); if (!t) return;
+    if (t.dataset.act === "sheet"){ sheet.classList.toggle("closed"); t.textContent = sheet.classList.contains("closed") ? "Show the case sheet" : "Hide the case sheet"; }
+    if (t.dataset.act === "next"){ const i = +t.dataset.i; const nx = cards[i + 1] || $(".endcard", root); focusCard(nx); }
+    if (t.dataset.act === "next-case"){ S.seed = S.seed < 10 ? S.seed + 1 : 1 + Math.floor(Math.random() * 1e6) + 10; render(); }
+    if (t.dataset.act === "reset-case"){ saveProgress(S.seed, { ans: {} }); render(); }
+  });
+  /* highlight the block of the question in the middle of the view */
+  requestAnimationFrame(() => {
+    const desk = matchMedia("(min-width: 961px)").matches;
+    const io = new IntersectionObserver(ents => {
+      for (const en of ents) if (en.isIntersecting){
+        cards.forEach(c => c.classList.toggle("cur", c === en.target));
+        const blk = en.target.dataset.blk;
+        sheet.querySelectorAll(".blk").forEach(b => b.classList.toggle("on", b.dataset.blk === blk));
+        if (desk){ const b = sheet.querySelector(`.blk[data-blk="${blk}"]`); if (b){ const top = b.offsetTop - 16; if (Math.abs(sheet.scrollTop - top) > 40) sheet.scrollTo({ top, behavior: "smooth" }); } }
+      }
+    }, { root: desk ? qs : null, rootMargin: "-45% 0px -45% 0px" });
+    cards.forEach(c => io.observe(c));
+    const first = cards.find(c => !P.ans[c.dataset.id]) ;
+    if (first && first !== cards[0]) focusCard(first, true);
+  });
+  setTimeout(refresh);
+  return root;
+}
+function focusCard(card, instant){
+  if (!card) return;
+  card.scrollIntoView({ block: "center", behavior: instant ? "auto" : "smooth" });
+  const inp = card.querySelector("input:not([disabled]), .opt:not([disabled])");
+  if (inp && !instant) setTimeout(() => inp.focus({ preventScroll: true }), 350);
+}
+function cardFor(q, i, K, P){
+  const prev = P.ans[q.id];
+  const card = h("article", { class: "card" + (prev ? (prev.ok ? " ok" : " bad") : ""), "data-id": q.id, "data-blk": q.blk, id: "q-" + q.id });
+  card.append(
+    h("div", { class: "qhead" }, h("span", { class: "qn" }, String(i + 1)), h("span", { class: "qtag" }, "Block " + q.blk), h("span", { class: "pts" }, "1 pt")),
+    h("p", { class: "qtext" }, q.text)
+  );
+  if (q.snip) card.append(h("p", { class: "snip mono" }, q.snip));
+  const out = h("div");
+  const show = (ok, given) => {
+    out.replaceChildren();
+    const v = h("div", { class: "verdict " + (ok ? "ok" : "bad") });
+    v.append(h("b", { class: "v" }, ok ? "Correct." : "Not quite."));
+    if (q.kind === "num"){ if (!ok) v.append(h("span", {}, "Expected: ", h("b", { class: "mono" }, fmtAns(q)))); v.append(h("div", { class: "calc" }, q.calc)); }
+    v.append(h("span", {}, q.why));
+    out.append(v, h("button", { class: "next", type: "button", "data-act": "next", "data-i": String(i) }, "Next question ↓"));
+    card.classList.remove("ok", "bad"); card.classList.add(ok ? "ok" : "bad");
+  };
+  const record = (ok, val) => { P.ans[q.id] = { ok, v: val }; card.dispatchEvent(new CustomEvent("answered", { bubbles: true })); };
+  if (q.kind === "num"){
+    const id = "in-" + q.id;
+    const inp = h("input", { id, inputmode: "decimal", autocomplete: "off", "aria-label": "Your answer", value: prev ? prev.v : "" });
+    const btn = h("button", { class: "check", type: "button" }, "Check");
+    const go = () => {
+      const v = parseNum(inp.value); if (Number.isNaN(v)) { inp.focus(); return; }
+      const ok = Math.abs(v - q.ans) <= Math.max(q.tol, Math.abs(q.ans) * 0.002);
+      record(ok, inp.value); show(ok);
+    };
+    btn.addEventListener("click", go); inp.addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); go(); } });
+    card.append(h("div", { class: "ans" }, h("label", { class: "field", for: id }, inp, q.unit ? h("span", { class: "unit" }, q.unit) : null), btn), out);
+    if (prev) show(prev.ok);
+  } else {
+    const box = h("div", { class: "opts", role: "group", "aria-label": "Options" });
+    const L = "ABCD";
+    const btns = q.opts.map((o, j) => h("button", { class: "opt", type: "button" }, h("span", { class: "k" }, L[j]), h("span", {}, o)));
+    const lock = sel => btns.forEach((b, j) => { b.disabled = true; if (j === q.right) b.classList.add("right"); else if (j === sel) b.classList.add("wrong"); });
+    btns.forEach((b, j) => b.addEventListener("click", () => { const ok = j === q.right; lock(j); record(ok, j); show(ok); }));
+    box.append(...btns); card.append(box, out);
+    if (prev){ lock(prev.v); show(prev.ok); }
+  }
+  return card;
+}
+function fmtAns(q){ const d = q.unit === "%" ? 2 : q.unit === "" ? 2 : Number.isInteger(Math.round(q.ans * 100) / 100) ? 0 : 2; return (q.unit === "€" ? eur(q.ans, d) : fmt(q.ans, d)) + (q.unit && q.unit !== "€" ? " " + q.unit : ""); }
+
+function render(){
+  document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", String(t.dataset.view === S.view)));
+  const app = $("#app"); app.replaceChildren(S.view === "case" ? viewCase() : viewHome());
+  if (S.view === "home") window.scrollTo(0, 0);
+}
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-act],[data-view]"); if (!t) return;
+  if (t.dataset.view){ S.view = t.dataset.view; render(); return; }
+  const a = t.dataset.act;
+  if (a === "start"){ S.seed = 1; S.view = "case"; render(); }
+  if (a === "random"){ S.seed = 11 + Math.floor(Math.random() * 1e6); S.view = "case"; render(); }
+  if (a === "open"){ S.seed = +t.dataset.seed; S.view = "case"; render(); }
+});
+if (location.hash === "#case") S.view = "case";
+render();
+</script>
+
+</body>
+</html>
