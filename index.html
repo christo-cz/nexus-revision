@@ -16,18 +16,20 @@
 <script>try{var t=localStorage.getItem("nexus-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}</script>
 <style>
 /* Nexus hub.
-   Signature: the exam paper. The hero is a sheet of squared exam paper (small squares, a stronger line every 5),
-   drawn in real 3D with hand-written WebGL. It sinks into a well under the pointer, ripples on click and takes the
-   Nexus gradient only where it bends. Everything below the hero stays quiet. */
+   Signature: the exam paper. The hero is a sheet of squared exam paper drawn in 3D with hand-written WebGL;
+   it sinks under the pointer, ripples on click and takes the Nexus gradient where it bends.
+   The three courses sit right under the headline. Hovering one turns it into its own colour and swaps its picture,
+   while the others step back. Scrolling down, the page colour drifts from paper to violet to plum to ink. */
 :root{
   color-scheme:light;
   --bg:#F5F6FB; --surface:#FFFFFF; --sunk:#E9EBF5; --line:#D9DCEA; --line-2:#C2C6DB;
   --fg:#12142B; --muted:#565B78; --faint:#8A8FA8;
-  --grid:70,92,190; --grid-a:.16; --grid-major:.30;
+  --grid:70 92 190; --grid-a:.16; --grid-major:.30;
   --b1:#3B5BFF; --b2:#8E6CFF; --b3:#FF5FA2;
-  --macro:#0B7472; --macro-soft:#DCEFEC;
+  --macro:#0B7472; --acc:#4453D0; --mgmt:#B5386F; --on-c:#FFFFFF;
   --star:#B06F07; --bad:#B4372E;
-  --scrim:245,246,251;
+  --scrim:245 246 251;
+  --glass:color-mix(in srgb,var(--surface) 72%,transparent);
   --f-display:"Familjen Grotesk","Avenir Next","Segoe UI",system-ui,sans-serif;
   --f-body:"Public Sans","Segoe UI",system-ui,-apple-system,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
@@ -35,18 +37,18 @@
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0D1024; --surface:#141836; --sunk:#1B2045; --line:#262C57; --line-2:#363D70;
-  --fg:#ECEDFA; --muted:#A3A8CC; --faint:#6E739A;
-  --grid:150,165,255; --grid-a:.2; --grid-major:.4;
-  --macro:#4CC2BC; --macro-soft:#123033;
-  --star:#E9AE4C; --bad:#F08A80; --scrim:13,16,36; color-scheme:dark;
+  --bg:#0D1024; --surface:#161A3A; --sunk:#1D2248; --line:#2A3060; --line-2:#3A4178;
+  --fg:#ECEDFA; --muted:#A8ADD2; --faint:#7177A0;
+  --grid:150 165 255; --grid-a:.2; --grid-major:.4;
+  --macro:#4CC2BC; --acc:#8F9AFF; --mgmt:#FF7FB2; --on-c:#0D1024;
+  --star:#E9AE4C; --bad:#F08A80; --scrim:13 16 36; color-scheme:dark;
 }}
 :root[data-theme="dark"]{
-  --bg:#0D1024; --surface:#141836; --sunk:#1B2045; --line:#262C57; --line-2:#363D70;
-  --fg:#ECEDFA; --muted:#A3A8CC; --faint:#6E739A;
-  --grid:150,165,255; --grid-a:.2; --grid-major:.4;
-  --macro:#4CC2BC; --macro-soft:#123033;
-  --star:#E9AE4C; --bad:#F08A80; --scrim:13,16,36; color-scheme:dark;
+  --bg:#0D1024; --surface:#161A3A; --sunk:#1D2248; --line:#2A3060; --line-2:#3A4178;
+  --fg:#ECEDFA; --muted:#A8ADD2; --faint:#7177A0;
+  --grid:150 165 255; --grid-a:.2; --grid-major:.4;
+  --macro:#4CC2BC; --acc:#8F9AFF; --mgmt:#FF7FB2; --on-c:#0D1024;
+  --star:#E9AE4C; --bad:#F08A80; --scrim:13 16 36; color-scheme:dark;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -57,97 +59,114 @@ p{margin:0}
 a{color:inherit}
 button{font:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:2.5px solid var(--b2);outline-offset:3px;border-radius:6px}
-.wrap{width:100%;max-width:1120px;margin:0 auto;padding-left:var(--gut);padding-right:var(--gut-r)}
+.wrap{width:100%;max-width:1180px;margin:0 auto;padding-left:var(--gut);padding-right:var(--gut-r)}
 
 /* ---------- top bar ---------- */
 .top{position:absolute;inset:0 0 auto;z-index:5;padding-top:env(safe-area-inset-top,0px)}
-.top .wrap{height:72px;display:flex;align-items:center;gap:12px}
+.top .wrap{height:72px;display:flex;align-items:center;gap:10px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
 .brand img{width:32px;height:32px}
 .brand b{font-family:var(--f-display);font-size:1.25rem;letter-spacing:-.01em}
 .grow{flex:1}
 .toplink{font-size:.92rem;font-weight:600;color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:8px}
 .toplink:hover{color:var(--fg)}
-.theme{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:rgb(var(--scrim) / .7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:var(--muted);border-radius:10px;padding:7px 11px;font-size:.86rem;font-weight:600}
-.theme:hover{color:var(--fg)}
-.theme svg{width:16px;height:16px}
-@media (max-width:560px){.theme .tl,.toplink{display:none}}
+.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:rgb(var(--scrim) / .7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:var(--muted);border-radius:10px;padding:7px 11px;font-size:.86rem;font-weight:600}
+.chip:hover{color:var(--fg);border-color:var(--line-2)}
+.chip svg{width:16px;height:16px}
+@media (max-width:640px){.chip .tl,.toplink{display:none}}
 
 /* ---------- hero: the exam paper ---------- */
-.hero{position:relative;min-height:min(94svh,900px);display:flex;align-items:center;overflow:hidden;isolation:isolate;
-  /* fallback when WebGL is off: flat squared paper */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;isolation:isolate;
   background-image:linear-gradient(rgb(var(--grid) / var(--grid-a)) 1px,transparent 1px),linear-gradient(90deg,rgb(var(--grid) / var(--grid-a)) 1px,transparent 1px);
   background-size:28px 28px;background-position:center}
 .hero.gl{background-image:none}
 .hero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-2;display:block;touch-action:pan-y}
 .hero::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
-  background:radial-gradient(ellipse 60% 70% at 18% 55%,rgb(var(--scrim) / .92),rgb(var(--scrim) / .55) 45%,transparent 75%),
-             linear-gradient(180deg,transparent 70%,rgb(var(--scrim)) 100%)}
-.hero .wrap{width:100%;padding-block:120px 96px;display:flex;flex-direction:column;gap:26px}
-.hero h1{font-size:clamp(3rem,9.2vw,7.4rem);font-weight:700;letter-spacing:-.045em;line-height:.93}
-.hero h1 .l2{display:block;padding-left:.9em;white-space:nowrap}
-.lede{font-size:clamp(1.05rem,1.6vw,1.2rem);color:var(--muted);max-width:44ch;line-height:1.55}
-.cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-.btn{display:inline-flex;align-items:center;gap:10px;border-radius:12px;padding:14px 20px;font-weight:700;font-size:1rem;text-decoration:none;border:1px solid transparent;transition:transform .15s,box-shadow .2s,background-color .2s}
-.btn.main{background:var(--fg);color:var(--bg);box-shadow:0 10px 30px -12px rgb(59 91 255 / .55)}
-.btn.main:hover{transform:translateY(-2px);box-shadow:0 16px 36px -12px rgb(142 108 255 / .6)}
-.btn.main small{font-weight:500;opacity:.7;font-size:.86rem}
-.btn.ghost{border-color:var(--line-2);background:rgb(var(--scrim) / .6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-.btn.ghost:hover{border-color:var(--fg)}
-.bar{width:84px;height:5px;border-radius:99px;background:rgb(255 255 255 / .25);overflow:hidden}
-.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--b1),var(--b2),var(--b3))}
-.hint{position:absolute;right:var(--gut-r);bottom:28px;font-size:.82rem;color:var(--faint);display:flex;gap:8px;align-items:center}
-.hint svg{width:16px;height:16px}
+  background:radial-gradient(ellipse 58% 52% at 22% 34%,rgb(var(--scrim) / .9),rgb(var(--scrim) / .45) 50%,transparent 78%),
+             linear-gradient(180deg,transparent 72%,rgb(var(--scrim)) 100%)}
+.hero .wrap{padding-block:112px 84px;display:flex;flex-direction:column;gap:22px}
+.hero h1{font-size:clamp(2.7rem,7.4vw,6.4rem);font-weight:700;letter-spacing:-.045em;line-height:.94}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.06em}
+.hero h1 .ln + .ln{padding-left:.9em}
+.hero h1 .w{display:inline-block;transform:translateY(105%);animation:rise .9s cubic-bezier(.2,.75,.15,1) forwards;animation-delay:calc(var(--i) * 70ms + 120ms)}
+@keyframes rise{to{transform:none}}
+.lede{font-size:clamp(1.02rem,1.5vw,1.15rem);color:var(--muted);max-width:46ch;line-height:1.55;opacity:0;animation:fade .8s ease .55s forwards}
+@keyframes fade{to{opacity:1}}
+.hint{position:absolute;right:var(--gut-r);bottom:22px;font-size:.8rem;color:var(--faint);display:flex;gap:7px;align-items:center}
+.hint svg{width:14px;height:14px}
 @media (hover:none){.hint .desk{display:none}}
 @media (hover:hover){.hint .touch{display:none}}
-@media (max-width:640px){.hero{min-height:78svh}.hero .wrap{padding-block:104px 72px}.hero h1{font-size:clamp(2.4rem,11.5vw,3.4rem)}.hero h1 .l2{padding-left:.45em;white-space:normal}.hint{left:var(--gut);right:auto;bottom:20px}}
+
+/* ---------- the three courses ---------- */
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:14px;perspective:1100px;opacity:0;animation:fade .9s ease .75s forwards}
+.tile{--rx:0deg;--ry:0deg;--gx:50%;--gy:50%;position:relative;display:flex;flex-direction:column;min-width:0;border-radius:20px;border:1px solid var(--line);
+  background:var(--glass);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);
+  text-decoration:none;color:var(--fg);overflow:hidden;transform-style:preserve-3d;
+  transform:rotateX(var(--rx)) rotateY(var(--ry));
+  transition:transform .35s cubic-bezier(.2,.8,.2,1),background-color .35s,border-color .35s,opacity .35s,filter .35s,box-shadow .35s;outline-offset:4px}
+.tile .vis{position:relative;height:150px;color:var(--c);border-bottom:1px solid var(--line);transition:color .35s,border-color .35s}
+.tile .vis svg{position:absolute;inset:0;width:100%;height:100%;transition:opacity .45s,transform .6s cubic-bezier(.2,.8,.2,1)}
+.tile .vb{opacity:0;transform:scale(1.08)}
+.tile .info{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px}
+.tile h3{font-size:clamp(1.25rem,1.9vw,1.55rem);letter-spacing:-.02em}
+.tile .what{font-size:.9rem;color:var(--muted);transition:color .35s}
+.tile .status{margin-top:6px;display:flex;align-items:center;gap:10px;font-size:.84rem;font-weight:700;color:var(--c);transition:color .35s}
+.tile .status .track{flex:0 1 110px;height:4px;border-radius:99px;background:color-mix(in srgb,currentColor 22%,transparent);overflow:hidden}
+.tile .status .track i{display:block;height:100%;background:currentColor}
+.tile .open{position:absolute;right:16px;bottom:16px;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1.5px solid currentColor;color:var(--c);transition:transform .35s,background-color .35s,color .35s}
+.tile .open svg{width:18px;height:18px}
+.tile .glare{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .35s;background:radial-gradient(380px circle at var(--gx) var(--gy),rgb(255 255 255 / .28),transparent 60%)}
+.tile.soon .status{color:var(--muted)}
+.tile.soon .pill{display:inline-block;border:1px dashed currentColor;border-radius:99px;padding:2px 10px}
+/* the hovered (or centred, on phones) course takes over */
+.tile:is(:hover,:focus-visible,.on){background:var(--c);border-color:var(--c);color:var(--on-c);box-shadow:0 30px 60px -28px var(--c);transform:rotateX(var(--rx)) rotateY(var(--ry)) translateY(-8px) scale(1.025)}
+.tile:is(:hover,:focus-visible,.on) .vis{color:var(--on-c);border-color:color-mix(in srgb,var(--on-c) 25%,transparent)}
+.tile:is(:hover,:focus-visible,.on) .va{opacity:0;transform:scale(.92)}
+.tile:is(:hover,:focus-visible,.on) .vb{opacity:1;transform:none}
+.tile:is(:hover,:focus-visible,.on) :is(.what,.status){color:var(--on-c)}
+.tile:is(:hover,:focus-visible,.on) .what{opacity:.85}
+.tile:is(:hover,:focus-visible,.on) .open{background:var(--on-c);color:var(--c);border-color:var(--on-c);transform:rotate(-45deg)}
+.tile:is(:hover,.on) .glare{opacity:1}
+.tiles:has(.tile:hover) .tile:not(:hover){opacity:.42;filter:saturate(.2) blur(1.2px);transform:scale(.965)}
+/* pictures: bars grow, lines draw, blocks settle */
+.vb .grow-y{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(.15);transition:transform .6s cubic-bezier(.2,.8,.2,1) var(--d,0ms)}
+.vb .draw{stroke-dasharray:var(--len,400);stroke-dashoffset:var(--len,400);transition:stroke-dashoffset 1s cubic-bezier(.3,.7,.2,1) var(--d,150ms)}
+.vb .drop{transform-box:fill-box;transform:translateY(-26px);opacity:0;transition:transform .55s cubic-bezier(.2,.9,.25,1.2) var(--d,0ms),opacity .3s var(--d,0ms)}
+.vb .pop{transform-box:fill-box;transform-origin:center;transform:scale(0);transition:transform .45s cubic-bezier(.2,.9,.3,1.4) var(--d,0ms)}
+.tile:is(:hover,:focus-visible,.on) .vb :is(.grow-y,.pop){transform:none}
+.tile:is(:hover,:focus-visible,.on) .vb .draw{stroke-dashoffset:0}
+.tile:is(:hover,:focus-visible,.on) .vb .drop{transform:none;opacity:1}
+@media (max-width:820px){
+  .hero{min-height:auto}
+  .hero .wrap{padding-block:104px 64px}
+  .hero h1 .ln + .ln{padding-left:.45em}
+  .tiles{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-inline:calc(var(--gut) * -1);padding:10px var(--gut) 18px;scrollbar-width:none;perspective:none}
+  .tiles::-webkit-scrollbar{display:none}
+  .tile{flex:0 0 78%;scroll-snap-align:center}
+  .tiles:has(.tile:hover) .tile:not(:hover){opacity:1;filter:none;transform:none}
+  .tiles .tile:not(.on){opacity:.6;transform:scale(.95)}
+  .hint{left:var(--gut);right:auto;bottom:16px}
+}
 
 /* ---------- sections ---------- */
-main{display:flex;flex-direction:column;gap:88px;padding-block:24px 64px}
-@media (max-width:640px){main{gap:64px}}
-.sh{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
-.sh h2{font-size:clamp(1.6rem,3.4vw,2.2rem);letter-spacing:-.02em}
+main{display:flex;flex-direction:column;gap:110px;padding-block:72px 48px}
+@media (max-width:640px){main{gap:80px;padding-block:48px 40px}}
+.sh{display:flex;flex-direction:column;gap:8px;margin-bottom:26px}
+.sh h2{font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.03em}
 .sh p{color:var(--muted);max-width:60ch}
-
-/* courses: one row per course, like a timetable */
-.courses{display:flex;flex-direction:column;border-top:1.5px solid var(--fg)}
-.course{--mx:50%;--my:50%;position:relative;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;gap:20px 32px;align-items:center;padding:28px 4px;border-bottom:1px solid var(--line);text-decoration:none;overflow:hidden}
-.course::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;transition:opacity .25s;
-  background:radial-gradient(420px circle at var(--mx) var(--my),color-mix(in srgb,var(--c) 14%,transparent),transparent 70%)}
-.course:hover::before{opacity:1}
-.course h3{font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-.03em;color:var(--fg);transition:color .2s}
-.course:hover h3{color:var(--c)}
-.course .sub{color:var(--muted);margin-top:8px;max-width:46ch}
-.facts{display:grid;grid-template-columns:repeat(3,auto);gap:4px 26px;margin:0;justify-content:start}
-.facts div{display:flex;flex-direction:column}
-.facts dt{font-size:.8rem;color:var(--muted)}
-.facts dd{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.25rem}
-.go{display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;border:1.5px solid var(--fg);transition:background-color .2s,color .2s,transform .2s}
-.go svg{width:22px;height:22px}
-.course:hover .go{background:var(--c);border-color:var(--c);color:#fff;transform:rotate(-45deg)}
-.course .pg{grid-column:1/-1;display:flex;align-items:center;gap:12px;font-size:.88rem;color:var(--muted)}
-.course .pg .track{flex:0 1 260px;height:5px;border-radius:99px;background:var(--sunk);overflow:hidden}
-.course .pg .track i{display:block;height:100%;background:var(--c)}
-.more{padding:18px 4px;color:var(--muted);font-size:.95rem}
-@media (max-width:820px){.course{grid-template-columns:minmax(0,1fr) auto}.facts{grid-column:1/-1;grid-row:2}.go{grid-row:1;grid-column:2;width:48px;height:48px}}
-@media (max-width:420px){.facts{grid-template-columns:repeat(2,auto)}}
-
-/* method: three short points */
-.method{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
-@media (max-width:820px){.method{grid-template-columns:1fr;gap:22px}}
-.pt{display:grid;grid-template-columns:28px minmax(0,1fr);gap:4px 14px;align-content:start}
-.pt .sq{width:28px;height:28px;border:1.5px solid var(--fg);border-radius:3px;position:relative;grid-row:span 2}
-.pt .sq::after{content:"";position:absolute;inset:5px;border-radius:1px;background:linear-gradient(135deg,var(--b1),var(--b2),var(--b3))}
-.pt h3{font-size:1.15rem}
-.pt p{color:var(--muted);font-size:.96rem}
-
-/* reviews */
+.method{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px}
+@media (max-width:820px){.method{grid-template-columns:1fr;gap:24px}}
+.pt{display:grid;grid-template-columns:30px minmax(0,1fr);gap:4px 16px;align-content:start}
+.pt .sq{width:30px;height:30px;border:1.5px solid var(--fg);border-radius:4px;position:relative;grid-row:span 2}
+.pt .sq::after{content:"";position:absolute;inset:6px;border-radius:1px;background:linear-gradient(135deg,var(--b1),var(--b2),var(--b3))}
+.pt h3{font-size:1.2rem}
+.pt p{color:var(--muted)}
 .labline{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;border-left:3px solid var(--c);padding:4px 0 4px 14px;text-decoration:none}
 .labline .nm{font-family:var(--f-display);font-weight:700;font-size:1.05rem;color:var(--c)}
 .labline .avg{font-family:var(--f-display);font-weight:700;font-size:1.2rem}
 .labline .n{color:var(--muted);font-size:.9rem}
 .labline .tg{display:flex;flex-wrap:wrap;gap:6px}
-.labline .tg span{font-size:.78rem;font-weight:600;padding:3px 9px;border-radius:8px;background:var(--sunk);color:var(--muted)}
+.labline .tg span{font-size:.78rem;font-weight:600;padding:3px 9px;border-radius:8px;background:var(--glass);border:1px solid var(--line);color:var(--muted)}
 .st{color:var(--star);letter-spacing:1px;white-space:nowrap}
 .st .off{color:var(--line-2)}
 .quotes{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 40px}
@@ -159,63 +178,140 @@ main{display:flex;flex-direction:column;gap:88px;padding-block:24px 64px}
 .quote .lab{font-weight:700;color:var(--c)}
 .quote .del{margin-left:auto;border:0;background:none;color:var(--bad);font-size:.8rem;font-weight:700;text-decoration:underline}
 .empty{color:var(--muted)}
-.morebtn{margin-top:14px;border:1px solid var(--line-2);background:var(--surface);border-radius:10px;padding:8px 14px;font-size:.88rem;font-weight:700}
+.morebtn{margin-top:14px;border:1px solid var(--line-2);background:var(--glass);border-radius:10px;padding:8px 14px;font-size:.88rem;font-weight:700}
 .admin{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px dashed var(--line-2);border-radius:12px;padding:12px;font-size:.88rem;margin-top:16px}
 .admin input{border:1px solid var(--line-2);border-radius:8px;background:var(--surface);color:var(--fg);padding:7px 10px;font:inherit;min-width:0;flex:1 1 200px}
 .admin button{border:0;border-radius:8px;padding:8px 12px;font-weight:700;background:var(--fg);color:var(--bg)}
-
-/* author + footer */
-.credit{display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px;padding:26px 0;border-top:1.5px solid var(--fg)}
+.credit{display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px;padding:28px 0;border-top:1.5px solid var(--fg)}
 .credit .who{display:flex;flex-direction:column;gap:2px;margin-right:auto;min-width:0}
-.credit .who b{font-family:var(--f-display);font-size:1.2rem}
+.credit .who b{font-family:var(--f-display);font-size:1.25rem}
 .credit .who span{font-size:.9rem;color:var(--muted)}
 .links{display:flex;flex-wrap:wrap;gap:8px}
-.links a{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-2);background:var(--surface);border-radius:11px;padding:9px 13px;font-size:.9rem;font-weight:600;text-decoration:none;transition:border-color .15s,transform .15s}
+.links a{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-2);background:var(--glass);border-radius:11px;padding:9px 13px;font-size:.9rem;font-weight:600;text-decoration:none;transition:border-color .15s,transform .15s}
 .links a:hover{border-color:var(--fg);transform:translateY(-1px)}
 .links svg{width:18px;height:18px;flex:none}
 .legal{font-size:.84rem;color:var(--muted);padding-bottom:12px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}.hero h1 .w{transform:none}.lede,.tiles{opacity:1}}
 </style>
 </head>
 <body>
 <header class="top"><div class="wrap">
   <a class="brand" href="/" aria-label="Nexus home"><img src="/favicon.svg" alt=""><b>Nexus</b></a>
   <span class="grow"></span>
-  <a class="toplink" href="#courses">Courses</a>
   <a class="toplink" href="#reviews">Reviews</a>
-  <button class="theme" id="theme" type="button"></button>
+  <button class="chip" id="fsBtn" type="button"></button>
+  <button class="chip" id="theme" type="button"></button>
 </div></header>
 
 <section class="hero" id="hero">
   <canvas id="paper" aria-hidden="true"></canvas>
   <div class="wrap">
-    <h1>Sit the exam <span class="l2">before the exam.</span></h1>
-    <p class="lede">Revision built from your EDHEC BBA1 courses. Exam-style cases, every answer worked out with your numbers, and new numbers each time.</p>
-    <div class="cta">
-      <a class="btn main" id="mainCta" href="#courses">Choose a course</a>
-      <a class="btn ghost" id="sideCta" href="/macro/" hidden>All Macroeconomics cases</a>
-    </div>
+    <h1 aria-label="Sit the exam before the exam."><span class="ln" aria-hidden="true"><span class="w" style="--i:0">Sit</span> <span class="w" style="--i:1">the</span> <span class="w" style="--i:2">exam</span></span><span class="ln" aria-hidden="true"><span class="w" style="--i:3">before</span> <span class="w" style="--i:4">the</span> <span class="w" style="--i:5">exam.</span></span></h1>
+    <p class="lede">Revision built from your EDHEC BBA1 courses. Exam-style cases, every answer worked out with your numbers.</p>
+
+    <nav class="tiles" id="tiles" aria-label="Courses">
+      <a class="tile" href="/macro/" style="--c:var(--macro)">
+        <div class="vis" aria-hidden="true">
+          <svg class="va" viewBox="0 0 300 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path id="loopPath" d="M70 75a80 38 0 1 1 160 0a80 38 0 1 1-160 0" stroke-dasharray="3 7" opacity=".6"/>
+            <path d="M144 34l9 3-8 5M156 116l-9-3 8-5" opacity=".9"/>
+            <circle cx="70" cy="75" r="17" fill="currentColor" fill-opacity=".14"/><circle cx="230" cy="75" r="17" fill="currentColor" fill-opacity=".14"/>
+            <text x="70" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor" stroke="none" font-family="JetBrains Mono,monospace">H</text>
+            <text x="230" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor" stroke="none" font-family="JetBrains Mono,monospace">F</text>
+            <g fill="currentColor" stroke="none">
+              <circle r="3.6"><animateMotion dur="5s" repeatCount="indefinite"><mpath href="#loopPath"/></animateMotion></circle>
+              <circle r="3.6"><animateMotion dur="5s" begin="-1.25s" repeatCount="indefinite"><mpath href="#loopPath"/></animateMotion></circle>
+              <circle r="3.6"><animateMotion dur="5s" begin="-2.5s" repeatCount="indefinite"><mpath href="#loopPath"/></animateMotion></circle>
+              <circle r="3.6"><animateMotion dur="5s" begin="-3.75s" repeatCount="indefinite"><mpath href="#loopPath"/></animateMotion></circle>
+            </g>
+          </svg>
+          <svg class="vb" viewBox="0 0 300 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M48 124h206" opacity=".6"/>
+            <g fill="currentColor" fill-opacity=".9" stroke="none">
+              <rect class="grow-y" x="62" y="88" width="24" height="36" rx="3" style="--d:0ms"/>
+              <rect class="grow-y" x="98" y="76" width="24" height="48" rx="3" style="--d:60ms"/>
+              <rect class="grow-y" x="134" y="80" width="24" height="44" rx="3" style="--d:120ms"/>
+              <rect class="grow-y" x="170" y="58" width="24" height="66" rx="3" style="--d:180ms"/>
+              <rect class="grow-y" x="206" y="40" width="24" height="84" rx="3" style="--d:240ms"/>
+            </g>
+            <path class="draw" d="M74 70 110 56 146 62 182 38 218 22" stroke-width="2.5" style="--len:170;--d:280ms"/>
+            <circle class="pop" cx="218" cy="22" r="5" fill="currentColor" style="--d:900ms"/>
+          </svg>
+        </div>
+        <div class="info">
+          <h3>Macroeconomics</h3>
+          <p class="what">GDP, consumption, the multiplier, growth</p>
+          <p class="status" id="macroStatus">10 full cases</p>
+        </div>
+        <span class="open" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <span class="glare" aria-hidden="true"></span>
+      </a>
+
+      <div class="tile soon" tabindex="0" role="group" aria-label="Financial Accounting, coming soon" style="--c:var(--acc)">
+        <div class="vis" aria-hidden="true">
+          <svg class="va" viewBox="0 0 300 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M80 40h140M150 40v86"/>
+            <text x="115" y="32" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor" stroke="none" font-family="JetBrains Mono,monospace">Dr</text>
+            <text x="185" y="32" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor" stroke="none" font-family="JetBrains Mono,monospace">Cr</text>
+            <g opacity=".6"><path d="M92 60h44M92 78h30M92 96h40M164 60h36M164 78h44M164 96h24"/></g>
+            <path d="M92 114h44M164 114h44" stroke-width="2.5"/>
+          </svg>
+          <svg class="vb" viewBox="0 0 300 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <g fill="currentColor" stroke="none">
+              <rect class="drop" x="70" y="88" width="66" height="34" rx="4" style="--d:0ms"/>
+              <rect class="drop" x="70" y="50" width="66" height="34" rx="4" fill-opacity=".7" style="--d:90ms"/>
+              <rect class="drop" x="164" y="96" width="66" height="26" rx="4" style="--d:180ms"/>
+              <rect class="drop" x="164" y="66" width="66" height="26" rx="4" fill-opacity=".7" style="--d:270ms"/>
+              <rect class="drop" x="164" y="50" width="66" height="12" rx="3" fill-opacity=".45" style="--d:360ms"/>
+            </g>
+            <path class="draw" d="M60 34h180" style="--len:180;--d:420ms"/>
+            <path class="draw" d="M145 82h10M145 90h10" stroke-width="2.5" style="--len:10;--d:600ms"/>
+          </svg>
+        </div>
+        <div class="info">
+          <h3>Financial Accounting</h3>
+          <p class="what">Journal entries, the balance sheet, the income statement</p>
+          <p class="status"><span class="pill">Coming soon</span></p>
+        </div>
+        <span class="glare" aria-hidden="true"></span>
+      </div>
+
+      <div class="tile soon" tabindex="0" role="group" aria-label="Management and Organization, coming soon" style="--c:var(--mgmt)">
+        <div class="vis" aria-hidden="true">
+          <svg class="va" viewBox="0 0 300 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M150 46v16M90 62h120M90 62v18M150 62v18M210 62v18" opacity=".7"/>
+            <rect x="128" y="22" width="44" height="24" rx="6" fill="currentColor" fill-opacity=".18"/>
+            <rect x="70" y="80" width="40" height="22" rx="6"/><rect x="130" y="80" width="40" height="22" rx="6"/><rect x="190" y="80" width="40" height="22" rx="6"/>
+            <path d="M90 102v12M150 102v12M210 102v12" opacity=".5"/>
+          </svg>
+          <svg class="vb" viewBox="0 0 300 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <g opacity=".75">
+              <path class="draw" d="M150 75 98 44M150 75l52-31M150 75 92 104M150 75l58 29M150 75v-50M98 44l104 0M92 104h116" style="--len:120"/>
+            </g>
+            <g fill="currentColor" stroke="none">
+              <circle class="pop" cx="150" cy="75" r="11" style="--d:0ms"/>
+              <circle class="pop" cx="98" cy="44" r="7" style="--d:120ms"/><circle class="pop" cx="202" cy="44" r="7" style="--d:180ms"/>
+              <circle class="pop" cx="92" cy="104" r="7" style="--d:240ms"/><circle class="pop" cx="208" cy="104" r="7" style="--d:300ms"/>
+              <circle class="pop" cx="150" cy="25" r="7" style="--d:360ms"/>
+            </g>
+          </svg>
+        </div>
+        <div class="info">
+          <h3>Management &amp; Organization</h3>
+          <p class="what">Structures, behaviour, the classic theories</p>
+          <p class="status"><span class="pill">Coming soon</span></p>
+        </div>
+        <span class="glare" aria-hidden="true"></span>
+      </div>
+    </nav>
   </div>
   <p class="hint" aria-hidden="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M5 3l14 7-6 2-2 6z"/></svg>
-    <span class="desk">Move your mouse. Click the paper.</span><span class="touch">Touch the paper.</span>
+    <span class="desk">Move your mouse. Click the paper.</span><span class="touch">Swipe the courses. Touch the paper.</span>
   </p>
 </section>
 
 <main>
-  <section class="wrap" id="courses" aria-labelledby="coursesH">
-    <div class="sh"><h2 id="coursesH">Courses</h2><p>Pick a course. Your progress is saved on this device.</p></div>
-    <div class="courses">
-      <a class="course" href="/macro/" style="--c:var(--macro)">
-        <div><h3>Macroeconomics</h3><p class="sub">Business Economics, semester 1. GDP, national accounts, consumption, the multiplier and growth.</p></div>
-        <dl class="facts"><div><dt>Full cases</dt><dd>10</dd></div><div><dt>Chapters</dt><dd>2 to 4</dd></div><div><dt>Questions</dt><dd>300</dd></div></dl>
-        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-        <div class="pg" id="macroPg" hidden><span class="track"><i></i></span><span></span></div>
-      </a>
-    </div>
-    <p class="more">More courses arrive during the semester, starting with the next exams.</p>
-  </section>
-
   <section class="wrap" aria-labelledby="methodH">
     <div class="sh"><h2 id="methodH">How it works</h2></div>
     <div class="method">
@@ -267,35 +363,83 @@ function applyTheme(){
   themeBtn.setAttribute("aria-label", "Theme: " + THEME.label[theme] + ". Change theme");
   window.dispatchEvent(new Event("nexus-theme"));
 }
-applyTheme();
 themeBtn.addEventListener("click", () => { theme = THEME.next[theme]; try { localStorage.setItem("nexus-theme", theme); } catch (e) {} applyTheme(); });
 
-/* ---------- progress: continue where you left off ---------- */
+/* ---------- full screen (kept across pages: the first tap on the next page restores it) ---------- */
+const FS = (() => {
+  const d = document, el = d.documentElement;
+  const can = !!(d.fullscreenEnabled || d.webkitFullscreenEnabled);
+  const isOn = () => !!(d.fullscreenElement || d.webkitFullscreenElement);
+  let leaving = false;
+  const want = v => { try { v ? sessionStorage.setItem("nexus-fs", "1") : sessionStorage.removeItem("nexus-fs"); } catch (e) {} };
+  const wanted = () => { try { return sessionStorage.getItem("nexus-fs") === "1"; } catch (e) { return false; } };
+  const enter = () => { try { const r = (el.requestFullscreen || el.webkitRequestFullscreen).call(el, { navigationUI: "hide" }); if (r && r.catch) r.catch(() => {}); } catch (e) {} };
+  const exit = () => { try { (d.exitFullscreen || d.webkitExitFullscreen).call(d); } catch (e) {} };
+  const toggle = () => { if (isOn()){ want(false); exit(); } else { want(true); enter(); } };
+  const ENTER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+  const EXIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>';
+  function bind(btn){
+    if (!can){ btn.hidden = true; return; }
+    const paint = () => { const on = isOn(); btn.innerHTML = (on ? EXIT : ENTER) + `<span class="tl">${on ? "Exit full screen" : "Full screen"}</span>`; btn.setAttribute("aria-label", on ? "Exit full screen" : "Full screen (F)"); btn.title = on ? "Exit full screen (F)" : "Full screen (F)"; btn.setAttribute("aria-pressed", String(on)); };
+    btn.addEventListener("click", toggle);
+    const changed = () => { paint(); if (!isOn() && !leaving) want(false); };
+    d.addEventListener("fullscreenchange", changed); d.addEventListener("webkitfullscreenchange", changed);
+    addEventListener("beforeunload", () => { leaving = true; }); addEventListener("pagehide", () => { leaving = true; });
+    d.addEventListener("keydown", e => { if ((e.key === "f" || e.key === "F") && !e.metaKey && !e.ctrlKey && !e.altKey && !(e.target.closest && e.target.closest("input,textarea,select,[contenteditable]"))){ e.preventDefault(); toggle(); } });
+    if (wanted() && !isOn()){ const again = e => { if (e.target.closest && e.target.closest("#" + btn.id)) return; enter(); }; d.addEventListener("pointerup", again, { once: true }); }
+    paint();
+  }
+  return { bind };
+})();
+
+/* ---------- background colour that follows the scroll ---------- */
+function scrollTint(getStops, getStart){
+  const root = document.documentElement, hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const dark = () => { const t = root.dataset.theme; return t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches); };
+  let raf = 0;
+  function upd(){
+    raf = 0;
+    const stops = getStops(dark());
+    if (!stops){ root.style.removeProperty("--bg"); root.style.removeProperty("--scrim"); return; }
+    const start = getStart(), max = Math.max(1, root.scrollHeight - innerHeight - start);
+    const p = Math.min(1, Math.max(0, (scrollY - start) / max)), x = p * (stops.length - 1), i = Math.min(stops.length - 2, Math.floor(x)), f = x - i, e = f * f * (3 - 2 * f);
+    const a = hex(stops[i]), b = hex(stops[i + 1]), c = a.map((v, k) => Math.round(v + (b[k] - v) * e));
+    root.style.setProperty("--bg", `rgb(${c.join(" ")})`); root.style.setProperty("--scrim", c.join(" "));
+  }
+  const q = () => { if (!raf) raf = requestAnimationFrame(upd); };
+  addEventListener("scroll", q, { passive: true }); addEventListener("resize", q); addEventListener("nexus-theme", q);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", q);
+  q(); return q;
+}
+
+FS.bind(document.getElementById("fsBtn"));
+/* paper → violet → plum → ink (dark); paper → lilac → blush → sand (light) */
+scrollTint(dark => dark ? ["#0D1024", "#1C1550", "#36123F", "#0A0B17"] : ["#F5F6FB", "#ECE8FF", "#FDE8F1", "#F7F1E8"], () => document.getElementById("hero").offsetHeight * 0.3);
+applyTheme();
+
+/* ---------- course tiles: progress, 3D tilt, centred tile on phones ---------- */
 (function(){
   try {
     const st = JSON.parse(localStorage.getItem("flow-v1")) || {}, cases = st.cases || {};
     let done = 0, ans = 0;
     for (let i = 1; i <= 10; i++){ const n = Object.keys((cases[i] || {}).ans || {}).length; ans += n; if (n === 30) done++; }
-    if (!ans) return;
-    let next = st.last && Object.keys((cases[st.last] || {}).ans || {}).length < 30 ? st.last : null;
-    if (!next) for (let i = 1; i <= 10; i++) if (Object.keys((cases[i] || {}).ans || {}).length < 30){ next = i; break; }
-    const cta = document.getElementById("mainCta");
-    if (next){
-      const n = Object.keys((cases[next] || {}).ans || {}).length;
-      cta.href = "/macro/#case" + next;
-      cta.innerHTML = `<span>Continue Macroeconomics<br><small>Case ${next}${next > 10 ? " (practice)" : ""}, ${n} of 30 done</small></span><span class="bar" aria-hidden="true"><i style="width:${n / 30 * 100}%"></i></span>`;
-    } else { cta.href = "/macro/"; cta.textContent = "Open Macroeconomics"; }
-    document.getElementById("sideCta").hidden = false;
-    const pg = document.getElementById("macroPg");
-    pg.hidden = false; pg.querySelector("i").style.width = (ans / 300 * 100) + "%";
-    pg.lastElementChild.textContent = `${done} of 10 cases finished, ${ans} questions answered`;
+    if (ans) document.getElementById("macroStatus").innerHTML = `<span class="track" aria-hidden="true"><i style="width:${ans / 300 * 100}%"></i></span>${done} of 10 cases finished`;
   } catch (e) {}
+  const tiles = [...document.querySelectorAll(".tile")], fine = matchMedia("(hover: hover) and (pointer: fine)");
+  tiles.forEach(t => {
+    t.addEventListener("pointermove", e => {
+      if (!fine.matches) return;
+      const r = t.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+      t.style.setProperty("--ry", ((x - .5) * 10).toFixed(2) + "deg"); t.style.setProperty("--rx", ((.5 - y) * 10).toFixed(2) + "deg");
+      t.style.setProperty("--gx", (x * 100).toFixed(1) + "%"); t.style.setProperty("--gy", (y * 100).toFixed(1) + "%");
+    });
+    t.addEventListener("pointerleave", () => { t.style.setProperty("--rx", "0deg"); t.style.setProperty("--ry", "0deg"); });
+  });
+  const narrow = matchMedia("(max-width: 820px)"), row = document.getElementById("tiles");
+  const io = new IntersectionObserver(es => { if (!narrow.matches) return; es.forEach(e => e.target.classList.toggle("on", e.intersectionRatio > 0.75)); }, { root: row, threshold: [0, .75, 1] });
+  tiles.forEach(t => io.observe(t));
+  narrow.addEventListener("change", () => { if (!narrow.matches) tiles.forEach(t => t.classList.remove("on")); });
 })();
-
-/* ---------- spotlight on course rows ---------- */
-document.querySelectorAll(".course").forEach(el => el.addEventListener("pointermove", e => {
-  const r = el.getBoundingClientRect(); el.style.setProperty("--mx", (e.clientX - r.left) + "px"); el.style.setProperty("--my", (e.clientY - r.top) + "px");
-}));
 
 /* ---------- the exam paper (WebGL, no library) ---------- */
 (function(){
@@ -354,7 +498,7 @@ void main(){
   const hex = h => [parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255];
   function colors(){
     const cs = getComputedStyle(document.documentElement);
-    const g = cs.getPropertyValue("--grid").split(",").map(x => +x / 255);
+    const g = cs.getPropertyValue("--grid").trim().split(/[\s,]+/).map(x => +x / 255);
     gl.uniform3fv(u.line, g);
     gl.uniform1f(u.a, +cs.getPropertyValue("--grid-a") * 1.25);
     gl.uniform1f(u.aMajor, +cs.getPropertyValue("--grid-major") * 1.25);
@@ -393,7 +537,7 @@ void main(){
   }
   hero.addEventListener("pointermove", e => { setTarget(e.clientX, e.clientY); wake(); });
   hero.addEventListener("pointerdown", e => {
-    if (e.target.closest("a,button")) return;
+    if (e.target.closest("a,button,.tile")) return;
     setTarget(e.clientX, e.clientY); S.rip = [S.tx, S.ty]; S.ripT = 0; wake();
   });
   hero.addEventListener("pointerleave", () => { S.active = false; S.twell = 0.55; });
@@ -434,6 +578,7 @@ void main(){
   if (reduce.matches){ S.mx = halfW * 0.45; S.my = HALF_H * 0.1; S.well = 0.8; S.rx = -0.12; draw(); }
   else wake();
 })();
+
 
 /* ---------- reviews (from /api/reviews) ---------- */
 (function(){

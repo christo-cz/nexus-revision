@@ -21,6 +21,7 @@
   --inj:#B06F07; --inj-soft:#F7EAD2; --leak:#C2493A; --leak-soft:#F8E1DD;
   --ok:#23794E; --ok-soft:#DFF2E6; --bad:#B4372E; --bad-soft:#F9E3E0;
   --shadow:0 1px 2px rgb(21 32 36 / .05),0 6px 20px rgb(21 32 36 / .06);
+  --glass:rgb(255 255 255 / .6); --glass-line:rgb(21 32 36 / .1);
   --f-display:"Familjen Grotesk","Avenir Next","Segoe UI",system-ui,sans-serif;
   --f-body:"Public Sans","Segoe UI",system-ui,-apple-system,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
@@ -32,20 +33,20 @@
   --flow:#4CC2BC; --flow-2:#6FD6D0; --flow-soft:#12302F; --on-flow:#05201F;
   --inj:#E9AE4C; --inj-soft:#33280F; --leak:#F08473; --leak-soft:#3A1F1B;
   --ok:#6FD39C; --ok-soft:#13301F; --bad:#F08A80; --bad-soft:#3A1D1A;
-  --shadow:0 1px 2px rgb(0 0 0 / .3),0 8px 24px rgb(0 0 0 / .25); color-scheme:dark;
+  --shadow:0 1px 2px rgb(0 0 0 / .3),0 8px 24px rgb(0 0 0 / .25); --glass:rgb(255 255 255 / .045); --glass-line:rgb(255 255 255 / .1); color-scheme:dark;
 }}
 :root[data-theme="dark"]{
   --bg:#0E1416; --surface:#151F23; --sunk:#1C282D; --line:#26343A; --line-2:#33444B; --fg:#E7EFED; --muted:#A0B1B3; --faint:#6F8286;
   --flow:#4CC2BC; --flow-2:#6FD6D0; --flow-soft:#12302F; --on-flow:#05201F;
   --inj:#E9AE4C; --inj-soft:#33280F; --leak:#F08473; --leak-soft:#3A1F1B;
   --ok:#6FD39C; --ok-soft:#13301F; --bad:#F08A80; --bad-soft:#3A1D1A;
-  --shadow:0 1px 2px rgb(0 0 0 / .3),0 8px 24px rgb(0 0 0 / .25); color-scheme:dark;
+  --shadow:0 1px 2px rgb(0 0 0 / .3),0 8px 24px rgb(0 0 0 / .25); --glass:rgb(255 255 255 / .045); --glass-line:rgb(255 255 255 / .1); color-scheme:dark;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{margin:0}
 body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--surface)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--bg)}
 h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.15;text-wrap:balance;letter-spacing:-.01em}
 p{margin:0}
 button,input{font:inherit;color:inherit}
@@ -58,7 +59,7 @@ a{color:inherit}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* ---------- header ---------- */
-.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--surface);border-bottom:1px solid var(--line)}
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:color-mix(in srgb,var(--bg) 76%,transparent);backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);border-bottom:1px solid var(--glass-line)}
 .hdr-in{height:var(--hdr);display:flex;align-items:center;gap:16px;padding-left:var(--gut);padding-right:var(--gut-r)}
 .crumb{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:700;font-size:1.12rem;white-space:nowrap;text-decoration:none}
 .crumb .hub{color:var(--muted);font-weight:600;text-decoration:none}
@@ -76,6 +77,9 @@ a{color:inherit}
 .crumb .here{text-decoration:none;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .crumb{min-width:0}
 @media (max-width:480px){.nav a[data-route="home"]{display:none}.crumb{font-size:1.02rem}}
+.hdr-in{gap:10px}
+.hdr .theme{background:transparent}
+@media (max-width:980px){#fsBtn .tl{display:none}}
 @media (max-width:620px){.nav{margin-left:0}.nav a{padding:7px 9px}.theme .tl{display:none}.crumb .hub,.crumb .sl{display:none}}
 
 /* ---------- shared page frame ---------- */
@@ -283,7 +287,73 @@ a{color:inherit}
 .rv-form .msg.err{color:var(--bad)}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .rv-thanks{display:flex;gap:10px;align-items:center;background:var(--ok-soft);border-radius:12px;padding:12px 16px;font-weight:600;font-size:.95rem}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+/* ---------- overview & case list: the living circular flow ---------- */
+#app{position:relative;z-index:1}
+.aura{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(640px circle at var(--ax,70%) var(--ay,40%),color-mix(in srgb,var(--ac,var(--flow)) 20%,transparent),transparent 70%);transition:opacity .4s}
+:root[data-theme="light"] .aura{opacity:.8}
+.ov{--surface:var(--glass)}
+.ov :is(.casecard,.stat,.exam,.credit,.rv-form){backdrop-filter:blur(12px) saturate(1.2);-webkit-backdrop-filter:blur(12px) saturate(1.2);border-color:var(--glass-line)}
+.fhero{position:relative;overflow:hidden;isolation:isolate;min-height:calc(100svh - var(--hdr) - env(safe-area-inset-top,0px));display:flex;align-items:center}
+.fhero.compact{min-height:min(62svh,560px)}
+.fhero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1;touch-action:pan-y}
+.fl-labels{position:absolute;inset:0;z-index:1;pointer-events:none}
+.fl{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;cursor:default;white-space:nowrap;font-size:.8rem;font-weight:600;color:var(--muted);padding:3px 9px;border-radius:99px;transition:color .25s,background-color .25s,transform .25s}
+.fl b{font-family:var(--f-mono);font-weight:700}
+.fl.node{font-family:var(--f-display);font-size:.98rem;font-weight:700;color:var(--fg);background:var(--glass);border:1px solid var(--glass-line);padding:8px 14px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.fl.inj b{color:var(--inj)} .fl.leak b{color:var(--leak)}
+.fl.arc{font-size:.74rem;color:var(--faint)}
+.fl.lit{color:var(--fg);transform:translate(-50%,-50%) scale(1.12)}
+.fl.inj.lit{background:var(--inj-soft)} .fl.leak.lit{background:var(--leak-soft)} .fl.node.lit{border-color:var(--flow)}
+.fh-in{position:relative;z-index:2;width:100%;max-width:1240px;margin:0 auto;padding-block:48px 64px;padding-left:var(--gut);padding-right:var(--gut-r);display:flex;flex-direction:column;gap:20px;pointer-events:none}
+.fh-in > *{pointer-events:auto;max-width:560px}
+.fh-in::before{content:"";position:absolute;z-index:-1;left:-10%;top:0;bottom:0;width:70%;pointer-events:none;background:radial-gradient(ellipse 70% 60% at 30% 50%,color-mix(in srgb,var(--bg) 82%,transparent),transparent 75%)}
+.kicker{font-size:.95rem;font-weight:600;color:var(--flow)}
+.ov-title{font-size:clamp(3rem,8.4vw,6.6rem);font-weight:700;letter-spacing:-.05em;line-height:.92;max-width:none!important}
+.ov-title .w{display:inline-block;transform:translateY(105%);animation:rise .9s cubic-bezier(.2,.75,.15,1) forwards}
+.ov-title .clip{display:block;overflow:hidden;padding-bottom:.08em}
+@keyframes rise{to{transform:none}}
+.ov-eq{font-family:var(--f-display);font-weight:700;font-size:clamp(1.5rem,3.2vw,2.3rem);letter-spacing:-.02em;display:flex;flex-wrap:wrap;gap:0 .28em;align-items:baseline}
+.ov-eq [data-hl]{cursor:default;border-radius:8px;padding:0 .08em;transition:background-color .2s,transform .2s;display:inline-block}
+.ov-eq [data-hl]:hover{transform:translateY(-3px)}
+.ov-eq .y{color:var(--flow)} .ov-eq .i{color:var(--inj)} .ov-eq .l{color:var(--leak)}
+.ov-eq .i:hover{background:var(--inj-soft)} .ov-eq .l:hover{background:var(--leak-soft)} .ov-eq .y:hover,.ov-eq .c:hover{background:var(--flow-soft)}
+.ov-eq .hint{font-family:var(--f-body);font-size:.78rem;font-weight:500;color:var(--faint);letter-spacing:0;width:100%;margin-top:2px}
+.fh-in .lede{color:var(--muted);font-size:1.08rem;max-width:46ch}
+.btn.big{padding:14px 22px;font-size:1.02rem;border-radius:13px}
+.btn.primary{box-shadow:0 14px 32px -14px var(--flow)}
+.btn.glassy{background:var(--glass);border-color:var(--glass-line);color:var(--fg);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.btn.glassy:hover{border-color:var(--fg)}
+.mystats{display:flex;flex-wrap:wrap;gap:8px 26px}
+.mystats div{display:flex;flex-direction:column}
+.mystats b{font-family:var(--f-display);font-size:1.5rem;line-height:1.1}
+.mystats span{font-size:.82rem;color:var(--muted)}
+.ov .page{max-width:1180px;gap:96px;padding-block:24px 64px}
+.ov .sec-h h2{font-size:clamp(1.7rem,3.6vw,2.5rem);letter-spacing:-.03em}
+@media (max-width:820px){
+  .fhero{min-height:auto;align-items:flex-start}
+  .fh-in{padding-block:28px 470px}
+  .fhero.compact .fh-in{padding-bottom:440px}
+  .fh-in::before{width:120%;left:-10%;height:62%;bottom:auto}
+  .ov-title{font-size:10.4vw}
+  .fl{font-size:.74rem;padding:2px 7px}
+  .fl.node{font-size:.86rem;padding:6px 11px}
+  .ov .page{gap:72px}
+}
+/* case cards: hover swaps the card for its numbers */
+.ov .cases{gap:12px;perspective:1000px}
+.casecard{position:relative;overflow:hidden;min-height:142px;transform-style:preserve-3d;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .3s cubic-bezier(.2,.8,.2,1),background-color .3s,border-color .3s,opacity .3s,filter .3s,box-shadow .3s}
+.casecard .cf{display:flex;flex-direction:column;gap:8px;transition:opacity .3s,transform .4s cubic-bezier(.2,.8,.2,1)}
+.casecard .cb{position:absolute;inset:0;padding:14px;display:flex;flex-direction:column;justify-content:space-between;gap:4px;opacity:0;transform:translateY(14px);transition:opacity .3s,transform .4s cubic-bezier(.2,.8,.2,1);color:var(--on-flow)}
+.casecard .cb b{font-size:1rem}
+.casecard .cb dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:0 10px;font-size:.76rem;line-height:1.45}
+.casecard .cb dt{opacity:.75}
+.casecard .cb dd{margin:0;font-family:var(--f-mono);font-weight:700;text-align:right}
+.casecard:is(:hover,:focus-visible){background:var(--flow);border-color:var(--flow);box-shadow:0 22px 44px -22px var(--flow);transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-6px) scale(1.04)}
+.casecard:is(:hover,:focus-visible) .cf{opacity:0;transform:translateY(-14px)}
+.casecard:is(:hover,:focus-visible) .cb{opacity:1;transform:none}
+.cases:has(.casecard:hover) .casecard:not(:hover){opacity:.5;filter:saturate(.3)}
+@media (hover:none){.casecard .cb{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}.ov-title .w{transform:none}}
 </style>
 </head>
 <body>
@@ -294,6 +364,7 @@ a{color:inherit}
     <a href="#cases" data-route="cases">Cases</a>
   </nav>
   <span class="grow"></span>
+  <button class="theme" id="fsBtn" type="button"></button>
   <button class="theme" id="themeBtn" type="button"></button>
 </div></header>
 <main id="app"></main>
@@ -325,7 +396,7 @@ const ICON = {
 };
 const THEME_LABEL = { system: "Auto", light: "Light", dark: "Dark" };
 let theme = "system"; try { theme = localStorage.getItem("nexus-theme") || "system"; } catch (e) {}
-function applyTheme(){ if (theme === "system") delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = theme; const b = $("#themeBtn"); b.innerHTML = ICON[theme] + `<span class="tl">${THEME_LABEL[theme]}</span>`; b.setAttribute("aria-label", `Theme: ${THEME_LABEL[theme]}. Change theme`); b.title = "Theme: " + THEME_LABEL[theme]; }
+function applyTheme(){ if (theme === "system") delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = theme; const b = $("#themeBtn"); b.innerHTML = ICON[theme] + `<span class="tl">${THEME_LABEL[theme]}</span>`; b.setAttribute("aria-label", `Theme: ${THEME_LABEL[theme]}. Change theme`); b.title = "Theme: " + THEME_LABEL[theme]; window.dispatchEvent(new Event("nexus-theme")); }
 applyTheme();
 $("#themeBtn").addEventListener("click", () => { theme = { system: "light", light: "dark", dark: "system" }[theme]; try { localStorage.setItem("nexus-theme", theme); } catch (e) {} applyTheme(); });
 
@@ -512,7 +583,7 @@ function go(hash){ if (location.hash === "#" + hash) render(); else location.has
 window.addEventListener("hashchange", render);
 
 /* ---------- author credit (same block on every Nexus page) ---------- */
-const ME = { name: "Christo Czysz", cls: "EDHEC BBA1 · English track · Lille", insta: "christo.cz", linkedin: "https://www.linkedin.com/search/results/people/?keywords=Christo%20Czysz", mail: ["christo.czysz", "edhec.com"] };
+const ME = { name: "Christo Czysz", cls: "EDHEC BBA1, English track, Lille campus", insta: "christo.cz", linkedin: "https://www.linkedin.com/search/results/people/?keywords=Christo%20Czysz", mail: ["christo.czysz", "edhec.com"] };
 const ICONS = {
   ig: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>',
   li: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V17M8 7.2v.1M12 17v-6.5M12 13.4c0-1.7 1-2.9 2.5-2.9S17 11.4 17 13v4"/></svg>',
@@ -528,7 +599,9 @@ function creditHtml(){
 function caseCard(i){
   const s = caseStats(i), done = s.done === TOTAL;
   const state = done ? `<span class="state done">${s.pct ?? Math.round(s.right / TOTAL * 100)}%</span>` : s.done ? `<span class="state go">${s.done}/${TOTAL}</span>` : `<span class="state">New</span>`;
-  return `<a class="casecard" href="#case${i}"><div class="top"><b>Case ${i}</b>${state}</div><span class="country">${COUNTRIES[i - 1]}</span><div class="mini" aria-hidden="true"><i style="width:${s.done / TOTAL * 100}%;${done ? "background:var(--ok)" : ""}"></i></div></a>`;
+  const K = makeCase(i), fin = K.ch[5];
+  return `<a class="casecard" href="#case${i}"><div class="cf"><div class="top"><b>Case ${i}</b>${state}</div><span class="country">${COUNTRIES[i - 1]}</span><div class="mini" aria-hidden="true"><i style="width:${s.done / TOTAL * 100}%;${done ? "background:var(--ok)" : ""}"></i></div></div>
+    <div class="cb" aria-hidden="true"><b>${COUNTRIES[i - 1]}</b><dl><dt>Makes</dt><dd>${fin}</dd><dt>GDP Y</dt><dd>€${fmt(K.Y)} bn</dd><dt>MPC c</dt><dd>${K.c}</dd><dt>Real growth</dt><dd>${K.gReal >= 0 ? "+" : "−"}${fmt(Math.abs(K.gReal), 1)}%</dd></dl></div></a>`;
 }
 function resumeTarget(){
   const st = store.get(); const last = st.last;
@@ -541,43 +614,56 @@ function overall(){
   for (let i = 1; i <= 10; i++){ const s = caseStats(i); if (s.done === TOTAL) cases++; ans += s.done; right += s.right; }
   return { cases, ans, right, acc: ans ? Math.round(right / ans * 100) : null };
 }
+const words = s => s.split(" ").map((w, i) => `<span class="w" style="animation-delay:${i * 80 + 100}ms">${w}</span>`).join(" ");
+const EQ = `<p class="ov-eq" aria-label="Y equals C plus I plus G plus X minus M"><span class="y" data-hl="loop">Y</span><span>=</span><span class="c" data-hl="loop">C</span><span>+</span><span class="i" data-hl="I">I</span><span>+</span><span class="i" data-hl="G">G</span><span>+</span><span>(<span class="i" data-hl="X">X</span></span><span>−</span><span><span class="l" data-hl="M">M</span>)</span></p>`;
 function viewHome(){
   const o = overall(), r = resumeTarget(), started = caseStats(r).done > 0;
-  return h("div", { class: "page", html: `
-  <section class="hero">
-    <span class="eyebrow">Business Economics · Semester 1</span>
-    <h1 class="pagetitle">Macroeconomics</h1>
-    <div class="eq" aria-label="Y equals C plus I plus G plus X minus M"><span class="y">Y</span> = C + <span class="i">I</span> + <span class="i">G</span> + (<span class="i">X</span> − <span class="l">M</span>)</div>
-    <p class="lede">Chapters 2 to 4 as hands-on cases. New numbers every time, and every answer comes with the working.</p>
-    <div class="row"><a class="btn primary" href="#case${r}">${started ? `Continue case ${r}` : `Start case ${r}`} →</a><button class="btn quiet" type="button" data-act="random">Random case</button></div>
+  return h("div", { class: "ov", html: `
+  <section class="fhero" aria-label="Macroeconomics">
+    <canvas aria-hidden="true"></canvas><div class="fl-labels" aria-hidden="true"></div>
+    <div class="fh-in">
+      <p class="kicker">Business Economics, semester 1</p>
+      <h1 class="ov-title"><span class="clip">${words("Macroeconomics")}</span></h1>
+      ${EQ}
+      <p class="lede">Chapters 2 to 4 as full exam-style cases. Point at a letter to see its flow in the economy.</p>
+      <div class="row"><a class="btn primary big" href="#case${r}">${started ? `Continue case ${r}` : `Start case ${r}`}</a><a class="btn glassy big" href="#cases">All 10 cases</a><button class="btn glassy big" type="button" data-act="random">Random case</button></div>
+      ${o.ans ? `<div class="mystats" aria-label="Your progress"><div><b class="num">${o.cases}/10</b><span>cases finished</span></div><div><b class="num">${o.ans}</b><span>questions answered</span></div><div><b class="num">${o.acc}%</b><span>right first time</span></div></div>` : ""}
+    </div>
   </section>
-  ${o.ans ? `<section class="stats" aria-label="Your progress">
-    <div class="stat"><b class="num">${o.cases}/10</b><span>cases finished</span></div>
-    <div class="stat"><b class="num">${o.ans}</b><span>questions answered</span></div>
-    <div class="stat"><b class="num">${o.acc}%</b><span>right first time</span></div></section>` : ""}
+  <div class="page">
   <section class="sec">
-    <div class="sec-h"><h2>Full cases</h2><p>30 questions each, about 25 minutes.</p></div>
+    <div class="sec-h"><h2>Full cases</h2><p>30 questions each, about 25 minutes. Hover a case to see its economy.</p></div>
     <div class="cases">${Array.from({ length: 10 }, (_, i) => caseCard(i + 1)).join("")}</div>
   </section>
-  <section class="sec" id="reviews" aria-label="Reviews"></section>
   <section class="exam" aria-label="How the course is graded">
-    <div><span class="eyebrow">How you are graded</span><h2 style="margin-top:6px">The final exam is 60%</h2><p>Open questions on the lectures, plus one exercise like the tutorials.</p></div>
+    <div><h2>The final exam is 60%</h2><p>Open questions on the lectures, plus one exercise like the tutorials.</p></div>
     <div><div class="split" aria-hidden="true"><i style="width:60%;background:var(--flow)"></i><i style="width:30%;background:var(--inj)"></i><i style="width:10%;background:var(--leak)"></i></div>
       <ul class="legend"><li><i class="sw" style="background:var(--flow)"></i><b>60%</b>Final exam</li><li><i class="sw" style="background:var(--inj)"></i><b>30%</b>Group project and debate</li><li><i class="sw" style="background:var(--leak)"></i><b>10%</b>Tutorials (one exercise drawn at random)</li></ul></div>
   </section>
+  <section class="sec" id="reviews" aria-label="Reviews"></section>
   <section class="sec"><div class="sec-h"><h2>Coming soon</h2></div>
     <div class="soon"><span>Course cards</span><span>Open-question trainer</span><span>Schools of thought</span><span>Drills</span><span>Flashcards</span></div></section>
   ${creditHtml()}
-  <footer class="foot"><span>Part of <a href="/">Nexus</a>, a student project to help with revision. Not an official EDHEC website.</span><span>Your progress is saved in this browser only.</span></footer>` });
+  <footer class="foot"><span>Part of <a href="/">Nexus</a>, a student project to help with revision. Not an official EDHEC website.</span><span>Your progress is saved in this browser only.</span></footer>
+  </div>` });
 }
 function viewCases(){
   const o = overall();
-  return h("div", { class: "page", html: `
-  <section class="sec">
-    <div class="sec-h"><div><span class="eyebrow">Full cases</span><h2 style="font-size:1.8rem;margin-top:4px">Pick a case</h2></div><button class="btn quiet" type="button" data-act="random">Random case</button></div>
-    <p class="muted" style="max-width:60ch">Each case follows the slides: production chain, national accounts, a household, the multiplier, then growth. ${o.cases ? `You have finished ${o.cases} of 10.` : ""}</p>
-    <div class="cases">${Array.from({ length: 10 }, (_, i) => caseCard(i + 1)).join("")}</div>
-  </section>` });
+  return h("div", { class: "ov", html: `
+  <section class="fhero compact" aria-label="Full cases">
+    <canvas aria-hidden="true"></canvas><div class="fl-labels" aria-hidden="true"></div>
+    <div class="fh-in">
+      <p class="kicker">Macroeconomics</p>
+      <h1 class="ov-title" style="font-size:clamp(2.6rem,6.4vw,5rem)"><span class="clip">${words("Full cases")}</span></h1>
+      <p class="lede">Each case follows the slides: production chain, national accounts, a household, the multiplier, then growth. ${o.cases ? `You have finished ${o.cases} of 10.` : ""}</p>
+      <div class="row"><button class="btn primary big" type="button" data-act="random">Random case</button></div>
+    </div>
+  </section>
+  <div class="page">
+    <section class="sec"><div class="sec-h"><h2>Pick a case</h2><p>Hover a case to see its economy.</p></div>
+    <div class="cases">${Array.from({ length: 10 }, (_, i) => caseCard(i + 1)).join("")}</div></section>
+    ${creditHtml()}
+  </div>` });
 }
 
 /* ---------- case view ---------- */
@@ -802,9 +888,198 @@ function mountReviewSection(sec){
   rvLoad().then(draw);
 }
 
+/* ---------- full screen (kept across pages: the first tap on the next page restores it) ---------- */
+const FS = (() => {
+  const d = document, el = d.documentElement;
+  const can = !!(d.fullscreenEnabled || d.webkitFullscreenEnabled);
+  const isOn = () => !!(d.fullscreenElement || d.webkitFullscreenElement);
+  let leaving = false;
+  const want = v => { try { v ? sessionStorage.setItem("nexus-fs", "1") : sessionStorage.removeItem("nexus-fs"); } catch (e) {} };
+  const wanted = () => { try { return sessionStorage.getItem("nexus-fs") === "1"; } catch (e) { return false; } };
+  const enter = () => { try { const r = (el.requestFullscreen || el.webkitRequestFullscreen).call(el, { navigationUI: "hide" }); if (r && r.catch) r.catch(() => {}); } catch (e) {} };
+  const exit = () => { try { (d.exitFullscreen || d.webkitExitFullscreen).call(d); } catch (e) {} };
+  const toggle = () => { if (isOn()){ want(false); exit(); } else { want(true); enter(); } };
+  const ENTER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+  const EXIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>';
+  function bind(btn){
+    if (!can){ btn.hidden = true; return; }
+    const paint = () => { const on = isOn(); btn.innerHTML = (on ? EXIT : ENTER) + `<span class="tl">${on ? "Exit full screen" : "Full screen"}</span>`; btn.setAttribute("aria-label", on ? "Exit full screen" : "Full screen (F)"); btn.title = on ? "Exit full screen (F)" : "Full screen (F)"; btn.setAttribute("aria-pressed", String(on)); };
+    btn.addEventListener("click", toggle);
+    const changed = () => { paint(); if (!isOn() && !leaving) want(false); };
+    d.addEventListener("fullscreenchange", changed); d.addEventListener("webkitfullscreenchange", changed);
+    addEventListener("beforeunload", () => { leaving = true; }); addEventListener("pagehide", () => { leaving = true; });
+    d.addEventListener("keydown", e => { if ((e.key === "f" || e.key === "F") && !e.metaKey && !e.ctrlKey && !e.altKey && !(e.target.closest && e.target.closest("input,textarea,select,[contenteditable]"))){ e.preventDefault(); toggle(); } });
+    if (wanted() && !isOn()){ const again = e => { if (e.target.closest && e.target.closest("#" + btn.id)) return; enter(); }; d.addEventListener("pointerup", again, { once: true }); }
+    paint();
+  }
+  return { bind };
+})();
+
+/* ---------- background colour that follows the scroll ---------- */
+function scrollTint(getStops, getStart){
+  const root = document.documentElement, hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const dark = () => { const t = root.dataset.theme; return t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches); };
+  let raf = 0;
+  function upd(){
+    raf = 0;
+    const stops = getStops(dark());
+    if (!stops){ root.style.removeProperty("--bg"); root.style.removeProperty("--scrim"); return; }
+    const start = getStart(), max = Math.max(1, root.scrollHeight - innerHeight - start);
+    const p = Math.min(1, Math.max(0, (scrollY - start) / max)), x = p * (stops.length - 1), i = Math.min(stops.length - 2, Math.floor(x)), f = x - i, e = f * f * (3 - 2 * f);
+    const a = hex(stops[i]), b = hex(stops[i + 1]), c = a.map((v, k) => Math.round(v + (b[k] - v) * e));
+    root.style.setProperty("--bg", `rgb(${c.join(" ")})`); root.style.setProperty("--scrim", c.join(" "));
+  }
+  const q = () => { if (!raf) raf = requestAnimationFrame(upd); };
+  addEventListener("scroll", q, { passive: true }); addEventListener("resize", q); addEventListener("nexus-theme", q);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", q);
+  q(); return q;
+}
+
+/* ---------- the circular flow, live (WebGL points, no library) ----------
+   Households ⇄ firms on an ellipse. Upper arc: spending (C) to firms. Lower arc: income (Y) back to households.
+   Amber streams join the spending arc (I, G, X: injections). Coral streams leave the income arc (S, T, M: leakages).
+   The pointer pushes particles aside; hovering a letter of the formula or a label lights up that stream. */
+function mountFlow(hero, opts = {}){
+  const cv = hero.querySelector("canvas"), labels = hero.querySelector(".fl-labels");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let gl; try { gl = cv.getContext("webgl", { antialias: false, alpha: true, premultipliedAlpha: false }); } catch (e) {}
+  if (!gl) return () => {};
+  const VS = `attribute vec2 aP; attribute float aS; attribute vec4 aC; uniform vec2 uR; uniform float uD; varying vec4 vC;
+    void main(){ vec2 c = aP / uR * 2.0 - 1.0; gl_Position = vec4(c.x, -c.y, 0.0, 1.0); gl_PointSize = aS * uD; vC = aC; }`;
+  const FS = `precision mediump float; varying vec4 vC;
+    void main(){ vec2 d = gl_PointCoord - 0.5; float r = length(d); float a = smoothstep(0.5, 0.0, r); gl_FragColor = vec4(vC.rgb, vC.a * a); }`;
+  const mk = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return o; };
+  const pr = gl.createProgram(); gl.attachShader(pr, mk(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, mk(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr);
+  if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return () => {};
+  gl.useProgram(pr);
+  const aP = gl.getAttribLocation(pr, "aP"), aS = gl.getAttribLocation(pr, "aS"), aC = gl.getAttribLocation(pr, "aC");
+  const uR = gl.getUniformLocation(pr, "uR"), uD = gl.getUniformLocation(pr, "uD");
+  const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.enableVertexAttribArray(aP); gl.vertexAttribPointer(aP, 2, gl.FLOAT, false, 28, 0);
+  gl.enableVertexAttribArray(aS); gl.vertexAttribPointer(aS, 1, gl.FLOAT, false, 28, 8);
+  gl.enableVertexAttribArray(aC); gl.vertexAttribPointer(aC, 4, gl.FLOAT, false, 28, 12);
+  gl.enable(gl.BLEND);
+
+  const STREAMS = ["loop", "I", "G", "X", "S", "T", "M"];
+  const NAMES = { I: "Investment", G: "Public spending", X: "Exports", S: "Saving", T: "Taxes", M: "Imports" };
+  let W = 0, H = 0, dpr = 1, geo = null, P = [], data = null, dark = false, col = {};
+  const hexRGB = h => { h = h.trim(); return [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255); };
+  function readColors(){
+    const cs = getComputedStyle(document.documentElement);
+    dark = matchMedia("(prefers-color-scheme: dark)").matches && document.documentElement.dataset.theme !== "light" || document.documentElement.dataset.theme === "dark";
+    col = { loop: hexRGB(cs.getPropertyValue("--flow")), inj: hexRGB(cs.getPropertyValue("--inj")), leak: hexRGB(cs.getPropertyValue("--leak")) };
+    if (dark) gl.blendFunc(gl.SRC_ALPHA, gl.ONE); else gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  }
+  const loopAt = (g, th, lane = 0) => { const c = Math.cos(th), s = Math.sin(th); let nx = c * g.ry, ny = s * g.rx; const n = Math.hypot(nx, ny) || 1; return [g.cx + g.rx * c + nx / n * lane, g.cy + g.ry * s + ny / n * lane]; };
+  function layout(){
+    const r = hero.getBoundingClientRect(); W = r.width; H = r.height; dpr = Math.min(devicePixelRatio || 1, 2);
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); gl.viewport(0, 0, cv.width, cv.height);
+    const narrow = W < 820;
+    let g;
+    if (narrow){ const rx = Math.min(W * 0.27, 150), ry = 74; g = { cx: W / 2, cy: H - 205, rx, ry, out: 54 }; }
+    else { const rx = Math.min(W * 0.17, opts.compact ? 190 : 260), ry = Math.min(H * (opts.compact ? 0.2 : 0.2), opts.compact ? 92 : 150); g = { cx: Math.min(W * 0.72, W - rx - 170), cy: H * 0.53, rx, ry, out: opts.compact ? 80 : 120 }; }
+    const o = g.out, lp = th => loopAt(g, th);
+    g.src = {
+      G: { from: [g.cx - g.rx * 0.45, g.cy - g.ry - o], th: Math.PI * 1.38 },
+      I: { from: [g.cx + g.rx * 0.3, g.cy - g.ry - o * 1.08], th: Math.PI * 1.62 },
+      X: { from: [g.cx + g.rx + o * 1.05, g.cy - g.ry * 0.7], th: Math.PI * 1.86 },
+      M: { to: [g.cx + g.rx + o * 1.05, g.cy + g.ry * 0.75], th: Math.PI * 0.14 },
+      T: { to: [g.cx + g.rx * 0.2, g.cy + g.ry + o * 1.08], th: Math.PI * 0.42 },
+      S: { to: [g.cx - g.rx * 0.5, g.cy + g.ry + o], th: Math.PI * 0.68 }
+    };
+    for (const k in g.src){ const s = g.src[k], j = lp(s.th); if (s.from){ s.a = s.from; s.b = j; } else { s.a = j; s.b = s.to; } const m = [(s.a[0] + s.b[0]) / 2, (s.a[1] + s.b[1]) / 2], v = [m[0] - g.cx, m[1] - g.cy], n = Math.hypot(v[0], v[1]) || 1; s.c = [m[0] + v[0] / n * 26, m[1] + v[1] / n * 26]; }
+    geo = g;
+    const nLoop = narrow ? 360 : (opts.compact ? 460 : 720), nStr = narrow ? 34 : (opts.compact ? 40 : 62);
+    if (!P.length || P._n !== nLoop + nStr * 6){
+      P = []; P._n = nLoop + nStr * 6;
+      for (let i = 0; i < nLoop; i++) P.push({ k: 0, s: Math.random(), v: 0.045 + Math.random() * 0.03, lane: (Math.random() - .5) * (narrow ? 22 : 34), z: 2.6 + Math.random() * 3.4, dx: 0, dy: 0, vx: 0, vy: 0 });
+      for (let k = 1; k <= 6; k++) for (let i = 0; i < nStr; i++) P.push({ k, s: Math.random(), v: 0.16 + Math.random() * 0.12, lane: (Math.random() - .5) * 16, z: 3 + Math.random() * 3, dx: 0, dy: 0, vx: 0, vy: 0 });
+      data = new Float32Array(P.length * 7);
+    }
+    gl.uniform2f(uR, W, H); gl.uniform1f(uD, dpr);
+    if (labels){
+      const L = (cls, x, y, html, hl) => `<span class="fl ${cls}" data-hl="${hl}" style="left:${Math.min(W - (narrow ? 22 : 64), Math.max(narrow ? 22 : 64, x)).toFixed(1)}px;top:${y.toFixed(1)}px">${html}</span>`;
+      const lt = lp(Math.PI), rt = lp(0);
+      let s = L("node", lt[0], lt[1], narrow ? "Households" : "Households", "loop") + L("node", rt[0], rt[1], "Firms", "loop");
+      for (const k of ["I", "G", "X"]){ const p = g.src[k].a; s += L("inj", p[0], p[1] - 14, `<b>${k}</b>${narrow ? "" : " " + NAMES[k]}`, k); }
+      for (const k of ["S", "T", "M"]){ const p = g.src[k].b; s += L("leak", p[0], p[1] + 14, `<b>${k}</b>${narrow ? "" : " " + NAMES[k]}`, k); }
+      const top = lp(Math.PI * 1.5), bot = lp(Math.PI * 0.5);
+      s += L("arc", top[0], top[1] - (narrow ? 26 : 34), "Spending C", "loop") + L("arc", bot[0], bot[1] + (narrow ? 26 : 34), "Income Y", "loop");
+      labels.innerHTML = s;
+    }
+  }
+  /* highlight: one weight per stream, eased */
+  const wt = new Float32Array(7).fill(1), wtT = new Float32Array(7).fill(1);
+  function setHL(name){ for (let i = 0; i < 7; i++) wtT[i] = !name ? 1 : STREAMS[i] === name ? 1.7 : 0.18; labels && labels.querySelectorAll(".fl").forEach(l => l.classList.toggle("lit", !!name && l.dataset.hl === name)); }
+  const onOver = e => { const t = e.target.closest && e.target.closest("[data-hl]"); setHL(t ? t.dataset.hl : null); };
+  document.addEventListener("pointerover", onOver);
+  const M = { x: -1e4, y: -1e4, on: false };
+  const onMove = e => { const r = hero.getBoundingClientRect(); M.x = e.clientX - r.left; M.y = e.clientY - r.top; M.on = true; };
+  const onLeave = () => { M.on = false; M.x = M.y = -1e4; };
+  hero.addEventListener("pointermove", onMove); hero.addEventListener("pointerleave", onLeave);
+  function bez(a, c, b, t){ const u = 1 - t; return [u * u * a[0] + 2 * u * t * c[0] + t * t * b[0], u * u * a[1] + 2 * u * t * c[1] + t * t * b[1]]; }
+  function step(dt){
+    const g = geo; let o = 0;
+    for (let i = 0; i < 7; i++) wt[i] += (wtT[i] - wt[i]) * Math.min(1, dt * 7);
+    for (const p of P){
+      p.s += p.v * dt * (p.k ? 1 : 1); if (p.s >= 1) p.s -= 1;
+      let x, y, a, c;
+      if (p.k === 0){ [x, y] = loopAt(g, Math.PI + p.s * Math.PI * 2, p.lane); a = 0.78; c = col.loop; }
+      else {
+        const key = STREAMS[p.k], s = g.src[key]; [x, y] = bez(s.a, s.c, s.b, p.s);
+        const dx = s.b[0] - s.a[0], dy = s.b[1] - s.a[1], n = Math.hypot(dx, dy) || 1; x += -dy / n * p.lane; y += dx / n * p.lane;
+        const inj = p.k <= 3; c = inj ? col.inj : col.leak;
+        a = inj ? Math.min(1, p.s / 0.2) : Math.min(1, (1 - p.s) / 0.35);
+      }
+      /* pointer pushes particles aside, a spring brings them back */
+      const ddx = x + p.dx - M.x, ddy = y + p.dy - M.y, d2 = ddx * ddx + ddy * ddy, R = 120;
+      if (d2 < R * R){ const d = Math.sqrt(d2) || 1, f = (1 - d / R) ** 2 * 2600; p.vx += ddx / d * f * dt; p.vy += ddy / d * f * dt; }
+      p.vx += -p.dx * 22 * dt; p.vy += -p.dy * 22 * dt; const damp = Math.pow(0.02, dt); p.vx *= damp; p.vy *= damp;
+      p.dx += p.vx * dt; p.dy += p.vy * dt;
+      const w = wt[p.k];
+      data[o++] = x + p.dx; data[o++] = y + p.dy; data[o++] = p.z * (0.7 + 0.45 * w) * (dark ? 1.3 : 1);
+      data[o++] = c[0]; data[o++] = c[1]; data[o++] = c[2]; data[o++] = Math.min(1, a * w * (dark ? 1 : 0.9));
+    }
+  }
+  function draw(){ gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW); gl.drawArrays(gl.POINTS, 0, P.length); }
+  let raf = 0, prev = 0, vis = true, dead = false;
+  function frame(now){ raf = 0; if (dead) return; const dt = Math.min(0.05, (now - (prev || now)) / 1000); prev = now; step(dt); draw(); if (vis && !document.hidden) raf = requestAnimationFrame(frame); }
+  const wake = () => { if (!raf && vis && !document.hidden && !reduce && !dead){ prev = 0; raf = requestAnimationFrame(frame); } };
+  const io = new IntersectionObserver(es => { vis = es[0].isIntersecting; wake(); }); io.observe(hero);
+  const onVis = () => wake(); document.addEventListener("visibilitychange", onVis);
+  let rt; const onResize = () => { clearTimeout(rt); rt = setTimeout(() => { layout(); if (reduce){ step(0); draw(); } }, 100); };
+  addEventListener("resize", onResize);
+  const onTheme = () => { readColors(); if (reduce){ step(0); draw(); } };
+  addEventListener("nexus-theme", onTheme);
+  readColors(); layout();
+  if (reduce){ step(0); draw(); } else wake();
+  return () => { dead = true; cancelAnimationFrame(raf); io.disconnect(); document.removeEventListener("pointerover", onOver); document.removeEventListener("visibilitychange", onVis); removeEventListener("resize", onResize); removeEventListener("nexus-theme", onTheme); };
+}
+
+/* ---------- colour aura that follows the pointer (teal → amber → coral across the screen) ---------- */
+const AURA = (() => {
+  const el = document.createElement("div"); el.className = "aura"; el.setAttribute("aria-hidden", "true"); document.body.prepend(el);
+  const st = { x: innerWidth * .7, y: innerHeight * .4, tx: innerWidth * .7, ty: innerHeight * .4 }; let raf = 0, on = false;
+  const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+  const hx = h => [1, 3, 5].map(i => parseInt(h.trim().slice(i, i + 2), 16));
+  function tick(){
+    raf = 0; st.x += (st.tx - st.x) * .09; st.y += (st.ty - st.y) * .09;
+    const cs = getComputedStyle(document.documentElement), f = Math.min(1, Math.max(0, st.x / innerWidth));
+    const c = f < .5 ? mix(hx(cs.getPropertyValue("--flow")), hx(cs.getPropertyValue("--inj")), f * 2) : mix(hx(cs.getPropertyValue("--inj")), hx(cs.getPropertyValue("--leak")), f * 2 - 1);
+    el.style.setProperty("--ax", st.x + "px"); el.style.setProperty("--ay", st.y + "px"); el.style.setProperty("--ac", `rgb(${c.join(" ")})`);
+    if (on && (Math.abs(st.tx - st.x) > .5 || Math.abs(st.ty - st.y) > .5)) raf = requestAnimationFrame(tick);
+  }
+  addEventListener("pointermove", e => { if (!on || e.pointerType !== "mouse") return; st.tx = e.clientX; st.ty = e.clientY; if (!raf) raf = requestAnimationFrame(tick); }, { passive: true });
+  addEventListener("scroll", () => { if (!on || matchMedia("(hover: hover)").matches) return; const p = scrollY / Math.max(1, document.documentElement.scrollHeight - innerHeight); st.tx = innerWidth * (.15 + .7 * p); st.ty = innerHeight * (.3 + .4 * p); if (!raf) raf = requestAnimationFrame(tick); }, { passive: true });
+  return { set(v){ on = v; el.hidden = !v; if (v && !raf) raf = requestAnimationFrame(tick); } };
+})();
+
 /* ---------- render ---------- */
+const STAGE = { stop: null, view: null };
 function render(){
   const r = route();
+  if (STAGE.stop){ STAGE.stop(); STAGE.stop = null; }
+  STAGE.view = r.view; AURA.set(r.view !== "case"); TINT();
   document.querySelectorAll(".nav a").forEach(a => a.setAttribute("aria-current", (a.dataset.route === r.view || (r.view === "case" && a.dataset.route === "cases")) ? "page" : "false"));
   const app = $("#app");
   if (r.view === "case"){
@@ -813,6 +1088,11 @@ function render(){
     document.title = `Case ${seed <= 10 ? seed : "practice"} · Macroeconomics`;
   } else {
     app.replaceChildren(r.view === "cases" ? viewCases() : viewHome());
+    const fh = app.querySelector(".fhero"); if (fh) STAGE.stop = mountFlow(fh, { compact: r.view === "cases" });
+    app.querySelectorAll(".casecard").forEach(c => {
+      c.addEventListener("pointermove", e => { if (e.pointerType !== "mouse") return; const b = c.getBoundingClientRect(); c.style.setProperty("--ry", (((e.clientX - b.left) / b.width - .5) * 12).toFixed(1) + "deg"); c.style.setProperty("--rx", ((.5 - (e.clientY - b.top) / b.height) * 12).toFixed(1) + "deg"); });
+      c.addEventListener("pointerleave", () => { c.style.removeProperty("--rx"); c.style.removeProperty("--ry"); });
+    });
     const rs = app.querySelector("#reviews"); if (rs) mountReviewSection(rs);
     document.title = "Macroeconomics · Nexus";
     if (location.hash === "#reviews") setTimeout(() => { const s = $("#reviews"); if (s) s.scrollIntoView(); }, 60); else window.scrollTo(0, 0);
@@ -822,6 +1102,9 @@ document.addEventListener("click", e => {
   const t = e.target.closest("[data-act='random']"); if (!t) return;
   go("case" + (11 + Math.floor(Math.random() * 1e6)));
 });
+FS.bind($("#fsBtn"));
+/* teal ink → navy → amber dusk → coral dusk → ink (dark); mint paper → lilac → cream → blush → paper (light) */
+const TINT = scrollTint(dark => STAGE.view === "case" ? null : dark ? ["#0B1719", "#0E1A2C", "#2A1B0B", "#2C1114", "#090C0D"] : ["#EEF6F4", "#EEF0FA", "#FBF1DD", "#FCE7E3", "#F3F5F2"], () => innerHeight * 0.25);
 render();
 </script>
 </body>

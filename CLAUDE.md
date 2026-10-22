@@ -42,7 +42,15 @@ Une nouvelle matière = un dossier `/<matiere>/index.html` autonome, plus une li
 
 - Élément signature : une feuille d'examen quadrillée (petits carreaux, trait renforcé tous les 5) en WebGL écrit à la main, sans librairie. Elle se creuse sous la souris, s'incline, fait une onde au clic et prend le dégradé Nexus là où elle se déforme.
 - Garde-fous : pause hors écran et onglet caché, mode économe automatique si les images sont lentes, image fixe si « mouvement réduit », fond quadrillé en CSS si WebGL est absent.
-- Le reste de la page reste sobre : matières en lignes (pas de cartes identiques), « How it works », avis, puis le bloc auteur.
+- Sous le titre, directement dans le haut de page : une tuile par matière (Macroeconomics + 2 « Coming soon » : Financial Accounting, Management & Organization, à remplacer quand Alexi choisit). Survol : la tuile prend la couleur de sa matière, change de visuel (vitrine façon popterror.com) et s'incline vers la souris, les autres s'effacent. Sur téléphone : carrousel, la tuile centrée est mise en valeur. Un clic mène à l'overview de la matière, jamais directement à un cas.
+- Ensuite : « How it works », avis, bloc auteur. Pas de sous-catégorie (« All cases », etc.) sur l'accueil.
+
+## Effets communs (toutes les pages sauf l'exercice en cours)
+
+- Plein écran : bouton dans l'en-tête de chaque page, touche F. Le choix est gardé dans `sessionStorage` (`nexus-fs`) et rétabli au premier clic sur la page suivante (un navigateur sort du plein écran à chaque changement de page).
+- Fond qui change de couleur en continu au défilement (`scrollTint`, inspiration keblow.com). Hub : papier → violet → prune → encre (sombre), papier → lilas → rose pâle → sable (clair). Macroeconomics : encre teal → bleu nuit → crépuscule ambre → crépuscule corail → encre.
+- Overview Macroeconomics : le circuit économique en particules WebGL (ménages ⇄ entreprises, injections I, G, X en ambre, fuites S, T, M en corail). Les particules s'écartent sous la souris. Survoler une lettre de la formule ou une étiquette allume le flux. Un halo de couleur suit la souris (teal → ambre → corail selon la position). Les cartes de cas montrent l'économie du cas au survol.
+- La vue d'un cas (exercice) garde un fond fixe et aucune animation.
 - Bloc auteur en bas du hub et de l'accueil de chaque lab : Christo Czysz, EDHEC BBA1 English track Lille, Instagram @christo.cz, LinkedIn, christo.czysz@edhec.com. Le lien LinkedIn est provisoire (recherche) tant qu'Alexi n'a pas donné l'adresse exacte de son profil.
 
 Chaque page est un fichier unique : CSS et JS dans la page. Seules dépendances externes autorisées : Google Fonts.
