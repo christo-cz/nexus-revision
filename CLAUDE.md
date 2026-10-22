@@ -3,7 +3,7 @@
 Site public de révision pour la promo EDHEC BBA1 (track anglais, campus de Lille), créé par Alexi (GitHub : christo-cz).
 Une page d'accueil (hub) qui liste les matières, et un « lab » par matière.
 
-- En ligne : Netlify, projet relié à ce dépôt. Chaque push sur `main` est mis en ligne automatiquement.
+- En ligne : https://nexus-revision-bba1.netlify.app (projet Netlify `nexus-revision-bba1`, public, relié à ce dépôt). Chaque push sur `main` est mis en ligne automatiquement.
 - Le site est statique : du HTML, CSS et JS écrits à la main, sans framework, sans build et sans serveur. Ne rien ajouter qui demande une étape de build.
 - Modèle d'inspiration : le site d'un camarade (midterms-work.netlify.app), en particulier son « IT-4U Ledger Lab ». On s'en inspire pour l'ergonomie, sans copier ni son code ni son identité visuelle.
 
