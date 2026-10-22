@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Flow · Macro Lab</title>
+<title>Macroeconomics · Nexus</title>
 <meta name="description" content="Business Economics revision for EDHEC BBA1: full cases on GDP, the circular flow, consumption, the multiplier and growth. Every answer checked and explained.">
 <meta name="theme-color" content="#0B7472">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
 <script>try{var t=localStorage.getItem("nexus-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}</script>
 <style>
-/* Flow: a national-accounts workbook. Data on the left, questions on the right, snapping to the centre.
+/* Macroeconomics lab (internal name "flow"): a national-accounts workbook. Data on the left, questions on the right, snapping to the centre.
    Colour carries economics: teal = output and income, amber = injections (I, G, X), coral = leakages (S, T, M). */
 :root{
   color-scheme:light;
@@ -73,6 +73,9 @@ a{color:inherit}
 .theme{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:6px 10px;font-size:.84rem;font-weight:600;color:var(--muted)}
 .theme:hover{color:var(--fg);border-color:var(--line-2)}
 .theme svg{width:16px;height:16px}
+.crumb .here{text-decoration:none;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.crumb{min-width:0}
+@media (max-width:480px){.nav a[data-route="home"]{display:none}.crumb{font-size:1.02rem}}
 @media (max-width:620px){.nav{margin-left:0}.nav a{padding:7px 9px}.theme .tl{display:none}.crumb .hub,.crumb .sl{display:none}}
 
 /* ---------- shared page frame ---------- */
@@ -126,6 +129,15 @@ a{color:inherit}
 .legend b{font-family:var(--f-mono);font-size:.86rem;min-width:3ch}
 .soon{display:flex;flex-wrap:wrap;gap:8px}
 .soon span{font-size:.86rem;padding:6px 12px;border-radius:99px;border:1px dashed var(--line-2);color:var(--muted)}
+.pagetitle{font-size:clamp(1.05rem,2.4vw,1.25rem);font-weight:700;color:var(--flow);margin:-6px 0 -4px}
+.credit{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:18px 20px}
+.credit .who{display:flex;flex-direction:column;gap:2px;margin-right:auto;min-width:0}
+.credit .who b{font-family:var(--f-display);font-size:1.05rem}
+.credit .who span{font-size:.86rem;color:var(--muted)}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a,.links button{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:10px;padding:8px 12px;font:inherit;font-size:.88rem;font-weight:600;text-decoration:none;cursor:pointer;transition:border-color .15s,transform .15s}
+.links a:hover,.links button:hover{border-color:var(--flow);transform:translateY(-1px)}
+.links svg{width:17px;height:17px;flex:none}
 .foot{border-top:1px solid var(--line);padding-top:18px;font-size:.84rem;color:var(--muted);display:flex;flex-direction:column;gap:4px}
 
 /* ---------- case workbook ---------- */
@@ -276,7 +288,7 @@ a{color:inherit}
 </head>
 <body>
 <header class="hdr"><div class="hdr-in">
-  <div class="crumb"><a class="hub" href="/" title="All subjects">Nexus</a><span class="sl">/</span><b>Flow</b></div>
+  <div class="crumb"><a class="hub" href="/" title="All subjects">Nexus</a><span class="sl">/</span><a class="here" href="#home"><b>Macroeconomics</b></a></div>
   <nav class="nav" aria-label="Sections">
     <a href="#home" data-route="home">Overview</a>
     <a href="#cases" data-route="cases">Cases</a>
@@ -499,6 +511,19 @@ function route(){
 function go(hash){ if (location.hash === "#" + hash) render(); else location.hash = hash; }
 window.addEventListener("hashchange", render);
 
+/* ---------- author credit (same block on every Nexus page) ---------- */
+const ME = { name: "Christo Czysz", cls: "EDHEC BBA1 · English track · Lille", insta: "christo.cz", linkedin: "https://www.linkedin.com/search/results/people/?keywords=Christo%20Czysz", mail: ["christo.czysz", "edhec.com"] };
+const ICONS = {
+  ig: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>',
+  li: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V17M8 7.2v.1M12 17v-6.5M12 13.4c0-1.7 1-2.9 2.5-2.9S17 11.4 17 13v4"/></svg>',
+  mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>'
+};
+function creditHtml(){
+  const mail = ME.mail.join("@");
+  return `<section class="credit" aria-label="About the author"><div class="who"><b>Made by ${ME.name}</b><span>${ME.cls}</span></div>
+    <div class="links"><a href="https://www.instagram.com/${ME.insta}/" target="_blank" rel="noopener">${ICONS.ig}@${ME.insta}</a><a href="${ME.linkedin}" target="_blank" rel="noopener">${ICONS.li}LinkedIn</a><a href="mailto:${mail}">${ICONS.mail}${mail}</a></div></section>`;
+}
+
 /* ---------- overview ---------- */
 function caseCard(i){
   const s = caseStats(i), done = s.done === TOTAL;
@@ -521,6 +546,7 @@ function viewHome(){
   return h("div", { class: "page", html: `
   <section class="hero">
     <span class="eyebrow">Business Economics · Semester 1</span>
+    <h1 class="pagetitle">Macroeconomics</h1>
     <div class="eq" aria-label="Y equals C plus I plus G plus X minus M"><span class="y">Y</span> = C + <span class="i">I</span> + <span class="i">G</span> + (<span class="i">X</span> − <span class="l">M</span>)</div>
     <p class="lede">Chapters 2 to 4 as hands-on cases. New numbers every time, and every answer comes with the working.</p>
     <div class="row"><a class="btn primary" href="#case${r}">${started ? `Continue case ${r}` : `Start case ${r}`} →</a><button class="btn quiet" type="button" data-act="random">Random case</button></div>
@@ -533,7 +559,7 @@ function viewHome(){
     <div class="sec-h"><h2>Full cases</h2><p>30 questions each, about 25 minutes.</p></div>
     <div class="cases">${Array.from({ length: 10 }, (_, i) => caseCard(i + 1)).join("")}</div>
   </section>
-  <section class="sec" id="rvSec" aria-label="Reviews"></section>
+  <section class="sec" id="reviews" aria-label="Reviews"></section>
   <section class="exam" aria-label="How the course is graded">
     <div><span class="eyebrow">How you are graded</span><h2 style="margin-top:6px">The final exam is 60%</h2><p>Open questions on the lectures, plus one exercise like the tutorials.</p></div>
     <div><div class="split" aria-hidden="true"><i style="width:60%;background:var(--flow)"></i><i style="width:30%;background:var(--inj)"></i><i style="width:10%;background:var(--leak)"></i></div>
@@ -541,6 +567,7 @@ function viewHome(){
   </section>
   <section class="sec"><div class="sec-h"><h2>Coming soon</h2></div>
     <div class="soon"><span>Course cards</span><span>Open-question trainer</span><span>Schools of thought</span><span>Drills</span><span>Flashcards</span></div></section>
+  ${creditHtml()}
   <footer class="foot"><span>Part of <a href="/">Nexus</a>, a student project to help with revision. Not an official EDHEC website.</span><span>Your progress is saved in this browser only.</span></footer>` });
 }
 function viewCases(){
@@ -706,7 +733,7 @@ function rvSummary(s){
 function rvForm(onDone){
   const f = h("form", { class: "rv-form", novalidate: true });
   const tags = (RV.data && RV.data.tags) || ["Exam-like", "Clear corrections", "Good on phone", "Saves time", "Too easy", "Too hard", "Found a mistake"];
-  f.innerHTML = `<h3>How was Flow?</h3>
+  f.innerHTML = `<h3>How is the Macroeconomics lab?</h3>
     <fieldset><legend>Your rating</legend><div class="stars" role="radiogroup" aria-label="Rating">${[1, 2, 3, 4, 5].map(n => `<button type="button" role="radio" aria-checked="false" data-star="${n}" aria-label="${n} star${n > 1 ? "s" : ""}: ${RV_WORDS[n]}">★</button>`).join("")}<output aria-live="polite"></output></div></fieldset>
     <fieldset><legend>What stood out? <span class="opt-l">Optional, up to 4</span></legend><div class="tagpick">${tags.map(x => `<button type="button" aria-pressed="false" data-tag="${esc(x)}">${esc(x)}</button>`).join("")}</div></fieldset>
     <fieldset><label class="lbl" for="rvText">Your review</label><textarea id="rvText" maxlength="600" placeholder="What helped you? What is missing?"></textarea><span class="cnt" aria-hidden="true">0/600</span></fieldset>
@@ -756,7 +783,7 @@ function mountReviewSection(sec){
   const draw = () => {
     const d = RV.data, s = d && d.labs && d.labs[RV.lab];
     const canWrite = !recentlyReviewed();
-    sec.innerHTML = `<div class="sec-h"><h2>What the class says</h2>${d && canWrite ? `<button class="btn quiet small" type="button" data-rvwrite>Rate Flow</button>` : ""}</div><div data-rvform></div>`;
+    sec.innerHTML = `<div class="sec-h"><h2>What the class says</h2>${d && canWrite ? `<button class="btn quiet small" type="button" data-rvwrite>Write a review</button>` : ""}</div><div data-rvform></div>`;
     if (!d){ sec.insertAdjacentHTML("beforeend", `<p class="rv-empty">Reviews could not be loaded right now.</p>`); return; }
     if (!s || !s.count){ sec.insertAdjacentHTML("beforeend", `<p class="rv-empty">No reviews yet. Finish a case and be the first to say what you think.</p>`); }
     else {
@@ -783,12 +810,12 @@ function render(){
   if (r.view === "case"){
     const seed = r.seed >= 1 ? r.seed : 1;
     app.replaceChildren(viewCase(seed));
-    document.title = `Case ${seed <= 10 ? seed : "practice"} · Flow`;
+    document.title = `Case ${seed <= 10 ? seed : "practice"} · Macroeconomics`;
   } else {
     app.replaceChildren(r.view === "cases" ? viewCases() : viewHome());
-    const rs = app.querySelector("#rvSec"); if (rs) mountReviewSection(rs);
-    document.title = "Flow · Macro Lab";
-    window.scrollTo(0, 0);
+    const rs = app.querySelector("#reviews"); if (rs) mountReviewSection(rs);
+    document.title = "Macroeconomics · Nexus";
+    if (location.hash === "#reviews") setTimeout(() => { const s = $("#reviews"); if (s) s.scrollIntoView(); }, 60); else window.scrollTo(0, 0);
   }
 }
 document.addEventListener("click", e => {

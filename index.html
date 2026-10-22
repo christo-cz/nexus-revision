@@ -3,194 +3,452 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Nexus Revision</title>
-<meta name="description" content="Revision labs for EDHEC BBA1 courses: full cases, drills and mock exams built from the course material. Free, no account needed.">
-<meta property="og:title" content="Nexus Revision">
-<meta property="og:description" content="Revision labs for EDHEC BBA1 courses: full cases, drills and mock exams. Free, no account needed.">
-<meta name="theme-color" content="#14112A">
+<title>Nexus · Revision for EDHEC BBA1</title>
+<meta name="description" content="Revision labs for EDHEC BBA1 courses: full exam-style cases with every answer worked out, new numbers every time. Free, no account.">
+<meta property="og:title" content="Nexus · Revision for EDHEC BBA1">
+<meta property="og:description" content="Sit the exam before the exam. Full cases built from the course, every answer worked out.">
+<meta name="theme-color" content="#F5F6FB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0D1024" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
 <script>try{var t=localStorage.getItem("nexus-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}</script>
 <style>
-/* Hub: one column of subject cards. Each subject keeps its own colour; the hub itself stays neutral ink with the Nexus gradient as its only flourish. */
+/* Nexus hub.
+   Signature: the exam paper. The hero is a sheet of squared exam paper (small squares, a stronger line every 5),
+   drawn in real 3D with hand-written WebGL. It sinks into a well under the pointer, ripples on click and takes the
+   Nexus gradient only where it bends. Everything below the hero stays quiet. */
 :root{
   color-scheme:light;
-  --bg:#F4F4F8; --surface:#FFFFFF; --sunk:#EAEAF1; --line:#DADAE5; --fg:#14112A; --muted:#5C5A70; --faint:#8D8BA0;
-  --brand1:#3B5BFF; --brand2:#8E6CFF; --brand3:#FF5FA2;
-  --flow:#0B7472; --flow-soft:#DCEFEC; --star:#B06F07; --line-2:#C4C4D4; --bad:#B4372E;
+  --bg:#F5F6FB; --surface:#FFFFFF; --sunk:#E9EBF5; --line:#D9DCEA; --line-2:#C2C6DB;
+  --fg:#12142B; --muted:#565B78; --faint:#8A8FA8;
+  --grid:70,92,190; --grid-a:.16; --grid-major:.30;
+  --b1:#3B5BFF; --b2:#8E6CFF; --b3:#FF5FA2;
+  --macro:#0B7472; --macro-soft:#DCEFEC;
+  --star:#B06F07; --bad:#B4372E;
+  --scrim:245,246,251;
   --f-display:"Familjen Grotesk","Avenir Next","Segoe UI",system-ui,sans-serif;
   --f-body:"Public Sans","Segoe UI",system-ui,-apple-system,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
-  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  --gut:max(20px,env(safe-area-inset-left,0px)); --gut-r:max(20px,env(safe-area-inset-right,0px));
+  padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0F0E19; --surface:#18172A; --sunk:#211F36; --line:#2D2B45; --fg:#ECEBF7; --muted:#A8A6BF; --faint:#76748E;
-  --flow:#4CC2BC; --flow-soft:#13302F; --star:#E9AE4C; --line-2:#3C3A58; --bad:#F08A80; color-scheme:dark;
+  --bg:#0D1024; --surface:#141836; --sunk:#1B2045; --line:#262C57; --line-2:#363D70;
+  --fg:#ECEDFA; --muted:#A3A8CC; --faint:#6E739A;
+  --grid:150,165,255; --grid-a:.2; --grid-major:.4;
+  --macro:#4CC2BC; --macro-soft:#123033;
+  --star:#E9AE4C; --bad:#F08A80; --scrim:13,16,36; color-scheme:dark;
 }}
 :root[data-theme="dark"]{
-  --bg:#0F0E19; --surface:#18172A; --sunk:#211F36; --line:#2D2B45; --fg:#ECEBF7; --muted:#A8A6BF; --faint:#76748E;
-  --flow:#4CC2BC; --flow-soft:#13302F; --star:#E9AE4C; --line-2:#3C3A58; --bad:#F08A80; color-scheme:dark;
+  --bg:#0D1024; --surface:#141836; --sunk:#1B2045; --line:#262C57; --line-2:#363D70;
+  --fg:#ECEDFA; --muted:#A3A8CC; --faint:#6E739A;
+  --grid:150,165,255; --grid-a:.2; --grid-major:.4;
+  --macro:#4CC2BC; --macro-soft:#123033;
+  --star:#E9AE4C; --bad:#F08A80; --scrim:13,16,36; color-scheme:dark;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
-h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.08;text-wrap:balance;letter-spacing:-.015em}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.08;text-wrap:balance}
 p{margin:0}
 a{color:inherit}
-:focus-visible{outline:2px solid var(--brand2);outline-offset:3px}
-.wrap{max-width:1040px;margin:0 auto;padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:44px}
-.top{display:flex;align-items:center;gap:12px}
-.top img{width:34px;height:34px}
-.top b{font-family:var(--f-display);font-size:1.25rem}
-.top .grow{flex:1}
-.theme{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:9px;padding:6px 10px;font:inherit;font-size:.84rem;font-weight:600;cursor:pointer}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2.5px solid var(--b2);outline-offset:3px;border-radius:6px}
+.wrap{width:100%;max-width:1120px;margin:0 auto;padding-left:var(--gut);padding-right:var(--gut-r)}
+
+/* ---------- top bar ---------- */
+.top{position:absolute;inset:0 0 auto;z-index:5;padding-top:env(safe-area-inset-top,0px)}
+.top .wrap{height:72px;display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand img{width:32px;height:32px}
+.brand b{font-family:var(--f-display);font-size:1.25rem;letter-spacing:-.01em}
+.grow{flex:1}
+.toplink{font-size:.92rem;font-weight:600;color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:8px}
+.toplink:hover{color:var(--fg)}
+.theme{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:rgb(var(--scrim) / .7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:var(--muted);border-radius:10px;padding:7px 11px;font-size:.86rem;font-weight:600}
 .theme:hover{color:var(--fg)}
 .theme svg{width:16px;height:16px}
-@media (max-width:520px){.theme .tl{display:none}}
-.prog{display:flex;flex-direction:column;gap:6px}
-.prog .bar{height:6px;border-radius:99px;background:var(--sunk);overflow:hidden}
-.prog .bar i{display:block;height:100%;background:var(--c);border-radius:99px}
-.prog span{font-size:.86rem;color:var(--muted)}
-.label{font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
-.hero h1{font-size:clamp(2.3rem,7vw,4.6rem);margin-top:12px}
-.hero h1 span{background:linear-gradient(100deg,var(--brand1),var(--brand2) 55%,var(--brand3));-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p{max-width:58ch;color:var(--muted);margin-top:16px;font-size:1.02rem}
-.subjects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-@media (max-width:720px){.subjects{grid-template-columns:1fr}}
-.subj{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden;text-decoration:none;transition:border-color .15s,box-shadow .15s}
-a.subj:hover{border-color:var(--c);box-shadow:0 6px 22px rgb(20 17 42 / .08)}
-.subj-h{padding:20px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
-.subj-h .label{color:var(--c)}
-.subj-h h2{font-size:1.6rem}
-.subj-b{padding:20px;display:flex;flex-direction:column;gap:14px;flex:1}
-.subj-b p{color:var(--muted)}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{font-size:.74rem;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--sunk);color:var(--muted)}
-.chip.on{background:var(--soft);color:var(--c)}
-.go{margin-top:auto;align-self:flex-start;display:inline-flex;gap:8px;align-items:center;border-radius:10px;padding:11px 16px;font-weight:700;background:var(--c);color:var(--surface)}
-.subj:hover .go{filter:brightness(1.08)}
-.subj.soon{border-style:dashed;background:transparent}
-.subj.soon .subj-h{border-bottom-style:dashed}
-.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-@media (max-width:720px){.facts{grid-template-columns:1fr}}
-.fact{border-top:2px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:4px}
-.fact h3{font-size:1rem}
-.fact p{font-size:.9rem;color:var(--muted)}
-.voices{display:flex;flex-direction:column;gap:18px}
-.voices-h{display:flex;flex-direction:column;gap:6px}
-.voices-h h2{font-size:1.5rem}
-.voices-h p{color:var(--muted);font-size:.95rem}
+@media (max-width:560px){.theme .tl,.toplink{display:none}}
+
+/* ---------- hero: the exam paper ---------- */
+.hero{position:relative;min-height:min(94svh,900px);display:flex;align-items:center;overflow:hidden;isolation:isolate;
+  /* fallback when WebGL is off: flat squared paper */
+  background-image:linear-gradient(rgb(var(--grid) / var(--grid-a)) 1px,transparent 1px),linear-gradient(90deg,rgb(var(--grid) / var(--grid-a)) 1px,transparent 1px);
+  background-size:28px 28px;background-position:center}
+.hero.gl{background-image:none}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-2;display:block;touch-action:pan-y}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse 60% 70% at 18% 55%,rgb(var(--scrim) / .92),rgb(var(--scrim) / .55) 45%,transparent 75%),
+             linear-gradient(180deg,transparent 70%,rgb(var(--scrim)) 100%)}
+.hero .wrap{width:100%;padding-block:120px 96px;display:flex;flex-direction:column;gap:26px}
+.hero h1{font-size:clamp(3rem,9.2vw,7.4rem);font-weight:700;letter-spacing:-.045em;line-height:.93}
+.hero h1 .l2{display:block;padding-left:.9em;white-space:nowrap}
+.lede{font-size:clamp(1.05rem,1.6vw,1.2rem);color:var(--muted);max-width:44ch;line-height:1.55}
+.cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:10px;border-radius:12px;padding:14px 20px;font-weight:700;font-size:1rem;text-decoration:none;border:1px solid transparent;transition:transform .15s,box-shadow .2s,background-color .2s}
+.btn.main{background:var(--fg);color:var(--bg);box-shadow:0 10px 30px -12px rgb(59 91 255 / .55)}
+.btn.main:hover{transform:translateY(-2px);box-shadow:0 16px 36px -12px rgb(142 108 255 / .6)}
+.btn.main small{font-weight:500;opacity:.7;font-size:.86rem}
+.btn.ghost{border-color:var(--line-2);background:rgb(var(--scrim) / .6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.btn.ghost:hover{border-color:var(--fg)}
+.bar{width:84px;height:5px;border-radius:99px;background:rgb(255 255 255 / .25);overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--b1),var(--b2),var(--b3))}
+.hint{position:absolute;right:var(--gut-r);bottom:28px;font-size:.82rem;color:var(--faint);display:flex;gap:8px;align-items:center}
+.hint svg{width:16px;height:16px}
+@media (hover:none){.hint .desk{display:none}}
+@media (hover:hover){.hint .touch{display:none}}
+@media (max-width:640px){.hero{min-height:78svh}.hero .wrap{padding-block:104px 72px}.hero h1{font-size:clamp(2.4rem,11.5vw,3.4rem)}.hero h1 .l2{padding-left:.45em;white-space:normal}.hint{left:var(--gut);right:auto;bottom:20px}}
+
+/* ---------- sections ---------- */
+main{display:flex;flex-direction:column;gap:88px;padding-block:24px 64px}
+@media (max-width:640px){main{gap:64px}}
+.sh{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+.sh h2{font-size:clamp(1.6rem,3.4vw,2.2rem);letter-spacing:-.02em}
+.sh p{color:var(--muted);max-width:60ch}
+
+/* courses: one row per course, like a timetable */
+.courses{display:flex;flex-direction:column;border-top:1.5px solid var(--fg)}
+.course{--mx:50%;--my:50%;position:relative;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;gap:20px 32px;align-items:center;padding:28px 4px;border-bottom:1px solid var(--line);text-decoration:none;overflow:hidden}
+.course::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;transition:opacity .25s;
+  background:radial-gradient(420px circle at var(--mx) var(--my),color-mix(in srgb,var(--c) 14%,transparent),transparent 70%)}
+.course:hover::before{opacity:1}
+.course h3{font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-.03em;color:var(--fg);transition:color .2s}
+.course:hover h3{color:var(--c)}
+.course .sub{color:var(--muted);margin-top:8px;max-width:46ch}
+.facts{display:grid;grid-template-columns:repeat(3,auto);gap:4px 26px;margin:0;justify-content:start}
+.facts div{display:flex;flex-direction:column}
+.facts dt{font-size:.8rem;color:var(--muted)}
+.facts dd{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.25rem}
+.go{display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;border:1.5px solid var(--fg);transition:background-color .2s,color .2s,transform .2s}
+.go svg{width:22px;height:22px}
+.course:hover .go{background:var(--c);border-color:var(--c);color:#fff;transform:rotate(-45deg)}
+.course .pg{grid-column:1/-1;display:flex;align-items:center;gap:12px;font-size:.88rem;color:var(--muted)}
+.course .pg .track{flex:0 1 260px;height:5px;border-radius:99px;background:var(--sunk);overflow:hidden}
+.course .pg .track i{display:block;height:100%;background:var(--c)}
+.more{padding:18px 4px;color:var(--muted);font-size:.95rem}
+@media (max-width:820px){.course{grid-template-columns:minmax(0,1fr) auto}.facts{grid-column:1/-1;grid-row:2}.go{grid-row:1;grid-column:2;width:48px;height:48px}}
+@media (max-width:420px){.facts{grid-template-columns:repeat(2,auto)}}
+
+/* method: three short points */
+.method{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+@media (max-width:820px){.method{grid-template-columns:1fr;gap:22px}}
+.pt{display:grid;grid-template-columns:28px minmax(0,1fr);gap:4px 14px;align-content:start}
+.pt .sq{width:28px;height:28px;border:1.5px solid var(--fg);border-radius:3px;position:relative;grid-row:span 2}
+.pt .sq::after{content:"";position:absolute;inset:5px;border-radius:1px;background:linear-gradient(135deg,var(--b1),var(--b2),var(--b3))}
+.pt h3{font-size:1.15rem}
+.pt p{color:var(--muted);font-size:.96rem}
+
+/* reviews */
 .labline{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;border-left:3px solid var(--c);padding:4px 0 4px 14px;text-decoration:none}
 .labline .nm{font-family:var(--f-display);font-weight:700;font-size:1.05rem;color:var(--c)}
-.labline .avg{font-family:var(--f-mono);font-weight:700}
+.labline .avg{font-family:var(--f-display);font-weight:700;font-size:1.2rem}
 .labline .n{color:var(--muted);font-size:.9rem}
 .labline .tg{display:flex;flex-wrap:wrap;gap:6px}
 .labline .tg span{font-size:.78rem;font-weight:600;padding:3px 9px;border-radius:8px;background:var(--sunk);color:var(--muted)}
 .st{color:var(--star);letter-spacing:1px;white-space:nowrap}
 .st .off{color:var(--line-2)}
-.quotes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
-.quote{display:flex;flex-direction:column;gap:6px;padding:16px 0;border-top:1px solid var(--line);max-width:68ch}
-.quote p{font-size:1rem;white-space:pre-line;overflow-wrap:anywhere}
+.quotes{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 40px}
+@media (max-width:820px){.quotes{grid-template-columns:1fr}}
+.quote{display:flex;flex-direction:column;gap:8px;padding:18px 0;border-top:1px solid var(--line)}
+.quote p{font-size:1.05rem;white-space:pre-line;overflow-wrap:anywhere}
 .quote .meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font-size:.85rem;color:var(--muted)}
 .quote .meta b{color:var(--fg)}
 .quote .lab{font-weight:700;color:var(--c)}
-.quote .del{margin-left:auto;border:0;background:none;color:var(--bad);font:inherit;font-size:.8rem;font-weight:700;text-decoration:underline;cursor:pointer}
-.voices .empty{color:var(--muted)}
-.voices .more{align-self:flex-start;border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:7px 12px;font:inherit;font-size:.86rem;font-weight:700;color:var(--fg);cursor:pointer;text-decoration:none}
-.admin{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px dashed var(--line-2);border-radius:12px;padding:12px;font-size:.88rem}
+.quote .del{margin-left:auto;border:0;background:none;color:var(--bad);font-size:.8rem;font-weight:700;text-decoration:underline}
+.empty{color:var(--muted)}
+.morebtn{margin-top:14px;border:1px solid var(--line-2);background:var(--surface);border-radius:10px;padding:8px 14px;font-size:.88rem;font-weight:700}
+.admin{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px dashed var(--line-2);border-radius:12px;padding:12px;font-size:.88rem;margin-top:16px}
 .admin input{border:1px solid var(--line-2);border-radius:8px;background:var(--surface);color:var(--fg);padding:7px 10px;font:inherit;min-width:0;flex:1 1 200px}
-.admin button{border:0;border-radius:8px;padding:8px 12px;font:inherit;font-weight:700;background:var(--fg);color:var(--bg);cursor:pointer}
-.foot{border-top:1px solid var(--line);padding-top:18px;font-size:.82rem;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+.admin button{border:0;border-radius:8px;padding:8px 12px;font-weight:700;background:var(--fg);color:var(--bg)}
+
+/* author + footer */
+.credit{display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px;padding:26px 0;border-top:1.5px solid var(--fg)}
+.credit .who{display:flex;flex-direction:column;gap:2px;margin-right:auto;min-width:0}
+.credit .who b{font-family:var(--f-display);font-size:1.2rem}
+.credit .who span{font-size:.9rem;color:var(--muted)}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-2);background:var(--surface);border-radius:11px;padding:9px 13px;font-size:.9rem;font-weight:600;text-decoration:none;transition:border-color .15s,transform .15s}
+.links a:hover{border-color:var(--fg);transform:translateY(-1px)}
+.links svg{width:18px;height:18px;flex:none}
+.legal{font-size:.84rem;color:var(--muted);padding-bottom:12px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="top">
-    <img src="/favicon.svg" alt="">
-    <b>Nexus</b>
-    <span class="grow"></span>
-    <button class="theme" id="theme" type="button"></button>
-  </header>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/" aria-label="Nexus home"><img src="/favicon.svg" alt=""><b>Nexus</b></a>
+  <span class="grow"></span>
+  <a class="toplink" href="#courses">Courses</a>
+  <a class="toplink" href="#reviews">Reviews</a>
+  <button class="theme" id="theme" type="button"></button>
+</div></header>
 
-  <section class="hero">
-    <span class="label">EDHEC BBA1 · Revision labs</span>
-    <h1>Practise the way <span>the exam asks.</span></h1>
-    <p>One lab per course, built from the slides. Every answer is checked and explained. Free, no account.</p>
+<section class="hero" id="hero">
+  <canvas id="paper" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <h1>Sit the exam <span class="l2">before the exam.</span></h1>
+    <p class="lede">Revision built from your EDHEC BBA1 courses. Exam-style cases, every answer worked out with your numbers, and new numbers each time.</p>
+    <div class="cta">
+      <a class="btn main" id="mainCta" href="#courses">Choose a course</a>
+      <a class="btn ghost" id="sideCta" href="/macro/" hidden>All Macroeconomics cases</a>
+    </div>
+  </div>
+  <p class="hint" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M5 3l14 7-6 2-2 6z"/></svg>
+    <span class="desk">Move your mouse. Click the paper.</span><span class="touch">Touch the paper.</span>
+  </p>
+</section>
+
+<main>
+  <section class="wrap" id="courses" aria-labelledby="coursesH">
+    <div class="sh"><h2 id="coursesH">Courses</h2><p>Pick a course. Your progress is saved on this device.</p></div>
+    <div class="courses">
+      <a class="course" href="/macro/" style="--c:var(--macro)">
+        <div><h3>Macroeconomics</h3><p class="sub">Business Economics, semester 1. GDP, national accounts, consumption, the multiplier and growth.</p></div>
+        <dl class="facts"><div><dt>Full cases</dt><dd>10</dd></div><div><dt>Chapters</dt><dd>2 to 4</dd></div><div><dt>Questions</dt><dd>300</dd></div></dl>
+        <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <div class="pg" id="macroPg" hidden><span class="track"><i></i></span><span></span></div>
+      </a>
+    </div>
+    <p class="more">More courses arrive during the semester, starting with the next exams.</p>
   </section>
 
-  <section class="subjects" aria-label="Subjects">
-    <a class="subj" href="/macro/" style="--c:var(--flow);--soft:var(--flow-soft)">
-      <div class="subj-h"><span class="label">Business Economics · Macroeconomics</span><h2>Flow</h2></div>
-      <div class="subj-b">
-        <p>GDP, the circular flow, consumption, the multiplier and growth.</p>
-        <div class="chips"><span class="chip on">10 full cases</span><span class="chip">Endless practice</span><span class="chip">Chapters 2–4</span></div>
-        <div class="prog" id="flowProg" hidden><div class="bar"><i></i></div><span></span></div>
-        <span class="go" id="flowGo">Open Flow →</span>
-      </div>
-    </a>
-    <div class="subj soon">
-      <div class="subj-h"><span class="label">Coming next</span><h2>More courses</h2></div>
-      <div class="subj-b"><p>New labs arrive during the semester. Flow grows with each new chapter.</p></div>
+  <section class="wrap" aria-labelledby="methodH">
+    <div class="sh"><h2 id="methodH">How it works</h2></div>
+    <div class="method">
+      <div class="pt"><span class="sq" aria-hidden="true"></span><h3>Built from the course</h3><p>Questions follow the slides and the tutorial sheets, in the order the exam uses.</p></div>
+      <div class="pt"><span class="sq" aria-hidden="true"></span><h3>Every answer worked out</h3><p>You see the calculation with your numbers, then the reason behind it.</p></div>
+      <div class="pt"><span class="sq" aria-hidden="true"></span><h3>New numbers each time</h3><p>Redo a case and the figures change, so you learn the method and not the answer.</p></div>
     </div>
   </section>
 
-  <section class="voices" id="voices" aria-labelledby="voicesH">
-    <div class="voices-h"><h2 id="voicesH">From the class</h2><p>Reviews from students who used the labs. Posted after finishing a case.</p></div>
+  <section class="wrap" id="reviews" aria-labelledby="voicesH">
+    <div class="sh"><h2 id="voicesH">From the class</h2><p>Reviews from students, posted after finishing a case.</p></div>
     <div id="voicesBody"><p class="empty">Loading reviews…</p></div>
+    <div id="adminSlot"></div>
   </section>
 
-  <section class="facts">
-    <div class="fact"><h3>Always up to date</h3><p>This link always opens the latest version.</p></div>
-    <div class="fact"><h3>Saved on your device</h3><p>Your scores stay in this browser. No account.</p></div>
-    <div class="fact"><h3>Made for your phone too</h3><p>Add it to your home screen for one-tap access.</p></div>
-  </section>
-
-  <footer class="foot">
-    <span>A student project to help with revision. Not an official EDHEC website.</span>
+  <footer class="wrap" aria-label="About">
+    <div class="credit">
+      <div class="who"><b>Made by Christo Czysz</b><span id="myClass"></span></div>
+      <div class="links" id="myLinks"></div>
+    </div>
+    <p class="legal">A student project to help with revision. Not an official EDHEC website.</p>
   </footer>
-</div>
+</main>
+
 <script>
+/* ---------- author ---------- */
+const ME = { cls: "EDHEC BBA1, English track, Lille campus", insta: "christo.cz", linkedin: "https://www.linkedin.com/search/results/people/?keywords=Christo%20Czysz", mail: ["christo.czysz", "edhec.com"] };
 (function(){
-  const KEY = "nexus-theme", NEXT = { system: "light", light: "dark", dark: "system" }, LABEL = { system: "Auto", light: "Light", dark: "Dark" }, b = document.getElementById("theme");
-  const ICON = {
+  const mail = ME.mail.join("@");
+  document.getElementById("myClass").textContent = ME.cls;
+  document.getElementById("myLinks").innerHTML =
+    `<a href="https://www.instagram.com/${ME.insta}/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>@${ME.insta}</a>` +
+    `<a href="${ME.linkedin}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V17M8 7.2v.1M12 17v-6.5M12 13.4c0-1.7 1-2.9 2.5-2.9S17 11.4 17 13v4"/></svg>LinkedIn</a>` +
+    `<a href="mailto:${mail}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>${mail}</a>`;
+})();
+
+/* ---------- theme ---------- */
+const themeBtn = document.getElementById("theme");
+const THEME = { next: { system: "light", light: "dark", dark: "system" }, label: { system: "Auto", light: "Light", dark: "Dark" },
+  icon: {
     system: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg>',
     light: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
-    dark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>'
-  };
-  let t = "system"; try { t = localStorage.getItem(KEY) || "system"; } catch (e) {}
-  if (!NEXT[t]) t = "system";
-  const apply = () => { if (t === "system") delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = t; b.innerHTML = ICON[t] + '<span class="tl">' + LABEL[t] + '</span>'; b.setAttribute("aria-label", "Theme: " + LABEL[t] + ". Change theme"); b.title = "Theme: " + LABEL[t]; };
-  apply();
-  b.addEventListener("click", () => { t = NEXT[t]; try { localStorage.setItem(KEY, t); } catch (e) {} apply(); });
-  /* Flow progress, read from the same origin */
+    dark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>' } };
+let theme = "system"; try { theme = localStorage.getItem("nexus-theme") || "system"; } catch (e) {}
+if (!THEME.next[theme]) theme = "system";
+function applyTheme(){
+  if (theme === "system") delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = theme;
+  themeBtn.innerHTML = THEME.icon[theme] + '<span class="tl">' + THEME.label[theme] + "</span>";
+  themeBtn.setAttribute("aria-label", "Theme: " + THEME.label[theme] + ". Change theme");
+  window.dispatchEvent(new Event("nexus-theme"));
+}
+applyTheme();
+themeBtn.addEventListener("click", () => { theme = THEME.next[theme]; try { localStorage.setItem("nexus-theme", theme); } catch (e) {} applyTheme(); });
+
+/* ---------- progress: continue where you left off ---------- */
+(function(){
   try {
     const st = JSON.parse(localStorage.getItem("flow-v1")) || {}, cases = st.cases || {};
     let done = 0, ans = 0;
     for (let i = 1; i <= 10; i++){ const n = Object.keys((cases[i] || {}).ans || {}).length; ans += n; if (n === 30) done++; }
-    if (ans){
-      const p = document.getElementById("flowProg");
-      p.hidden = false; p.querySelector("i").style.width = (ans / 300 * 100) + "%";
-      p.querySelector("span").textContent = done + " of 10 cases finished";
-      document.getElementById("flowGo").textContent = "Continue →";
-    }
+    if (!ans) return;
+    let next = st.last && Object.keys((cases[st.last] || {}).ans || {}).length < 30 ? st.last : null;
+    if (!next) for (let i = 1; i <= 10; i++) if (Object.keys((cases[i] || {}).ans || {}).length < 30){ next = i; break; }
+    const cta = document.getElementById("mainCta");
+    if (next){
+      const n = Object.keys((cases[next] || {}).ans || {}).length;
+      cta.href = "/macro/#case" + next;
+      cta.innerHTML = `<span>Continue Macroeconomics<br><small>Case ${next}${next > 10 ? " (practice)" : ""}, ${n} of 30 done</small></span><span class="bar" aria-hidden="true"><i style="width:${n / 30 * 100}%"></i></span>`;
+    } else { cta.href = "/macro/"; cta.textContent = "Open Macroeconomics"; }
+    document.getElementById("sideCta").hidden = false;
+    const pg = document.getElementById("macroPg");
+    pg.hidden = false; pg.querySelector("i").style.width = (ans / 300 * 100) + "%";
+    pg.lastElementChild.textContent = `${done} of 10 cases finished, ${ans} questions answered`;
   } catch (e) {}
 })();
-/* Reviews from /api/reviews */
+
+/* ---------- spotlight on course rows ---------- */
+document.querySelectorAll(".course").forEach(el => el.addEventListener("pointermove", e => {
+  const r = el.getBoundingClientRect(); el.style.setProperty("--mx", (e.clientX - r.left) + "px"); el.style.setProperty("--my", (e.clientY - r.top) + "px");
+}));
+
+/* ---------- the exam paper (WebGL, no library) ---------- */
 (function(){
-  const LABS = { flow: { name: "Flow", href: "/macro/#rvSec", c: "var(--flow)" } };
-  const body = document.getElementById("voicesBody"), sec = document.getElementById("voices");
+  const hero = document.getElementById("hero"), cv = document.getElementById("paper");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+  let gl; try { gl = cv.getContext("webgl", { antialias: true, alpha: true, premultipliedAlpha: false }); } catch (e) {}
+  if (!gl) return;
+  const VS = `
+attribute vec2 aPos; attribute float aMajor;
+uniform mat4 uProj; uniform vec2 uRot; uniform vec2 uMouse; uniform float uWell; uniform float uT;
+uniform vec2 uRip; uniform float uRipAge; uniform float uDist;
+varying float vMajor; varying float vHeat; varying vec2 vP;
+void main(){
+  vec2 p = aPos;
+  vec2 d = p - uMouse; float g = exp(-dot(d, d) / 0.32);
+  p -= d * 0.22 * g * uWell;
+  float z = -0.62 * g * uWell;
+  z += 0.035 * sin(aPos.x * 2.1 + uT * 0.55) * cos(aPos.y * 1.7 - uT * 0.42);
+  float rd = length(aPos - uRip);
+  float ring = exp(-pow((rd - uRipAge * 1.5) * 4.5, 2.0)) * exp(-uRipAge * 1.1) * step(0.0, uRipAge);
+  z += 0.16 * ring;
+  vec3 q = vec3(p, z);
+  float cx = cos(uRot.x), sx = sin(uRot.x), cy = cos(uRot.y), sy = sin(uRot.y);
+  q = vec3(q.x, q.y * cx - q.z * sx, q.y * sx + q.z * cx);
+  q = vec3(q.x * cy + q.z * sy, q.y, -q.x * sy + q.z * cy);
+  q.z -= uDist;
+  gl_Position = uProj * vec4(q, 1.0);
+  vMajor = aMajor; vHeat = clamp(g * uWell * 1.25 + ring * 1.4, 0.0, 1.0); vP = aPos;
+}`;
+  const FS = `
+precision mediump float;
+uniform vec3 uLine; uniform float uA; uniform float uAMajor; uniform vec2 uExt;
+uniform vec3 uB1; uniform vec3 uB2; uniform vec3 uB3;
+varying float vMajor; varying float vHeat; varying vec2 vP;
+void main(){
+  float t = clamp(vP.x / uExt.x * 0.5 + 0.5 + vP.y / uExt.y * 0.15, 0.0, 1.0);
+  vec3 brand = t < 0.5 ? mix(uB1, uB2, t * 2.0) : mix(uB2, uB3, t * 2.0 - 1.0);
+  vec2 e = abs(vP / uExt);
+  float fade = (1.0 - smoothstep(0.62, 1.0, e.x)) * (1.0 - smoothstep(0.55, 1.0, e.y));
+  float a = mix(uA, uAMajor, vMajor);
+  vec3 col = mix(uLine, brand, vHeat);
+  gl_FragColor = vec4(col, min(1.0, a + vHeat * 0.85) * fade);
+}`;
+  function sh(type, src){ const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; }
+  let prog;
+  try { prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog); if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw 0; }
+  catch (e) { return; }
+  hero.classList.add("gl");
+  gl.useProgram(prog);
+  const U = n => gl.getUniformLocation(prog, n);
+  const u = { proj: U("uProj"), rot: U("uRot"), mouse: U("uMouse"), well: U("uWell"), t: U("uT"), rip: U("uRip"), ripAge: U("uRipAge"), dist: U("uDist"), line: U("uLine"), a: U("uA"), aMajor: U("uAMajor"), ext: U("uExt"), b1: U("uB1"), b2: U("uB2"), b3: U("uB3") };
+  const aPos = gl.getAttribLocation(prog, "aPos"), aMajor = gl.getAttribLocation(prog, "aMajor");
+  const buf = gl.createBuffer();
+  const FOV = 40 * Math.PI / 180, DIST = 3, HALF_H = Math.tan(FOV / 2) * DIST;
+  let W = 0, H = 0, count = 0, ext = [1, 1], halfW = 1, low = false, slow = 0, frames = 0;
+  const hex = h => [parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255];
+  function colors(){
+    const cs = getComputedStyle(document.documentElement);
+    const g = cs.getPropertyValue("--grid").split(",").map(x => +x / 255);
+    gl.uniform3fv(u.line, g);
+    gl.uniform1f(u.a, +cs.getPropertyValue("--grid-a") * 1.25);
+    gl.uniform1f(u.aMajor, +cs.getPropertyValue("--grid-major") * 1.25);
+    gl.uniform3fv(u.b1, hex(cs.getPropertyValue("--b1").trim())); gl.uniform3fv(u.b2, hex(cs.getPropertyValue("--b2").trim())); gl.uniform3fv(u.b3, hex(cs.getPropertyValue("--b3").trim()));
+    draw();
+  }
+  function build(){
+    const dpr = low ? 1 : Math.min(window.devicePixelRatio || 1, 1.75);
+    W = hero.clientWidth; H = hero.clientHeight;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    gl.viewport(0, 0, cv.width, cv.height);
+    const aspect = W / H; halfW = HALF_H * aspect;
+    const cell = HALF_H * (W < 640 ? 24 : 30) / (H / 2);         /* one square of exam paper, about 30 css px */
+    const ex = Math.ceil(halfW * 1.35 / cell) * cell, ey = Math.ceil(HALF_H * 1.4 / cell) * cell;
+    ext = [ex, ey];
+    const seg = low ? 40 : 90, v = [];
+    const nx = Math.round(ex / cell), ny = Math.round(ey / cell);
+    for (let i = -nx; i <= nx; i++){ const x = i * cell, m = i % 5 === 0 ? 1 : 0; for (let s = 0; s < seg; s++){ const y0 = -ey + 2 * ey * s / seg, y1 = -ey + 2 * ey * (s + 1) / seg; v.push(x, y0, m, x, y1, m); } }
+    for (let j = -ny; j <= ny; j++){ const y = j * cell, m = j % 5 === 0 ? 1 : 0; for (let s = 0; s < seg; s++){ const x0 = -ex + 2 * ex * s / seg, x1 = -ex + 2 * ex * (s + 1) / seg; v.push(x0, y, m, x1, y, m); } }
+    count = v.length / 3;
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(v), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(aPos); gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 12, 0);
+    gl.enableVertexAttribArray(aMajor); gl.vertexAttribPointer(aMajor, 1, gl.FLOAT, false, 12, 8);
+    const f = 1 / Math.tan(FOV / 2), n = 0.1, fa = 20;
+    gl.uniformMatrix4fv(u.proj, false, new Float32Array([f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (fa + n) / (n - fa), -1, 0, 0, 2 * fa * n / (n - fa), 0]));
+    gl.uniform2f(u.ext, ex, ey); gl.uniform1f(u.dist, DIST);
+    draw();
+  }
+  /* state, smoothed every frame */
+  const S = { mx: 0.55, my: 0.1, tx: 0.55, ty: 0.1, well: 0, twell: 0.55, rx: 0, ry: 0, rip: [0, 0], ripT: -1, active: false, last: 0, t: 0 };
+  function setTarget(cx, cy){
+    const r = hero.getBoundingClientRect();
+    const nx = (cx - r.left) / r.width * 2 - 1, ny = -((cy - r.top) / r.height * 2 - 1);
+    S.tx = nx * halfW; S.ty = ny * HALF_H; S.twell = 1; S.active = true; S.last = performance.now();
+    if (reduce.matches) { S.mx = S.tx; S.my = S.ty; S.well = 1; draw(); }
+  }
+  hero.addEventListener("pointermove", e => { setTarget(e.clientX, e.clientY); wake(); });
+  hero.addEventListener("pointerdown", e => {
+    if (e.target.closest("a,button")) return;
+    setTarget(e.clientX, e.clientY); S.rip = [S.tx, S.ty]; S.ripT = 0; wake();
+  });
+  hero.addEventListener("pointerleave", () => { S.active = false; S.twell = 0.55; });
+  function draw(){
+    gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.uniform2f(u.mouse, S.mx, S.my); gl.uniform1f(u.well, S.well); gl.uniform1f(u.t, S.t);
+    gl.uniform2f(u.rot, S.rx, S.ry); gl.uniform2f(u.rip, S.rip[0], S.rip[1]); gl.uniform1f(u.ripAge, S.ripT);
+    gl.drawArrays(gl.LINES, 0, count);
+  }
+  let raf = 0, prev = 0, visible = true;
+  function frame(now){
+    raf = 0;
+    const dt = Math.min(0.05, (now - (prev || now)) / 1000); prev = now;
+    S.t += dt;
+    /* slow machine: after 90 frames, drop resolution, then only animate while the pointer moves */
+    if (frames >= 0){ frames++; slow += dt; if (slow > 1.2){ if (slow / frames > 0.04 && !low){ low = true; build(); } frames = -1; } }
+    const idle = !S.active || now - S.last > 2500;
+    if (low && idle && S.ripT < 0 && Math.abs(S.well - S.twell) < 0.01) { draw(); return; }
+    if (idle){                       /* idle: the well drifts on its own */
+      S.tx = halfW * (0.35 + 0.28 * Math.sin(S.t * 0.23)); S.ty = HALF_H * 0.45 * Math.sin(S.t * 0.31 + 1); S.twell = 0.6;
+    }
+    const k = 1 - Math.pow(0.0009, dt);                         /* frame-rate independent easing */
+    S.mx += (S.tx - S.mx) * k; S.my += (S.ty - S.my) * k; S.well += (S.twell - S.well) * k * 0.6;
+    S.rx += (-S.my / HALF_H * 0.16 - 0.12 - S.rx) * k * 0.5; S.ry += (S.mx / halfW * 0.14 - S.ry) * k * 0.5;
+    if (S.ripT >= 0){ S.ripT += dt; if (S.ripT > 4) S.ripT = -1; }
+    draw();
+    if (visible && !document.hidden && !reduce.matches) raf = requestAnimationFrame(frame);
+  }
+  function wake(){ if (!raf && visible && !document.hidden && !reduce.matches){ prev = 0; raf = requestAnimationFrame(frame); } }
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible) wake(); }).observe(hero);
+  document.addEventListener("visibilitychange", wake);
+  reduce.addEventListener && reduce.addEventListener("change", () => { if (reduce.matches){ S.rx = -0.12; draw(); } else wake(); });
+  let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(build, 120); });
+  window.addEventListener("nexus-theme", colors);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", colors);
+  build(); colors();
+  if (reduce.matches){ S.mx = halfW * 0.45; S.my = HALF_H * 0.1; S.well = 0.8; S.rx = -0.12; draw(); }
+  else wake();
+})();
+
+/* ---------- reviews (from /api/reviews) ---------- */
+(function(){
+  const LABS = { flow: { name: "Macroeconomics", href: "/macro/#reviews", c: "var(--macro)" } };
+  const body = document.getElementById("voicesBody");
   const get = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const stars = n => `<span class="st" role="img" aria-label="${n} out of 5 stars">${"★".repeat(n)}<span class="off">${"★".repeat(5 - n)}</span></span>`;
   const ago = ts => { const d = Math.floor((Date.now() - ts) / 86400000); return d <= 0 ? "today" : d === 1 ? "yesterday" : d < 30 ? d + " days ago" : new Date(ts).toLocaleDateString("en-GB", { day: "numeric", month: "short" }); };
-  let admin = get("nexus-admin-key", "");
+  const admin = get("nexus-admin-key", "");
   if (/[?&]admin\b/.test(location.search)){
     const box = document.createElement("div"); box.className = "admin";
-    box.innerHTML = admin ? `Admin mode is on: a Delete link shows under each review. <button type="button">Turn off</button>` : `<label for="ak">Admin key</label><input id="ak" type="password" autocomplete="off"><button type="button">Save</button>`;
+    box.innerHTML = admin ? `Admin mode is on. A Delete link shows under each review. <button type="button">Turn off</button>` : `<label for="ak">Admin key</label><input id="ak" type="password" autocomplete="off"><button type="button">Save</button>`;
     box.querySelector("button").addEventListener("click", () => { try { if (admin) localStorage.removeItem("nexus-admin-key"); else localStorage.setItem("nexus-admin-key", JSON.stringify(box.querySelector("input").value.trim())); } catch (e) {} location.reload(); });
-    sec.append(box);
+    document.getElementById("adminSlot").append(box);
   }
   let all = false, data = null;
   function draw(){
@@ -198,13 +456,13 @@ a.subj:hover{border-color:var(--c);box-shadow:0 6px 22px rgb(20 17 42 / .08)}
     const lines = Object.entries(LABS).map(([k, L]) => {
       const s = data.labs[k]; if (!s || !s.count) return "";
       const top = Object.entries(s.tags).sort((a, b) => b[1] - a[1]).slice(0, 3);
-      return `<a class="labline" href="${L.href}" style="--c:${L.c}"><span class="nm">${L.name}</span><span class="avg">${s.avg.toFixed(1)}</span>${stars(Math.round(s.avg))}<span class="n">${s.count} review${s.count > 1 ? "s" : ""}</span>${top.length ? `<span class="tg">${top.map(([t, n]) => `<span>${esc(t)} · ${n}</span>`).join("")}</span>` : ""}</a>`;
+      return `<a class="labline" href="${L.href}" style="--c:${L.c}"><span class="nm">${L.name}</span><span class="avg">${s.avg.toFixed(1)}</span>${stars(Math.round(s.avg))}<span class="n">${s.count} review${s.count > 1 ? "s" : ""}</span>${top.length ? `<span class="tg">${top.map(([t, n]) => `<span>${esc(t)} (${n})</span>`).join("")}</span>` : ""}</a>`;
     }).join("");
-    if (!lines){ body.innerHTML = `<p class="empty">No reviews yet. Finish a case in <a href="/macro/">Flow</a> and be the first.</p>`; return; }
-    const items = data.items.filter(r => LABS[r.lab]), shown = all || admin ? items : items.slice(0, 3);
+    if (!lines){ body.innerHTML = `<p class="empty">No reviews yet. Finish a case in <a href="/macro/">Macroeconomics</a> and be the first.</p>`; return; }
+    const items = data.items.filter(r => LABS[r.lab]), shown = all || admin ? items : items.slice(0, 4);
     body.innerHTML = `<div style="display:flex;flex-direction:column;gap:10px">${lines}</div>
-      <ul class="quotes" style="margin-top:14px">${shown.map(r => `<li class="quote" style="--c:${LABS[r.lab].c}"><p>${esc(r.text)}</p><div class="meta">${stars(r.stars)}<b>${esc(r.name || "BBA1 student")}</b><span class="lab">${LABS[r.lab].name}</span><span>${ago(r.at)}</span>${admin ? `<button class="del" type="button" data-del="${esc(r.id)}">Delete</button>` : ""}</div></li>`).join("")}</ul>
-      ${shown.length < items.length ? `<button class="more" type="button" data-more>Show all ${items.length} reviews</button>` : ""}`;
+      <ul class="quotes">${shown.map(r => `<li class="quote" style="--c:${LABS[r.lab].c}"><p>${esc(r.text)}</p><div class="meta">${stars(r.stars)}<b>${esc(r.name || "BBA1 student")}</b><span class="lab">${LABS[r.lab].name}</span><span>${ago(r.at)}</span>${admin ? `<button class="del" type="button" data-del="${esc(r.id)}">Delete</button>` : ""}</div></li>`).join("")}</ul>
+      ${shown.length < items.length ? `<button class="morebtn" type="button" data-more>Show all ${items.length} reviews</button>` : ""}`;
   }
   body.addEventListener("click", e => {
     if (e.target.closest("[data-more]")){ all = true; draw(); }

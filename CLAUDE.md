@@ -18,9 +18,9 @@ Une page d'accueil (hub) qui liste les matières, et un « lab » par matière.
 ## Structure
 
 ```
-/index.html        hub Nexus : liste des matières (cartes), thème clair/sombre
+/index.html        hub Nexus : haut de page en WebGL (feuille quadrillée en 3D), liste des matières, avis, auteur
 /favicon.svg       logo N de Nexus (dégradé bleu → violet → rose)
-/macro/index.html  « Flow », le lab de Business Economics (macroéconomie, semestre 1)
+/macro/index.html  lab « Macroeconomics » (Business Economics, semestre 1). Nom interne `flow` gardé pour les clés de stockage et l'API des avis.
 /CLAUDE.md         ce fichier
 /package.json      dépendance de la fonction des avis
 /netlify/functions/reviews.mjs   API des avis (GET liste + résumé, POST avis, POST suppression admin)
@@ -29,13 +29,22 @@ Une page d'accueil (hub) qui liste les matières, et un « lab » par matière.
 ## Avis des étudiants
 
 - Étoiles 1 à 5, tags fixes (liste `TAGS` dans la fonction, à garder identique côté pages), commentaire obligatoire de 10 à 600 caractères, prénom facultatif (« BBA1 student » sinon). Liens refusés. Publication immédiate.
-- Demandés sur la carte de bilan à la fin d'un cas, et via « Rate Flow » sur l'accueil de Flow. Affichés sur l'accueil de Flow et résumés sur le hub (section « From the class »).
+- Demandés sur la carte de bilan à la fin d'un cas, et via « Write a review » sur l'accueil du lab Macroeconomics. Affichés sur l'accueil du lab et résumés sur le hub (section « From the class »).
 - Anti-triche côté serveur : un avis par lab et par 24 h, à la fois par IP (hachée, jamais stockée en clair) et par appareil (`nexus-did`). Champ piège `website` contre les robots.
 - Mise en page volontairement différente du site de Zadig : pas d'histogramme de notes, pas de filtres en pastilles, pas de grille de cartes. Une ligne de résumé et des citations sur une colonne.
-- Suppression : la variable d'environnement `ADMIN_KEY` (au moins 8 caractères) se règle dans Netlify. Ouvrir `/?admin`, saisir la clé une fois : un lien « Delete » apparaît sous chaque avis (hub et Flow).
+- Suppression : la variable d'environnement `ADMIN_KEY` (au moins 8 caractères) se règle dans Netlify. Ouvrir `/?admin`, saisir la clé une fois : un lien « Delete » apparaît sous chaque avis (hub et labs).
 - Ne jamais écrire de faux avis, même pour « amorcer » la section.
 
-Une nouvelle matière = un dossier `/<matiere>/index.html` autonome, plus une carte dans `/index.html`.
+Une nouvelle matière = un dossier `/<matiere>/index.html` autonome, plus une ligne dans la liste « Courses » de `/index.html`.
+**Chaque lab porte le nom exact de la matière** (« Macroeconomics », pas un nom de marque), demandé par Alexi.
+
+## Page d'accueil (hub)
+
+- Élément signature : une feuille d'examen quadrillée (petits carreaux, trait renforcé tous les 5) en WebGL écrit à la main, sans librairie. Elle se creuse sous la souris, s'incline, fait une onde au clic et prend le dégradé Nexus là où elle se déforme.
+- Garde-fous : pause hors écran et onglet caché, mode économe automatique si les images sont lentes, image fixe si « mouvement réduit », fond quadrillé en CSS si WebGL est absent.
+- Le reste de la page reste sobre : matières en lignes (pas de cartes identiques), « How it works », avis, puis le bloc auteur.
+- Bloc auteur en bas du hub et de l'accueil de chaque lab : Christo Czysz, EDHEC BBA1 English track Lille, Instagram @christo.cz, LinkedIn, christo.czysz@edhec.com. Le lien LinkedIn est provisoire (recherche) tant qu'Alexi n'a pas donné l'adresse exacte de son profil.
+
 Chaque page est un fichier unique : CSS et JS dans la page. Seules dépendances externes autorisées : Google Fonts.
 
 ## Principes de contenu (ce qui fait la qualité du site)
@@ -55,15 +64,15 @@ Chaque page est un fichier unique : CSS et JS dans la page. Seules dépendances 
 ## Identité visuelle
 
 - Polices : Familjen Grotesk (titres), Public Sans (texte), JetBrains Mono (chiffres et calculs).
-- Hub : encre neutre, avec le dégradé Nexus (#3B5BFF → #8E6CFF → #FF5FA2) comme seule touche.
-- Chaque lab a sa couleur. Flow (macro) utilise :
+- Hub : papier #F5F6FB et encre #12142B en clair, encre bleu nuit #0D1024 en sombre. Le dégradé Nexus (#3B5BFF → #8E6CFF → #FF5FA2) n'apparaît que dans le quadrillage déformé et le logo, jamais sur un mot de titre.
+- Chaque lab a sa couleur. Macroeconomics utilise :
   - teal `--flow` pour la production et le revenu ;
   - ambre `--inj` pour les injections (I, G, X) ;
   - corail `--leak` pour les fuites (S, T, M).
 - Mode clair et mode sombre, définis par des variables CSS. Bouton de thème cyclique système / clair / sombre.
 - Tout doit fonctionner à 390 px de large, sans défilement horizontal.
 
-## Lab « Flow » : Business Economics, macroéconomie (S1)
+## Lab « Macroeconomics » : Business Economics (S1)
 
 Professeurs : S. Clot, Q. Deme, A. Safa. 36 h, 4 ECTS.
 
