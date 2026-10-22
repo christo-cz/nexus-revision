@@ -66,6 +66,8 @@ Chaque page est un fichier unique : CSS et JS dans la page. Seules dépendances 
 - Éclats de couleur sur les bonnes réponses (`burst()`), compteur de série qui rebondit (`bump()`), paquet de flashcards en 3D qui part à droite (connue) ou à l'arrière (à revoir).
 - Recherche dans chaque lab : bouton dans l'en-tête, touche `/` ou Ctrl/Cmd+K. Index : fiches, définitions des flashcards, questions d'examen, cas, labs, pages. Choisir une fiche ouvre le chapitre et l'allume (`GOTO.note`, `landOnNote()`).
 - `#recap` dans chaque lab : toutes les fiches sur une page, filtrable et imprimable (CSS `@media print`).
+- Changement de thème : le nouveau thème s'étend en cercle depuis le bouton (`themeSwap`, transition de vue avec la classe `theme-vt`).
+- Fond de Management : aubergine → indigo nuit → baie profonde (sombre), papier rosé → lavande → abricot (clair).
 - Haut de page (hub, accueil Macroeconomics, accueil Management) : la scène bascule en arrière et s'efface quand on fait défiler (`heroTilt`).
 - Hub : tuiles dans l'ordre Macroeconomics, Management, puis Financial Accounting (bientôt). Au survol, la tuile Management montre une foule qui se range en organigramme.
 - Hub : « Pick up where you left off » lit `flow-v1` et `mgmt-v1` pour proposer de reprendre (la liste des cas Management et leur nombre d'étapes est recopiée dans le hub, à tenir à jour si on ajoute un cas).

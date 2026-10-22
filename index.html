@@ -176,6 +176,12 @@ main{display:flex;flex-direction:column;gap:110px;padding-block:72px 48px}
 ::view-transition-new(root){animation:vtIn .5s cubic-bezier(.2,.8,.2,1) both}
 @keyframes vtOut{to{opacity:0}}
 @keyframes vtIn{from{opacity:0;transform:translateY(16px)}}
+/* theme switch: circular reveal from the button */
+html.theme-vt .hdr{view-transition-name:none}
+html.theme-vt::view-transition-old(root){animation:none}
+html.theme-vt::view-transition-new(root){animation:themeReveal .65s cubic-bezier(.45,0,.2,1)}
+@keyframes themeReveal{from{clip-path:circle(0 at var(--tx,90%) var(--ty,30px))}to{clip-path:circle(150vmax at var(--tx,90%) var(--ty,30px))}}
+
 @media (max-width:640px){main{gap:80px;padding-block:48px 40px}}
 .sh{display:flex;flex-direction:column;gap:8px;margin-bottom:26px}
 .sh h2{font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.03em}
@@ -404,7 +410,17 @@ function applyTheme(){
   themeBtn.setAttribute("aria-label", "Theme: " + THEME.label[theme] + ". Switch to " + THEME.label[THEME.next[theme]].toLowerCase());
   window.dispatchEvent(new Event("nexus-theme"));
 }
-themeBtn.addEventListener("click", () => { theme = THEME.next[theme]; try { localStorage.setItem("nexus-theme", theme); } catch (e) {} applyTheme(); });
+/* switching theme: the new colours spread from the button in a circle (where the browser can) */
+function themeSwap(btn, swap){
+  const root = document.documentElement;
+  if (!document.startViewTransition || matchMedia("(prefers-reduced-motion: reduce)").matches){ swap(); return; }
+  const r = btn.getBoundingClientRect();
+  root.style.setProperty("--tx", (r.left + r.width / 2).toFixed(0) + "px"); root.style.setProperty("--ty", (r.top + r.height / 2).toFixed(0) + "px");
+  root.classList.add("theme-vt");
+  const vt = document.startViewTransition(swap);
+  vt.finished.finally(() => root.classList.remove("theme-vt"));
+}
+themeBtn.addEventListener("click", () => themeSwap(themeBtn, () => { theme = THEME.next[theme]; try { localStorage.setItem("nexus-theme", theme); } catch (e) {} applyTheme(); }));
 
 /* ---------- full screen that survives page changes ----------
    Browsers always leave full screen when the page changes. So while in full screen, links to another Nexus page

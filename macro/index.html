@@ -728,6 +728,12 @@ kbd{font-family:var(--f-mono);font-size:.72rem;border:1px solid currentColor;bor
 ::view-transition-new(root){animation:vtIn .45s cubic-bezier(.2,.8,.2,1) both}
 @keyframes vtOut{to{opacity:0}}
 @keyframes vtIn{from{opacity:0;transform:translateY(14px)}}
+/* theme switch: circular reveal from the button */
+html.theme-vt .hdr{view-transition-name:none}
+html.theme-vt::view-transition-old(root){animation:none}
+html.theme-vt::view-transition-new(root){animation:themeReveal .65s cubic-bezier(.45,0,.2,1)}
+@keyframes themeReveal{from{clip-path:circle(0 at var(--tx,90%) var(--ty,30px))}to{clip-path:circle(150vmax at var(--tx,90%) var(--ty,30px))}}
+
 
 /* full-screen invitation */
 .fsinv{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;align-items:center;gap:12px;max-width:calc(100% - 32px);padding:10px 10px 10px 16px;border-radius:16px;border:1px solid color-mix(in srgb,var(--fg) 14%,transparent);background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);box-shadow:0 18px 50px -20px rgb(0 0 0 / .45);color:var(--fg);transform:translate(-50%,140%);opacity:0;transition:transform .55s cubic-bezier(.2,.9,.25,1.15),opacity .35s}
@@ -804,7 +810,17 @@ const THEME_LABEL = { light: "Light", dark: "Dark" };
 let theme = "dark"; try { if (localStorage.getItem("nexus-theme") === "light") theme = "light"; } catch (e) {}
 function applyTheme(){ document.documentElement.dataset.theme = theme; const b = $("#themeBtn"); b.innerHTML = ICON[theme] + `<span class="tl">${THEME_LABEL[theme]}</span>`; const nx = theme === "dark" ? "light" : "dark"; b.setAttribute("aria-label", `Theme: ${THEME_LABEL[theme]}. Switch to ${nx}`); b.title = "Switch to " + nx; window.dispatchEvent(new Event("nexus-theme")); }
 applyTheme();
-$("#themeBtn").addEventListener("click", () => { theme = theme === "dark" ? "light" : "dark"; try { localStorage.setItem("nexus-theme", theme); } catch (e) {} applyTheme(); });
+/* switching theme: the new colours spread from the button in a circle (where the browser can) */
+function themeSwap(btn, swap){
+  const root = document.documentElement;
+  if (!document.startViewTransition || matchMedia("(prefers-reduced-motion: reduce)").matches){ swap(); return; }
+  const r = btn.getBoundingClientRect();
+  root.style.setProperty("--tx", (r.left + r.width / 2).toFixed(0) + "px"); root.style.setProperty("--ty", (r.top + r.height / 2).toFixed(0) + "px");
+  root.classList.add("theme-vt");
+  const vt = document.startViewTransition(swap);
+  vt.finished.finally(() => root.classList.remove("theme-vt"));
+}
+$("#themeBtn").addEventListener("click", () => themeSwap($("#themeBtn"), () => { theme = theme === "dark" ? "light" : "dark"; try { localStorage.setItem("nexus-theme", theme); } catch (e) {} applyTheme(); }));
 
 /* ---------- case generator: every answer is computed, never typed by hand ---------- */
 const COUNTRIES = ["Norland", "Valdoria", "Kestria", "Marenia", "Sorvik", "Elbara", "Quarvia", "Lumeria", "Drevon", "Saltera", "Brevia", "Tarnis"];
