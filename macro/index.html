@@ -18,7 +18,7 @@
   color-scheme:light;
   --bg:#F3F5F2; --surface:#FFFFFF; --sunk:#EAEEE9; --line:#D8DFD8; --line-2:#C6CFC7; --fg:#152024; --muted:#55646A; --faint:#89969A;
   --flow:#0B7472; --flow-2:#095E5C; --flow-soft:#DCEFEC; --on-flow:#FFFFFF;
-  --inj:#B06F07; --inj-soft:#F7EAD2; --leak:#C2493A; --leak-soft:#F8E1DD;
+  --inj:#B06F07; --inj-soft:#F7EAD2; --leak:#C2493A; --leak-soft:#F8E1DD; --ch4:#3D63D1;
   --ok:#23794E; --ok-soft:#DFF2E6; --bad:#B4372E; --bad-soft:#F9E3E0;
   --shadow:0 1px 2px rgb(21 32 36 / .05),0 6px 20px rgb(21 32 36 / .06);
   --glass:rgb(255 255 255 / .6); --glass-line:rgb(21 32 36 / .1);
@@ -31,14 +31,14 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0E1416; --surface:#151F23; --sunk:#1C282D; --line:#26343A; --line-2:#33444B; --fg:#E7EFED; --muted:#A0B1B3; --faint:#6F8286;
   --flow:#4CC2BC; --flow-2:#6FD6D0; --flow-soft:#12302F; --on-flow:#05201F;
-  --inj:#E9AE4C; --inj-soft:#33280F; --leak:#F08473; --leak-soft:#3A1F1B;
+  --inj:#E9AE4C; --inj-soft:#33280F; --leak:#F08473; --leak-soft:#3A1F1B; --ch4:#86A6FF;
   --ok:#6FD39C; --ok-soft:#13301F; --bad:#F08A80; --bad-soft:#3A1D1A;
   --shadow:0 1px 2px rgb(0 0 0 / .3),0 8px 24px rgb(0 0 0 / .25); --glass:rgb(255 255 255 / .045); --glass-line:rgb(255 255 255 / .1); color-scheme:dark;
 }}
 :root[data-theme="dark"]{
   --bg:#0E1416; --surface:#151F23; --sunk:#1C282D; --line:#26343A; --line-2:#33444B; --fg:#E7EFED; --muted:#A0B1B3; --faint:#6F8286;
   --flow:#4CC2BC; --flow-2:#6FD6D0; --flow-soft:#12302F; --on-flow:#05201F;
-  --inj:#E9AE4C; --inj-soft:#33280F; --leak:#F08473; --leak-soft:#3A1F1B;
+  --inj:#E9AE4C; --inj-soft:#33280F; --leak:#F08473; --leak-soft:#3A1F1B; --ch4:#86A6FF;
   --ok:#6FD39C; --ok-soft:#13301F; --bad:#F08A80; --bad-soft:#3A1D1A;
   --shadow:0 1px 2px rgb(0 0 0 / .3),0 8px 24px rgb(0 0 0 / .25); --glass:rgb(255 255 255 / .045); --glass-line:rgb(255 255 255 / .1); color-scheme:dark;
 }
@@ -60,7 +60,7 @@ a{color:inherit}
 
 /* ---------- header ---------- */
 .hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:color-mix(in srgb,var(--bg) 76%,transparent);backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);border-bottom:1px solid var(--glass-line)}
-.hdr-in{height:var(--hdr);display:flex;align-items:center;gap:16px;padding-left:var(--gut);padding-right:var(--gut-r)}
+.hdr-in{min-height:56px;display:flex;align-items:center;gap:16px;padding-left:var(--gut);padding-right:var(--gut-r)}
 .crumb{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:700;font-size:1.12rem;white-space:nowrap;text-decoration:none}
 .crumb .hub{color:var(--muted);font-weight:600;text-decoration:none}
 .crumb .hub:hover{color:var(--fg)}
@@ -377,7 +377,228 @@ a{color:inherit}
 .casecard:is(:hover,:focus-visible) .cb{opacity:1;transform:none}
 .cases:has(.casecard:hover) .casecard:not(:hover){opacity:.5;filter:saturate(.3)}
 @media (hover:none){.casecard .cb{display:none}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}.ov-title .w{transform:none}}
+/* ---------- revision modules ---------- */
+.mod{position:relative;max-width:1180px;margin:0 auto;padding-block:36px 72px;padding-left:var(--gut);padding-right:var(--gut-r);display:flex;flex-direction:column;gap:36px;--surface:var(--glass)}
+.mod :is(.note,.chtile,.qzsetup,.qzq,.qzend,.dq,.oitem,.owrite,.ochk,.oans,.modt,.widget,.method,.flip .face,.sprintend){backdrop-filter:blur(12px) saturate(1.2);-webkit-backdrop-filter:blur(12px) saturate(1.2)}
+.mhead{display:flex;flex-direction:column;gap:14px}
+.mtitle{font-size:clamp(2.6rem,7vw,5.2rem);font-weight:700;letter-spacing:-.05em;line-height:.95}
+.mtitle .clip{display:block;overflow:hidden;padding-bottom:.08em}
+.mtitle .w{display:inline-block;transform:translateY(105%);animation:rise .9s cubic-bezier(.2,.75,.15,1) forwards}
+.mhead .lede{max-width:60ch;color:var(--muted);font-size:1.06rem}
+.mprog{display:flex;align-items:center;gap:12px;font-size:.88rem;color:var(--muted)}
+.mbar{flex:0 1 280px;height:6px;border-radius:99px;background:var(--sunk);overflow:hidden}
+.mbar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--flow),var(--inj),var(--leak));transition:width .4s}
+.mprog.sm .mbar{flex-basis:140px}
+.mchips{display:flex;flex-wrap:wrap;gap:8px}
+.mchip{border:1.5px solid var(--glass-line);background:var(--glass);border-radius:99px;padding:7px 14px;font-size:.88rem;font-weight:700;color:var(--muted);transition:background-color .2s,color .2s,border-color .2s}
+.mchip.on{background:var(--c,var(--flow));border-color:var(--c,var(--flow));color:var(--bg)}
+.seg{display:inline-flex;border:1px solid var(--glass-line);background:var(--glass);border-radius:12px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;border-radius:9px;padding:7px 13px;font-size:.86rem;font-weight:700;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.seg button:hover{color:var(--fg)} .seg button[aria-pressed="true"]:hover{color:var(--bg)}
+kbd{font-family:var(--f-mono);font-size:.72rem;border:1px solid currentColor;border-radius:5px;padding:0 5px;opacity:.6;font-weight:500}
+@media (hover:none){.fact kbd,.dq kbd,.qzq kbd{display:none}}
+/* learn index */
+.chgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;perspective:1100px}
+@media (max-width:760px){.chgrid{grid-template-columns:1fr}}
+.chtile{position:relative;display:flex;flex-direction:column;gap:10px;padding:24px;border-radius:20px;border:1px solid var(--glass-line);background:var(--glass);text-decoration:none;overflow:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1),background-color .35s,border-color .35s,color .35s,opacity .3s,filter .3s}
+.chtile .chn{font-family:var(--f-display);font-size:3.4rem;font-weight:700;line-height:.9;color:var(--c);letter-spacing:-.04em;transition:color .35s}
+.chtile h2{font-size:1.5rem;letter-spacing:-.02em}
+.chtile p{color:var(--muted);font-size:.94rem;transition:color .35s}
+.chfoot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding-top:10px}
+.ring{--p:0;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--c) calc(var(--p) * 360deg),var(--sunk) 0);position:relative}
+.ring::after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--bg)}
+.ring b{position:relative;z-index:1;font-family:var(--f-mono);font-size:.74rem}
+.chgo{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:var(--c);transition:color .35s}
+.chgo svg{width:18px;height:18px}
+.chtile:hover{background:var(--c);border-color:var(--c);color:var(--bg);transform:translateY(-6px)}
+.chtile:hover :is(.chn,p,.chgo){color:var(--bg)}
+.chtile:hover .ring{background:conic-gradient(var(--bg) calc(var(--p) * 360deg),color-mix(in srgb,var(--bg) 30%,transparent) 0)}
+.chtile:hover .ring::after{background:var(--c)}
+.chgrid:has(.chtile:hover) .chtile:not(:hover){opacity:.5;filter:saturate(.3)}
+.steps{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+@media (max-width:820px){.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.steps{grid-template-columns:1fr}}
+.steps li{counter-increment:s;display:flex;flex-direction:column;gap:4px;border-top:2px solid var(--fg);padding-top:12px}
+.steps li::before{content:counter(s);font-family:var(--f-mono);font-weight:700;color:var(--flow)}
+.steps b{font-family:var(--f-display);font-size:1.1rem}
+.steps span{color:var(--muted);font-size:.92rem}
+/* chapter */
+.chapter{max-width:1240px}
+.chlay{display:grid;grid-template-columns:260px minmax(0,1fr);gap:40px;align-items:start}
+.toc,.chbody{min-width:0}
+.toc{position:sticky;top:calc(var(--hdr) + 20px);display:flex;flex-direction:column;gap:14px;max-height:calc(100dvh - var(--hdr) - 40px);overflow:auto;padding-right:4px}
+.tocback{display:inline-flex;align-items:center;gap:6px;font-size:.86rem;font-weight:700;color:var(--muted);text-decoration:none}
+.tocback:hover{color:var(--fg)} .tocback svg{width:16px;height:16px}
+.toc-h{display:flex;align-items:baseline;gap:10px}
+.toc-h .chn{font-family:var(--f-display);font-weight:700;font-size:1.8rem;color:var(--c)}
+.toc-h b{font-family:var(--f-display);font-size:1.05rem;line-height:1.2}
+.toc-l{display:flex;flex-direction:column;gap:2px;border-left:2px solid var(--line)}
+.toc-l button{display:flex;justify-content:space-between;gap:8px;text-align:left;border:0;background:none;padding:7px 10px;margin-left:-2px;border-left:2px solid transparent;font-size:.9rem;color:var(--muted);font-weight:600}
+.toc-l button:hover{color:var(--fg)}
+.toc-l button.on{color:var(--fg);border-left-color:var(--c)}
+.toc-l em{font-style:normal;font-family:var(--f-mono);font-size:.74rem;color:var(--faint)}
+.toc-l em.full{color:var(--ok)}
+.toc-act{display:flex;flex-wrap:wrap;gap:8px}
+.chbody{display:flex;flex-direction:column;gap:44px;min-width:0}
+.chbody .mhead{padding-top:8px}
+.nsec{display:flex;flex-direction:column;gap:16px;scroll-margin-top:calc(var(--hdr) + 20px)}
+.nsec > h2{font-size:clamp(1.5rem,3vw,2rem);letter-spacing:-.03em;display:flex;align-items:center;gap:12px}
+.nsec > h2::before{content:"";width:12px;height:12px;border-radius:3px;background:var(--c);flex:none}
+.note{position:relative;border:1px solid var(--glass-line);background:var(--glass);border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px;max-width:820px;scroll-margin-top:calc(var(--hdr) + 30px);transition:border-color .3s,box-shadow .3s}
+.note::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:3px;border-radius:0 3px 3px 0;background:var(--c);opacity:.7}
+.note.known{border-color:color-mix(in srgb,var(--ok) 45%,transparent)}
+.note.known::before{background:var(--ok)}
+.note.flash{box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 40%,transparent)}
+.note-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.note-h h3{font-size:1.18rem;letter-spacing:-.01em}
+.gotit{flex:none;display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line-2);background:transparent;border-radius:99px;padding:5px 12px 5px 8px;font-size:.8rem;font-weight:700;color:var(--muted);transition:all .2s}
+.gotit svg{width:16px;height:16px}
+.gotit:hover{border-color:var(--ok);color:var(--ok)}
+.gotit[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.nline{font-size:1.08rem;font-weight:600;line-height:1.5;max-width:62ch}
+.npts{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:5px;color:var(--fg);max-width:66ch}
+.npts li::marker{color:var(--c)}
+.formula{margin:0;font-family:var(--f-mono);font-size:.95rem;line-height:1.7;background:color-mix(in srgb,var(--c) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--c) 30%,transparent);border-radius:12px;padding:12px 16px;white-space:pre-wrap;overflow-x:auto}
+.nbox{border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;font-size:.95rem}
+.nb-h{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700}
+.nb-h svg{width:15px;height:15px}
+.nbox.ex{background:var(--flow-soft)} .nbox.ex .nb-h{color:var(--flow)}
+.nbox.trap{background:var(--leak-soft)} .nbox.trap .nb-h{color:var(--leak)}
+.nbox.exam{background:var(--inj-soft)} .nbox.exam .nb-h{color:var(--inj)}
+.chnext{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:20px}
+.chnext .btn svg{width:16px;height:16px}
+@media (max-width:980px){
+  .chlay{grid-template-columns:minmax(0,1fr);gap:20px}
+  .chlay > *{min-width:0}
+  .mtitle{font-size:clamp(2.2rem,10vw,3.4rem)}
+  .toc{position:static;max-height:none;overflow:visible}
+  .toc-l{flex-direction:row;overflow-x:auto;border-left:0;gap:6px;scrollbar-width:none}
+  .toc-l button{border:1px solid var(--glass-line);border-radius:99px;margin:0;white-space:nowrap;background:var(--glass)}
+  .toc-l button.on{border-color:var(--c)}
+  .note{padding:18px}
+}
+/* widgets */
+.widget{border:1px solid var(--glass-line);background:var(--glass);border-radius:18px;padding:18px;max-width:820px}
+.widget:empty{display:none}
+.wgrid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:700px){.wgrid{grid-template-columns:1fr}}
+.plot{width:100%;height:auto;font-family:var(--f-body)}
+.wctl{display:flex;flex-direction:column;gap:14px}
+.wctl label{display:flex;flex-direction:column;gap:4px;font-size:.86rem;font-weight:600;color:var(--muted)}
+.wctl output{font-family:var(--f-mono);color:var(--fg);font-weight:700}
+.wctl input[type=range]{accent-color:var(--c,var(--flow));width:100%}
+.wout{margin:0;display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:10px}
+.wout div{display:flex;justify-content:space-between;gap:10px;font-size:.88rem}
+.wout dt{color:var(--muted)} .wout dd{margin:0;font-family:var(--f-mono);font-weight:700}
+.wcap,.wnote{font-size:.86rem;color:var(--muted);margin-top:10px}
+.tl{display:flex;gap:0;overflow-x:auto;padding:8px 2px 4px;scrollbar-width:thin}
+.tlb{position:relative;flex:1 0 96px;display:flex;flex-direction:column;align-items:flex-start;gap:4px;border:0;background:none;padding:22px 8px 6px 0;text-align:left}
+.tlb::before{content:"";position:absolute;left:0;right:0;top:9px;height:2px;background:var(--line-2)}
+.tlb i{position:absolute;left:0;top:3px;width:14px;height:14px;border-radius:50%;background:var(--c);box-shadow:0 0 0 4px var(--bg);transition:transform .2s}
+.tlb:hover i{transform:scale(1.35)}
+.tlb b{font-family:var(--f-mono);font-size:.8rem;color:var(--c)}
+.tlb span{font-size:.84rem;font-weight:600;line-height:1.3}
+.cmp th[scope=row]{font-family:var(--f-display);font-weight:700;color:var(--fg);text-transform:none;letter-spacing:0;font-size:.9rem;white-space:nowrap}
+.cmp td{vertical-align:top;font-size:.9rem}
+.cmp thead th{font-size:.74rem}
+.circ{width:100%;height:auto;max-width:640px}
+/* drills */
+.drillbar{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center}
+.drillstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;max-width:760px}
+.drillstats div{display:flex;flex-direction:column}
+.drillstats b{font-family:var(--f-display);font-size:1.6rem;line-height:1.1}
+.drillstats span{font-size:.8rem;color:var(--muted)}
+.timer{height:6px;border-radius:99px;background:var(--sunk);overflow:hidden;max-width:760px}
+.timer i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--leak),var(--inj),var(--flow))}
+.dq,.qzq{max-width:760px;border:1px solid var(--glass-line);background:var(--glass);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:16px;transition:background-color .3s,border-color .3s}
+.dq.ok,.qzq.ok{background:var(--ok-soft);border-color:color-mix(in srgb,var(--ok) 55%,transparent)}
+.dq.bad,.qzq.bad{background:var(--bad-soft);border-color:color-mix(in srgb,var(--bad) 55%,transparent)}
+.dq :is(.ok,.bad).verdict,.qzq .verdict{background:color-mix(in srgb,var(--surface) 60%,transparent)}
+.dqt{font-size:1.15rem;font-weight:600;line-height:1.5;max-width:60ch}
+.dq .field{max-width:320px}
+.sprintend{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.sprintend h2{font-size:2rem}
+/* quiz */
+.qzsetup,.qzend{max-width:760px;border:1px solid var(--glass-line);background:var(--glass);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+.qzsetup h2,.qzend h2{font-size:1.6rem}
+.small{font-size:.84rem}
+.qzprog{display:flex;align-items:center;gap:12px;font-size:.84rem;color:var(--muted)}
+.qzprog .mbar{flex:1}
+.qzprog .tag{font-weight:700;color:var(--c)}
+.qzend .blocks-sum{width:100%}
+.qzend .bs{border-color:var(--glass-line)}
+.qzend .bs b{color:var(--c)}
+.review{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;width:100%}
+.review li{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:4px}
+.rq{font-weight:600}
+.ra{display:flex;gap:6px;align-items:flex-start;color:var(--ok);font-weight:600}
+.ra svg{width:18px;height:18px;flex:none;margin-top:3px}
+/* flashcards */
+.fstage{display:flex;flex-direction:column;align-items:center;gap:18px;padding-top:6px}
+.flip{position:relative;width:min(560px,100%);aspect-ratio:16/10;border:0;background:none;padding:0;perspective:1400px;cursor:pointer}
+.flip .face{position:absolute;inset:0;border-radius:22px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;padding:28px;text-align:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;transition:transform .6s cubic-bezier(.3,.7,.2,1);border:1px solid var(--glass-line)}
+.flip .front{background:var(--glass)}
+.flip .back{background:var(--c);color:var(--bg);transform:rotateY(180deg)}
+.flip.on .front{transform:rotateY(-180deg)} .flip.on .back{transform:rotateY(0)}
+.flip em{font-style:normal;font-size:.8rem;font-weight:700;color:var(--c);opacity:.9}
+.flip .back em{color:var(--bg);opacity:.75}
+.flip b{font-family:var(--f-display);font-size:clamp(1.2rem,3vw,1.8rem);line-height:1.25;letter-spacing:-.01em}
+.flip .back b{font-family:var(--f-body);font-weight:600;font-size:clamp(1rem,2.4vw,1.25rem);line-height:1.5}
+.flip small{color:var(--faint);font-size:.78rem}
+.fact{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+/* open questions */
+.method{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;border:1px solid var(--glass-line);background:var(--glass);border-radius:16px;padding:14px 16px;font-size:.9rem;max-width:900px}
+.method b{font-family:var(--f-display);margin-right:6px}
+.method span{border-radius:99px;padding:4px 11px;background:var(--sunk);counter-increment:m}
+.method span::before{content:counter(m) ". ";font-family:var(--f-mono);font-weight:700;color:var(--flow)}
+.method{counter-reset:m}
+.olist{display:flex;flex-direction:column;gap:30px}
+.ogrp{display:flex;flex-direction:column;gap:10px}
+.ogrp h2{font-size:1.3rem;display:flex;align-items:center;gap:10px}
+.ogrp h2::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--c)}
+.oitem{display:flex;flex-direction:column;gap:6px;border:1px solid var(--glass-line);background:var(--glass);border-radius:16px;padding:16px 18px;text-decoration:none;max-width:900px;transition:border-color .2s,transform .2s,background-color .2s}
+.oitem:hover{border-color:var(--c);transform:translateX(4px)}
+.oq{font-weight:600;font-size:1.02rem}
+.ometa{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;color:var(--muted)}
+.osc{color:var(--ok);font-weight:700}
+.oq-page{max-width:980px}
+.oqt{font-size:clamp(1.5rem,3.4vw,2.3rem);letter-spacing:-.02em;line-height:1.2}
+.owrite{display:flex;flex-direction:column;gap:10px;border:1px solid var(--glass-line);background:var(--glass);border-radius:18px;padding:18px}
+.lbl{font-weight:700;font-size:.9rem}
+.owrite textarea{width:100%;min-height:240px;resize:vertical;border:1.5px solid var(--line-2);border-radius:12px;background:var(--bg);color:var(--fg);font:inherit;font-size:1rem;line-height:1.6;padding:14px;outline:none}
+.owrite textarea:focus{border-color:var(--c)}
+.orow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.omodel{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:18px;scroll-margin-top:calc(var(--hdr) + 20px)}
+@media (max-width:820px){.omodel{grid-template-columns:1fr}}
+.ochk,.oans{border:1px solid var(--glass-line);background:var(--glass);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.ochk h2,.oans h2{font-size:1.2rem}
+.ochk h2 span{font-family:var(--f-mono);color:var(--ok);margin-left:6px}
+.ochk ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.ochk label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:.94rem;line-height:1.45;padding:6px 8px;border-radius:10px}
+.ochk label:hover{background:var(--sunk)}
+.ochk input{accent-color:var(--ok);width:18px;height:18px;margin-top:2px;flex:none}
+.oans p{line-height:1.65}
+/* overview modules */
+.mods{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+@media (max-width:1000px){.mods{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:620px){.mods{grid-template-columns:1fr 1fr}}
+.modt{display:flex;flex-direction:column;gap:6px;border:1px solid var(--glass-line);background:var(--glass);border-radius:18px;padding:16px;text-decoration:none;transition:transform .3s cubic-bezier(.2,.8,.2,1),background-color .3s,border-color .3s,color .3s,opacity .3s,filter .3s;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.modt .mi{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--c);transition:background-color .3s,color .3s}
+.modt .mi svg{width:22px;height:22px}
+.modt b{font-family:var(--f-display);font-size:1.15rem;margin-top:4px}
+.modt .md{font-size:.84rem;color:var(--muted);line-height:1.45;transition:color .3s}
+.modt .ms{margin-top:auto;padding-top:6px;font-size:.78rem;font-weight:700;color:var(--c);font-family:var(--f-mono);transition:color .3s}
+.modt:hover{background:var(--c);border-color:var(--c);color:var(--bg);transform:translateY(-5px)}
+.modt:hover :is(.md,.ms){color:var(--bg)}
+.modt:hover .mi{background:var(--bg);color:var(--c)}
+.mods:has(.modt:hover) .modt:not(:hover){opacity:.5;filter:saturate(.3)}
+/* header with many sections */
+.nav{overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+@media (max-width:1180px){.hdr-in{flex-wrap:wrap;height:auto;padding-block:8px;row-gap:4px}.nav{order:5;width:100%;margin-left:0}.nav a{padding:6px 10px}}
+@media (max-width:480px){.nav a[data-route="home"]{display:inline-block}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}.ov-title .w,.mtitle .w{transform:none}}
 </style>
 </head>
 <body>
@@ -385,7 +606,12 @@ a{color:inherit}
   <div class="crumb"><a class="hub" href="/" title="All subjects">Nexus</a><span class="sl">/</span><a class="here" href="#home"><b>Macroeconomics</b></a></div>
   <nav class="nav" aria-label="Sections">
     <a href="#home" data-route="home">Overview</a>
+    <a href="#learn" data-route="learn">Learn</a>
     <a href="#cases" data-route="cases">Cases</a>
+    <a href="#drills" data-route="drills">Drills</a>
+    <a href="#quiz" data-route="quiz">Quiz</a>
+    <a href="#cards" data-route="cards">Flashcards</a>
+    <a href="#open" data-route="open">Open questions</a>
   </nav>
   <span class="grow"></span>
   <button class="theme" id="fsBtn" type="button"></button>
@@ -601,6 +827,13 @@ function route(){
   const hs = location.hash.slice(1);
   if (/^case\d+$/.test(hs)) return { view: "case", seed: +hs.slice(4) };
   if (hs === "cases") return { view: "cases" };
+  if (hs === "learn") return { view: "learn" };
+  if (/^learn-\w+$/.test(hs)) return { view: "chapter", id: hs.slice(6) };
+  if (hs === "drills") return { view: "drills" };
+  if (hs === "quiz" || /^quiz-\w+$/.test(hs)) return { view: "quiz", id: hs.slice(5) };
+  if (hs === "cards" || /^cards-\w+$/.test(hs)) return { view: "cards", id: hs.slice(6) };
+  if (hs === "open") return { view: "open" };
+  if (/^open-o\d+$/.test(hs)) return { view: "openq", id: hs.slice(5) };
   return { view: "home" };
 }
 function go(hash){ if (location.hash === "#" + hash) render(); else location.hash = hash; }
@@ -655,6 +888,7 @@ function viewHome(){
     </div>
   </section>
   <div class="page">
+  ${modulesHtml()}
   <section class="sec">
     <div class="sec-h"><h2>Full cases</h2><p>30 questions each, about 25 minutes. Hover a case to see its economy.</p></div>
     <div class="cases">${Array.from({ length: 10 }, (_, i) => caseCard(i + 1)).join("")}</div>
@@ -666,7 +900,7 @@ function viewHome(){
   </section>
   <section class="sec" id="reviews" aria-label="Reviews"></section>
   <section class="sec"><div class="sec-h"><h2>Coming soon</h2></div>
-    <div class="soon"><span>Course cards</span><span>Open-question trainer</span><span>Schools of thought</span><span>Drills</span><span>Flashcards</span></div></section>
+    <div class="soon"><span>Timed mock exam</span><span>Inflation and money</span><span>The labour market</span><span>Economic policy</span><span>Climate change</span></div></section>
   ${creditHtml()}
   <footer class="foot"><span>Part of <a href="/">Nexus</a>, a student project to help with revision. Not an official EDHEC website.</span><span>Your progress is saved in this browser only.</span></footer>
   </div>` });
@@ -1150,18 +1384,943 @@ const AURA = (() => {
   return { set(v){ on = v; el.hidden = !v; if (v && !raf) raf = requestAnimationFrame(tick); } };
 })();
 
+/* =====================================================================
+   COURSE CONTENT — Business Economics S1, chapters 1 to 4.
+   Written from the lecture slides, reworded. Numbers in examples are our own.
+   Each card: title, line (the rule in one line), points, formula, example, trap, exam.
+   ===================================================================== */
+const COURSE = [
+{ id: "thought", n: 1, title: "Schools of economic thought", short: "Schools of thought", c: "var(--leak)",
+  intro: "Every topic of the course is read twice: through Classical or Neoclassical eyes, then through Keynesian eyes. Know what each school says about wealth, markets, money and the State.",
+  sections: [
+  { title: "Why schools matter", cards: [
+    { id: "t-macro", title: "Macro and micro",
+      line: "Macroeconomics studies the economy as a whole. Microeconomics studies households and firms one by one.",
+      points: ["Macro: growth, unemployment, inflation, the big aggregates.", "Micro: consumption and production decisions, and how agents interact.", "Explaining a fact always means choosing a theoretical framework, a school."],
+      exam: "Most open questions can be answered in two parts: the Classical or Neoclassical view, then the Keynesian view." }
+  ]},
+  { title: "Before the Classics", widget: "timeline", cards: [
+    { id: "t-merc", title: "Mercantilists (16th to mid-18th century)",
+      line: "Wealth is a stock of gold and silver, and trade is a zero-sum game.",
+      points: ["A country only gets richer at another country's expense: exporters win, importers lose.", "Goal: a trade surplus, so precious metals flow in.", "Means: build export manufacturing with high value added, and protect the home market with tariffs.", "A strong State runs and regulates the economy.", "Versions: Spanish-Portuguese and English mercantilism, and a manufacturing version in France, which had few precious metals."],
+      trap: "Mercantilists are protectionist. Do not confuse them with the Physiocrats, who want free trade." },
+    { id: "t-phys", title: "Physiocrats (Quesnay, 1758)",
+      line: "Only land creates wealth. Industry and trade are \"sterile\".",
+      points: ["Wealth means goods that meet needs, created by productive labour, not precious metals.", "Agriculture is the only productive activity; industry transforms and trade exchanges.", "Three classes: productive farmers, sterile manufacturers and merchants, and landowners.", "\"Laissez faire, laissez passer\" (Vincent de Gournay): let people act and let goods move freely.", "Freedom and private property are natural rights. They are the forerunners of economic liberalism."],
+      trap: "Physiocrats are liberal, but they are not Classical: for them only agriculture creates value." }
+  ]},
+  { title: "The Classical school", cards: [
+    { id: "t-class", title: "Who and when",
+      line: "Born with the Industrial Revolution: labour, markets and freedom at the centre.",
+      points: ["Adam Smith, The Wealth of Nations (1776).", "David Ricardo, Principles of Political Economy and Taxation (1817).", "Jean-Baptiste Say and Say's Law.", "John Stuart Mill, Principles of Political Economy (1848).", "Six principles: theory of value, liberalism, the market, Say's Law, a minimal State, neutral money."] },
+    { id: "t-value", title: "Theory of value",
+      line: "English Classics: value comes from labour. French Classics: value comes from usefulness.",
+      points: ["Smith and Ricardo: exchange value, measured objectively by the labour embodied in a good. This is the labour theory of value.", "Say: use value, the utility people expect from a good. A subjective view.", "The idea that work creates wealth still shapes French political speeches."],
+      example: "\"Work more to earn more\" is a modern echo of the labour theory of value." },
+    { id: "t-market", title: "Liberalism and the invisible hand",
+      line: "Free markets coordinate self-interested people, and that serves the common good.",
+      points: ["The market brings buyers and sellers together around a price.", "Smith's invisible hand: by pursuing their own interest, individuals push society towards more wealth.", "Liberalism supports capitalism: private ownership of the means of production and freedom to trade and to start a business."],
+      example: "You buy a coffee because you want one; the café sells it to make a living. Nobody aims at the common good, yet both needs are met and wealth is created." },
+    { id: "t-ricardo", title: "Comparative advantage (Ricardo)",
+      line: "Each country gains by specialising in what it produces relatively best, then trading.",
+      points: ["Free trade creates an international division of labour.", "Gains from trade are mutual: trade is not zero-sum, unlike for the Mercantilists."],
+      example: "France exports aircraft and luxury goods and imports textiles and electronics produced more competitively elsewhere.",
+      trap: "Comparative is not absolute: a country can gain from trade even if it is less efficient at producing everything." },
+    { id: "t-say", title: "Say's Law",
+      line: "Supply creates its own demand.",
+      points: ["Producing distributes income: wages to staff, payments to suppliers. That income buys other goods.", "A product can fail to sell, but only temporarily and in one sector, after a bad forecast. Producers then switch activity.", "No general, lasting overproduction. Crises come from outside the system: wars, droughts."],
+      exam: "Keynes reverses Say's Law: for him, demand determines supply and employment." },
+    { id: "t-state", title: "The minimal State",
+      line: "The State sticks to what markets cannot provide profitably.",
+      points: ["Sovereign functions: justice, police, defence.", "Essential services such as education and healthcare.", "Keeping competition alive so markets regulate themselves."],
+      example: "The case for opening telecoms or air transport to competition: competition, not the State, lowers prices and improves service." },
+    { id: "t-money", title: "Neutral money and the quantity theory",
+      line: "Money is a veil over the real economy: it only moves prices.",
+      points: ["Mill: money is just a means of exchange. Wealth is created in production.", "Quantity theory (Bodin, Hume): more money in circulation raises the price level, not output.", "Dichotomy between the real sphere and the monetary sphere.", "So monetary policy has one goal: price stability."],
+      example: "The ECB's main goal is inflation close to 2%. It holds that too much money creation raises inflation without lasting gains in output or jobs." }
+  ]},
+  { title: "Neoclassicals and the 1929 crash", cards: [
+    { id: "t-neo", title: "The Neoclassical school",
+      line: "Classical foundations plus marginal analysis: the birth of modern microeconomics.",
+      points: ["Walras: general equilibrium.", "Menger: the marginalist revolution.", "Marshall: partial equilibrium.", "Pareto: the Pareto optimum."] },
+    { id: "t-1929", title: "The Great Depression",
+      line: "1929 showed that waiting for markets to self-correct can fail.",
+      points: ["The stock market crash ruined investors, who could no longer repay their debts.", "Banks could no longer finance the economy and went bankrupt.", "Activity came to a standstill.", "The Classical answer was to wait for a return to equilibrium. It did not come."],
+      exam: "1929 is the bridge between the Classical view and Keynes." }
+  ]},
+  { title: "Keynes", cards: [
+    { id: "t-keynes", title: "Keynes and the General Theory (1936)",
+      line: "The founder of modern macroeconomics breaks with the Classics on four points.",
+      points: ["Level of analysis: the whole economy.", "Money: not neutral.", "Aggregate demand: it drives output.", "The State: it should intervene."] },
+    { id: "t-global", title: "A global level of analysis",
+      line: "Keynes reasons in aggregates and in a circuit, not in market equilibrium.",
+      points: ["Global actors: the State, households, firms.", "Aggregates: GDP, consumption, investment, saving, unemployment, inflation.", "A logic of the economic circuit replaces a logic of equilibrium."] },
+    { id: "t-kmoney", title: "Money is not neutral",
+      line: "When uncertainty rises, people hoard money, and demand falls.",
+      points: ["Three motives to hold money: transaction (to pay), precautionary (for the unexpected), speculative (to seize the best investment).", "Liquidity preference: in doubt, households and firms keep their money instead of spending or investing it."],
+      example: "In 2008 households cut spending and banks cut lending. Central banks lowered rates and injected liquidity, as again during Covid: a Keynesian response." },
+    { id: "t-effd", title: "Effective demand",
+      line: "Output and employment depend on the demand firms expect.",
+      points: ["Effective demand is the demand entrepreneurs expect when they decide to produce and invest.", "Firms set output, then the jobs they need, from that expectation.", "Demand determines supply: Say's Law reversed."],
+      example: "Covid: lockdowns crushed spending in restaurants, tourism and transport, so firms cut output and investment. Governments propped up demand." },
+    { id: "t-welfare", title: "The welfare State and counter-cyclical policy",
+      line: "When markets fail, the State supports demand.",
+      points: ["Market failures: high unemployment, persistent inflation.", "Transfers and social benefits sustain household income, so demand, so output and jobs.", "Redistribution reduces imbalances.", "Counter-cyclical: the State does more when activity slows."],
+      example: "Covid support: short-time work schemes, aid to firms, household income support, public investment." }
+  ]},
+  { title: "Classical vs Keynes in one table", widget: "compare", cards: [] }
+  ]
+},
+{ id: "activity", n: 2, title: "Representing economic activity", short: "Economic activity", c: "var(--flow)",
+  intro: "Who does what in the economy, how GDP is measured three ways, and how money flows in a circuit with leakages and injections.",
+  sections: [
+  { title: "Why measure the economy", cards: [
+    { id: "a-why", title: "What measurement is for",
+      line: "Numbers let us understand the economy, guide policy and compare countries.",
+      points: ["See the economy as a whole: production, income, consumption, trade.", "Track growth, recessions, inflation, unemployment.", "Help public authorities set fiscal and monetary policy.", "Compare over time and across countries.", "National accounts organise all this. GDP measures wealth creation, with limits (inequality, environment, well-being, informal economy)."] }
+  ]},
+  { title: "The five economic agents", widget: "agents", cards: [
+    { id: "a-agent", title: "What an economic agent is",
+      line: "A group of economic units that share the same main function.",
+      points: ["Households, firms, the State, financial institutions, the rest of the world.", "Each is defined by what it mainly does, not by who it is."],
+      trap: "In the course model, households save but do not invest, and firms invest but do not save." },
+    { id: "a-row", title: "The rest of the world",
+      line: "Not really an agent, since it has no main function, but it records all trade with non-residents.",
+      points: ["Imports, exports, income transfers to and from abroad."] }
+  ]},
+  { title: "Aggregates and GDP three ways", cards: [
+    { id: "a-agg", title: "Aggregates",
+      line: "An aggregate adds up individual quantities to describe the whole country.",
+      points: ["Examples: GDP, household consumption, investment, the money supply.", "GDP is the most studied: it adds up the output of every firm."] },
+    { id: "a-as", title: "Aggregate supply",
+      line: "Everything produced in the economy, measured by GDP, plus what is imported.",
+      points: ["GDP can be measured by production, by income or by expenditure.", "The three approaches measure the same circular flow: they are complementary.", "Imports M are the part of supply produced abroad."],
+      formula: "Total supply = Y + M" },
+    { id: "a-prod", title: "1. The production approach",
+      line: "GDP is the sum of values added. It equals the value of the final goods.",
+      formula: "Value added = sales − intermediate consumption\nGDP = Σ values added",
+      example: "A farm sells wheat for €50,000 (no inputs). A mill turns it into flour sold for €80,000. A bakery sells bread for €200,000.\nVA: 50,000 + 30,000 + 120,000 = €200,000 = the value of the bread.",
+      trap: "Adding all sales (€330,000) counts the wheat three times and the flour twice. That is double counting." },
+    { id: "a-inc", title: "2. The income approach",
+      line: "All value added is paid out as wages (labour) or profits (capital).",
+      formula: "GDP = wages + profits\nprofits = GDP − wages",
+      example: "In the bread chain, wages total €120,000, so profits are €200,000 − €120,000 = €80,000. Labour gets 60% of GDP, capital 40%." },
+    { id: "a-exp", title: "3. The expenditure approach",
+      line: "GDP is the sum of final spending.",
+      formula: "Y = C + I + G + (X − M)",
+      example: "If households buy all the bread and there is no investment, State or trade: Y = C = €200,000.",
+      trap: "Only final purchases count. The mill buying wheat is intermediate consumption, not investment." }
+  ]},
+  { title: "Aggregate demand", cards: [
+    { id: "a-ad", title: "The four uses of output",
+      line: "Demand comes from households (C), firms (I), the State (G) and abroad (X).",
+      points: ["C: household consumption, which brings well-being.", "I: what firms buy to increase, improve or replace equipment. Investment is a flow over a period, added to the capital stock.", "G: State purchases of goods and services, and its staff.", "X: exports, demanded by the rest of the world."],
+      trap: "The slides say exports make goods \"leak\" out of the country. In the circuit, though, X is an injection: foreign spending that brings income in." }
+  ]},
+  { title: "The economic circuit", widget: "circuit", cards: [
+    { id: "a-simple", title: "The simplified circular flow",
+      line: "Two agents only: households and firms. Nothing leaks out, nothing comes in.",
+      points: ["Households spend all their income: no saving.", "Firms pay out all their revenue as income: no investment.", "Result: the economy is stationary, the same from one year to the next."] },
+    { id: "a-ident", title: "The fundamental accounting identity",
+      line: "Resources equal uses: what is produced or imported is consumed, invested, bought by the State or exported.",
+      formula: "Y + M = C + I + G + X\nY = (C + I + G) + (X − M)",
+      points: ["C + I + G: aggregate domestic demand.", "X − M: net foreign demand, the trade balance. Positive is a surplus, negative a deficit."] },
+    { id: "a-open", title: "Leakages and injections",
+      line: "Income that leaves the circuit is a leakage; demand that does not come from households is an injection.",
+      formula: "Leakages  W = S + T + M\nInjections J = I + G + X",
+      points: ["S: income households do not consume, deposited with banks.", "T: taxes paid by households and firms, net of transfers (transfers are negative taxes).", "I: investment, financed through banks. G: public spending. X: exports."] },
+    { id: "a-wj", title: "W = J in total, not pair by pair",
+      line: "The totals always match in the accounts, but each pair usually differs.",
+      formula: "Y = C + S + T  and  Y = C + I + G + X − M\n⇒ S + T + M = I + G + X",
+      points: ["S ≠ I: households and firms decide separately.", "G vs T: a deficit (G > T), for example in a recession, or a surplus (G < T).", "X ≠ M: trade is rarely balanced."],
+      example: "S = 300, T = 400, M = 500 gives W = 1,200. I = 350, G = 450, X = 400 gives J = 1,200. Equal totals, unequal pairs.",
+      trap: "W = J does not mean S = I." }
+  ]}
+  ]
+},
+{ id: "determinants", n: 3, title: "Consumption, saving and investment", short: "Consumption & investment", c: "var(--inj)",
+  intro: "What households do with their income, Keynes against Fisher, and why investment moves the whole economy through the multiplier.",
+  sections: [
+  { title: "Two views of saving", cards: [
+    { id: "d-two", title: "Current income or a lifetime plan?",
+      line: "Keynes looks at current income. Fisher looks at the long run, with wealth and the interest rate.",
+      points: ["Keynes: short run, consumption depends on today's income, saving is what is left.", "Neoclassical (Fisher): households choose between consuming now and later; the interest rate matters."] }
+  ]},
+  { title: "Keynes: the current income hypothesis", widget: "consumption", cards: [
+    { id: "d-yd", title: "Disposable income",
+      line: "What households can spend or save after taxes.",
+      formula: "Yd = Y − T\nYd = C + S" },
+    { id: "d-cf", title: "The consumption function",
+      line: "Consumption = a fixed part + a share of disposable income.",
+      formula: "C = C₀ + c·Yd",
+      points: ["C₀: autonomous consumption, spent even with no income (from past savings or borrowing).", "c: the marginal propensity to consume."],
+      example: "C = 300 + 0.8·Yd. With Yd = 2,000: C = 300 + 1,600 = 1,900 and S = 100." },
+    { id: "d-mpc", title: "Marginal propensity to consume (MPC)",
+      line: "The share of each extra euro of income that is consumed.",
+      formula: "c = ΔC / ΔYd     0 < c < 1",
+      example: "Income rises by €100 and consumption by €80: c = 0.8." },
+    { id: "d-apc", title: "Average propensity to consume (APC)",
+      line: "The share of total income that is consumed.",
+      formula: "APC = C / Yd",
+      example: "C = 1,900 and Yd = 2,000: APC = 0.95, while the MPC is 0.8.",
+      trap: "MPC and APC are different. With C₀ > 0 the APC is above the MPC and falls as income rises." },
+    { id: "d-sf", title: "The saving function",
+      line: "Saving is what is left once consumption is decided.",
+      formula: "S = Yd − C = −C₀ + s·Yd\ns = ΔS / ΔYd = 1 − c      APS = S / Yd\nc + s = 1      APC + APS = 1",
+      points: ["Saving is residual: households do not really choose to save.", "Keynes leaves the interest rate out: in the short run income acts at once, the rate only slowly."] },
+    { id: "d-be", title: "Break-even income",
+      line: "The income at which saving is zero: below it, households dissave.",
+      formula: "C = Yd  ⇒  Y_R = C₀ / (1 − c) = C₀ / s",
+      example: "C₀ = 300 and c = 0.8: Y_R = 300 / 0.2 = 1,500. Below €1,500 saving is negative." },
+    { id: "d-law", title: "Keynes' psychological law and its limits",
+      line: "When income rises, consumption rises too, but by less: the APC falls.",
+      formula: "0 < ΔC < ΔYd",
+      points: ["Richer households, and richer countries, should have a lower APC and a higher APS.", "As living standards rise, a country's APC should slowly fall.", "Kuznets (Nobel 1971), on US data: true in the short run, but in the long run the APC and APS are stable.", "So Keynes' view is static: it ignores the choice between consuming now and later."],
+      exam: "A classic open question: state the psychological law, its implications, then Kuznets' test." }
+  ]},
+  { title: "Fisher: the intertemporal choice", cards: [
+    { id: "d-fisher", title: "Saving as postponed consumption",
+      line: "Saving is not a leftover: it finances future consumption.",
+      points: ["Irving Fisher (1930).", "Saved money can be hoarded as cash (no interest) or lent to an agent who needs funds.", "Lending turns saving into a financial investment and gives the saver a financing capacity.", "A loan transfers purchasing power from the present to the future."] },
+    { id: "d-rate", title: "The interest rate is the reward for waiting",
+      line: "The higher the interest rate, the stronger the incentive to save.",
+      points: ["The rate compares the utility of consuming today with consuming later.", "It measures how much households prefer the present."] },
+    { id: "d-three", title: "Three factors decide consumption and saving",
+      line: "Preferences, wealth and the interest rate.",
+      points: ["Intertemporal preferences: now or later.", "Wealth: present and expected future income.", "Financial conditions, above all the interest rate, the price of moving purchasing power through time."],
+      exam: "Keynes: current income decides. Neoclassicals: wealth, future income and the interest rate decide together." }
+  ]},
+  { title: "Investment", widget: "investment", cards: [
+    { id: "d-inv", title: "What investment is",
+      line: "A firm turns money into productive capital to earn more, or spend less, in the future.",
+      points: ["Physical: machines, buildings, factories, equipment.", "Intangible: R&D, patents, licences, staff training, software, advertising and marketing.", "Buying shares or bonds is a financial investment, not a productive one."],
+      trap: "A household buying shares is not \"investment I\" in the national accounts." },
+    { id: "d-roles", title: "The two roles of investment",
+      line: "Today it is demand; tomorrow it is capacity.",
+      points: ["Part of aggregate demand: spending that supports activity right away.", "A factor of production: more capacity and productivity, so long-run growth."] },
+    { id: "d-irate", title: "The interest rate, main determinant",
+      line: "Both schools agree: a lower interest rate encourages investment.",
+      formula: "I = f(i), decreasing",
+      points: ["Projects are financed by own funds or by borrowing; either way the rate is the cost of investing.", "Lower rates make more projects profitable; higher rates make firms postpone or cancel."] },
+    { id: "d-other", title: "Other determinants",
+      line: "Firms invest when they expect demand and have reasons to add capacity.",
+      points: ["Expectations: stronger demand, sales and profits ahead. Uncertainty holds investment back.", "Business confidence.", "Technological progress: higher productivity, lower costs, more competitiveness.", "Capacity utilisation: near full capacity, firms add equipment; with idle capacity they wait.", "Public policies: tax incentives, subsidies, infrastructure, cheap financing. Heavy taxation or regulatory doubt discourages."] }
+  ]},
+  { title: "The Keynesian multiplier", widget: "multiplier", cards: [
+    { id: "d-mult", title: "How one euro of investment becomes several",
+      line: "Extra investment becomes income, part of which is spent, which becomes income again, and so on.",
+      formula: "k = 1 / (1 − c) = 1 / s\nΔY = k × ΔI",
+      example: "c = 0.8, so k = 1 / 0.2 = 5. Firms invest €10 bn more: ΔY = 5 × 10 = €50 bn.",
+      points: ["Round 1: ΔI. Round 2: c·ΔI. Round 3: c²·ΔI… The rounds add up to ΔI / (1 − c)."] },
+    { id: "d-multc", title: "When the multiplier is strongest",
+      line: "Low saving, little trade, idle capacity.",
+      points: ["A low marginal propensity to save: more of each euro is spent again.", "A closed economy: less extra income leaks out as imports.", "Spare capacity and unemployment: firms can produce more instead of raising prices."],
+      trap: "A higher MPS means a smaller multiplier, not a bigger one." },
+    { id: "d-take", title: "Key takeaways",
+      line: "Households decide how much to consume and save; firms decide how much to invest.",
+      points: ["Keynes: consumption depends on current income, saving is residual, investment drives demand.", "Neoclassicals: households trade off present and future consumption; the interest rate is key; saving finances investment.", "These decisions set demand, growth, employment and long-run capacity."] }
+  ]}
+  ]
+},
+{ id: "growth", n: 4, title: "Economic growth", short: "Growth", c: "var(--ch4)",
+  intro: "How growth is measured, what GDP does and does not capture, and what makes economies grow.",
+  sections: [
+  { title: "Measuring growth", cards: [
+    { id: "g-rate", title: "The growth rate",
+      line: "The percentage change in GDP from one period to the next.",
+      formula: "g = (GDP n+1 − GDP n) / GDP n × 100",
+      example: "GDP goes from €2,000 bn to €2,050 bn: g = 50 / 2,000 × 100 = 2.5%.",
+      points: ["A key indicator for decisions, above all on jobs: more wealth created usually means more employment, so governments seek the highest growth."] },
+    { id: "g-cycle", title: "Slowdown, recession, depression",
+      line: "Read the signs of the quarterly growth rates.",
+      points: ["Slowdown: growth stays positive but gets weaker.", "Recession (INSEE): GDP falls for at least two quarters in a row.", "Depression: a recession that lasts several years."],
+      example: "+0.6%, +0.4%, +0.2%, +0.1% is a slowdown. +0.4%, −0.2%, −0.3%, +0.1% is a recession.",
+      trap: "A slowdown is not a recession: GDP still grows." }
+  ]},
+  { title: "GDP", cards: [
+    { id: "g-def", title: "What GDP is",
+      line: "The market value of all final goods and services produced in a country over a given period.",
+      points: ["Market value: goods are counted at their market prices.", "Final goods only: bought by their final user. Intermediate goods are inside the final price, so excluding them avoids double counting.", "Territorial: the output of all resident units, whatever their nationality.", "One period: usually a year or a quarter."] },
+    { id: "g-real", title: "Nominal vs real GDP",
+      line: "Nominal uses current prices; real uses the prices of a base year.",
+      formula: "Nominal n+1 = Σ p(n+1) × q(n+1)\nReal n+1     = Σ p(n) × q(n+1)",
+      points: ["Nominal GDP cannot tell whether it rose because prices rose or because output rose.", "Real GDP removes inflation and shows changes in quantities: best to compare growth over time."],
+      example: "Year n: 100 units at €10, GDP €1,000. Year n+1: 104 units at €11. Nominal €1,144 (+14.4%), real 104 × €10 = €1,040 (+4%).",
+      trap: "When prices rise, nominal growth overstates real growth." },
+    { id: "g-cap", title: "GDP per capita",
+      line: "GDP divided by the population: best to compare countries of different sizes.",
+      formula: "GDP per capita = GDP / population",
+      points: ["Better than total GDP to compare development.", "But it is only an average: it hides inequality, and it does not measure quality of life."] },
+    { id: "g-ppp", title: "Purchasing power parity (PPP)",
+      line: "Convert GDPs with a rate that keeps the same purchasing power everywhere.",
+      points: ["The PPP rate compares how much money buys the same basket of goods in each country.", "It removes exchange-rate swings and accounts for the cost of living.", "Results are in international dollars (int-$).", "The Economist's Big Mac index is a famous, simple PPP comparison."] },
+    { id: "g-gnp", title: "GNP vs GDP",
+      line: "GDP follows the territory; GNP follows nationality.",
+      formula: "GNP = GDP + income received from abroad − income paid abroad",
+      example: "GDP €500 bn, residents earn €8 bn abroad and pay €5 bn to foreigners: GNP = €503 bn." },
+    { id: "g-lim", title: "The limits of GDP",
+      line: "GDP misses what has no market price, and says little about well-being.",
+      points: ["Not or badly counted: domestic work, volunteering, the underground economy, negative externalities such as pollution.", "Not captured: income distribution, health and life expectancy, leisure, environmental quality, political freedom and social justice."] },
+    { id: "g-hdi", title: "The Human Development Index (HDI)",
+      line: "A UN index that adds health and education to income.",
+      points: ["Standard of living: GNI per capita in PPP.", "Health and life expectancy.", "Education.", "Strongly linked to GDP, but some countries rank higher on HDI thanks to health and education, for example Scandinavian countries compared with the US."] }
+  ]},
+  { title: "Growth in history", cards: [
+    { id: "g-hist", title: "A recent phenomenon",
+      line: "For most of history, output grew only as fast as population.",
+      points: ["Modern growth lets more people live longer, not just consume more.", "It has relied on an exponential rise in CO₂ emissions, which drives climate change.", "It reshuffled power between continents and countries."],
+      example: "Hans Rosling's \"200 countries, 200 years, 4 minutes\" shows it in one animation." }
+  ]},
+  { title: "What drives growth", cards: [
+    { id: "g-endo-g", title: "Endogenous: the role of government",
+      line: "Public goods make an economy more productive.",
+      points: ["Good, well-maintained infrastructure: roads, power, telecoms.", "An effective education system: a skilled workforce.", "Enough public R&D to drive innovation."] },
+    { id: "g-endo-e", title: "Endogenous: economic factors",
+      line: "Demand, saving, the interest rate and technology raise output.",
+      points: ["Consumption and exports: firms produce more to meet demand, so value added and GDP rise.", "Saving and investment: high saving funds loans that let firms invest.", "The interest rate: it moves consumption and investment, both parts of demand.", "Technological progress, mainly from R&D: new technologies, new organisation, better materials and processes."] },
+    { id: "g-schump", title: "Schumpeter: creative destruction",
+      line: "Innovations come in clusters and drive growth and long cycles.",
+      points: ["Clusters such as the steam engine or railways.", "Creative destruction: activities tied to old innovations disappear and more productive ones replace them.", "Long waves of growth: the Kondratiev cycles."] },
+    { id: "g-exo", title: "Exogenous variables",
+      line: "Nature and demography set the stage.",
+      points: ["Natural resources (gas, oil, farm products) can be processed and exported. Natural disasters and climate change hurt growth.", "Demography: a larger population needs more output and offers a bigger labour force."] }
+  ]}
+  ]
+}
+];
+
+/* exam-style multiple choice, tagged by chapter */
+const QUIZ = [
+{ ch: "thought", q: "For the Mercantilists, national wealth is mainly…", o: ["a stock of gold and silver", "the output of agriculture", "the labour embodied in goods", "the utility of goods"], a: 0, why: "Mercantilists see wealth as accumulated precious metals, gained through a trade surplus." },
+{ ch: "thought", q: "Which policy fits Mercantilism?", o: ["Tariffs on imports to keep a trade surplus", "Free trade between all nations", "A minimal State", "Leaving prices to the invisible hand"], a: 0, why: "They want exports in and imports out, so they protect the home market with tariffs." },
+{ ch: "thought", q: "For the Physiocrats, the only productive activity is…", o: ["agriculture", "manufacturing", "trade", "banking"], a: 0, why: "Industry and trade only transform or exchange what land produces: they are \"sterile\"." },
+{ ch: "thought", q: "\"Laissez faire, laissez passer\" is associated with…", o: ["the Physiocrats", "the Mercantilists", "Keynes", "the quantity theory of money"], a: 0, why: "The motto (Vincent de Gournay) sums up the Physiocrats' defence of free trade: forerunners of liberalism." },
+{ ch: "thought", q: "For Smith and Ricardo, the value of a good is measured by…", o: ["the labour embodied in it", "its usefulness to the buyer", "the gold it can buy", "its scarcity alone"], a: 0, why: "The English Classics use exchange value and the labour theory of value. Say, a French Classic, stresses use value." },
+{ ch: "thought", q: "Ricardo's theory of comparative advantage says that…", o: ["each country gains by specialising in what it does relatively best and trading", "a country should export more than it imports", "only the most efficient country gains from trade", "trade is a zero-sum game"], a: 0, why: "Specialisation by comparative advantage creates mutual gains, even for a country less efficient at everything." },
+{ ch: "thought", q: "Say's Law states that…", o: ["supply creates its own demand", "demand creates its own supply", "money supply sets prices", "saving equals investment at all times"], a: 0, why: "Producing distributes the income that buys other goods, so there is no lasting general overproduction." },
+{ ch: "thought", q: "According to Say, economic crises come from…", o: ["external shocks such as wars or droughts", "a lack of effective demand", "too much saving", "the State's budget deficit"], a: 0, why: "Inside the system, only temporary sector-specific imbalances exist. General crises come from outside." },
+{ ch: "thought", q: "For the Classics, money is…", o: ["neutral: a veil over the real economy", "the main driver of output", "a store of value people hoard in a crisis", "the source of all wealth"], a: 0, why: "Mill: money only helps exchange. The quantity theory says more money only raises prices." },
+{ ch: "thought", q: "The quantity theory of money (Bodin, Hume) implies that monetary policy should aim at…", o: ["price stability", "full employment", "a trade surplus", "a higher GDP growth rate"], a: 0, why: "If money only affects prices, the central bank's job is to control inflation, like the ECB's 2% target." },
+{ ch: "thought", q: "Which economist is linked to general equilibrium?", o: ["Walras", "Marshall", "Menger", "Pareto"], a: 0, why: "Walras: general equilibrium. Marshall: partial equilibrium. Menger: marginalism. Pareto: the optimum." },
+{ ch: "thought", q: "The Classical answer to the 1929 crisis was to…", o: ["wait for markets to return to equilibrium", "raise public spending", "cut interest rates sharply", "nationalise the banks"], a: 0, why: "Classics trusted self-correction. Waiting did not work, which opened the way to Keynes." },
+{ ch: "thought", q: "Which is NOT one of Keynes' motives for holding money?", o: ["the production motive", "the transaction motive", "the precautionary motive", "the speculative motive"], a: 0, why: "Keynes lists three motives: transaction, precautionary and speculative." },
+{ ch: "thought", q: "For Keynes, output and employment are determined by…", o: ["effective demand", "the labour embodied in goods", "the quantity of money", "the supply of labour"], a: 0, why: "Firms produce and hire according to the demand they expect: Say's Law reversed." },
+{ ch: "thought", q: "A counter-cyclical policy means that the State…", o: ["supports demand when activity slows", "cuts spending when activity slows", "never runs a deficit", "only provides sovereign functions"], a: 0, why: "Keynes: intervene more in downturns, for example with Covid-era support schemes." },
+{ ch: "thought", q: "Liquidity preference means that in times of uncertainty…", o: ["agents keep money instead of spending or investing it", "banks lend more", "interest rates always fall", "prices rise"], a: 0, why: "Hoarding money lowers aggregate demand, so money is not neutral for Keynes." },
+{ ch: "activity", q: "Which agent's main function is to produce non-market services financed by taxes?", o: ["The State", "Firms", "Financial institutions", "Households"], a: 0, why: "Non-market services are free or almost free, financed by compulsory levies." },
+{ ch: "activity", q: "In the course model, firms…", o: ["invest but do not save", "save but do not invest", "consume and save", "neither save nor invest"], a: 0, why: "Households save but do not invest; firms invest but do not save." },
+{ ch: "activity", q: "A bank's main income comes from…", o: ["interest on loans and fees", "taxes", "selling goods", "consumption"], a: 0, why: "Financial institutions collect deposits, lend, and charge interest and fees." },
+{ ch: "activity", q: "Why is the rest of the world \"not really\" an economic agent?", o: ["It has no main function", "It does not trade with residents", "It is part of the State", "It only exports"], a: 0, why: "It records trade with non-residents but has no main function of its own." },
+{ ch: "activity", q: "Value added equals…", o: ["sales minus intermediate consumption", "sales minus wages", "profits plus taxes", "sales plus imports"], a: 0, why: "What a firm adds on top of what it buys from other firms." },
+{ ch: "activity", q: "Summing all firms' sales to measure GDP is wrong because…", o: ["intermediate goods are counted several times", "imports are left out", "wages are counted twice", "the State is ignored"], a: 0, why: "This is double counting. Summing values added, or valuing final goods only, avoids it." },
+{ ch: "activity", q: "With the income approach, GDP equals…", o: ["wages + profits", "C + I + G", "sales − wages", "S + T + M"], a: 0, why: "All value added is distributed to labour (wages) and capital (profits)." },
+{ ch: "activity", q: "The fundamental accounting identity is…", o: ["Y + M = C + I + G + X", "Y = C + S + I", "Y − M = C + I + G", "Y = C + I − G + X"], a: 0, why: "Resources (output plus imports) equal uses (consumption, investment, public spending, exports)." },
+{ ch: "activity", q: "Aggregate domestic demand is…", o: ["C + I + G", "C + I + G + X", "X − M", "Y − M"], a: 0, why: "It leaves out the external balance X − M, which is net foreign demand." },
+{ ch: "activity", q: "Which of these is a leakage?", o: ["Saving", "Investment", "Exports", "Public spending"], a: 0, why: "Leakages: S, T, M. Injections: I, G, X." },
+{ ch: "activity", q: "Which of these is an injection?", o: ["Exports", "Imports", "Taxes", "Saving"], a: 0, why: "Exports are demand for domestic firms that does not come from domestic households." },
+{ ch: "activity", q: "In the simplified circuit with only households and firms, the economy is…", o: ["stationary", "growing", "in recession", "in deficit"], a: 0, why: "No saving, no investment, no leakages or injections: output stays the same each year." },
+{ ch: "activity", q: "In the national accounts, total leakages and total injections are…", o: ["always equal, though S, T, M differ from I, G, X one by one", "never equal", "equal only if S = I", "equal only in a closed economy"], a: 0, why: "From the identity, S + T + M = I + G + X, while each pair usually differs." },
+{ ch: "activity", q: "G > T means the government runs…", o: ["a budget deficit", "a budget surplus", "a trade deficit", "a balanced budget"], a: 0, why: "It spends more than it collects, which Keynesians accept in a recession." },
+{ ch: "determinants", q: "In C = C₀ + c·Yd, C₀ is…", o: ["autonomous consumption", "the marginal propensity to consume", "disposable income", "saving"], a: 0, why: "C₀ is consumed even with zero income, financed by past saving or borrowing." },
+{ ch: "determinants", q: "Income rises by €200 and consumption by €150. The MPC is…", o: ["0.75", "0.25", "1.33", "150"], a: 0, why: "c = ΔC / ΔYd = 150 / 200 = 0.75." },
+{ ch: "determinants", q: "If the MPC is 0.7, the MPS is…", o: ["0.3", "0.7", "1.7", "1.43"], a: 0, why: "c + s = 1, so s = 0.3." },
+{ ch: "determinants", q: "Keynes' psychological law says that when income rises…", o: ["consumption rises, but by less than income", "consumption rises by more than income", "consumption falls", "saving falls"], a: 0, why: "0 < ΔC < ΔYd, so the APC falls as income grows." },
+{ ch: "determinants", q: "Kuznets found that over the long run the APC is…", o: ["roughly stable", "falling steadily", "rising steadily", "equal to the MPC"], a: 0, why: "Keynes is confirmed in the short run only. In the long run, APC and APS are stable." },
+{ ch: "determinants", q: "For Keynes, saving is…", o: ["residual: what is left after consumption", "a reward for waiting", "set by the interest rate", "a postponed consumption plan"], a: 0, why: "Households do not really choose to save; the interest rate is left out in the short run." },
+{ ch: "determinants", q: "For Fisher, the interest rate is…", o: ["the reward for postponing consumption", "irrelevant to saving", "the cost of consuming today only", "set by the State"], a: 0, why: "The higher the rate, the stronger the incentive to save." },
+{ ch: "determinants", q: "Which is NOT one of the Neoclassical determinants of consumption and saving?", o: ["The tax rate on profits", "Intertemporal preferences", "Wealth and expected income", "The interest rate"], a: 0, why: "The three are preferences, wealth (present and future income) and financial conditions, chiefly the interest rate." },
+{ ch: "determinants", q: "Which of these is productive investment (I)?", o: ["A firm buys a new production line", "A household buys shares", "A bank buys bonds", "A firm buys flour to make bread"], a: 0, why: "Shares and bonds are financial investments; flour is intermediate consumption." },
+{ ch: "determinants", q: "Training employees and R&D are…", o: ["intangible investment", "consumption", "intermediate consumption", "financial investment"], a: 0, why: "They raise productivity over several years: intangible investment." },
+{ ch: "determinants", q: "The investment function I = f(i) is…", o: ["decreasing in the interest rate", "increasing in the interest rate", "independent of the interest rate", "only Keynesian"], a: 0, why: "The rate is the cost of financing: higher rates make fewer projects profitable. Both schools agree." },
+{ ch: "determinants", q: "With c = 0.8, the Keynesian multiplier is…", o: ["5", "0.8", "1.25", "8"], a: 0, why: "k = 1 / (1 − 0.8) = 1 / 0.2 = 5." },
+{ ch: "determinants", q: "k = 4 and investment rises by €5 bn. Income rises by…", o: ["€20 bn", "€5 bn", "€1.25 bn", "€9 bn"], a: 0, why: "ΔY = k × ΔI = 4 × 5 = 20." },
+{ ch: "determinants", q: "The multiplier is weakest when…", o: ["the economy imports a lot", "the MPS is low", "there is high unemployment", "firms have idle capacity"], a: 0, why: "Imports are a leakage: extra spending creates income abroad, not at home." },
+{ ch: "determinants", q: "Investment plays two roles. Which pair is right?", o: ["Component of demand and factor of production", "Leakage and injection", "Saving and consumption", "Tax and transfer"], a: 0, why: "It supports demand today and adds productive capacity for tomorrow." },
+{ ch: "growth", q: "GDP rises from 800 to 820. The growth rate is…", o: ["2.5%", "2%", "20%", "2.44%"], a: 0, why: "(820 − 800) / 800 × 100 = 2.5%." },
+{ ch: "growth", q: "Real GDP is measured…", o: ["at the constant prices of a base year", "at current prices", "per inhabitant", "in international dollars"], a: 0, why: "Constant prices remove inflation, so real GDP tracks quantities." },
+{ ch: "growth", q: "To compare living standards between countries of different sizes, the best measure is…", o: ["GDP per capita in PPP", "nominal GDP", "real GDP", "GNP"], a: 0, why: "Per capita removes size; PPP removes exchange rates and cost-of-living differences." },
+{ ch: "growth", q: "INSEE defines a recession as…", o: ["at least two consecutive quarters of falling GDP", "growth below 1%", "one quarter of falling GDP", "a fall in GDP lasting several years"], a: 0, why: "Several years of decline would be a depression; positive but weaker growth is a slowdown." },
+{ ch: "growth", q: "GDP counts output…", o: ["of all resident units on the territory", "of national firms wherever they are", "of final and intermediate goods", "of non-market and household work"], a: 0, why: "GDP is territorial. GNP follows nationality." },
+{ ch: "growth", q: "Which is NOT one of the three HDI components?", o: ["Political freedom", "Standard of living (GNI per capita, PPP)", "Health and life expectancy", "Education"], a: 0, why: "Political freedom is one of the things GDP misses, but it is not in the HDI." },
+{ ch: "growth", q: "Which of these is NOT counted in GDP?", o: ["Volunteering", "A haircut paid in cash with a receipt", "A new factory", "Public schools"], a: 0, why: "Volunteering has no market price. Public services are counted at their cost." },
+{ ch: "growth", q: "Schumpeter's creative destruction is…", o: ["new innovations replacing activities tied to older ones", "the State destroying old firms", "the effect of wars on growth", "inflation destroying savings"], a: 0, why: "Clusters of innovation drive growth and long cycles (Kondratiev)." },
+{ ch: "growth", q: "Which is an exogenous driver of growth in the course?", o: ["Natural resources", "Public R&D", "The interest rate", "Education spending"], a: 0, why: "Natural resources and demography are exogenous; government action and economic factors are endogenous." },
+{ ch: "growth", q: "Prices rose by 5% and real GDP by 2%. Nominal GDP rose by about…", o: ["7%", "3%", "2%", "10%"], a: 0, why: "Nominal growth ≈ real growth + price growth. Exactly: 1.05 × 1.02 − 1 = 7.1%." }
+];
+
+/* flashcards: front → back */
+const CARDS = [
+["thought", "Mercantilism", "Wealth = gold and silver. Trade is zero-sum. Aim for a trade surplus with export industries and tariffs. Strong State."],
+["thought", "Physiocracy", "Quesnay (1758). Only agriculture is productive; industry and trade are sterile. Liberal: \"laissez faire, laissez passer\"."],
+["thought", "Labour theory of value", "Smith, Ricardo: exchange value is measured by the labour embodied in a good."],
+["thought", "Use value", "Say: value comes from the utility people expect from a good. A subjective view."],
+["thought", "Invisible hand", "Smith: individuals pursuing their own interest end up serving the common good through the market."],
+["thought", "Comparative advantage", "Ricardo: specialise in what you produce relatively best, then trade. Gains are mutual."],
+["thought", "Say's Law", "Supply creates its own demand. No lasting general overproduction; crises come from external shocks."],
+["thought", "Minimal State", "Sovereign functions, essential services, and keeping markets competitive."],
+["thought", "Neutral money", "Mill: money is a veil over the real economy. It only affects prices (quantity theory: Bodin, Hume)."],
+["thought", "The Neoclassicals", "Walras (general equilibrium), Menger (marginalism), Marshall (partial equilibrium), Pareto (optimum)."],
+["thought", "Keynes' 3 motives for holding money", "Transaction, precautionary, speculative."],
+["thought", "Effective demand", "The demand firms expect. It sets output and employment: demand determines supply."],
+["thought", "Counter-cyclical policy", "The State supports demand when activity slows: transfers, aid, public investment."],
+["thought", "General Theory", "Keynes, 1936: founder of modern macroeconomics."],
+["activity", "Economic agent", "A group of units sharing the same main function. Five: households, firms, State, financial institutions, rest of the world."],
+["activity", "Households: main function", "Consume to meet needs. Split income between consumption and saving. Do not invest (course model)."],
+["activity", "Firms: main function", "Produce market goods and services at a price covering costs. Invest; do not save (course model)."],
+["activity", "The State: main function", "Produce non-market services, financed by taxes. Economic, social (redistribution) and sovereign roles."],
+["activity", "Financial institutions", "Collect deposits and turn them into loans. Income: interest and fees."],
+["activity", "Value added", "Sales − intermediate consumption."],
+["activity", "GDP, production approach", "Sum of values added = value of final goods. Avoids double counting."],
+["activity", "GDP, income approach", "Wages + profits."],
+["activity", "GDP, expenditure approach", "Y = C + I + G + (X − M)."],
+["activity", "Fundamental identity", "Y + M = C + I + G + X: resources = uses."],
+["activity", "Domestic demand", "C + I + G."],
+["activity", "Net foreign demand", "X − M, the trade balance: surplus if positive, deficit if negative."],
+["activity", "Leakages W", "S + T + M: income that leaves the circuit."],
+["activity", "Injections J", "I + G + X: demand that does not come from households."],
+["activity", "T in the circuit", "Taxes net of transfers (transfers are negative taxes)."],
+["activity", "Simplified circular flow", "Households and firms only. No saving, no investment: a stationary economy."],
+["determinants", "Disposable income", "Yd = Y − T = C + S."],
+["determinants", "Keynesian consumption function", "C = C₀ + c·Yd."],
+["determinants", "Autonomous consumption C₀", "Consumption with zero income, financed by past saving or borrowing."],
+["determinants", "MPC", "c = ΔC / ΔYd, between 0 and 1."],
+["determinants", "APC", "C / Yd. Falls as income rises when C₀ > 0."],
+["determinants", "MPS", "s = ΔS / ΔYd = 1 − c."],
+["determinants", "c + s", "= 1. And APC + APS = 1."],
+["determinants", "Saving function", "S = −C₀ + s·Yd."],
+["determinants", "Break-even income", "Y_R = C₀ / (1 − c) = C₀ / s. Saving is zero there, negative below."],
+["determinants", "Psychological law", "0 < ΔC < ΔYd: consumption rises less than income, so the APC falls."],
+["determinants", "Kuznets' test", "Keynes holds in the short run; in the long run APC and APS are stable."],
+["determinants", "Fisher (1930)", "Saving is postponed consumption. The interest rate rewards waiting."],
+["determinants", "Neoclassical determinants of saving", "Intertemporal preferences, wealth (present and future income), the interest rate."],
+["determinants", "Productive investment", "Turning money into physical or intangible capital. Not buying shares or bonds."],
+["determinants", "Intangible investment", "R&D, patents, licences, training, software, advertising, marketing."],
+["determinants", "Two roles of investment", "A component of demand now, a factor of production later."],
+["determinants", "Investment function", "I = f(i), decreasing: the interest rate is the cost of investing."],
+["determinants", "Keynesian multiplier", "k = 1 / (1 − c) = 1 / s. ΔY = k × ΔI."],
+["determinants", "Strong multiplier conditions", "Low MPS, little openness (few imports), idle capacity."],
+["growth", "Growth rate", "(GDP n+1 − GDP n) / GDP n × 100."],
+["growth", "GDP", "Market value of all final goods and services produced in a country in a period. Territorial."],
+["growth", "Nominal GDP", "At current prices. Mixes price and quantity changes."],
+["growth", "Real GDP", "At base-year prices. Shows quantity changes only: best for growth over time."],
+["growth", "GDP per capita", "GDP / population. Best to compare countries of different sizes, but hides inequality."],
+["growth", "PPP", "Exchange rate that equalises purchasing power. Results in international dollars. Big Mac index."],
+["growth", "GNP", "GDP + income received from abroad − income paid abroad. Follows nationality."],
+["growth", "Slowdown", "Growth stays positive but weakens."],
+["growth", "Recession (INSEE)", "At least two consecutive quarters of falling GDP."],
+["growth", "Depression", "A recession lasting several years."],
+["growth", "Limits of GDP", "Misses domestic work, volunteering, the underground economy, externalities, inequality and well-being."],
+["growth", "HDI", "UN index: GNI per capita (PPP), health and life expectancy, education."],
+["growth", "Creative destruction", "Schumpeter: clusters of innovation replace old activities and drive long cycles (Kondratiev)."],
+["growth", "Endogenous growth drivers", "Government (infrastructure, education, R&D) and economic factors (demand, saving, interest rate, technology)."],
+["growth", "Exogenous growth drivers", "Natural resources (and disasters) and demography."]
+];
+
+/* open questions: model answer + key points to tick */
+const OPEN = [
+{ id: "o1", ch: "thought", min: 12, q: "Compare the Classical and the Keynesian views of the role of the State in the economy.",
+  points: ["Classics: minimal State limited to sovereign functions and essential services", "Classics: markets self-regulate (invisible hand, Say's Law)", "Classics: crises come from external shocks, so the State waits", "Keynes: markets can fail (unemployment), crises can come from insufficient demand", "Keynes: effective demand sets output and jobs", "Keynes: counter-cyclical policy and welfare State (transfers, public investment)", "A real example (1929, 2008 or Covid support measures)"],
+  model: ["For the Classical economists, the State should be minimal. Markets coordinate self-interested agents (Smith's invisible hand) and, by Say's Law, supply creates its own demand, so there can be no lasting general overproduction. Crises come from outside shocks. The State keeps to sovereign functions, essential services and protecting competition.", "Keynes broke with this view after the 1929 crisis, when waiting for self-correction failed. Output and employment depend on effective demand, the demand firms expect. If demand is too weak, unemployment can last. The State should then act counter-cyclically: transfers and social benefits sustain household income, public spending and investment support demand.", "The Covid crisis illustrates the Keynesian answer: short-time work, aid to firms and income support kept demand from collapsing."] },
+{ id: "o2", ch: "thought", min: 10, q: "Is money neutral? Answer with the Classical and the Keynesian views.",
+  points: ["Classics (Mill): money is a veil, only a means of exchange", "Quantity theory (Bodin, Hume): more money only raises prices", "Dichotomy between real and monetary spheres", "Policy goal for Classics: price stability (e.g. ECB, 2%)", "Keynes: money is not neutral", "Three motives: transaction, precautionary, speculative", "Liquidity preference lowers demand in uncertain times (2008, Covid)"],
+  model: ["The Classics answer yes. For Mill, money only helps exchange: it is a veil over the real economy where wealth is produced. The quantity theory of Bodin and Hume adds that more money in circulation only raises the general price level. There is a dichotomy between the real and the monetary spheres, so monetary policy should aim at price stability, as the ECB does with its 2% target.", "Keynes answers no. People hold money for three motives: transaction, precaution and speculation. In uncertain times households and firms prefer to keep their money rather than spend or invest it. This liquidity preference lowers aggregate demand and activity. That is why central banks cut rates and injected liquidity in 2008 and during Covid."] },
+{ id: "o3", ch: "thought", min: 8, q: "Explain Say's Law and how Keynes challenged it.",
+  points: ["Say's Law: supply creates its own demand", "Production distributes income (wages, suppliers) that buys other goods", "Only temporary, sector-specific overproduction", "Crises come from external shocks", "Keynes: demand determines supply (effective demand)", "Insufficient demand can cause lasting unemployment", "1929 showed self-correction can fail"],
+  model: ["Say's Law states that supply creates its own demand. When a firm produces, it pays wages and suppliers, and this income is spent on other goods. A product may fail to sell, but only temporarily and in one sector: producers then switch activity. There is no general and lasting overproduction, so crises can only come from outside, such as wars or droughts.", "Keynes reversed the reasoning. Firms produce and hire according to effective demand, the demand they expect. If households hoard money or firms lack confidence, demand can stay too low and unemployment can last. The 1929 depression, where waiting for self-correction failed, supports his view."] },
+{ id: "o4", ch: "thought", min: 8, q: "Present the Mercantilists and the Physiocrats. What separates them?",
+  points: ["Mercantilists: wealth = gold and silver", "Trade as a zero-sum game, aim for a surplus", "Protectionism and export manufacturing, strong State", "Physiocrats (Quesnay): wealth = goods meeting needs, made by productive labour", "Only agriculture is productive, industry and trade sterile", "\"Laissez faire, laissez passer\": free trade, natural rights", "Opposition: protectionism vs liberalism; metals vs land"],
+  model: ["The Mercantilists (16th to mid-18th century) define wealth as a stock of gold and silver. Trade is a zero-sum game: one country's gain is another's loss. A strong State should therefore seek a trade surplus by developing export manufacturing and taxing imports.", "The Physiocrats, led by Quesnay (1758), see wealth as the goods that meet people's needs, created by productive labour. Only agriculture is productive; industry and trade are sterile. They defend free trade (\"laissez faire, laissez passer\") and private property as natural rights, which makes them forerunners of liberalism.", "They differ on the source of wealth (metals vs land) and on policy (protection vs free trade)."] },
+{ id: "o5", ch: "activity", min: 10, q: "Explain the three approaches to measuring GDP and why they give the same result.",
+  points: ["Production: sum of values added (sales − intermediate consumption)", "Avoids double counting; equals value of final goods", "Income: wages + profits", "Expenditure: Y = C + I + G + (X − M)", "Only final purchases count", "Same circular flow seen from three sides: output is income, income is spent", "A short numerical example"],
+  model: ["GDP can be measured three ways. With the production approach, we add the value added of every firm, that is sales minus intermediate consumption. This avoids double counting and gives the value of final goods. With the income approach, we add what this value added pays: wages to labour and profits to capital. With the expenditure approach, we add final spending: Y = C + I + G + (X − M).", "The three give the same figure because they describe the same circular flow: what is produced is paid out as income, and that income is spent on final goods. In a chain where a farm sells wheat for €50,000, a mill flour for €80,000 and a bakery bread for €200,000, values added sum to €200,000, wages plus profits equal €200,000, and household purchases of bread equal €200,000."] },
+{ id: "o6", ch: "activity", min: 10, q: "What are leakages and injections? Are they always equal?",
+  points: ["Leakages W = S + T + M, defined", "Injections J = I + G + X, defined", "Simplified circuit: none, stationary economy", "Identity Y = C + S + T and Y = C + I + G + X − M gives W = J", "Pairs differ: S ≠ I", "G vs T: deficit or surplus (deficit in recession)", "X ≠ M: trade rarely balanced"],
+  model: ["In the open circuit, leakages are the income that leaves the flow between households and firms: saving S, taxes net of transfers T and imports M. Injections are the demand addressed to firms that does not come from households: investment I, public spending G and exports X. In the simplified circuit with only households and firms there are neither, and the economy is stationary.", "In the national accounts, total leakages equal total injections: since Y = C + S + T and Y = C + I + G + X − M, we get S + T + M = I + G + X. But the pairs usually differ. Saving and investment are decided by different agents, the State can run a deficit (G > T), for example in a recession, or a surplus, and the trade balance is rarely in equilibrium."] },
+{ id: "o7", ch: "activity", min: 6, q: "Present the five economic agents and their main functions.",
+  points: ["Definition: units with the same main function", "Households: consume; income split into consumption and saving", "Firms: produce market goods; invest", "State: non-market services financed by taxes; redistribution", "Financial institutions: deposits into loans; interest and fees", "Rest of the world: trade with non-residents, no main function"],
+  model: ["An economic agent groups units that share the same main function. Households consume goods and services to meet their needs, and split their income between consumption and saving. Firms produce market goods and services, sold at a price that covers costs, and invest in capital. The State produces non-market services financed by taxes and redistributes income. Financial institutions collect deposits and lend them, earning interest and fees. The rest of the world is not really an agent, since it has no main function, but it records trade with non-residents: imports, exports and income transfers."] },
+{ id: "o8", ch: "determinants", min: 12, q: "Compare the Keynesian and the Neoclassical theories of consumption and saving.",
+  points: ["Keynes: current income is the key variable", "C = C₀ + cYd, MPC, APC", "Saving is residual; interest rate left out in the short run", "Psychological law: APC falls as income rises", "Kuznets: true short run, stable APC long run", "Fisher: saving is postponed consumption, interest rate as reward", "Neoclassical determinants: preferences, wealth/future income, interest rate"],
+  model: ["For Keynes, consumption depends on current disposable income: C = C₀ + cYd, where c is the marginal propensity to consume. Saving is simply what is left: households do not really choose it, and the interest rate is left out because in the short run income acts immediately. His psychological law says consumption rises with income but by less, so the average propensity to consume falls. Kuznets confirmed this in the short run but found the APC stable over the long run.", "Fisher's Neoclassical theory takes a long-term view. Saving is a postponement of consumption that finances future consumption, often by lending. The interest rate is the reward for waiting: the higher it is, the more households save. Consumption and saving depend jointly on intertemporal preferences, wealth and expected income, and the interest rate."] },
+{ id: "o9", ch: "determinants", min: 10, q: "Explain the Keynesian multiplier and the conditions that make it strong.",
+  points: ["Extra investment becomes income for others", "Part is spent (c), part saved: successive rounds", "k = 1 / (1 − c) = 1 / s", "ΔY = k × ΔI with a numerical example", "Stronger with a low MPS", "Stronger in a less open economy (imports leak)", "Stronger with idle capacity and unemployment"],
+  model: ["When firms invest an extra ΔI, that spending becomes income for other agents. They spend a share c of it, which becomes income again, and so on: ΔI, then cΔI, then c²ΔI. The rounds add up to ΔY = ΔI / (1 − c), so the multiplier is k = 1 / (1 − c) = 1 / s. With c = 0.8, k = 5: €10 bn of investment raises income by €50 bn.", "The effect is stronger when the marginal propensity to save is low, so more is spent at each round; when the economy is not very open, since imports send part of the extra income abroad; and when capacity is underused, so firms can produce more instead of raising prices."] },
+{ id: "o10", ch: "determinants", min: 8, q: "What determines firms' investment?",
+  points: ["Definition: physical or intangible capital, not financial assets", "Two roles: demand now, capacity later", "Interest rate: cost of financing, I = f(i) decreasing (both schools agree)", "Expectations of demand and profits; uncertainty", "Technological progress", "Capacity utilisation", "Public policies and taxation"],
+  model: ["Investment is when a firm turns financial resources into productive capital, physical (machines, factories) or intangible (R&D, training, software). It supports demand today and adds productive capacity for the future.", "Its main determinant is the interest rate, as both Keynesians and Neoclassicals agree: whether financed by borrowing or own funds, the rate is the cost of investing, so the investment function is decreasing. Investment also depends on expectations of future demand and profits, business confidence, technological progress, how close firms are to full capacity, and public policies such as tax incentives, subsidies and infrastructure, while heavy taxation or regulatory uncertainty hold it back."] },
+{ id: "o11", ch: "growth", min: 10, q: "Is GDP a good measure of a country's wealth and well-being?",
+  points: ["Definition of GDP (final goods, market value, territorial, period)", "Useful: growth rate, link with employment", "Real GDP and GDP per capita in PPP for fair comparisons", "Misses domestic work, volunteering, underground economy", "Ignores negative externalities and environment", "Says nothing on distribution, health, leisure, freedom", "Alternative: HDI (income, health, education)"],
+  model: ["GDP is the market value of all final goods and services produced on a territory in a period. It is a key indicator: its growth rate guides policy, notably because growth and employment move together. Used as real GDP per capita in purchasing power parity, it allows fair comparisons over time and between countries.", "But GDP has clear limits. It misses activities without a market price, such as domestic work and volunteering, and the underground economy. It does not deduct negative externalities like pollution. And as an average it says nothing about the distribution of income, health and life expectancy, leisure, environmental quality or political freedom.", "That is why the UN built the Human Development Index, which combines income (GNI per capita in PPP), health and education. Some countries, such as the Scandinavian ones, rank higher on HDI than on GDP."] },
+{ id: "o12", ch: "growth", min: 10, q: "What are the sources of economic growth?",
+  points: ["Endogenous, government: infrastructure, education, R&D", "Endogenous, economic: consumption and exports raise output", "Saving and investment", "Interest rate", "Technological progress and R&D", "Schumpeter: creative destruction, Kondratiev cycles", "Exogenous: natural resources, demography"],
+  model: ["Growth has endogenous sources. The State supports it through infrastructure, an effective education system and R&D. Economic factors matter too: consumption and exports push firms to produce more; saving funds loans that let firms invest; the interest rate moves consumption and investment; and technological progress, mostly from R&D, improves how goods are produced.", "Schumpeter explains that innovations arrive in clusters and drive long cycles (Kondratiev) through creative destruction, as new activities replace those tied to older innovations.", "Growth also depends on exogenous factors: natural resources that can be processed and exported, natural disasters that set it back, and demography, since a larger population needs more output and supplies more workers."] },
+{ id: "o13", ch: "growth", min: 6, q: "Distinguish nominal GDP, real GDP, GDP per capita and GDP in PPP. When do you use each?",
+  points: ["Nominal: current prices; mixes price and volume", "Real: base-year prices; shows volume, best over time", "Per capita: GDP / population; compare different sizes", "Per capita hides inequality", "PPP: same purchasing power, int-$, removes exchange rates", "Big Mac index as an illustration"],
+  model: ["Nominal GDP values output at current prices, so it cannot tell price rises from volume rises. Real GDP uses the prices of a base year, removing inflation: it is the right measure to compare growth over time. GDP per capita divides GDP by population and is better for comparing countries of different sizes, though it is an average that hides inequality. Finally, GDP in purchasing power parity converts currencies with a rate that equalises what money can buy, expressed in international dollars, which removes exchange-rate swings and cost-of-living gaps; the Big Mac index is a simple illustration."] }
+];
+
+/* =====================================================================
+   REVISION MODULES: Learn, Drills, Quiz, Flashcards, Open questions.
+   Progress lives in localStorage (key flow-v1) next to the case progress.
+   ===================================================================== */
+const MS = {
+  get(k, d){ const s = store.get(); return s[k] ?? d; },
+  set(k, v){ const s = store.get(); s[k] = v; store.set(s); }
+};
+const CH = Object.fromEntries(COURSE.map(c => [c.id, c]));
+const allCards = () => COURSE.flatMap(c => c.sections.flatMap(s => s.cards.map(k => ({ ...k, ch: c.id }))));
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const ICO = {
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+  warn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17v.5"/></svg>',
+  pen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg>',
+  ex: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19h16M7 15l3-4 3 2 4-6"/></svg>',
+  arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>'
+};
+function learnStats(chId){
+  const known = MS.get("learn", {}), cards = allCards().filter(c => !chId || c.ch === chId);
+  return { known: cards.filter(c => known[c.id]).length, total: cards.length };
+}
+function mhead(kicker, title, lede, extra = ""){
+  return `<header class="mhead"><p class="kicker">${kicker}</p><h1 class="mtitle"><span class="clip">${words(title)}</span></h1>${lede ? `<p class="lede">${lede}</p>` : ""}${extra}</header>`;
+}
+const chipCh = (c, on, act = "ch") => `<button class="mchip${on ? " on" : ""}" type="button" data-${act}="${c.id}" style="--c:${c.c}" aria-pressed="${on}">${c.n}. ${c.short}</button>`;
+
+/* ---------------- LEARN: index ---------------- */
+function viewLearn(){
+  const all = learnStats();
+  return h("div", { class: "mod", html: `
+  ${mhead("Macroeconomics", "Learn the course", "Four chapters, cut into short cards: the rule in one line, the formula, an example, the trap, and what the exam wants. Tick each card when you know it.",
+    `<div class="mprog"><div class="mbar"><i style="width:${all.total ? all.known / all.total * 100 : 0}%"></i></div><span>${all.known} of ${all.total} cards known</span></div>`)}
+  <section class="chgrid">${COURSE.map(c => { const s = learnStats(c.id), started = s.known > 0;
+    return `<a class="chtile" href="#learn-${c.id}" style="--c:${c.c}">
+      <span class="chn">${String(c.n).padStart(2, "0")}</span>
+      <h2>${c.title}</h2><p>${c.intro}</p>
+      <div class="chfoot"><span class="ring" style="--p:${s.total ? s.known / s.total : 0}"><b>${s.known}/${s.total}</b></span><span class="chgo">${s.known === s.total ? "Review" : started ? "Continue" : "Start"} ${ICO.arrow}</span></div>
+    </a>`; }).join("")}</section>
+  <section class="sec"><div class="sec-h"><h2>A good order to revise</h2></div>
+    <ol class="steps">
+      <li><b>Read a chapter</b><span>Card by card. Tick what you could explain to a friend.</span></li>
+      <li><b>Test it</b><span>Run the chapter quiz and read every explanation, even when you are right.</span></li>
+      <li><b>Drill the numbers</b><span>Short exercises until the formulas are automatic.</span></li>
+      <li><b>Write one open answer</b><span>Then compare with the model answer and tick the key points.</span></li>
+    </ol></section>
+  ${creditHtml()}` });
+}
+
+/* ---------------- LEARN: a chapter ---------------- */
+function noteCard(k, known){
+  return `<article class="note${known ? " known" : ""}" id="n-${k.id}" data-note="${k.id}">
+    <div class="note-h"><h3>${k.title}</h3><button class="gotit" type="button" data-know="${k.id}" aria-pressed="${!!known}">${ICO.check}<span>${known ? "Known" : "I know this"}</span></button></div>
+    <p class="nline">${k.line}</p>
+    ${k.formula ? `<pre class="formula">${k.formula}</pre>` : ""}
+    ${k.points ? `<ul class="npts">${k.points.map(p => `<li>${p}</li>`).join("")}</ul>` : ""}
+    ${k.example ? `<div class="nbox ex"><span class="nb-h">${ICO.ex}Example</span><p>${k.example.replace(/\n/g, "<br>")}</p></div>` : ""}
+    ${k.trap ? `<div class="nbox trap"><span class="nb-h">${ICO.warn}Trap</span><p>${k.trap}</p></div>` : ""}
+    ${k.exam ? `<div class="nbox exam"><span class="nb-h">${ICO.pen}In the exam</span><p>${k.exam}</p></div>` : ""}
+  </article>`;
+}
+function viewChapter(id){
+  const c = CH[id] || COURSE[0], known = MS.get("learn", {});
+  const idx = COURSE.indexOf(c), prev = COURSE[idx - 1], next = COURSE[idx + 1];
+  const s = learnStats(c.id);
+  const root = h("div", { class: "mod chapter", style: `--c:${c.c}`, html: `
+  <div class="chlay">
+    <aside class="toc" aria-label="Sections">
+      <a class="tocback" href="#learn">${ICO.back}All chapters</a>
+      <div class="toc-h"><span class="chn">${String(c.n).padStart(2, "0")}</span><b>${c.title}</b></div>
+      <div class="mprog sm"><div class="mbar"><i data-chbar style="width:${s.known / s.total * 100}%"></i></div><span data-chcount>${s.known}/${s.total} known</span></div>
+      <nav class="toc-l">${c.sections.map((sec, i) => `<button type="button" data-sec="${i}"><span>${sec.title}</span><em data-seccount="${i}"></em></button>`).join("")}</nav>
+      <div class="toc-act"><a class="btn primary small" href="#quiz-${c.id}">Quiz this chapter</a><a class="btn glassy small" href="#cards-${c.id}">Flashcards</a></div>
+    </aside>
+    <div class="chbody">
+      ${mhead(`Chapter ${c.n}`, c.title, c.intro)}
+      ${c.sections.map((sec, i) => `<section class="nsec" data-seci="${i}"><h2>${sec.title}</h2>${sec.widget ? `<div class="widget" data-widget="${sec.widget}"></div>` : ""}${sec.cards.map(k => noteCard(k, known[k.id])).join("")}</section>`).join("")}
+      <nav class="chnext">${prev ? `<a class="btn glassy" href="#learn-${prev.id}">${ICO.back}${prev.title}</a>` : "<span></span>"}<a class="btn primary" href="#quiz-${c.id}">Test this chapter</a>${next ? `<a class="btn glassy" href="#learn-${next.id}">${next.title}${ICO.arrow}</a>` : "<span></span>"}</nav>
+    </div>
+  </div>` });
+  const counts = () => {
+    const k = MS.get("learn", {});
+    c.sections.forEach((sec, i) => { const n = sec.cards.filter(x => k[x.id]).length, el = root.querySelector(`[data-seccount="${i}"]`); el.textContent = sec.cards.length ? `${n}/${sec.cards.length}` : ""; el.classList.toggle("full", sec.cards.length && n === sec.cards.length); });
+    const st = learnStats(c.id); root.querySelector("[data-chbar]").style.width = (st.known / st.total * 100) + "%"; root.querySelector("[data-chcount]").textContent = `${st.known}/${st.total} known`;
+  };
+  counts();
+  root.addEventListener("click", e => {
+    const kb = e.target.closest("[data-know]");
+    if (kb){ const k = MS.get("learn", {}), id = kb.dataset.know; if (k[id]) delete k[id]; else k[id] = 1; MS.set("learn", k);
+      const on = !!k[id]; kb.setAttribute("aria-pressed", String(on)); kb.querySelector("span").textContent = on ? "Known" : "I know this"; kb.closest(".note").classList.toggle("known", on); counts(); }
+    const sb = e.target.closest("[data-sec]");
+    if (sb){ const t = root.querySelector(`[data-seci="${sb.dataset.sec}"]`); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); }
+  });
+  /* the section in view lights up in the table of contents */
+  requestAnimationFrame(() => {
+    const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) root.querySelectorAll("[data-sec]").forEach(b => b.classList.toggle("on", b.dataset.sec === en.target.dataset.seci)); }), { rootMargin: "-30% 0px -60% 0px" });
+    root.querySelectorAll(".nsec").forEach(s => io.observe(s));
+    root.querySelectorAll("[data-widget]").forEach(w => WIDGETS[w.dataset.widget] && WIDGETS[w.dataset.widget](w));
+  });
+  return root;
+}
+
+/* ---------------- interactive widgets ---------------- */
+const WIDGETS = {
+  timeline(el){
+    const T = [["16th–18th c.", "Mercantilists", "t-merc", "var(--inj)"], ["1758", "Quesnay, Physiocrats", "t-phys", "var(--inj)"], ["1776", "Smith", "t-market", "var(--flow)"], ["1803", "Say", "t-say", "var(--flow)"], ["1817", "Ricardo", "t-ricardo", "var(--flow)"], ["1848", "Mill", "t-money", "var(--flow)"], ["1870s", "Neoclassicals", "t-neo", "var(--ch4)"], ["1929", "The crash", "t-1929", "var(--leak)"], ["1936", "Keynes", "t-keynes", "var(--leak)"]];
+    el.innerHTML = `<div class="tl" role="list">${T.map(([d, n, id, col]) => `<button class="tlb" type="button" role="listitem" data-goto="${id}" style="--c:${col}"><i></i><b>${d}</b><span>${n}</span></button>`).join("")}</div><p class="wcap">Tap a date to jump to its card.</p>`;
+    el.addEventListener("click", e => { const b = e.target.closest("[data-goto]"); if (b){ const n = document.getElementById("n-" + b.dataset.goto); if (n){ n.scrollIntoView({ behavior: "smooth", block: "center" }); n.classList.add("flash"); setTimeout(() => n.classList.remove("flash"), 1200); } } });
+  },
+  compare(el){
+    const R = [["Level of analysis", "Individual agents and markets", "The whole economy: aggregates and the circuit"], ["What drives output", "Supply: Say's Law", "Demand: effective demand"], ["Money", "Neutral, a veil (Mill, quantity theory)", "Not neutral: transaction, precaution, speculation"], ["Crises", "External shocks; markets self-correct", "Can come from too little demand; may last"], ["Saving", "Neoclassicals: rewarded by the interest rate (Fisher)", "Residual: what is left of current income"], ["The State", "Minimal: sovereign functions, competition", "Counter-cyclical, welfare State, transfers"], ["Typical policy", "Price stability, wait for equilibrium", "Support demand: 2008, Covid measures"]];
+    el.innerHTML = `<div class="tw"><table class="tbl cmp"><thead><tr><th></th><th>Classical / Neoclassical</th><th>Keynes</th></tr></thead><tbody>${R.map(r => `<tr><th scope="row">${r[0]}</th><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</tbody></table></div>`;
+  },
+  agents(el){
+    const A = [["Households", "Consume to meet their needs", "Wages and other income", "Save, do not invest"], ["Firms", "Produce market goods and services", "Sales", "Invest, do not save"], ["The State", "Non-market services; redistribution", "Taxes", "Can run a deficit or a surplus"], ["Financial institutions", "Turn deposits into loans", "Interest and fees", "Finance the others"], ["Rest of the world", "No main function: trade with non-residents", "Exports, imports, transfers", "Not really an agent"]];
+    el.innerHTML = `<div class="tw"><table class="tbl cmp"><thead><tr><th>Agent</th><th>Main function</th><th>Main resources</th><th>In the model</th></tr></thead><tbody>${A.map(r => `<tr><th scope="row">${r[0]}</th><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join("")}</tbody></table></div>`;
+  },
+  circuit(el){
+    el.innerHTML = `<svg class="circ" viewBox="0 0 640 300" role="img" aria-label="Open circuit: spending C flows from households to firms, income Y flows back; S, T and M leak out; I, G and X are injected.">
+      <defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0l10 5-10 5z" fill="currentColor"/></marker></defs>
+      <g fill="none" stroke-width="2.5">
+        <path d="M150 120 C 240 40, 400 40, 490 120" stroke="var(--flow)" marker-end="url(#ah)" style="color:var(--flow)"/>
+        <path d="M490 180 C 400 260, 240 260, 150 180" stroke="var(--flow)" marker-end="url(#ah)" style="color:var(--flow)"/>
+        <path d="M250 228 L 220 290" stroke="var(--leak)" marker-end="url(#ah)" style="color:var(--leak)"/><path d="M320 238 L 320 296" stroke="var(--leak)" marker-end="url(#ah)" style="color:var(--leak)"/><path d="M390 228 L 420 290" stroke="var(--leak)" marker-end="url(#ah)" style="color:var(--leak)"/>
+        <path d="M250 4 L 280 62" stroke="var(--inj)" marker-end="url(#ah)" style="color:var(--inj)"/><path d="M360 4 L 360 58" stroke="var(--inj)" marker-end="url(#ah)" style="color:var(--inj)"/><path d="M470 4 L 440 62" stroke="var(--inj)" marker-end="url(#ah)" style="color:var(--inj)"/>
+      </g>
+      <g font-family="var(--f-display)" font-weight="700" text-anchor="middle">
+        <rect x="40" y="118" width="120" height="64" rx="14" fill="var(--surface)" stroke="var(--line-2)"/><text x="100" y="156" font-size="17" fill="var(--fg)">Households</text>
+        <rect x="480" y="118" width="120" height="64" rx="14" fill="var(--surface)" stroke="var(--line-2)"/><text x="540" y="156" font-size="17" fill="var(--fg)">Firms</text>
+        <text x="320" y="56" font-size="15" fill="var(--flow)">Spending C</text><text x="320" y="252" font-size="15" fill="var(--flow)" dy="-24">Income Y</text>
+        <g font-family="var(--f-mono)" font-size="15"><text x="248" y="20" fill="var(--inj)" dx="-16">I</text><text x="360" y="18" fill="var(--inj)" dx="-14">G</text><text x="470" y="20" fill="var(--inj)" dx="14">X</text>
+        <text x="212" y="290" fill="var(--leak)" dx="-12">S</text><text x="320" y="292" fill="var(--leak)" dx="-14">T</text><text x="428" y="290" fill="var(--leak)" dx="12">M</text></g>
+      </g></svg><p class="wcap">Leakages (coral) leave the circuit, injections (amber) enter it. <a href="#home">See it live on the overview</a>.</p>`;
+  },
+  consumption(el){
+    el.innerHTML = `<div class="wgrid"><svg class="plot" viewBox="0 0 360 260" aria-label="Consumption function and 45 degree line"></svg>
+      <div class="wctl"><label>Autonomous consumption C₀ <output data-o="c0"></output><input type="range" min="0" max="800" step="50" value="300" data-r="c0"></label>
+      <label>MPC c <output data-o="c"></output><input type="range" min="0.5" max="0.95" step="0.05" value="0.8" data-r="c"></label>
+      <label>Disposable income Yd <output data-o="yd"></output><input type="range" min="0" max="6000" step="100" value="2500" data-r="yd"></label>
+      <dl class="wout"></dl></div></div><p class="wcap">The dashed line is C = Yd. Where the consumption line crosses it, saving is zero: that is the break-even income.</p>`;
+    const svg = el.querySelector("svg"), out = el.querySelector(".wout"), R = n => el.querySelector(`[data-r="${n}"]`), O = n => el.querySelector(`[data-o="${n}"]`);
+    const draw = () => {
+      const c0 = +R("c0").value, c = +R("c").value, yd = +R("yd").value, max = 6000, X = v => 40 + v / max * 300, Y = v => 230 - v / max * 210;
+      const C = c0 + c * yd, S = yd - C, be = c0 / (1 - c);
+      O("c0").textContent = "€" + fmt(c0); O("c").textContent = fmt(c, 2); O("yd").textContent = "€" + fmt(yd);
+      svg.innerHTML = `<g stroke="var(--line)" stroke-width="1"><path d="M40 230H345M40 230V15"/></g>
+        <path d="M${X(0)} ${Y(0)}L${X(max)} ${Y(max)}" stroke="var(--faint)" stroke-dasharray="5 5" fill="none"/>
+        <path d="M${X(0)} ${Y(c0)}L${X(max)} ${Y(c0 + c * max)}" stroke="var(--inj)" stroke-width="3" fill="none"/>
+        ${be <= max ? `<circle cx="${X(be)}" cy="${Y(be)}" r="5" fill="var(--leak)"/><text x="${X(be) + 8}" y="${Y(be) + 16}" font-size="11" fill="var(--leak)" font-weight="700">Y_R</text>` : ""}
+        <path d="M${X(yd)} 230V${Y(Math.max(C, yd))}" stroke="var(--flow)" stroke-dasharray="3 4"/>
+        <circle cx="${X(yd)}" cy="${Y(C)}" r="5.5" fill="var(--inj)"/><circle cx="${X(yd)}" cy="${Y(yd)}" r="4" fill="var(--faint)"/>
+        <text x="345" y="246" font-size="11" text-anchor="end" fill="var(--muted)">Yd</text><text x="30" y="20" font-size="11" text-anchor="end" fill="var(--muted)">C</text>`;
+      out.innerHTML = `<div><dt>C = C₀ + c·Yd</dt><dd>€${fmt(C)}</dd></div><div><dt>Saving S = Yd − C</dt><dd style="color:${S < 0 ? "var(--bad)" : "var(--ok)"}">€${fmt(S)}</dd></div><div><dt>APC = C / Yd</dt><dd>${yd ? fmt(C / yd, 2) : "—"}</dd></div><div><dt>MPC c</dt><dd>${fmt(c, 2)}</dd></div><div><dt>Break-even Y_R = C₀ / (1 − c)</dt><dd>€${fmt(be)}</dd></div>`;
+    };
+    el.addEventListener("input", draw); draw();
+  },
+  investment(el){
+    el.innerHTML = `<div class="wgrid"><svg class="plot" viewBox="0 0 360 260" aria-label="Investment as a decreasing function of the interest rate"></svg>
+      <div class="wctl"><label>Interest rate i <output data-o="i"></output><input type="range" min="0" max="10" step="0.5" value="4" data-r="i"></label><dl class="wout"></dl>
+      <p class="wnote">A lower rate makes more projects profitable, so firms invest more. A higher rate makes them postpone or cancel.</p></div></div>`;
+    const svg = el.querySelector("svg"), out = el.querySelector(".wout"), r = el.querySelector("[data-r]"), o = el.querySelector("[data-o]");
+    const I = i => 400 * Math.exp(-0.16 * i);
+    const draw = () => {
+      const i = +r.value, X = v => 40 + v / 420 * 300, Yy = v => 230 - v / 10 * 210;
+      o.textContent = fmt(i, 1) + "%";
+      let d = ""; for (let k = 0; k <= 10; k += 0.25) d += (k ? "L" : "M") + X(I(k)).toFixed(1) + " " + Yy(k).toFixed(1);
+      svg.innerHTML = `<path d="M40 230H345M40 230V15" stroke="var(--line)"/><path d="${d}" stroke="var(--inj)" stroke-width="3" fill="none"/>
+        <path d="M40 ${Yy(i)}H${X(I(i))}V230" stroke="var(--flow)" stroke-dasharray="4 4" fill="none"/><circle cx="${X(I(i))}" cy="${Yy(i)}" r="6" fill="var(--flow)"/>
+        <text x="345" y="246" font-size="11" text-anchor="end" fill="var(--muted)">Investment I</text><text x="30" y="20" font-size="11" text-anchor="end" fill="var(--muted)">i</text>`;
+      out.innerHTML = `<div><dt>Investment at this rate</dt><dd>€${fmt(I(i))} bn</dd></div><div><dt>Compared with i = 0%</dt><dd>${fmt(I(i) / I(0) * 100)}%</dd></div>`;
+    };
+    r.addEventListener("input", draw); draw();
+  },
+  multiplier(el){
+    el.innerHTML = `<div class="wgrid"><svg class="plot" viewBox="0 0 360 260" aria-label="Rounds of the multiplier"></svg>
+      <div class="wctl"><label>MPC c <output data-o="c"></output><input type="range" min="0.5" max="0.9" step="0.05" value="0.8" data-r="c"></label>
+      <label>Extra investment ΔI <output data-o="di"></output><input type="range" min="5" max="50" step="5" value="10" data-r="di"></label><dl class="wout"></dl></div></div>
+      <p class="wcap">Each bar is one round of spending: ΔI, then c·ΔI, then c²·ΔI… The line shows the running total, which tends to k × ΔI.</p>`;
+    const svg = el.querySelector("svg"), out = el.querySelector(".wout"), R = n => el.querySelector(`[data-r="${n}"]`), O = n => el.querySelector(`[data-o="${n}"]`);
+    const draw = () => {
+      const c = +R("c").value, di = +R("di").value, k = 1 / (1 - c), tot = k * di, N = 14, X = i => 48 + i * 21, Yv = v => 230 - v / tot * 200;
+      O("c").textContent = fmt(c, 2); O("di").textContent = "€" + di + " bn";
+      let bars = "", run = 0, line = "";
+      for (let i = 0; i < N; i++){ const v = di * c ** i; run += v; bars += `<rect x="${X(i)}" y="${Yv(v)}" width="15" height="${230 - Yv(v)}" rx="3" fill="var(--inj)" opacity="${1 - i * 0.04}"/>`; line += (i ? "L" : "M") + (X(i) + 7.5) + " " + Yv(run).toFixed(1); }
+      svg.innerHTML = `<path d="M40 230H345M40 230V15" stroke="var(--line)"/><path d="M40 ${Yv(tot)}H345" stroke="var(--leak)" stroke-dasharray="5 5"/><text x="345" y="${Yv(tot) - 6}" text-anchor="end" font-size="11" fill="var(--leak)" font-weight="700">k × ΔI = ${fmt(tot, 1)}</text>${bars}<path d="${line}" stroke="var(--flow)" stroke-width="2.5" fill="none"/>`;
+      out.innerHTML = `<div><dt>k = 1 / (1 − c)</dt><dd>${fmt(k, 2)}</dd></div><div><dt>ΔY = k × ΔI</dt><dd>€${fmt(tot, 1)} bn</dd></div><div><dt>After 3 rounds</dt><dd>€${fmt(di * (1 + c + c * c), 1)} bn</dd></div>`;
+    };
+    el.addEventListener("input", draw); draw();
+  }
+};
+
+/* ---------------- DRILLS: endless short exercises ---------------- */
+const RI = (a, b, s = 1) => a + s * Math.floor(Math.random() * ((b - a) / s + 1));
+const PICK = a => a[Math.floor(Math.random() * a.length)];
+const DRILL_TOPICS = { circuit: "The circuit", gdp: "GDP", cons: "Consumption", mult: "Multiplier", growth: "Growth" };
+const GEN = [
+  { t: "circuit", f(){ const it = PICK([["Households put part of their income into a savings account.", 0, "Saving S is a leakage."], ["Households pay income tax.", 0, "Taxes T are a leakage."], ["French households buy Italian wine.", 0, "Imports M are a leakage: the income goes abroad."], ["A firm builds a new factory.", 1, "Investment I is an injection."], ["The State pays for a new hospital.", 1, "Public spending G is an injection."], ["A Japanese tourist pays for a hotel in Paris.", 1, "Spending by non-residents is an export X: an injection."], ["A German firm buys French machines.", 1, "French exports X: an injection."], ["A family buys groceries in a local shop.", 2, "Household consumption C stays inside the circuit."]]);
+    return { kind: "mcq", text: it[0] + " For the French circuit, this is…", opts: ["A leakage", "An injection", "Neither: it stays in the circuit"], right: it[1], why: it[2] }; } },
+  { t: "circuit", f(){ const it = PICK([["Collects deposits and turns them into loans.", 3], ["Produces market goods and services and invests.", 1], ["Consumes goods and services to meet its needs.", 0], ["Produces non-market services financed by taxes.", 2], ["Has no main function but records trade with non-residents.", 4]]);
+    return { kind: "mcq", text: "Which economic agent? " + it[0], opts: ["Households", "Firms", "The State", "Financial institutions", "The rest of the world"], right: it[1], why: "Each agent is defined by its main function." }; } },
+  { t: "circuit", f(){ const C = RI(800, 1500, 10), I = RI(200, 400, 5), G = RI(250, 450, 5), X = RI(200, 500, 5), M = RI(200, 500, 5), Y = C + I + G + X - M;
+    return PICK([{ kind: "num", text: `C = ${C}, I = ${I}, G = ${G}, X = ${X}, M = ${M} (€ bn). What is GDP?`, ans: Y, unit: "€ bn", tol: 0.5, why: "Y = C + I + G + (X − M).", calc: `${C} + ${I} + ${G} + (${X} − ${M}) = ${fmt(Y)}` },
+      { kind: "num", text: `Y = ${Y}, C = ${C}, I = ${I}, G = ${G}, X = ${X} (€ bn). How much are imports M?`, ans: M, unit: "€ bn", tol: 0.5, why: "From Y + M = C + I + G + X: M = C + I + G + X − Y.", calc: `${C} + ${I} + ${G} + ${X} − ${Y} = ${fmt(M)}` },
+      { kind: "num", text: `I = ${I}, G = ${G}, X = ${X} (€ bn). What are total injections J?`, ans: I + G + X, unit: "€ bn", tol: 0.5, why: "J = I + G + X.", calc: `${I} + ${G} + ${X} = ${fmt(I + G + X)}` }]); } },
+  { t: "gdp", f(){ const s1 = RI(40, 150, 5) * 1000, s2 = s1 + RI(30, 150, 5) * 1000, s3 = s2 + RI(80, 300, 10) * 1000;
+    return PICK([{ kind: "num", text: `Firm 1 sells raw material for ${eur(s1)} (no inputs) to firm 2, which sells its product for ${eur(s2)} to firm 3, which sells the final good for ${eur(s3)}. What is firm 2's value added?`, ans: s2 - s1, unit: "€", tol: 0.5, why: "Value added = sales − intermediate consumption.", calc: `${eur(s2)} − ${eur(s1)} = ${eur(s2 - s1)}` },
+      { kind: "num", text: `Same chain: ${eur(s1)}, ${eur(s2)}, ${eur(s3)}. What is GDP?`, ans: s3, unit: "€", tol: 0.5, why: "GDP = sum of values added = value of the final good.", calc: `${eur(s1)} + ${eur(s2 - s1)} + ${eur(s3 - s2)} = ${eur(s3)}` },
+      (() => { const w = Math.round(s3 * RI(40, 75) / 100 / 1000) * 1000; return { kind: "num", text: `GDP is ${eur(s3)} and wages total ${eur(w)}. What are profits?`, ans: s3 - w, unit: "€", tol: 0.5, why: "Income approach: GDP = wages + profits.", calc: `${eur(s3)} − ${eur(w)} = ${eur(s3 - w)}` }; })()]); } },
+  { t: "cons", f(){ const inc = RI(1800, 4200, 50), tax = Math.round(inc * RI(10, 22) / 100 / 10) * 10, yd = inc - tax, c0 = RI(100, 600, 50), c = PICK([0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9]), C = c0 + c * yd;
+    return PICK([{ kind: "num", text: `Income ${eur(inc)}, taxes ${eur(tax)}, C = ${c0} + ${c}·Yd. How much does the household consume?`, ans: C, unit: "€", tol: 0.5, why: "Yd = Y − T, then C = C₀ + c·Yd.", calc: `Yd = ${fmt(yd)}; C = ${c0} + ${c} × ${fmt(yd)} = ${eur(C, 2)}` },
+      { kind: "num", text: `Income ${eur(inc)}, taxes ${eur(tax)}, C = ${c0} + ${c}·Yd. How much does it save?`, ans: yd - C, unit: "€", tol: 0.5, why: "S = Yd − C.", calc: `${fmt(yd)} − ${fmt(C, 2)} = ${eur(yd - C, 2)}` },
+      { kind: "num", text: `C = ${c0} + ${c}·Yd. What is the break-even income Y_R?`, ans: c0 / (1 - c), unit: "€", tol: 0.5, why: "Saving is zero when C = Yd: Y_R = C₀ / (1 − c).", calc: `${c0} / ${fmt(1 - c, 2)} = ${eur(c0 / (1 - c), 2)}` },
+      { kind: "num", text: `C = ${c0} + ${c}·Yd and Yd = ${eur(yd)}. What is the APC? Two decimals.`, ans: C / yd, unit: "", tol: 0.006, why: "APC = C / Yd.", calc: `${fmt(C, 2)} / ${fmt(yd)} = ${fmt(C / yd, 3)}` },
+      (() => { const d = RI(100, 500, 50), dc = d * c; return { kind: "num", text: `Disposable income rises by €${d} and consumption by €${fmt(dc, 1)}. What is the MPC?`, ans: c, unit: "", tol: 0.006, why: "MPC = ΔC / ΔYd.", calc: `${fmt(dc, 1)} / ${d} = ${fmt(c, 2)}` }; })(),
+      { kind: "num", text: `The MPC is ${c}. What is the MPS?`, ans: 1 - c, unit: "", tol: 0.006, why: "c + s = 1.", calc: `1 − ${c} = ${fmt(1 - c, 2)}` }]); } },
+  { t: "mult", f(){ const c = PICK([0.5, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9]), k = 1 / (1 - c), di = RI(5, 40, 5);
+    return PICK([{ kind: "num", text: `The MPC is ${c}. What is the Keynesian multiplier? Two decimals.`, ans: k, unit: "", tol: 0.011, why: "k = 1 / (1 − c).", calc: `1 / (1 − ${c}) = ${fmt(k, 2)}` },
+      { kind: "num", text: `MPC ${c}. Firms invest €${di} bn more. By how much does income rise?`, ans: k * di, unit: "€ bn", tol: 0.3, why: "ΔY = k × ΔI.", calc: `${fmt(k, 2)} × ${di} = ${fmt(k * di, 2)}` },
+      { kind: "num", text: `The multiplier is ${fmt(k, 2)}. What is the MPS? Two decimals.`, ans: 1 - c, unit: "", tol: 0.011, why: "k = 1 / s, so s = 1 / k.", calc: `1 / ${fmt(k, 2)} = ${fmt(1 - c, 2)}` },
+      { kind: "mcq", text: "Which change makes the multiplier bigger?", opts: ["A higher MPC", "A higher MPS", "More imports", "Factories at full capacity"], right: 0, why: "More of each euro is spent again at each round." }]); } },
+  { t: "growth", f(){ const a = RI(500, 3000, 10), g = RI(-30, 60) / 10, b = Math.round(a * (1 + g / 100) * 10) / 10, gr = (b - a) / a * 100;
+    return { kind: "num", text: `GDP goes from ${fmt(a)} to ${fmt(b, 1)} (€ bn). What is the growth rate?`, ans: gr, unit: "%", tol: 0.06, why: "(GDP n+1 − GDP n) / GDP n × 100.", calc: `(${fmt(b, 1)} − ${fmt(a)}) / ${fmt(a)} × 100 = ${fmt(gr, 2)}%` }; } },
+  { t: "growth", f(){ const p = RI(5, 40), q = RI(100, 400, 10), p2 = Math.round(p * (1 + RI(0, 10) / 100) * 10) / 10, q2 = Math.round(q * (1 + RI(-4, 8) / 100)), nom = p * q, real = p * q2, nom2 = p2 * q2;
+    return PICK([{ kind: "num", text: `One good. Year n: ${q} m units at €${p}. Year n+1: ${q2} m units at €${fmt(p2, 1)}. What is real growth (base year n)?`, ans: (real - nom) / nom * 100, unit: "%", tol: 0.06, why: "Real GDP n+1 uses year-n prices, so real growth only reflects quantities.", calc: `(${p} × ${q2} − ${p} × ${q}) / ${fmt(nom)} × 100 = ${fmt((real - nom) / nom * 100, 2)}%` },
+      { kind: "num", text: `One good. Year n: ${q} m units at €${p}. Year n+1: ${q2} m units at €${fmt(p2, 1)}. What is nominal growth?`, ans: (nom2 - nom) / nom * 100, unit: "%", tol: 0.06, why: "Nominal GDP uses each year's own prices.", calc: `(${fmt(p2, 1)} × ${q2} − ${p} × ${q}) / ${fmt(nom)} × 100 = ${fmt((nom2 - nom) / nom * 100, 2)}%` }]); } },
+  { t: "growth", f(){ const P = PICK([[[0.6, 0.4, 0.2, 0.1], 0], [[0.4, -0.2, -0.3, 0.1], 1], [[0.5, 0.2, -0.1, 0.3], 2], [[-0.2, -0.4, -0.3, -0.1], 1], [[0.3, 0.5, 0.4, 0.6], 2], [[0.2, -0.1, 0.3, -0.2], 2], [[0.9, 0.6, 0.5, 0.2], 0]]);
+    return { kind: "mcq", text: `Quarterly growth: ${P[0].map(x => (x > 0 ? "+" : "") + fmt(x, 1) + "%").join(", ")}. This year is…`, opts: ["A slowdown", "A recession", "Neither"], right: P[1], why: "Slowdown: positive but weaker growth. Recession: at least two consecutive quarters of falling GDP." }; } },
+  { t: "growth", f(){ const gdp = RI(200, 900, 5), rec = RI(5, 40) / 2, paid = RI(5, 40) / 2, pop = RI(8, 70) / 2;
+    return PICK([{ kind: "num", text: `GDP ${fmt(gdp)}, income received from abroad ${fmt(rec, 1)}, paid abroad ${fmt(paid, 1)} (€ bn). What is GNP?`, ans: gdp + rec - paid, unit: "€ bn", tol: 0.06, why: "GNP = GDP + received − paid.", calc: `${fmt(gdp)} + ${fmt(rec, 1)} − ${fmt(paid, 1)} = ${fmt(gdp + rec - paid, 1)}` },
+      { kind: "num", text: `GDP €${fmt(gdp)} bn and ${fmt(pop, 1)} million inhabitants. What is GDP per capita?`, ans: gdp * 1000 / pop, unit: "€", tol: 1, why: "GDP / population. Billions over millions gives thousands.", calc: `${fmt(gdp)} bn / ${fmt(pop, 1)} m = ${eur(gdp * 1000 / pop, 2)}` }]); } }
+];
+function viewDrills(){
+  const st = MS.get("drills", { best: 0, sprint: 0 }), sel = new Set(Object.keys(DRILL_TOPICS));
+  const root = h("div", { class: "mod", html: `
+  ${mhead("Macroeconomics", "Drills", "Short exercises with new numbers every time. Build a streak, or race the clock for 60 seconds.")}
+  <div class="drillbar"><div class="mchips" data-topics>${Object.entries(DRILL_TOPICS).map(([k, v]) => `<button class="mchip on" type="button" data-topic="${k}" aria-pressed="true">${v}</button>`).join("")}</div>
+    <div class="seg" role="group" aria-label="Mode"><button type="button" data-mode="practice" aria-pressed="true">Practice</button><button type="button" data-mode="sprint" aria-pressed="false">Sprint 60 s</button></div></div>
+  <div class="drillstats"><div><b data-s="streak">0</b><span>streak</span></div><div><b data-s="best">${st.best}</b><span>best streak</span></div><div><b data-s="score">0/0</b><span>this session</span></div><div><b data-s="sprint">${st.sprint}</b><span>best sprint</span></div></div>
+  <div class="timer" hidden><i></i></div>
+  <article class="dq" aria-live="polite"></article>` });
+  let mode = "practice", streak = 0, ok = 0, tot = 0, cur = null, t0 = 0, tick = 0, sprintOn = false;
+  const dq = root.querySelector(".dq"), S = k => root.querySelector(`[data-s="${k}"]`), timer = root.querySelector(".timer");
+  const stats = () => { S("streak").textContent = streak; S("score").textContent = `${ok}/${tot}`; const s = MS.get("drills", { best: 0, sprint: 0 }); S("best").textContent = s.best; S("sprint").textContent = s.sprint; };
+  function next(){
+    const pool = GEN.filter(g => sel.has(g.t)); if (!pool.length){ dq.innerHTML = `<p class="muted">Pick at least one topic.</p>`; return; }
+    cur = PICK(pool).f(); cur.done = false; dq.classList.remove("ok", "bad");
+    const L = "ABCDE";
+    dq.innerHTML = `<p class="dqt">${cur.text}</p>` + (cur.kind === "num"
+      ? `<div class="ans"><label class="field"><input inputmode="decimal" autocomplete="off" aria-label="Your answer">${cur.unit ? `<span class="unit">${cur.unit}</span>` : ""}</label><button class="check" type="button" data-go>Check</button></div>`
+      : `<div class="opts">${cur.opts.map((o, j) => `<button class="opt" type="button" data-o="${j}"><span class="k">${L[j]}</span><span>${o}</span></button>`).join("")}</div>`) + `<div class="dout"></div>`;
+    const inp = dq.querySelector("input"); if (inp){ inp.focus({ preventScroll: true }); inp.addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); if (cur.done) next(); else check(); } }); }
+  }
+  function verdict(good, extra){
+    cur.done = true; tot++; if (good){ ok++; streak++; } else streak = 0;
+    const s = MS.get("drills", { best: 0, sprint: 0 }); if (streak > s.best){ s.best = streak; MS.set("drills", s); }
+    stats();
+    dq.classList.remove("ok", "bad"); dq.classList.add(good ? "ok" : "bad");
+    dq.querySelector(".dout").innerHTML = `<div class="verdict ${good ? "ok" : "bad"}"><div class="vh"><b>${good ? "Correct" : "Not quite"}</b>${extra || ""}</div>${cur.calc ? `<div class="calc">${cur.calc}</div>` : ""}<p>${cur.why}</p></div><button class="btn quiet small next" type="button" data-next>Next ${ICO.arrow}<kbd>Enter</kbd></button>`;
+    const nb = dq.querySelector("[data-next]"); nb.focus({ preventScroll: true });
+    if (mode === "sprint" && sprintOn) setTimeout(() => { if (cur.done && sprintOn) next(); dq.classList.remove("ok", "bad"); }, good ? 450 : 1400);
+  }
+  function check(){
+    if (cur.done) return;
+    if (cur.kind === "num"){ const inp = dq.querySelector("input"), v = parseNum(inp.value); if (Number.isNaN(v)){ inp.focus(); return; } inp.disabled = true; const good = Math.abs(v - cur.ans) <= Math.max(cur.tol, Math.abs(cur.ans) * 0.002);
+      const d = cur.unit === "%" || cur.unit === "" ? 2 : Number.isInteger(Math.round(cur.ans * 100) / 100) ? 0 : 2;
+      verdict(good, good ? "" : `<span>The answer is <span class="exp">${cur.unit === "€" ? eur(cur.ans, d) : fmt(cur.ans, d) + (cur.unit ? " " + cur.unit : "")}</span></span>`); }
+  }
+  root.addEventListener("click", e => {
+    const tb = e.target.closest("[data-topic]");
+    if (tb){ const k = tb.dataset.topic; if (sel.has(k) && sel.size > 1) sel.delete(k); else sel.add(k); tb.classList.toggle("on", sel.has(k)); tb.setAttribute("aria-pressed", String(sel.has(k))); next(); }
+    const mb = e.target.closest("[data-mode]");
+    if (mb){ mode = mb.dataset.mode; root.querySelectorAll("[data-mode]").forEach(b => b.setAttribute("aria-pressed", String(b === mb))); streak = 0; ok = 0; tot = 0; stats(); if (mode === "sprint") startSprint(); else { sprintOn = false; timer.hidden = true; next(); } }
+    if (e.target.closest("[data-go]")) check();
+    const ob = e.target.closest("[data-o]");
+    if (ob && !cur.done){ const j = +ob.dataset.o; dq.querySelectorAll(".opt").forEach((b, i) => { b.disabled = true; if (i === cur.right) b.classList.add("right"); else if (i === j) b.classList.add("wrong"); }); verdict(j === cur.right); }
+    if (e.target.closest("[data-next]")) next();
+    if (e.target.closest("[data-again]")) startSprint();
+  });
+  root.addEventListener("keydown", e => {
+    if (!cur || e.target.matches("input")) return;
+    if (e.key === "Enter" && cur.done){ e.preventDefault(); next(); return; }
+    const k = { a: 0, b: 1, c: 2, d: 3, e: 4, "1": 0, "2": 1, "3": 2, "4": 3, "5": 4 }[e.key.toLowerCase()];
+    if (k != null && cur.kind === "mcq" && !cur.done){ const b = dq.querySelectorAll(".opt")[k]; if (b){ e.preventDefault(); b.click(); } }
+  });
+  function startSprint(){
+    sprintOn = true; ok = 0; tot = 0; streak = 0; stats(); timer.hidden = false; t0 = performance.now(); next();
+    cancelAnimationFrame(tick);
+    const run = () => { if (!root.isConnected){ sprintOn = false; return; } const left = 1 - (performance.now() - t0) / 60000; timer.firstChild.style.width = Math.max(0, left * 100) + "%";
+      if (left <= 0){ sprintOn = false; const s = MS.get("drills", { best: 0, sprint: 0 }), rec = ok > s.sprint; if (rec){ s.sprint = ok; MS.set("drills", s); } stats();
+        dq.classList.remove("ok", "bad"); dq.innerHTML = `<div class="sprintend"><span class="kicker">Time</span><h2>${ok} right out of ${tot}</h2><p class="muted">${rec ? "New personal best." : `Your best is ${s.sprint}.`}</p><div class="row"><button class="btn primary" type="button" data-again>Go again</button></div></div>`; return; }
+      tick = requestAnimationFrame(run); };
+    tick = requestAnimationFrame(run);
+  }
+  requestAnimationFrame(next);
+  return root;
+}
+
+/* ---------------- QUIZ: exam-style multiple choice ---------------- */
+function viewQuiz(pre){
+  const sel = new Set(pre && CH[pre] ? [pre] : COURSE.map(c => c.id));
+  const root = h("div", { class: "mod", html: `${mhead("Macroeconomics", "Quiz", "Exam-style multiple choice on the lectures. Every answer comes with its explanation.")}<div class="qzwrap"></div>` });
+  const W = root.querySelector(".qzwrap");
+  let len = 10, Qs = [], i = 0, score = 0, wrong = [];
+  function setup(){
+    const hist = MS.get("quiz", {});
+    W.innerHTML = `<div class="qzsetup"><h2>Choose your quiz</h2>
+      <div class="mchips">${COURSE.map(c => chipCh(c, sel.has(c.id))).join("")}</div>
+      <div class="seg" role="group" aria-label="Length">${[10, 20, 0].map(n => `<button type="button" data-len="${n}" aria-pressed="${n === len}">${n || "All"} questions</button>`).join("")}</div>
+      <p class="muted" data-avail></p>
+      <button class="btn primary big" type="button" data-start>Start the quiz</button>
+      ${hist.last ? `<p class="muted small">Last quiz: ${hist.last.score}/${hist.last.n} (${Math.round(hist.last.score / hist.last.n * 100)}%).</p>` : ""}</div>`;
+    const avail = () => { W.querySelector("[data-avail]").textContent = `${QUIZ.filter(q => sel.has(q.ch)).length} questions available.`; };
+    avail();
+    W.onclick = e => {
+      const cb = e.target.closest("[data-ch]"); if (cb){ const k = cb.dataset.ch; if (sel.has(k) && sel.size > 1) sel.delete(k); else sel.add(k); cb.classList.toggle("on", sel.has(k)); cb.setAttribute("aria-pressed", String(sel.has(k))); avail(); }
+      const lb = e.target.closest("[data-len]"); if (lb){ len = +lb.dataset.len; W.querySelectorAll("[data-len]").forEach(b => b.setAttribute("aria-pressed", String(b === lb))); }
+      if (e.target.closest("[data-start]")){ const pool = shuffle(QUIZ.filter(q => sel.has(q.ch))); start(len ? pool.slice(0, len) : pool); }
+    };
+  }
+  function start(list){ Qs = list.map(q => { const order = shuffle(q.o.map((_, j) => j)); return { ...q, order }; }); i = 0; score = 0; wrong = []; show(); }
+  function show(){
+    const q = Qs[i], c = CH[q.ch], L = "ABCD";
+    W.innerHTML = `<div class="qzq" style="--c:${c.c}"><div class="qzprog"><span>${i + 1} / ${Qs.length}</span><div class="mbar"><i style="width:${i / Qs.length * 100}%"></i></div><span class="tag">${c.short}</span></div>
+      <p class="dqt">${q.q}</p><div class="opts">${q.order.map((j, k) => `<button class="opt" type="button" data-pick="${j}"><span class="k">${L[k]}</span><span>${q.o[j]}</span></button>`).join("")}</div><div class="dout"></div></div>`;
+    W.onclick = e => {
+      const pb = e.target.closest("[data-pick]");
+      if (pb && !q.done){ q.done = true; const j = +pb.dataset.pick, good = j === q.a; if (good) score++; else wrong.push(q);
+        W.querySelectorAll(".opt").forEach(b => { b.disabled = true; const v = +b.dataset.pick; if (v === q.a) b.classList.add("right"); else if (v === j) b.classList.add("wrong"); });
+        const box = W.querySelector(".qzq"); box.classList.add(good ? "ok" : "bad");
+        W.querySelector(".dout").innerHTML = `<div class="verdict ${good ? "ok" : "bad"}"><div class="vh"><b>${good ? "Correct" : "Not quite"}</b></div><p>${q.why}</p></div><button class="btn quiet small next" type="button" data-nx>${i + 1 < Qs.length ? "Next question" : "See my score"} ${ICO.arrow}<kbd>Enter</kbd></button>`;
+        W.querySelector("[data-nx]").focus({ preventScroll: true }); }
+      if (e.target.closest("[data-nx]")){ i++; if (i < Qs.length) show(); else end(); }
+    };
+  }
+  function end(){
+    const pct = Math.round(score / Qs.length * 100), hist = MS.get("quiz", {}); hist.last = { score, n: Qs.length }; hist.count = (hist.count || 0) + 1; MS.set("quiz", hist);
+    const byCh = COURSE.map(c => { const qs = Qs.filter(q => q.ch === c.id); return qs.length ? `<div class="bs" style="--c:${c.c}"><b>${qs.filter(q => !wrong.includes(q)).length}/${qs.length}</b><span>${c.short}</span></div>` : ""; }).join("");
+    W.innerHTML = `<div class="qzend"><span class="kicker">Quiz finished</span><h2>${pct}% · ${score} of ${Qs.length} right</h2><div class="blocks-sum">${byCh}</div>
+      <div class="row">${wrong.length ? `<button class="btn primary" type="button" data-retry>Retry my ${wrong.length} mistake${wrong.length > 1 ? "s" : ""}</button>` : ""}<button class="btn glassy" type="button" data-new>New quiz</button><a class="btn glassy" href="#learn">Back to the course</a></div>
+      ${wrong.length ? `<h3>Review</h3><ul class="review">${wrong.map(q => `<li><p class="rq">${q.q}</p><p class="ra">${ICO.check}<span>${q.o[q.a]}</span></p><p class="muted">${q.why}</p></li>`).join("")}</ul>` : ""}</div>`;
+    W.onclick = e => { if (e.target.closest("[data-retry]")) start(shuffle(wrong.map(q => ({ ...q, done: false })))); if (e.target.closest("[data-new]")) setup(); };
+  }
+  root.addEventListener("keydown", e => {
+    if (e.target.matches("input,textarea")) return;
+    if (e.key === "Enter"){ const nx = W.querySelector("[data-nx]"); if (nx){ e.preventDefault(); nx.click(); } return; }
+    const k = { a: 0, b: 1, c: 2, d: 3, "1": 0, "2": 1, "3": 2, "4": 3 }[e.key.toLowerCase()];
+    if (k != null){ const b = W.querySelectorAll(".opt:not([disabled])")[k]; if (b){ e.preventDefault(); b.click(); } }
+  });
+  setup();
+  return root;
+}
+
+/* ---------------- FLASHCARDS ---------------- */
+function viewCards(pre){
+  const sel = new Set(pre && CH[pre] ? [pre] : COURSE.map(c => c.id));
+  const root = h("div", { class: "mod", html: `${mhead("Macroeconomics", "Flashcards", "Say the answer out loud, then flip. Cards you know leave the pile; the others come back.")}
+    <div class="drillbar"><div class="mchips">${COURSE.map(c => chipCh(c, sel.has(c.id))).join("")}</div><div class="seg"><button type="button" data-shuffle>Shuffle</button><button type="button" data-resetk>Reset known</button></div></div>
+    <div class="mprog"><div class="mbar"><i data-fbar></i></div><span data-fcount></span></div>
+    <div class="fstage"></div>` });
+  const stage = root.querySelector(".fstage");
+  let deck = [];
+  const known = () => MS.get("cards", {});
+  const build = (mix) => { const k = known(); deck = CARDS.map((c, i) => ({ i, ch: c[0], f: c[1], b: c[2] })).filter(c => sel.has(c.ch) && !k[c.i]); if (mix) deck = shuffle(deck); paint(); };
+  function paint(){
+    const k = known(), total = CARDS.filter(c => sel.has(c[0])).length, kn = CARDS.filter((c, i) => sel.has(c[0]) && k[i]).length;
+    root.querySelector("[data-fbar]").style.width = (total ? kn / total * 100 : 0) + "%"; root.querySelector("[data-fcount]").textContent = `${kn} of ${total} known · ${deck.length} left in the pile`;
+    if (!deck.length){ stage.innerHTML = `<div class="sprintend"><span class="kicker">Pile empty</span><h2>You know all ${total} cards</h2><div class="row"><button class="btn primary" type="button" data-resetk>Start over</button><a class="btn glassy" href="#quiz">Take a quiz</a></div></div>`; return; }
+    const c = deck[0], C = CH[c.ch];
+    stage.innerHTML = `<button class="flip" type="button" aria-label="Flip the card" style="--c:${C.c}"><span class="face front"><em>${C.short}</em><b>${c.f}</b><small>Click or press Space to flip</small></span><span class="face back"><em>${c.f}</em><b>${c.b}</b></span></button>
+      <div class="fact"><button class="btn glassy big" type="button" data-again>Again <kbd>←</kbd></button><button class="btn primary big" type="button" data-know>I knew it <kbd>→</kbd></button></div>`;
+  }
+  const flip = () => { const f = stage.querySelector(".flip"); if (f) f.classList.toggle("on"); };
+  const again = () => { if (!deck.length) return; deck.push(deck.shift()); paint(); };
+  const got = () => { if (!deck.length) return; const k = known(); k[deck[0].i] = 1; MS.set("cards", k); deck.shift(); paint(); };
+  root.addEventListener("click", e => {
+    const cb = e.target.closest("[data-ch]"); if (cb){ const k = cb.dataset.ch; if (sel.has(k) && sel.size > 1) sel.delete(k); else sel.add(k); cb.classList.toggle("on", sel.has(k)); cb.setAttribute("aria-pressed", String(sel.has(k))); build(true); }
+    if (e.target.closest(".flip")) flip();
+    if (e.target.closest("[data-again]")) again();
+    if (e.target.closest("[data-know]")) got();
+    if (e.target.closest("[data-shuffle]")) build(true);
+    if (e.target.closest("[data-resetk]")){ const k = known(); CARDS.forEach((c, i) => { if (sel.has(c[0])) delete k[i]; }); MS.set("cards", k); build(true); }
+  });
+  const onKey = e => { if (!root.isConnected){ document.removeEventListener("keydown", onKey); return; } if (e.target.matches && e.target.matches("input,textarea")) return;
+    if (e.key === " "){ e.preventDefault(); flip(); } if (e.key === "ArrowLeft") again(); if (e.key === "ArrowRight") got(); };
+  document.addEventListener("keydown", onKey);
+  build(true);
+  return root;
+}
+
+/* ---------------- OPEN QUESTIONS ---------------- */
+function openState(){ return MS.get("open", { ans: {}, ticks: {} }); }
+function viewOpen(){
+  const s = openState();
+  return h("div", { class: "mod", html: `${mhead("Macroeconomics", "Open questions", "The final exam opens with questions on the lectures. Write your answer, then compare it with a model answer and tick the key points you covered.")}
+  <div class="method"><b>A method that works</b><span>Define the key terms</span><span>Give the Classical or Neoclassical view</span><span>Give the Keynesian view</span><span>Add a real example</span><span>Conclude in one sentence</span></div>
+  <div class="olist">${COURSE.map(c => { const qs = OPEN.filter(o => o.ch === c.id); return qs.length ? `<section class="ogrp" style="--c:${c.c}"><h2>${c.n}. ${c.title}</h2>${qs.map(o => { const t = (s.ticks[o.id] || []).length, w = (s.ans[o.id] || "").trim().split(/\s+/).filter(Boolean).length;
+    return `<a class="oitem" href="#open-${o.id}"><span class="oq">${o.q}</span><span class="ometa"><span>${o.min} min</span>${w ? `<span>${w} words</span>` : ""}${t ? `<span class="osc">${t}/${o.points.length} points</span>` : `<span>Not tried</span>`}</span></a>`; }).join("")}</section>` : ""; }).join("")}</div>
+  ${creditHtml()}` });
+}
+function viewOpenQ(id){
+  const o = OPEN.find(x => x.id === id) || OPEN[0], c = CH[o.ch], s = openState(), idx = OPEN.indexOf(o), nx = OPEN[idx + 1], pv = OPEN[idx - 1];
+  const ticks = new Set(s.ticks[o.id] || []);
+  const root = h("div", { class: "mod oq-page", style: `--c:${c.c}`, html: `
+    <a class="tocback" href="#open">${ICO.back}All open questions</a>
+    <header class="mhead"><p class="kicker">${c.n}. ${c.short} · about ${o.min} minutes</p><h1 class="oqt">${o.q}</h1></header>
+    <div class="owrite"><label for="oans" class="lbl">Your answer</label><textarea id="oans" placeholder="Write as you would in the exam. Your text is saved on this device.">${esc(s.ans[o.id] || "")}</textarea>
+      <div class="orow"><span class="muted" data-wc></span><button class="btn primary" type="button" data-reveal>Compare with the model answer</button></div></div>
+    <section class="omodel" hidden>
+      <div class="ochk"><h2>Key points <span data-osc></span></h2><p class="muted">Tick each point your answer covers.</p>
+        <ul>${o.points.map((p, k) => `<li><label><input type="checkbox" data-tick="${k}" ${ticks.has(k) ? "checked" : ""}><span>${p}</span></label></li>`).join("")}</ul></div>
+      <div class="oans"><h2>Model answer</h2>${o.model.map(p => `<p>${p}</p>`).join("")}</div>
+    </section>
+    <nav class="chnext">${pv ? `<a class="btn glassy" href="#open-${pv.id}">${ICO.back}Previous</a>` : "<span></span>"}${nx ? `<a class="btn glassy" href="#open-${nx.id}">Next question${ICO.arrow}</a>` : "<span></span>"}</nav>` });
+  const ta = root.querySelector("textarea"), wc = root.querySelector("[data-wc]"), model = root.querySelector(".omodel");
+  const count = () => { const n = ta.value.trim().split(/\s+/).filter(Boolean).length; wc.textContent = n ? `${n} words` : ""; };
+  let tmr; ta.addEventListener("input", () => { count(); clearTimeout(tmr); tmr = setTimeout(() => { const st = openState(); st.ans[o.id] = ta.value; MS.set("open", st); }, 300); });
+  count();
+  const score = () => { root.querySelector("[data-osc]").textContent = `${ticks.size}/${o.points.length}`; };
+  if (ticks.size || (s.ans[o.id] || "").length > 40) { model.hidden = false; }
+  root.addEventListener("click", e => { if (e.target.closest("[data-reveal]")){ model.hidden = false; const st = openState(); st.ans[o.id] = ta.value; MS.set("open", st); model.scrollIntoView({ behavior: "smooth", block: "start" }); } });
+  root.addEventListener("change", e => { const cb = e.target.closest("[data-tick]"); if (!cb) return; const k = +cb.dataset.tick; if (cb.checked) ticks.add(k); else ticks.delete(k); const st = openState(); st.ticks[o.id] = [...ticks]; MS.set("open", st); score(); });
+  score();
+  return root;
+}
+
+/* ---------------- overview: the modules ---------------- */
+function modulesHtml(){
+  const L = learnStats(), d = MS.get("drills", { best: 0, sprint: 0 }), qz = MS.get("quiz", {}), fk = Object.keys(MS.get("cards", {})).length, op = Object.values(openState().ticks || {}).filter(t => t.length).length;
+  const M = [
+    ["#learn", "Learn", "The course in short cards, with interactive graphs.", `${L.known}/${L.total} cards known`, "var(--flow)", '<path d="M4 5h7a3 3 0 0 1 3 3v11a2 2 0 0 0-2-2H4zM20 5h-5a3 3 0 0 0-3 3v11a2 2 0 0 1 2-2h6z"/>'],
+    ["#drills", "Drills", "Endless short exercises. Streaks and a 60-second sprint.", `best streak ${d.best}`, "var(--inj)", '<path d="M13 3 5 14h6l-1 7 8-11h-6z"/>'],
+    ["#quiz", "Quiz", "Exam-style multiple choice, explained.", qz.last ? `last ${Math.round(qz.last.score / qz.last.n * 100)}%` : `${QUIZ.length} questions`, "var(--leak)", '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17v.5"/>'],
+    ["#cards", "Flashcards", "Definitions and formulas to flip.", `${fk}/${CARDS.length} known`, "var(--ch4)", '<rect x="3" y="6" width="14" height="12" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v10"/>'],
+    ["#open", "Open questions", "Write, compare with a model answer, tick the key points.", `${op}/${OPEN.length} tried`, "var(--flow)", '<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/>']
+  ];
+  return `<section class="sec"><div class="sec-h"><h2>Revise</h2><p>Learn the course, then train in every format.</p></div>
+    <div class="mods">${M.map(m => `<a class="modt" href="${m[0]}" style="--c:${m[4]}"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${m[5]}</svg></span><b>${m[1]}</b><span class="md">${m[2]}</span><span class="ms">${m[3]}</span></a>`).join("")}</div></section>`;
+}
+
+const MODVIEWS = { learn: viewLearn, chapter: viewChapter, drills: viewDrills, quiz: viewQuiz, cards: viewCards, open: viewOpen, openq: viewOpenQ };
+const TITLES = { learn: "Learn", chapter: "Learn", drills: "Drills", quiz: "Quiz", cards: "Flashcards", open: "Open questions", openq: "Open questions" };
+/* header height drives the layout of the case view */
+new ResizeObserver(() => document.documentElement.style.setProperty("--hdr", document.querySelector(".hdr").offsetHeight + "px")).observe(document.querySelector(".hdr"));
+
 /* ---------- render ---------- */
 const STAGE = { stop: null, view: null };
 function render(){
   const r = route();
   if (STAGE.stop){ STAGE.stop(); STAGE.stop = null; }
   STAGE.view = r.view; AURA.set(r.view !== "case"); TINT();
-  document.querySelectorAll(".nav a").forEach(a => a.setAttribute("aria-current", (a.dataset.route === r.view || (r.view === "case" && a.dataset.route === "cases")) ? "page" : "false"));
+  const NAVOF = { case: "cases", chapter: "learn", openq: "open" };
+  document.querySelectorAll(".nav a").forEach(a => { const on = a.dataset.route === (NAVOF[r.view] || r.view); a.setAttribute("aria-current", on ? "page" : "false"); if (on) a.scrollIntoView({ block: "nearest", inline: "nearest" }); });
   const app = $("#app");
   if (r.view === "case"){
     const seed = r.seed >= 1 ? r.seed : 1;
     app.replaceChildren(viewCase(seed));
     document.title = `Case ${seed <= 10 ? seed : "practice"} · Macroeconomics`;
+  } else if (MODVIEWS[r.view]){
+    app.replaceChildren(MODVIEWS[r.view](r.id));
+    document.title = (TITLES[r.view] || "Macroeconomics") + " · Macroeconomics";
+    window.scrollTo(0, 0);
   } else {
     app.replaceChildren(r.view === "cases" ? viewCases() : viewHome());
     const fh = app.querySelector(".fhero"); if (fh) STAGE.stop = mountFlow(fh, { compact: r.view === "cases" });

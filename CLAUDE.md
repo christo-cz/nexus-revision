@@ -168,16 +168,23 @@ Le cours annonce que chaque thème est étudié sous deux angles, classique ou n
   - État-providence et politique contracyclique ;
   - exemples du Covid et de 2008.
 
+## Modules de révision du lab Macroeconomics (en place)
+
+Navigation par hash dans `/macro/` : `#home`, `#learn`, `#learn-<chapitre>`, `#cases`, `#caseN`, `#drills`, `#quiz` (`#quiz-<chapitre>`), `#cards` (`#cards-<chapitre>`), `#open`, `#open-oN`. Chapitres : `thought`, `activity`, `determinants`, `growth`.
+
+- **Contenu** (constantes JS dans la page, rédigées à partir des slides, reformulées) : `COURSE` (4 chapitres, sections, fiches : `line`, `points`, `formula`, `example`, `trap`, `exam`), `QUIZ` (QCM, bonne réponse en position 0 dans les données, mélangée à l'affichage), `CARDS` (flashcards), `OPEN` (questions ouvertes : réponse modèle + points clés à cocher).
+- **Learn** : fiches à cocher « I know this », sommaire collant, widgets interactifs (frise des écoles, tableau classiques/Keynes, tableau des agents, schéma du circuit, fonction de consommation, courbe d'investissement, tours du multiplicateur).
+- **Drills** : générateurs `GEN` (nombres aléatoires, réponse calculée par le code), série, sprint de 60 s.
+- **Quiz**, **Flashcards** (pile, touches Espace / ← / →), **Open questions** (texte sauvegardé, grille de points).
+- Progression dans `flow-v1` : `learn`, `drills`, `quiz`, `cards`, `open`.
+- Vue d'un cas : carte des 30 questions cliquable (centre la question), blocs de données cliquables, carte entière verte ou rouge selon la réponse, bouton Restart.
+
 ## Ce qui reste à faire (dans cet ordre, sauf avis contraire d'Alexi)
 
 1. **Caler les full cases sur les vraies feuilles de TD** dès qu'Alexi les fournit. Pour l'instant, le format des exercices est déduit des slides seulement.
-2. Onglet **Learn** : une fiche par chapitre (la règle en une ligne, la formule, un exemple, le piège classique).
-3. Onglet **Drills** : séries rapides (fuite ou injection, MPC/APC, nominal ou réel, quelle école de pensée).
-4. **Frise des écoles de pensée**, des mercantilistes à Keynes : leur vision de la richesse, de l'État et de la monnaie.
-5. **Entraîneur aux questions ouvertes** : question type examen, réponse modèle, grille de points à cocher.
-6. **Flashcards**.
-7. Ajouter les chapitres suivants (inflation et monnaie, marché du travail, politiques, climat) quand les slides sont disponibles.
-8. Plus tard, en option : un assistant IA limité au sujet de la matière. Il faudrait une Netlify Function avec une clé API côté serveur, **une vraie limite côté serveur** (pas seulement dans le navigateur) et un plafond de dépense. À ne faire qu'avec l'accord d'Alexi, car cela coûte de l'argent à chaque question.
+2. **Examen blanc chronométré** au format réel (questions ouvertes + exercice), dès qu'Alexi fournit l'examen blanc du prof.
+3. Ajouter les chapitres suivants (inflation et monnaie, marché du travail, politiques, climat) quand les slides sont disponibles.
+4. Plus tard, en option : un assistant IA limité au sujet de la matière. Il faudrait une Netlify Function avec une clé API côté serveur, **une vraie limite côté serveur** (pas seulement dans le navigateur) et un plafond de dépense. À ne faire qu'avec l'accord d'Alexi, car cela coûte de l'argent à chaque question.
 
 ## Vérifier avant de pousser
 
