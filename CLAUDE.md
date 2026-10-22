@@ -178,11 +178,12 @@ Navigation par hash dans `/macro/` : `#home`, `#learn`, `#learn-<chapitre>`, `#c
 - **Drills** : générateurs `GEN` (nombres aléatoires, réponse calculée par le code), série, sprint de 60 s.
 - **Quiz**, **Flashcards** (pile, touches Espace / ← / →), **Open questions** (texte sauvegardé, grille de points).
 - Progression dans `flow-v1` : `learn`, `drills`, `quiz`, `cards`, `open`.
+- **Tutorials** (`#td`, `#td-<type>`, `#td-all`) : les 5 exercices du TD 1 avec des chiffres aléatoires. Calculs vérifiés par le code ; questions « explain » comparées à une réponse modèle avec points clés à cocher. Attention : dans le TD, W et J sont des montants prévus, et W ≠ J signifie un déséquilibre (W > J : contraction). Dans les comptes réalisés, W = J toujours. Les fiches distinguent les deux.
 - Vue d'un cas : carte des 30 questions cliquable (centre la question), blocs de données cliquables, carte entière verte ou rouge selon la réponse, bouton Restart.
 
 ## Ce qui reste à faire (dans cet ordre, sauf avis contraire d'Alexi)
 
-1. **Caler les full cases sur les vraies feuilles de TD** dès qu'Alexi les fournit. Pour l'instant, le format des exercices est déduit des slides seulement.
+1. **Caler les full cases sur les vraies feuilles de TD.** TD 1 reçu (corrigé : équilibre AD/AS, fuites/injections, consommation keynésienne, choix intertemporel, multiplicateur) : il a servi à créer le module Tutorials (`#td`, générateurs `TD_GEN`) et à corriger Learn, Quiz, Flashcards, Drills et Open. Format de l'exercice d'examen : calculer puis expliquer/interpréter. À faire avec les TD suivants : même traitement.
 2. **Examen blanc chronométré** au format réel (questions ouvertes + exercice), dès qu'Alexi fournit l'examen blanc du prof.
 3. Ajouter les chapitres suivants (inflation et monnaie, marché du travail, politiques, climat) quand les slides sont disponibles.
 4. Plus tard, en option : un assistant IA limité au sujet de la matière. Il faudrait une Netlify Function avec une clé API côté serveur, **une vraie limite côté serveur** (pas seulement dans le navigateur) et un plafond de dépense. À ne faire qu'avec l'accord d'Alexi, car cela coûte de l'argent à chaque question.

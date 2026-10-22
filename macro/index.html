@@ -377,12 +377,45 @@ a{color:inherit}
 .casecard:is(:hover,:focus-visible) .cb{opacity:1;transform:none}
 .cases:has(.casecard:hover) .casecard:not(:hover){opacity:.5;filter:saturate(.3)}
 @media (hover:none){.casecard .cb{display:none}}
+/* tutorials */
+.tdfull{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:900px;border-radius:20px;padding:22px 24px;background:var(--flow);color:var(--on-flow);text-decoration:none;box-shadow:0 20px 44px -24px var(--flow);transition:transform .25s}
+.tdfull:hover{transform:translateY(-4px)}
+.tdfull > span{display:flex;flex-direction:column;gap:4px}
+.tdfull b{font-family:var(--f-display);font-size:1.4rem}
+.tdfull svg{width:26px;height:26px;flex:none}
+.tdlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;max-width:1100px}
+.tdcard{display:flex;flex-direction:column;gap:6px;border:1px solid var(--glass-line);background:var(--glass);border-radius:18px;padding:18px;text-decoration:none;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:border-color .2s,transform .2s,background-color .25s,color .25s}
+.tdcard .tdn,.tdstate .tdn{font-family:var(--f-mono);font-size:.76rem;font-weight:700;color:var(--flow)}
+.tdcard b{font-family:var(--f-display);font-size:1.15rem}
+.tdcard > span:not(.tdn){font-size:.88rem;color:var(--muted)}
+.tdcard em{font-style:normal;font-size:.76rem;font-weight:700;color:var(--ok);margin-top:auto}
+.tdcard:hover{border-color:var(--flow);transform:translateY(-4px)}
+.tdpage{max-width:900px}
+.tdex{display:flex;flex-direction:column;gap:14px}
+.tdex + .tdex{margin-top:28px;padding-top:28px;border-top:1.5px solid var(--fg)}
+.tdstate{border:1px solid var(--glass-line);background:var(--glass);border-radius:18px;padding:18px 20px;display:flex;flex-direction:column;gap:8px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.tdstate h2{font-size:1.4rem}
+.tdstate ul{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:4px}
+.tdstate .mono{font-family:var(--f-mono);font-weight:700}
+.tdpart{scroll-snap-align:none}
+.tdta{width:100%;min-height:120px;resize:vertical;border:1.5px solid var(--line-2);border-radius:12px;background:var(--bg);color:var(--fg);font:inherit;line-height:1.55;padding:12px;outline:none}
+.tdta:focus{border-color:var(--flow)}
+.tdmodel{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:14px}
+@media (max-width:760px){.tdmodel{grid-template-columns:1fr}}
+.tdmodel h3{font-size:1.02rem}
+.tdsum{position:sticky;bottom:12px;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:12px 28px;border:1px solid var(--glass-line);background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:18px;padding:14px 18px;box-shadow:var(--shadow)}
+.tdsum > div:not(.row){display:flex;flex-direction:column}
+.tdsum > div:not(.row) b{font-family:var(--f-display);font-size:1.4rem;line-height:1.1}
+.tdsum > div:not(.row) span{font-size:.8rem;color:var(--muted)}
+.tdsum .row{margin-left:auto}
+@media (max-width:760px){.tdsum{position:static;gap:10px 20px;padding:12px 14px}.tdsum > div:not(.row) b{font-size:1.15rem}.tdsum .row{margin-left:0}}
+
 /* ---------- revision modules ---------- */
 .mod{position:relative;max-width:1180px;margin:0 auto;padding-block:36px 72px;padding-left:var(--gut);padding-right:var(--gut-r);display:flex;flex-direction:column;gap:36px;--surface:var(--glass)}
 .mod :is(.note,.chtile,.qzsetup,.qzq,.qzend,.dq,.oitem,.owrite,.ochk,.oans,.modt,.widget,.method,.flip .face,.sprintend){backdrop-filter:blur(12px) saturate(1.2);-webkit-backdrop-filter:blur(12px) saturate(1.2)}
 .mhead{display:flex;flex-direction:column;gap:14px}
 .mtitle{font-size:clamp(2.6rem,7vw,5.2rem);font-weight:700;letter-spacing:-.05em;line-height:.95}
-.mtitle .clip{display:block;overflow:hidden;padding-bottom:.08em}
+.mtitle .clip{display:block;overflow:hidden;padding-bottom:.16em;margin-bottom:-.08em}
 .mtitle .w{display:inline-block;transform:translateY(105%);animation:rise .9s cubic-bezier(.2,.75,.15,1) forwards}
 .mhead .lede{max-width:60ch;color:var(--muted);font-size:1.06rem}
 .mprog{display:flex;align-items:center;gap:12px;font-size:.88rem;color:var(--muted)}
@@ -580,7 +613,7 @@ kbd{font-family:var(--f-mono);font-size:.72rem;border:1px solid currentColor;bor
 .ochk input{accent-color:var(--ok);width:18px;height:18px;margin-top:2px;flex:none}
 .oans p{line-height:1.65}
 /* overview modules */
-.mods{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.mods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 @media (max-width:1000px){.mods{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:620px){.mods{grid-template-columns:1fr 1fr}}
 .modt{display:flex;flex-direction:column;gap:6px;border:1px solid var(--glass-line);background:var(--glass);border-radius:18px;padding:16px;text-decoration:none;transition:transform .3s cubic-bezier(.2,.8,.2,1),background-color .3s,border-color .3s,color .3s,opacity .3s,filter .3s;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
@@ -623,6 +656,7 @@ kbd{font-family:var(--f-mono);font-size:.72rem;border:1px solid currentColor;bor
     <a href="#home" data-route="home">Overview</a>
     <a href="#learn" data-route="learn">Learn</a>
     <a href="#cases" data-route="cases">Cases</a>
+    <a href="#td" data-route="td">Tutorials</a>
     <a href="#drills" data-route="drills">Drills</a>
     <a href="#quiz" data-route="quiz">Quiz</a>
     <a href="#cards" data-route="cards">Flashcards</a>
@@ -732,7 +766,7 @@ function questions(K){
   num("b5", "B", "What are total injections J?", K.I + K.G + K.X, "€ bn", tolAbs.bn, "Injections are the demand that does not come from households: J = I + G + X.", `${K.I} + ${K.G} + ${K.X} = ${fmt(K.I + K.G + K.X)}`, `I ${K.I} · G ${K.G} · X ${K.X}`);
   mcq("b6", "B", "Compare your two answers: leakages and injections. What do you notice?",
     ["They are equal: the identity Y = C + I + G + X − M implies S + T + M = I + G + X.", "Leakages are larger, so the economy shrinks.", "Injections are larger, so the economy is in equilibrium only if G = T.", "They can never be equal in an open economy."], 0,
-    "Y = C + S + T and Y = C + I + G + X − M, so the totals always match. The pairs (S and I, T and G, M and X) usually differ.");
+    "These are realised national accounts: Y = C + S + T and Y = C + I + G + X − M, so the totals always match. The pairs (S and I, T and G, M and X) usually differ. When planned W and J differ, output adjusts (Tutorial 1).");
   const gov = K.G > K.T ? 0 : K.G < K.T ? 1 : 2;
   mcq("b7", "B", `With G = ${K.G} and T = ${K.T}, what is the government's position?`,
     ["A budget deficit: it spends more than it collects (G > T).", "A budget surplus: it collects more than it spends (G < T).", "A balanced budget (G = T).", "We cannot tell without the interest rate."], gov,
@@ -843,6 +877,8 @@ function route(){
   if (/^case\d+$/.test(hs)) return { view: "case", seed: +hs.slice(4) };
   if (hs === "cases") return { view: "cases" };
   if (hs === "learn") return { view: "learn" };
+  if (hs === "td") return { view: "td" };
+  if (/^td-\w+$/.test(hs)) return { view: "tdex", id: hs.slice(3) };
   if (/^learn-\w+$/.test(hs)) return { view: "chapter", id: hs.slice(6) };
   if (hs === "drills") return { view: "drills" };
   if (hs === "quiz" || /^quiz-\w+$/.test(hs)) return { view: "quiz", id: hs.slice(5) };
@@ -1563,12 +1599,23 @@ const COURSE = [
       line: "Income that leaves the circuit is a leakage; demand that does not come from households is an injection.",
       formula: "Leakages  W = S + T + M\nInjections J = I + G + X",
       points: ["S: income households do not consume, deposited with banks.", "T: taxes paid by households and firms, net of transfers (transfers are negative taxes).", "I: investment, financed through banks. G: public spending. X: exports."] },
-    { id: "a-wj", title: "W = J in total, not pair by pair",
-      line: "The totals always match in the accounts, but each pair usually differs.",
+    { id: "a-wj", title: "W = J in the accounts, not pair by pair",
+      line: "In the realised national accounts the totals always match, but each pair usually differs.",
       formula: "Y = C + S + T  and  Y = C + I + G + X − M\n⇒ S + T + M = I + G + X",
       points: ["S ≠ I: households and firms decide separately.", "G vs T: a deficit (G > T), for example in a recession, or a surplus (G < T).", "X ≠ M: trade is rarely balanced."],
       example: "S = 300, T = 400, M = 500 gives W = 1,200. I = 350, G = 450, X = 400 gives J = 1,200. Equal totals, unequal pairs.",
-      trap: "W = J does not mean S = I." }
+      trap: "W = J does not mean S = I." },
+    { id: "a-wjeq", title: "When planned leakages and injections differ",
+      line: "In the tutorial, W and J are what agents plan. If W > J output falls; if W < J output rises. Equilibrium requires W = J.",
+      points: ["W > J: part of income leaks out without being offset. Demand falls, unsold inventories build up, firms cut output: slowdown or recession.", "W < J: more income enters the circuit than leaves it. Demand rises, inventories fall, firms raise output: expansion.", "To fix W > J: raise injections (more G or I, more exports X) or cut leakages (lower taxes T, fewer imports M)."],
+      example: "S = 50, T = 70, M = 30 gives W = 150. I = 80, G = 40, X = 20 gives J = 140. W > J: the economy contracts. A policy answer: raise G or cut T.",
+      exam: "Tutorial 1, exercise 2: compute W and J, say whether the economy is in equilibrium, what happens if W > J or W < J, and propose a policy." },
+    { id: "a-eq", title: "Macroeconomic equilibrium: AD = AS",
+      line: "Output is in equilibrium when aggregate demand equals what firms produce.",
+      formula: "AD = a + b·Y   and   AS = Y\nY = a + bY  ⇒  Y* = a / (1 − b)",
+      points: ["At Y*, firms sell exactly what they produce, inventories are stable, nobody wants to change output.", "Below Y*, demand exceeds output: inventories fall, firms produce more, jobs and income rise until Y*.", "Above Y*, output exceeds demand: unsold goods pile up, firms cut production until Y*.", "Households drive demand through consumption; firms adjust supply to it."],
+      example: "AD = 200 + 0.8Y: Y* = 200 / 0.2 = 1,000. At Y = 900, AD = 200 + 720 = 920 > 900: excess demand of 20, so output rises towards 1,000.",
+      exam: "Tutorial 1, exercise 1: compute Y*, interpret it, compare AD and AS at another output level, and describe the adjustment." }
   ]}
   ]
 },
@@ -1592,7 +1639,8 @@ const COURSE = [
     { id: "d-mpc", title: "Marginal propensity to consume (MPC)",
       line: "The share of each extra euro of income that is consumed.",
       formula: "c = ΔC / ΔYd     0 < c < 1",
-      example: "Income rises by €100 and consumption by €80: c = 0.8." },
+      example: "Income rises by €100 and consumption by €80: c = 0.8. With c = 0.75, the household spends 75 cents of each extra euro and saves 25 (MPS = 0.25).",
+      points: ["The higher the MPC, the stronger the multiplier and the bigger the role of consumption in demand."] },
     { id: "d-apc", title: "Average propensity to consume (APC)",
       line: "The share of total income that is consumed.",
       formula: "APC = C / Yd",
@@ -1605,7 +1653,9 @@ const COURSE = [
     { id: "d-be", title: "Break-even income",
       line: "The income at which saving is zero: below it, households dissave.",
       formula: "C = Yd  ⇒  Y_R = C₀ / (1 − c) = C₀ / s",
-      example: "C₀ = 300 and c = 0.8: Y_R = 300 / 0.2 = 1,500. Below €1,500 saving is negative." },
+      example: "C = 0.75Yd + 50: S = 0.25Yd − 50 = 0 gives Yd = €200.",
+      points: ["Below Y_R: saving is negative. The household dissaves, borrowing or using past savings.", "At Y_R: saving is zero, all income is consumed.", "Above Y_R: the household starts to save.", "Y_R depends on autonomous consumption, the spending needed for essentials. Low-income households can hardly save: saving is strongly constrained by income."],
+      exam: "Tutorial 1 asks for the three cases (below, at, above) and their interpretation, not only the number." },
     { id: "d-law", title: "Keynes' psychological law and its limits",
       line: "When income rises, consumption rises too, but by less: the APC falls.",
       formula: "0 < ΔC < ΔYd",
@@ -1616,9 +1666,14 @@ const COURSE = [
     { id: "d-fisher", title: "Saving as postponed consumption",
       line: "Saving is not a leftover: it finances future consumption.",
       points: ["Irving Fisher (1930).", "Saved money can be hoarded as cash (no interest) or lent to an agent who needs funds.", "Lending turns saving into a financial investment and gives the saver a financing capacity.", "A loan transfers purchasing power from the present to the future."] },
+    { id: "d-fv", title: "What saved money is worth next year",
+      line: "Savings grow with interest: saving transfers purchasing power through time.",
+      formula: "Future value = S × (1 + r)",
+      example: "Save €400 at 10%: 400 × 1.10 = €440 next year. Giving up €400 of consumption today buys €440 of consumption tomorrow.",
+      exam: "Tutorial 1, exercise 4 starts with this calculation, then asks how the interest rate shapes the choice." },
     { id: "d-rate", title: "The interest rate is the reward for waiting",
       line: "The higher the interest rate, the stronger the incentive to save.",
-      points: ["The rate compares the utility of consuming today with consuming later.", "It measures how much households prefer the present."] },
+      points: ["The rate compares the utility of consuming today with consuming later.", "It is both the return on saving and the opportunity cost of consuming now.", "A rise in the rate (say from 10% to 20%) shifts consumption from the present to the future.", "It measures how much households prefer the present."] },
     { id: "d-three", title: "Three factors decide consumption and saving",
       line: "Preferences, wealth and the interest rate.",
       points: ["Intertemporal preferences: now or later.", "Wealth: present and expected future income.", "Financial conditions, above all the interest rate, the price of moving purchasing power through time."],
@@ -1645,7 +1700,8 @@ const COURSE = [
       line: "Extra investment becomes income, part of which is spent, which becomes income again, and so on.",
       formula: "k = 1 / (1 − c) = 1 / s\nΔY = k × ΔI",
       example: "c = 0.8, so k = 1 / 0.2 = 5. Firms invest €10 bn more: ΔY = 5 × 10 = €50 bn.",
-      points: ["Round 1: ΔI. Round 2: c·ΔI. Round 3: c²·ΔI… The rounds add up to ΔI / (1 − c)."] },
+      points: ["Round 1: ΔI is a first injection, which becomes income for other agents.", "Round 2: they consume c·ΔI, which becomes income again. Round 3: c²·ΔI…", "Each round is smaller, but the rounds add up to ΔI / (1 − c): that is why ΔY > ΔI."],
+      exam: "Tutorial 1, exercise 5: compute k and ΔY, explain why ΔY > ΔI step by step, then link the interest rate to investment." },
     { id: "d-multc", title: "When the multiplier is strongest",
       line: "Low saving, little trade, idle capacity.",
       points: ["A low marginal propensity to save: more of each euro is spent again.", "A closed economy: less extra income leaks out as imports.", "Spare capacity and unemployment: firms can produce more instead of raising prices."],
@@ -1779,6 +1835,16 @@ const QUIZ = [
 { ch: "growth", q: "Which of these is NOT counted in GDP?", o: ["Volunteering", "A haircut paid in cash with a receipt", "A new factory", "Public schools"], a: 0, why: "Volunteering has no market price. Public services are counted at their cost." },
 { ch: "growth", q: "Schumpeter's creative destruction is…", o: ["new innovations replacing activities tied to older ones", "the State destroying old firms", "the effect of wars on growth", "inflation destroying savings"], a: 0, why: "Clusters of innovation drive growth and long cycles (Kondratiev)." },
 { ch: "growth", q: "Which is an exogenous driver of growth in the course?", o: ["Natural resources", "Public R&D", "The interest rate", "Education spending"], a: 0, why: "Natural resources and demography are exogenous; government action and economic factors are endogenous." },
+{ ch: "activity", q: "AD = 300 + 0.75Y. Equilibrium output Y* is…", o: ["1,200", "400", "300", "1,050"], a: 0, why: "Y = 300 + 0.75Y, so 0.25Y = 300 and Y* = 1,200." },
+{ ch: "activity", q: "Output is below its equilibrium level. What happens?", o: ["Demand exceeds output: inventories fall and firms raise production", "Inventories pile up and firms cut production", "Nothing: output is always at equilibrium", "Prices fall and output stays the same"], a: 0, why: "Excess demand empties inventories, so firms produce more; output, jobs and income rise towards Y*." },
+{ ch: "activity", q: "Planned leakages exceed planned injections (W > J). The economy…", o: ["contracts: demand falls and inventories build up", "expands", "is in equilibrium", "has a trade surplus"], a: 0, why: "Income leaks out without being offset: demand falls, firms cut output (Tutorial 1, exercise 2)." },
+{ ch: "activity", q: "W > J. Which policy helps restore equilibrium?", o: ["Raise public spending or cut taxes", "Raise taxes", "Encourage more saving", "Cut exports"], a: 0, why: "Raise injections (G, I, X) or cut leakages (T, M)." },
+{ ch: "activity", q: "At equilibrium output Y*…", o: ["firms sell exactly what they produce and inventories are stable", "inventories rise", "there is excess demand", "saving equals zero"], a: 0, why: "AD = AS: no reason for firms to change production." },
+{ ch: "determinants", q: "C = 0.75Yd + 50. At what disposable income is saving zero?", o: ["200", "50", "66.7", "150"], a: 0, why: "S = 0.25Yd − 50 = 0, so Yd = 200." },
+{ ch: "determinants", q: "Below break-even income, a household…", o: ["dissaves: it borrows or uses past savings", "saves a small amount", "consumes nothing", "pays no taxes"], a: 0, why: "Consumption exceeds income, so saving is negative." },
+{ ch: "determinants", q: "€500 is saved at 4%. After one year it is worth…", o: ["€520", "€504", "€540", "€480"], a: 0, why: "500 × 1.04 = 520: saving transfers purchasing power through time." },
+{ ch: "determinants", q: "c = 0.75 means that…", o: ["the household spends 75 cents of each extra euro of income", "the household spends 75% of its total income", "the household saves 75% of each extra euro", "autonomous consumption is 75"], a: 0, why: "The MPC applies to extra income. The share of total income consumed is the APC." },
+{ ch: "determinants", q: "A firm finances an investment with its own funds. Why does the interest rate still matter?", o: ["Because of the opportunity cost: it gives up the return it could earn elsewhere", "It does not matter at all", "Because banks charge fees on own funds", "Because own funds are taxed at the interest rate"], a: 0, why: "Even without borrowing, the rate measures the return the firm forgoes." },
 { ch: "growth", q: "Prices rose by 5% and real GDP by 2%. Nominal GDP rose by about…", o: ["7%", "3%", "2%", "10%"], a: 0, why: "Nominal growth ≈ real growth + price growth. Exactly: 1.05 × 1.02 − 1 = 7.1%." }
 ];
 
@@ -1833,6 +1899,13 @@ const CARDS = [
 ["determinants", "Investment function", "I = f(i), decreasing: the interest rate is the cost of investing."],
 ["determinants", "Keynesian multiplier", "k = 1 / (1 − c) = 1 / s. ΔY = k × ΔI."],
 ["determinants", "Strong multiplier conditions", "Low MPS, little openness (few imports), idle capacity."],
+["activity", "Equilibrium output", "AD = a + bY and AS = Y, so Y* = a / (1 − b)."],
+["activity", "Adjustment below Y*", "Excess demand: inventories fall, firms raise output, jobs and income rise until Y*."],
+["activity", "Adjustment above Y*", "Excess supply: unsold goods pile up, firms cut output until Y*."],
+["activity", "W > J (planned)", "Income leaks out without being offset: demand falls, output falls. Fix: raise G, I, X or cut T, M."],
+["activity", "W < J (planned)", "More income enters than leaves: demand rises, output rises (expansion)."],
+["determinants", "Future value of savings", "S × (1 + r). €400 at 10% → €440."],
+["determinants", "Below break-even income", "Saving is negative: the household borrows or uses past savings."],
 ["growth", "Growth rate", "(GDP n+1 − GDP n) / GDP n × 100."],
 ["growth", "GDP", "Market value of all final goods and services produced in a country in a period. Territorial."],
 ["growth", "Nominal GDP", "At current prices. Mixes price and quantity changes."],
@@ -1870,6 +1943,12 @@ const OPEN = [
 { id: "o6", ch: "activity", min: 10, q: "What are leakages and injections? Are they always equal?",
   points: ["Leakages W = S + T + M, defined", "Injections J = I + G + X, defined", "Simplified circuit: none, stationary economy", "Identity Y = C + S + T and Y = C + I + G + X − M gives W = J", "Pairs differ: S ≠ I", "G vs T: deficit or surplus (deficit in recession)", "X ≠ M: trade rarely balanced"],
   model: ["In the open circuit, leakages are the income that leaves the flow between households and firms: saving S, taxes net of transfers T and imports M. Injections are the demand addressed to firms that does not come from households: investment I, public spending G and exports X. In the simplified circuit with only households and firms there are neither, and the economy is stationary.", "In the national accounts, total leakages equal total injections: since Y = C + S + T and Y = C + I + G + X − M, we get S + T + M = I + G + X. But the pairs usually differ. Saving and investment are decided by different agents, the State can run a deficit (G > T), for example in a recession, or a surplus, and the trade balance is rarely in equilibrium."] },
+{ id: "o14", ch: "activity", min: 8, q: "Output is below its equilibrium level. Describe the adjustment mechanism and the roles of households and firms.",
+  points: ["Define equilibrium: AD = AS, Y* = a / (1 − b)", "Below Y*: excess demand", "Inventories fall", "Firms raise output; jobs and income rise until Y*", "Households drive demand through consumption, which rises with income", "Firms adjust supply to demand", "Equilibrium results from the interaction of both"],
+  model: ["Macroeconomic equilibrium is reached when aggregate demand equals aggregate supply: firms sell exactly what they produce and inventories are stable. With AD = a + bY, it occurs at Y* = a / (1 − b).", "If output is below Y*, demand exceeds what is produced. Firms first draw on their inventories, which fall, then increase production. Employment and income rise, which raises consumption and demand again, until output reaches Y*.", "Households are the main driver of demand through consumption, which rises with income. Firms adjust their production to demand. Equilibrium is the result of the interaction between the two."] },
+{ id: "o15", ch: "activity", min: 8, q: "Planned leakages exceed planned injections. What happens to the economy, and what can policymakers do?",
+  points: ["Leakages W = S + T + M, injections J = I + G + X", "W > J: income leaks out without being offset", "Demand falls, unsold inventories build up", "Firms cut output: slowdown or recession", "Raise injections: public spending, investment, exports", "Cut leakages: lower taxes, fewer imports", "Equilibrium requires W = J"],
+  model: ["Leakages (saving, taxes, imports) are the income that leaves the circular flow; injections (investment, public spending, exports) are the demand that does not come from households. When planned leakages exceed planned injections, part of national income leaks out without being offset.", "Aggregate demand then falls, unsold goods accumulate and firms cut production: the economy slows down and may enter a recession.", "To restore W = J, policymakers can raise injections, for example by increasing public spending, encouraging investment or promoting exports, or reduce leakages by cutting taxes or limiting imports."] },
 { id: "o7", ch: "activity", min: 6, q: "Present the five economic agents and their main functions.",
   points: ["Definition: units with the same main function", "Households: consume; income split into consumption and saving", "Firms: produce market goods; invest", "State: non-market services financed by taxes; redistribution", "Financial institutions: deposits into loans; interest and fees", "Rest of the world: trade with non-residents, no main function"],
   model: ["An economic agent groups units that share the same main function. Households consume goods and services to meet their needs, and split their income between consumption and saving. Firms produce market goods and services, sold at a price that covers costs, and invest in capital. The State produces non-market services financed by taxes and redistributes income. Financial institutions collect deposits and lend them, earning interest and fees. The rest of the world is not really an agent, since it has no main function, but it records trade with non-residents: imports, exports and income transfers."] },
@@ -2109,6 +2188,12 @@ const GEN = [
       { kind: "num", text: `C = ${c0} + ${c}·Yd and Yd = ${eur(yd)}. What is the APC? Two decimals.`, ans: C / yd, unit: "", tol: 0.006, why: "APC = C / Yd.", calc: `${fmt(C, 2)} / ${fmt(yd)} = ${fmt(C / yd, 3)}` },
       (() => { const d = RI(100, 500, 50), dc = d * c; return { kind: "num", text: `Disposable income rises by €${d} and consumption by €${fmt(dc, 1)}. What is the MPC?`, ans: c, unit: "", tol: 0.006, why: "MPC = ΔC / ΔYd.", calc: `${fmt(dc, 1)} / ${d} = ${fmt(c, 2)}` }; })(),
       { kind: "num", text: `The MPC is ${c}. What is the MPS?`, ans: 1 - c, unit: "", tol: 0.006, why: "c + s = 1.", calc: `1 − ${c} = ${fmt(1 - c, 2)}` }]); } },
+  { t: "circuit", f(){ const a = RI(100, 400, 50), b = PICK([0.6, 0.7, 0.75, 0.8, 0.9]), Ys = a / (1 - b), Y0 = Math.round(Ys * RI(80, 120) / 100 / 10) * 10, AD0 = a + b * Y0;
+    return PICK([{ kind: "num", text: `AD = ${a} + ${b}Y. What is equilibrium output Y*?`, ans: Ys, unit: "", tol: 0.5, why: "Y = a + bY, so Y* = a / (1 − b).", calc: `${a} / (1 − ${b}) = ${fmt(Ys, 2)}` },
+      { kind: "num", text: `AD = ${a} + ${b}Y and output is Y = ${fmt(Y0)}. What is AD − AS?`, ans: AD0 - Y0, unit: "", tol: 0.5, why: "Positive: excess demand, output will rise. Negative: excess supply, output will fall.", calc: `${a} + ${b} × ${fmt(Y0)} − ${fmt(Y0)} = ${fmt(AD0 - Y0, 2)}` }]); } },
+  { t: "circuit", f(){ let S, T, M, I, G, X; do { S = RI(20, 120, 5); T = RI(20, 120, 5); M = RI(10, 80, 5); I = RI(20, 120, 5); G = RI(20, 100, 5); X = RI(10, 80, 5); } while (S + T + M === I + G + X);
+    const W = S + T + M, J = I + G + X; return { kind: "mcq", text: `S = ${S}, T = ${T}, M = ${M}, I = ${I}, G = ${G}, X = ${X} (planned). What happens to output?`, opts: ["It falls: W > J", "It rises: W < J", "It stays the same: W = J"], right: W > J ? 0 : 1, why: `W = ${W}, J = ${J}. If W > J output falls; if W < J it rises.` }; } },
+  { t: "cons", f(){ const sav = RI(2, 20) * 50, r = PICK([2, 3, 4, 5, 6, 8, 10, 12]); return { kind: "num", text: `€${sav} is saved at ${r}% a year. What is it worth after one year?`, ans: sav * (1 + r / 100), unit: "€", tol: 0.5, why: "Future value = S × (1 + r).", calc: `${sav} × ${1 + r / 100} = ${eur(sav * (1 + r / 100), 2)}` }; } },
   { t: "mult", f(){ const c = PICK([0.5, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9]), k = 1 / (1 - c), di = RI(5, 40, 5);
     return PICK([{ kind: "num", text: `The MPC is ${c}. What is the Keynesian multiplier? Two decimals.`, ans: k, unit: "", tol: 0.011, why: "k = 1 / (1 − c).", calc: `1 / (1 − ${c}) = ${fmt(k, 2)}` },
       { kind: "num", text: `MPC ${c}. Firms invest €${di} bn more. By how much does income rise?`, ans: k * di, unit: "€ bn", tol: 0.3, why: "ΔY = k × ΔI.", calc: `${fmt(k, 2)} × ${di} = ${fmt(k * di, 2)}` },
@@ -2324,6 +2409,7 @@ function modulesHtml(){
   const L = learnStats(), d = MS.get("drills", { best: 0, sprint: 0 }), qz = MS.get("quiz", {}), fk = Object.keys(MS.get("cards", {})).length, op = Object.values(openState().ticks || {}).filter(t => t.length).length;
   const M = [
     ["#learn", "Learn", "The course in short cards, with interactive graphs.", `${L.known}/${L.total} cards known`, "var(--flow)", '<path d="M4 5h7a3 3 0 0 1 3 3v11a2 2 0 0 0-2-2H4zM20 5h-5a3 3 0 0 0-3 3v11a2 2 0 0 1 2-2h6z"/>'],
+    ["#td", "Tutorials", "The tutorial exercises: calculate, then explain. New numbers each time.", (() => { const s = MS.get("td", {}); const n = Object.values(s).reduce((a, b) => a + b, 0); return n ? `${n} done` : "5 exercises"; })(), "var(--leak)", '<path d="M9 3h6l1 4H8z"/><rect x="4" y="7" width="16" height="14" rx="2"/><path d="M8 12h8M8 16h5"/>'],
     ["#drills", "Drills", "Endless short exercises. Streaks and a 60-second sprint.", `best streak ${d.best}`, "var(--inj)", '<path d="M13 3 5 14h6l-1 7 8-11h-6z"/>'],
     ["#quiz", "Quiz", "Exam-style multiple choice, explained.", qz.last ? `last ${Math.round(qz.last.score / qz.last.n * 100)}%` : `${QUIZ.length} questions`, "var(--leak)", '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17v.5"/>'],
     ["#cards", "Flashcards", "Definitions and formulas to flip.", `${fk}/${CARDS.length} known`, "var(--ch4)", '<rect x="3" y="6" width="14" height="12" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v10"/>'],
@@ -2333,8 +2419,173 @@ function modulesHtml(){
     <div class="mods">${M.map(m => `<a class="modt" href="${m[0]}" style="--c:${m[4]}"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${m[5]}</svg></span><b>${m[1]}</b><span class="md">${m[2]}</span><span class="ms">${m[3]}</span></a>`).join("")}</div></section>`;
 }
 
-const MODVIEWS = { learn: viewLearn, chapter: viewChapter, drills: viewDrills, quiz: viewQuiz, cards: viewCards, open: viewOpen, openq: viewOpenQ };
-const TITLES = { learn: "Learn", chapter: "Learn", drills: "Drills", quiz: "Quiz", cards: "Flashcards", open: "Open questions", openq: "Open questions" };
+/* =====================================================================
+   TUTORIALS — the five exercise types of Tutorial 1 ("The circular flow of income and the
+   fundamental determinants of economic activity"), with new numbers every time.
+   Calculations are checked by the code; "explain" questions are compared with a model answer.
+   ===================================================================== */
+const TD_TYPES = [
+  { id: "eq", title: "Aggregate demand and supply", what: "Equilibrium output Y*, excess demand or supply, how firms adjust." },
+  { id: "wj", title: "Leakages and injections", what: "W and J, contraction or expansion, the policy that restores equilibrium." },
+  { id: "kc", title: "Consumption and saving: Keynes", what: "C, S, APC, APS, the meaning of the MPC, break-even income." },
+  { id: "nc", title: "Consumption and saving: Neoclassical", what: "Future value of saving, the interest rate, the three determinants." },
+  { id: "mu", title: "Investment and the multiplier", what: "k, ΔY, why ΔY > ΔI, the interest rate and investment." }
+];
+const tdShuffle = (opts, right) => { const o = opts.map((t, i) => ({ t, ok: i === right })); const s = shuffle(o); return { opts: s.map(x => x.t), right: s.findIndex(x => x.ok) }; };
+const TD_GEN = {
+  eq(){
+    const a = RI(100, 400, 50), b = PICK([0.6, 0.7, 0.75, 0.8, 0.9]), Ys = a / (1 - b);
+    const below = Math.random() < 0.6, Y0 = Math.round(Ys * (below ? RI(80, 95) : RI(105, 120)) / 100 / 10) * 10, AD0 = a + b * Y0, gap = AD0 - Y0;
+    const adj = tdShuffle(below
+      ? ["Inventories fall, so firms raise output; employment and income rise until Y reaches Y*.", "Inventories pile up, so firms cut output until Y falls to Y*.", "Prices fall until demand matches supply; output does not change.", "Nothing happens: the economy is already in equilibrium."]
+      : ["Unsold goods pile up in inventories, so firms cut output; employment and income fall until Y reaches Y*.", "Inventories fall, so firms raise output until Y reaches Y*.", "Prices rise until demand matches supply; output does not change.", "Nothing happens: the economy is already in equilibrium."], 0);
+    return { title: "Aggregate demand and aggregate supply",
+      data: `<p>An economy is described by:</p><ul><li>Aggregate demand: <span class="mono">C + I + G + X − M = ${a} + ${b}Y</span></li><li>Aggregate supply (output): <span class="mono">Y</span></li></ul>`,
+      parts: [
+        { n: "1", kind: "num", text: "Calculate the equilibrium level of output Y*.", ans: Ys, unit: "", tol: 0.5, calc: `Y = ${a} + ${b}Y → ${fmt(1 - b, 2)}Y = ${a} → Y* = ${a} / ${fmt(1 - b, 2)} = ${fmt(Ys, 2)}`, why: "At equilibrium, output equals aggregate demand: solve Y = a + bY, so Y* = a / (1 − b)." },
+        { n: "2", kind: "explain", text: "Explain what this equilibrium represents.", points: ["Aggregate demand equals aggregate supply (output)", "Firms sell exactly what they produce", "Inventories stay stable", "No incentive to change production"],
+          model: ["At Y*, aggregate demand equals aggregate supply: the economy is in macroeconomic equilibrium. Firms sell exactly what they produce, inventories stay stable, and no one has a reason to change the level of production."] },
+        { n: "3a", kind: "num", text: `Output is initially Y = ${fmt(Y0)}. What is aggregate demand at this level of output?`, ans: AD0, unit: "", tol: 0.5, calc: `AD = ${a} + ${b} × ${fmt(Y0)} = ${fmt(AD0, 2)}`, why: "Plug the current output into the demand function." },
+        { n: "3b", kind: "num", text: "What is the gap AD − AS? (Positive for excess demand, negative for excess supply.)", ans: gap, unit: "", tol: 0.5, calc: `${fmt(AD0, 2)} − ${fmt(Y0)} = ${fmt(gap, 2)}`, why: gap > 0 ? "Demand exceeds what is produced: excess demand." : "Firms produce more than is demanded: excess supply." },
+        { n: "3c", kind: "mcq", text: "Describe the adjustment mechanism.", opts: adj.opts, right: adj.right, why: below ? "With excess demand, firms draw on their inventories, then produce more. Output, jobs and income rise towards Y*." : "With excess supply, unsold goods accumulate, so firms cut production. Output, jobs and income fall towards Y*." },
+        { n: "4", kind: "explain", text: "What is the role of households in forming aggregate demand? Why do firms adjust their production?", points: ["Households spend part of their income on consumption", "Consumption is the main driver of aggregate demand", "When income rises, consumption rises, so demand rises", "Firms adjust output to demand: expand when it rises, cut when it falls", "Equilibrium comes from the interaction of household and firm decisions"],
+          model: ["Households spend part of their income on consumption, which makes them the main driver of aggregate demand: when their income rises, consumption and therefore demand generally rise.", "Firms produce goods and services and adjust their output to demand: they expand production when demand rises and cut it when demand falls.", "Macroeconomic equilibrium comes from the interaction between households' decisions (demand) and firms' decisions (supply)."] }
+      ] };
+  },
+  wj(){
+    let S, T, M, I, G, X, W, J;
+    do { S = RI(20, 120, 5); T = RI(20, 120, 5); M = RI(10, 80, 5); I = RI(20, 120, 5); G = RI(20, 100, 5); X = RI(10, 80, 5); W = S + T + M; J = I + G + X; } while (W === J || Math.abs(W - J) < 10);
+    const over = W > J;
+    const st = tdShuffle(["Leakages exceed injections: the economy is not in equilibrium and activity contracts.", "Injections exceed leakages: the economy is not in equilibrium and activity expands.", "W and J are close enough: the economy is in equilibrium.", "We cannot tell without the interest rate."], over ? 0 : 1);
+    const pol = tdShuffle(over
+      ? ["Raise public spending G or cut taxes T.", "Raise taxes T to cut the deficit.", "Encourage households to save more.", "Reduce exports X."]
+      : ["Cut public spending G or raise taxes T.", "Cut taxes T.", "Subsidise new investment I.", "Promote exports X."], 0);
+    return { title: "Leakages and injections",
+      data: `<p>In an open economy, the following data are observed:</p><div class="tw"><table class="tbl"><tbody>
+        <tr><td>Savings S</td><td class="n k-leak">${S}</td><td>Investment I</td><td class="n k-inj">${I}</td></tr>
+        <tr><td>Taxes T</td><td class="n k-leak">${T}</td><td>Government spending G</td><td class="n k-inj">${G}</td></tr>
+        <tr><td>Imports M</td><td class="n k-leak">${M}</td><td>Exports X</td><td class="n k-inj">${X}</td></tr></tbody></table></div>`,
+      parts: [
+        { n: "1a", kind: "num", text: "Calculate total leakages W.", ans: W, unit: "", tol: 0.5, calc: `W = S + T + M = ${S} + ${T} + ${M} = ${W}`, why: "Leakages are the income that leaves the circuit." },
+        { n: "1b", kind: "num", text: "Calculate total injections J.", ans: J, unit: "", tol: 0.5, calc: `J = I + G + X = ${I} + ${G} + ${X} = ${J}`, why: "Injections are the demand that does not come from households." },
+        { n: "2a", kind: "mcq", text: "Compare W and J. Is the economy in equilibrium?", opts: st.opts, right: st.right, why: over ? `W = ${W} > J = ${J}: more income leaves the circuit than enters it.` : `W = ${W} < J = ${J}: more income enters the circuit than leaves it.` },
+        { n: "2b", kind: "explain", text: "What happens if W > J? And if W < J?", points: ["W > J: part of income leaks out without being offset", "W > J: demand falls, unsold inventories build up, output falls (slowdown, recession)", "W < J: more income enters the circuit than leaves it", "W < J: demand rises, inventories fall, output rises (expansion)", "Equilibrium requires W = J"],
+          model: ["If W > J, part of national income leaks out of the circular flow without being offset by an equal injection. Aggregate demand falls, unsold inventories accumulate and firms cut output: the economy slows down, possibly into recession.", "If W < J, more income enters the circuit than leaves it. Demand rises, inventories fall and firms raise output: the economy expands.", "In short: if W > J output falls, if W < J output rises. Equilibrium requires W = J."] },
+        { n: "3", kind: "mcq", text: "Which economic policy would help restore equilibrium?", opts: pol.opts, right: pol.right, why: over ? "To close W > J, raise injections (G, I, X) or reduce leakages (T, M)." : "To close W < J, reduce injections or raise leakages, for example by cutting G or raising T." }
+      ] };
+  },
+  kc(){
+    const c = PICK([0.6, 0.7, 0.75, 0.8, 0.85, 0.9]), C0 = RI(20, 300, 10), Yd = RI(6, 40) * 100, C = c * Yd + C0, S = Yd - C, apc = C / Yd, s = 1 - c, YR = C0 / s;
+    const mean = tdShuffle([`Out of each extra euro of disposable income, the household consumes €${c} and saves €${fmt(s, 2)}.`, `The household consumes ${Math.round(c * 100)}% of its total disposable income.`, `The household saves ${Math.round(c * 100)}% of each extra euro.`, `Consumption grows ${c} times faster than income.`], 0);
+    const below = tdShuffle(["Saving is negative: the household dissaves, borrowing or using past savings to consume.", "Saving is zero: the household spends all its income.", "Saving is positive but small.", "Consumption is zero."], 0);
+    return { title: "Consumption and saving (Keynesian approach)",
+      data: `<ul><li>Consumption function: <span class="mono">C = ${c}Yd + ${C0}</span></li><li>Disposable income: <span class="mono">Yd = ${fmt(Yd)}</span></li></ul>`,
+      parts: [
+        { n: "1a", kind: "num", text: "Calculate consumption C.", ans: C, unit: "€", tol: 0.5, calc: `C = ${c} × ${fmt(Yd)} + ${C0} = ${eur(C, 2)}`, why: "Plug Yd into the consumption function." },
+        { n: "1b", kind: "num", text: "Calculate saving S.", ans: S, unit: "€", tol: 0.5, calc: `S = Yd − C = ${fmt(Yd)} − ${fmt(C, 2)} = ${eur(S, 2)}`, why: "Saving is the residual: what is left after consumption." },
+        { n: "1c", kind: "explain", text: "Interpret these results.", points: ["Consumption has an income-dependent part (c·Yd) and an autonomous part (C₀)", "Autonomous consumption happens even with zero income", "Saving is the residual: income left after consumption", "Keynes: consumption depends directly on disposable income"],
+          model: [`Out of a disposable income of €${fmt(Yd)}, the household consumes €${fmt(C, 2)} and saves €${fmt(S, 2)}. Consumption has two parts: one that depends on income (${c} × Yd) and an autonomous part (€${C0}) that is spent even with zero income.`, "Saving is what is left once consumption has taken place: in the Keynesian model, consumption depends directly on disposable income and saving is residual."] },
+        { n: "2a", kind: "num", text: "Calculate the APC. Two decimals.", ans: apc, unit: "", tol: 0.006, calc: `APC = C / Yd = ${fmt(C, 2)} / ${fmt(Yd)} = ${fmt(apc, 3)}`, why: "The share of disposable income that is consumed." },
+        { n: "2b", kind: "num", text: "Calculate the APS. Two decimals.", ans: 1 - apc, unit: "", tol: 0.006, calc: `APS = 1 − APC = ${fmt(1 - apc, 3)}`, why: "APC + APS = 1: the share of disposable income that is saved." },
+        { n: "3", kind: "mcq", text: `Explain the meaning of c = ${c}.`, opts: mean.opts, right: mean.right, why: `c is the marginal propensity to consume: it applies to each additional euro. MPC + MPS = 1, so the MPS is ${fmt(s, 2)}. The higher the MPC, the stronger the multiplier.` },
+        { n: "4a", kind: "num", text: "Determine the income level at which S = 0.", ans: YR, unit: "€", tol: 0.5, calc: `S = Yd − (${c}Yd + ${C0}) = ${fmt(s, 2)}Yd − ${C0} = 0 → Yd = ${C0} / ${fmt(s, 2)} = ${eur(YR, 2)}`, why: "Write the saving function, set S = 0 and solve." },
+        { n: "4b", kind: "mcq", text: "What happens when disposable income is below this level?", opts: below.opts, right: below.right, why: "Below break-even income, consumption exceeds income. At break-even S = 0; above it, the household starts to save. Saving is strongly constrained by income." }
+      ] };
+  },
+  nc(){
+    const inc = RI(10, 40) * 100, r = PICK([2, 3, 4, 5, 6, 8, 10]), sav = RI(2, 6) * 100, fv = sav * (1 + r / 100), r2 = r * 2;
+    const eff = tdShuffle(["Saving becomes more attractive: households consume less today and more in the future.", "Saving becomes less attractive: households consume more today.", "Nothing changes: only current income matters.", "Households stop saving because prices rise."], 0);
+    return { title: "Consumption vs saving (Neoclassical approach)",
+      data: `<p>An individual has a current income of €${fmt(inc)}. They may consume it or save it at an annual interest rate of ${r}%.</p>`,
+      parts: [
+        { n: "1", kind: "num", text: `If the individual saves €${sav}, how much will these savings be worth after one year?`, ans: fv, unit: "€", tol: 0.5, calc: `${sav} × (1 + ${r / 100}) = ${eur(fv, 2)}`, why: "Future value = savings × (1 + interest rate). Saving transfers purchasing power through time." },
+        { n: "2", kind: "explain", text: "Explain how the interest rate influences saving and consumption decisions.", points: ["The interest rate is the return on saving", "It is also the opportunity cost of consuming today", "It is the reward for postponing consumption", "High rate: save more, consume less now", "Low rate: less incentive to save, more current spending"],
+          model: [`By saving €${sav}, the individual gives up consumption today to consume more tomorrow: the savings earn €${fmt(fv - sav, 2)} of interest over the year. The interest rate is the reward for postponing consumption.`, "It is both the return on saving and the opportunity cost of consuming now. When it is high, saving is more attractive, so households save more and consume less today. When it is low, there is less incentive to postpone consumption, so current spending rises."] },
+        { n: "3", kind: "mcq", text: `The interest rate rises to ${r2}%. How does this change saving and consumption decisions?`, opts: eff.opts, right: eff.right, why: "Each euro saved earns more, so households shift consumption from the present towards the future." },
+        { n: "4", kind: "explain", text: "Explain the main determinants of the consumption–saving trade-off.", points: ["Preferences for present versus future consumption", "Income: low-income households can hardly save", "Wealth (accumulated savings, assets) and expected future income", "The interest rate: return on saving and opportunity cost of consuming now"],
+          model: ["Three factors decide how income is split between consumption and saving. First, preferences: people with a strong preference for the present consume more and save little, while those who value the future save more.", "Second, income and wealth: low-income households spend most of their income on essentials, while higher incomes and accumulated wealth allow more saving.", "Third, the interest rate: as the return on saving and the opportunity cost of consuming today, a higher rate encourages saving and a lower rate encourages current consumption."] }
+      ] };
+  },
+  mu(){
+    const c = PICK([0.6, 0.7, 0.75, 0.8, 0.85, 0.9]), dI = RI(2, 20) * 10, k = 1 / (1 - c), dY = k * dI;
+    const rate = tdShuffle(["A lower rate cuts the cost of financing (and the opportunity cost of own funds), so more projects are profitable and investment rises.", "A lower rate raises the cost of financing, so investment falls.", "The interest rate only affects households, not firms.", "Investment depends only on current sales, not on the interest rate."], 0);
+    return { title: "Investment and the investment multiplier",
+      data: `<ul><li>Marginal propensity to consume: <span class="mono">c = ${c}</span></li><li>Change in investment: <span class="mono">ΔI = ${dI}</span></li></ul>`,
+      parts: [
+        { n: "1", kind: "num", text: "Calculate the investment multiplier k. Two decimals.", ans: k, unit: "", tol: 0.011, calc: `k = 1 / (1 − ${c}) = 1 / ${fmt(1 - c, 2)} = ${fmt(k, 2)}`, why: `An initial increase in demand is amplified ${fmt(k, 2)} times in the economy.` },
+        { n: "2", kind: "num", text: "Calculate ΔY.", ans: dY, unit: "", tol: 0.3, calc: `ΔY = k × ΔI = ${fmt(k, 2)} × ${dI} = ${fmt(dY, 2)}`, why: "The rise in investment leads to a larger rise in income through chain effects." },
+        { n: "3", kind: "explain", text: "Explain why ΔY > ΔI.", points: ["The extra investment is a first injection", "It becomes income for other agents", `A share c (${Math.round(c * 100)}%) of that income is consumed`, "That consumption becomes income again: the process repeats", "Each round is smaller, but the total adds up to k × ΔI"],
+          model: [`The initial investment of ${dI} is a first injection into the economy. It becomes income for other agents, who consume ${Math.round(c * 100)}% of it (c = ${c}). That consumption becomes income for others, who spend part of it again, and so on.`, `At each round only part of income is spent again, but the rounds add up: the total rise in income is ΔY = k × ΔI = ${fmt(dY, 1)}, greater than the initial ${dI}.`] },
+        { n: "4", kind: "mcq", text: "Explain the relationship between the interest rate and investment.", opts: rate.opts, right: rate.right, why: "The interest rate is the cost of financing; even with own funds, the firm gives up an alternative return. A fall in the rate stimulates investment and, through the multiplier, growth." }
+      ] };
+  }
+};
+
+function viewTD(){
+  const st = MS.get("td", {});
+  return h("div", { class: "mod", html: `${mhead("Macroeconomics", "Tutorials", "The exercises of the tutorial sheets, with new numbers every time. Calculate first, then explain: that is how the exam exercise is written.")}
+    <a class="tdfull" href="#td-all"><span><b>Full tutorial sheet</b><span>All five exercises in a row, like Tutorial 1. About 45 minutes.</span></span>${ICO.arrow}</a>
+    <div class="tdlist">${TD_TYPES.map((t, i) => `<a class="tdcard" href="#td-${t.id}"><span class="tdn">Exercise ${i + 1}</span><b>${t.title}</b><span>${t.what}</span>${st[t.id] ? `<em>Done ${st[t.id]}×</em>` : ""}</a>`).join("")}</div>
+    <p class="muted small">Based on Tutorial 1: the circular flow of income and the fundamental determinants of economic activity.</p>
+    ${creditHtml()}` });
+}
+function tdPart(p, key){
+  const L = "ABCD";
+  let body = "";
+  if (p.kind === "num") body = `<div class="ans"><label class="field"><input inputmode="decimal" autocomplete="off" aria-label="Your answer">${p.unit ? `<span class="unit">${p.unit}</span>` : ""}</label><button class="check" type="button" data-tdcheck>Check</button></div>`;
+  if (p.kind === "mcq") body = `<div class="opts">${p.opts.map((o, j) => `<button class="opt" type="button" data-tdopt="${j}"><span class="k">${L[j]}</span><span>${o}</span></button>`).join("")}</div>`;
+  if (p.kind === "explain") body = `<textarea class="tdta" placeholder="Write your explanation as in the exam."></textarea><div class="row"><button class="btn quiet small" type="button" data-tdmodel>Compare with the model answer</button></div>`;
+  return `<article class="card tdpart" data-key="${key}"><div class="qhead"><span class="qn">${p.n}</span><span class="qtag">${p.kind === "explain" ? "Explain" : p.kind === "mcq" ? "Choose" : "Calculate"}</span></div><p class="qtext">${p.text}</p>${body}<div class="tdout"></div></article>`;
+}
+function viewTDEx(which){
+  const ids = which === "all" ? TD_TYPES.map(t => t.id) : [TD_TYPES.some(t => t.id === which) ? which : "eq"];
+  const ex = ids.map(id => ({ id, ...TD_GEN[id]() }));
+  const parts = [];
+  const root = h("div", { class: "mod tdpage", html: `<a class="tocback" href="#td">${ICO.back}All tutorial exercises</a>
+    ${mhead("Tutorial", which === "all" ? "Full tutorial sheet" : ex[0].title, which === "all" ? "Five exercises, as in Tutorial 1. Calculate, then explain." : "New numbers every time you open it.")}
+    ${ex.map((e, i) => `<section class="tdex"><div class="tdstate"><span class="tdn">${which === "all" ? `Exercise ${i + 1}` : "The data"}</span>${which === "all" ? `<h2>${e.title}</h2>` : ""}${e.data}</div>${e.parts.map((p, j) => { parts.push(p); return tdPart(p, i + "-" + j); }).join("")}</section>`).join("")}
+    <section class="tdsum"></section>` });
+  const P = {}; ex.forEach((e, i) => e.parts.forEach((p, j) => P[i + "-" + j] = p));
+  const done = {}; let counted = false;
+  function summary(){
+    const auto = parts.filter(p => p.kind !== "explain"), right = auto.filter(p => done[keyOf(p)] === true).length, answered = auto.filter(p => done[keyOf(p)] !== undefined).length;
+    const ex2 = parts.filter(p => p.kind === "explain"), pts = ex2.reduce((a, p) => a + (p.ticked || 0), 0), totPts = ex2.reduce((a, p) => a + p.points.length, 0);
+    root.querySelector(".tdsum").innerHTML = `<div><b>${right}/${auto.length}</b><span>calculations and choices right${answered < auto.length ? ` · ${auto.length - answered} to do` : ""}</span></div><div><b>${pts}/${totPts}</b><span>key points covered in your explanations</span></div><div class="row"><button class="btn primary" type="button" data-tdnew>New numbers</button><a class="btn glassy" href="#td">Other exercises</a></div>`;
+    if (answered === auto.length && !counted){ counted = true; const s = MS.get("td", {}); ids.forEach(id => { s[id] = (s[id] || 0) + 1; }); MS.set("td", s); }
+  }
+  const keyOf = p => Object.keys(P).find(k => P[k] === p);
+  function verdict(card, p, good, extra){
+    done[card.dataset.key] = good; card.classList.add(good ? "ok" : "bad");
+    card.querySelector(".tdout").innerHTML = `<div class="verdict ${good ? "ok" : "bad"}"><div class="vh"><b>${good ? "Correct" : "Not quite"}</b>${extra || ""}</div>${p.calc ? `<div class="calc">${p.calc}</div>` : ""}<p>${p.why}</p></div>`;
+    summary();
+  }
+  root.addEventListener("click", e => {
+    const card = e.target.closest(".tdpart");
+    if (e.target.closest("[data-tdnew]")){ render(); return; }
+    if (!card) return;
+    const p = P[card.dataset.key];
+    if (e.target.closest("[data-tdcheck]") && done[card.dataset.key] === undefined){
+      const inp = card.querySelector("input"), v = parseNum(inp.value); if (Number.isNaN(v)){ inp.focus(); return; }
+      inp.disabled = true; card.querySelector("[data-tdcheck]").remove();
+      const good = Math.abs(v - p.ans) <= Math.max(p.tol, Math.abs(p.ans) * 0.002), d = p.unit === "" ? 2 : Number.isInteger(Math.round(p.ans * 100) / 100) ? 0 : 2;
+      verdict(card, p, good, good ? "" : `<span>The answer is <span class="exp">${p.unit === "€" ? eur(p.ans, d) : fmt(p.ans, d)}</span></span>`);
+    }
+    const ob = e.target.closest("[data-tdopt]");
+    if (ob && done[card.dataset.key] === undefined){ const j = +ob.dataset.tdopt; card.querySelectorAll(".opt").forEach((b, i) => { b.disabled = true; if (i === p.right) b.classList.add("right"); else if (i === j) b.classList.add("wrong"); }); verdict(card, p, j === p.right); }
+    if (e.target.closest("[data-tdmodel]")){
+      e.target.closest("[data-tdmodel]").remove(); p.ticked = 0;
+      card.querySelector(".tdout").innerHTML = `<div class="tdmodel"><div class="ochk"><h3>Key points <span data-sc>0/${p.points.length}</span></h3><ul>${p.points.map((x, k) => `<li><label><input type="checkbox" data-pt="${k}"><span>${x}</span></label></li>`).join("")}</ul></div><div class="oans"><h3>Model answer</h3>${p.model.map(m => `<p>${m}</p>`).join("")}</div></div>`;
+      summary();
+    }
+  });
+  root.addEventListener("change", e => { const cb = e.target.closest("[data-pt]"); if (!cb) return; const card = cb.closest(".tdpart"), p = P[card.dataset.key]; p.ticked = card.querySelectorAll("[data-pt]:checked").length; card.querySelector("[data-sc]").textContent = `${p.ticked}/${p.points.length}`; summary(); });
+  root.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.matches(".tdpart input")){ e.preventDefault(); e.target.closest(".tdpart").querySelector("[data-tdcheck]")?.click(); } });
+  requestAnimationFrame(summary);
+  return root;
+}
+
+const MODVIEWS = { td: viewTD, tdex: viewTDEx, learn: viewLearn, chapter: viewChapter, drills: viewDrills, quiz: viewQuiz, cards: viewCards, open: viewOpen, openq: viewOpenQ };
+const TITLES = { td: "Tutorials", tdex: "Tutorials", learn: "Learn", chapter: "Learn", drills: "Drills", quiz: "Quiz", cards: "Flashcards", open: "Open questions", openq: "Open questions" };
 /* header height drives the layout of the case view */
 new ResizeObserver(() => document.documentElement.style.setProperty("--hdr", document.querySelector(".hdr").offsetHeight + "px")).observe(document.querySelector(".hdr"));
 
@@ -2344,7 +2595,7 @@ function render(){
   const r = route();
   if (STAGE.stop){ STAGE.stop(); STAGE.stop = null; }
   STAGE.view = r.view; AURA.set(r.view !== "case"); TINT();
-  const NAVOF = { case: "cases", chapter: "learn", openq: "open" };
+  const NAVOF = { case: "cases", chapter: "learn", openq: "open", tdex: "td" };
   document.querySelectorAll(".nav a").forEach(a => { const on = a.dataset.route === (NAVOF[r.view] || r.view); a.setAttribute("aria-current", on ? "page" : "false"); if (on) a.scrollIntoView({ block: "nearest", inline: "nearest" }); });
   const app = $("#app");
   if (r.view === "case"){
