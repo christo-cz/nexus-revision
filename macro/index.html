@@ -378,6 +378,64 @@ a{color:inherit}
 .casecard:is(:hover,:focus-visible) .cb{opacity:1;transform:none}
 .cases:has(.casecard:hover) .casecard:not(:hover){opacity:.5;filter:saturate(.3)}
 @media (hover:none){.casecard .cb{display:none}}
+/* mock exam (Macroeconomics only) */
+.osrc{font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:99px;background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--c);white-space:nowrap}
+.exready{display:flex;flex-direction:column;gap:18px;max-width:980px}
+.exlist{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:12px}
+.exlist li{font-weight:600;line-height:1.45}
+.exlist .osrc{margin-right:8px}
+.exlist small{display:block;font-weight:500;font-size:.84rem;color:var(--muted);margin-top:2px}
+.mklen{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:680px}
+.mklen button{display:flex;flex-direction:column;gap:2px;text-align:left;border:1.5px solid var(--glass-line);background:var(--glass);border-radius:14px;padding:12px 14px;transition:border-color .2s,background-color .2s,transform .2s;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.mklen button b{font-family:var(--f-display);font-size:1.15rem}
+.mklen button span{font-size:.8rem;color:var(--muted)}
+.mklen button:hover{transform:translateY(-2px);border-color:var(--line-2)}
+.mklen button[aria-pressed="true"]{border-color:var(--flow);background:color-mix(in srgb,var(--flow) 14%,transparent)}
+@media (max-width:520px){.mklen{grid-template-columns:1fr}}
+.mkparts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:820px){.mkparts{grid-template-columns:1fr}}
+.mkparts section{border:1px solid var(--glass-line);background:var(--glass);border-radius:18px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.mkparts h2{font-size:1.2rem}
+.mkhist{display:flex;flex-direction:column;gap:8px;max-width:680px}
+.mkhist h2{font-size:1.1rem}
+.mkhist ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.mkhist li{display:grid;grid-template-columns:4.5em 4.5em 1fr 1fr;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:.9rem;color:var(--muted)}
+.mkhist li b{color:var(--fg)}
+@media (max-width:520px){.mkhist li{grid-template-columns:1fr 1fr}}
+.exbar{position:sticky;top:calc(var(--hdr) + env(safe-area-inset-top,0px) + 8px);z-index:6;display:flex;align-items:center;gap:16px;flex-wrap:wrap;border:1px solid var(--glass-line);background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:18px;padding:12px 16px;box-shadow:var(--shadow);max-width:980px}
+.exbar > div:first-child{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.exbar b{font-family:var(--f-display);font-size:1.6rem}
+.exbar span{font-size:.84rem;color:var(--muted)}
+.exbar .mbar{flex:1 1 160px}
+.exbar.late b{color:var(--bad)}
+.exbar.is-mark{position:relative;top:auto}
+@media (max-width:560px){.exbar.is-write{flex-wrap:nowrap;gap:10px;padding:8px 10px 8px 14px;border-radius:14px}.exbar.is-write b{font-size:1.3rem}.exbar.is-write .mbar{flex:1 1 30px;min-width:24px}.exbar.is-write .btn{white-space:nowrap;padding:8px 12px}}
+.exqs{display:flex;flex-direction:column;gap:30px;max-width:980px}
+.mkpart{font-size:clamp(1.35rem,3vw,1.8rem);letter-spacing:-.02em;margin-top:6px}
+.exq{display:flex;flex-direction:column;gap:10px;border-top:1.5px solid var(--fg);padding-top:16px}
+.exq .kicker{color:var(--c)}
+.exq h2{font-size:clamp(1.15rem,2.4vw,1.45rem);line-height:1.3}
+.exq .tdta{min-height:220px}
+.exq .tdmodel,.mockex .tdmodel{align-items:start}
+.exmine{border-left:3px solid var(--c,var(--flow));padding:4px 0 4px 14px;display:flex;flex-direction:column;gap:6px}
+.exmine p:last-child{overflow-wrap:anywhere}
+.ochk h3 span{font-family:var(--f-mono);color:var(--ok);margin-left:6px}
+details.oans summary{cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:1.02rem}
+details.oans[open] summary{margin-bottom:8px}
+.opt.sel{border-color:var(--flow);background:color-mix(in srgb,var(--flow) 12%,transparent)}
+.opt.sel .k{background:var(--flow);color:var(--bg)}
+.exend{border:1px solid var(--glass-line);background:var(--glass);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:14px;max-width:980px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.mkscore{display:flex;gap:16px 36px;flex-wrap:wrap}
+.mkscore div{display:flex;flex-direction:column;gap:2px}
+.mkscore b{font-family:var(--f-display);font-size:clamp(2rem,5vw,2.8rem);line-height:1}
+.mkscore span{font-size:.86rem;color:var(--muted);max-width:24ch}
+.exend [data-tips]{display:flex;flex-direction:column;gap:6px}
+.exend [data-tips] a{color:inherit;font-weight:700}
+/* the mock exam banner looks like an exam sheet: squared paper, ink, a margin rule */
+.tdfull.mkbanner{position:relative;overflow:hidden;background-color:var(--fg);color:var(--bg);box-shadow:0 22px 46px -26px var(--fg);background-image:linear-gradient(90deg,transparent 46px,color-mix(in srgb,var(--leak) 70%,transparent) 46px,color-mix(in srgb,var(--leak) 70%,transparent) 48px,transparent 48px),linear-gradient(color-mix(in srgb,var(--bg) 9%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--bg) 9%,transparent) 1px,transparent 1px);background-size:100% 100%,14px 14px,14px 14px;padding-left:66px}
+.mkbanner b{letter-spacing:-.02em}
+.mkbanner > span > span{opacity:.82}
+.mods + .mkbanner,.sec .mkbanner{margin-top:14px;max-width:none}
 /* tutorials */
 .tdfull{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:900px;border-radius:20px;padding:22px 24px;background:var(--flow);color:var(--on-flow);text-decoration:none;box-shadow:0 20px 44px -24px var(--flow);transition:transform .25s}
 .tdfull:hover{transform:translateY(-4px)}
@@ -1008,6 +1066,7 @@ function route(){
   if (hs === "cards" || /^cards-\w+$/.test(hs)) return { view: "cards", id: hs.slice(6) };
   if (hs === "open") return { view: "open" };
   if (hs === "recap") return { view: "recap" };
+  if (hs === "mock") return { view: "mock" };
   if (/^open-o\d+$/.test(hs)) return { view: "openq", id: hs.slice(5) };
   return { view: "home" };
 }
@@ -2508,6 +2567,7 @@ function openState(){ return MS.get("open", { ans: {}, ticks: {} }); }
 function viewOpen(){
   const s = openState();
   return h("div", { class: "mod", html: `${mhead("Macroeconomics", "Open questions", "The final exam opens with questions on the lectures. Write your answer, then compare it with a model answer and tick the key points you covered.")}
+  ${MOCK_BANNER()}
   <div class="method"><b>A method that works</b><span>Define the key terms</span><span>Give the Classical or Neoclassical view</span><span>Give the Keynesian view</span><span>Add a real example</span><span>Conclude in one sentence</span></div>
   <div class="olist">${COURSE.map(c => { const qs = OPEN.filter(o => o.ch === c.id); return qs.length ? `<section class="ogrp" style="--c:${c.c}"><h2>${c.n}. ${c.title}</h2>${qs.map(o => { const t = (s.ticks[o.id] || []).length, w = (s.ans[o.id] || "").trim().split(/\s+/).filter(Boolean).length;
     return `<a class="oitem" href="#open-${o.id}"><span class="oq">${o.q}</span><span class="ometa"><span>${o.min} min</span>${w ? `<span>${w} words</span>` : ""}${t ? `<span class="osc">${t}/${o.points.length} points</span>` : `<span>Not tried</span>`}</span></a>`; }).join("")}</section>` : ""; }).join("")}</div>
@@ -2551,7 +2611,7 @@ function modulesHtml(){
     ["#open", "Open questions", "Write, compare with a model answer, tick the key points.", `${op}/${OPEN.length} tried`, "var(--flow)", '<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/>']
   ];
   return `<section class="sec"><div class="sec-h"><h2>Revise</h2><p>Learn the course, then train in every format.</p></div>
-    <div class="mods">${M.map(m => `<a class="modt" href="${m[0]}" style="--c:${m[4]}"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${m[5]}</svg></span><b>${m[1]}</b><span class="md">${m[2]}</span><span class="ms">${m[3]}</span></a>`).join("")}</div></section>`;
+    <div class="mods">${M.map(m => `<a class="modt" href="${m[0]}" style="--c:${m[4]}"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${m[5]}</svg></span><b>${m[1]}</b><span class="md">${m[2]}</span><span class="ms">${m[3]}</span></a>`).join("")}</div>${MOCK_BANNER()}</section>`;
 }
 
 /* =====================================================================
@@ -2661,7 +2721,7 @@ function viewTD(){
   return h("div", { class: "mod", html: `${mhead("Macroeconomics", "Tutorials", "The exercises of the tutorial sheets, with new numbers every time. Calculate first, then explain: that is how the exam exercise is written.")}
     <a class="tdfull" href="#td-all"><span><b>Full tutorial sheet</b><span>All five exercises in a row, like Tutorial 1. About 45 minutes.</span></span>${ICO.arrow}</a>
     <div class="tdlist">${TD_TYPES.map((t, i) => `<a class="tdcard" href="#td-${t.id}"><span class="tdn">Exercise ${i + 1}</span><b>${t.title}</b><span>${t.what}</span>${st[t.id] ? `<em>Done ${st[t.id]}×</em>` : ""}</a>`).join("")}</div>
-    <p class="muted small">Based on Tutorial 1: the circular flow of income and the fundamental determinants of economic activity.</p>
+    <p class="muted small">Based on Tutorial 1: the circular flow of income and the fundamental determinants of economic activity. Ready for both parts of the final? Try the <a href="#mock">mock exam</a>.</p>
     ${creditHtml()}` });
 }
 function tdPart(p, key){
@@ -2719,8 +2779,178 @@ function viewTDEx(which){
   return root;
 }
 
-const MODVIEWS = { td: viewTD, tdex: viewTDEx, learn: viewLearn, chapter: viewChapter, drills: viewDrills, quiz: viewQuiz, cards: viewCards, open: viewOpen, openq: viewOpenQ, recap: viewRecap };
-const TITLES = { td: "Tutorials", tdex: "Tutorials", learn: "Learn", chapter: "Learn", drills: "Drills", quiz: "Quiz", cards: "Flashcards", open: "Open questions", openq: "Open questions", recap: "Recap" };
+/* =====================================================================
+   MOCK EXAM — the two parts of the final: open questions on the lectures, then an exercise
+   like the tutorials. Timed. The numbers are marked by the code, the writing against key points.
+   The syllabus gives neither the length nor the number of questions, so the student picks a length.
+   ===================================================================== */
+const MOCK_FMT = { 60: { open: 3, ex: 1 }, 90: { open: 4, ex: 2 }, 120: { open: 4, ex: 3 } };
+const chIdx = id => COURSE.findIndex(c => c.id === id);
+function newMock(min){
+  min = MOCK_FMT[min] ? min : 90;
+  const f = MOCK_FMT[min];
+  const chs = ["thought", ...shuffle(["activity", "determinants", "growth"])].slice(0, f.open).sort((a, b) => chIdx(a) - chIdx(b));
+  const qa = chs.map(ch => PICK(OPEN.filter(o => o.ch === ch)).id);
+  const ids = shuffle(TD_TYPES.map(t => t.id)).slice(0, f.ex).sort((a, b) => TD_TYPES.findIndex(t => t.id === a) - TD_TYPES.findIndex(t => t.id === b));
+  return { min, qa, ex: ids.map(id => ({ id, ...TD_GEN[id]() })), ans: {}, nums: {}, picks: {}, ticks: {}, start: null, end: null };
+}
+const mockKey = (i, j) => i + "-" + j;
+function mockRight(E, p, k){
+  if (p.kind === "num"){ const v = parseNum(E.nums[k] || ""); return !Number.isNaN(v) && Math.abs(v - p.ans) <= Math.max(p.tol, Math.abs(p.ans) * 0.002); }
+  if (p.kind === "mcq") return E.picks[k] === p.right;
+  return false;
+}
+/* [right, total] over the calculations and choices of part B */
+function mockAuto(E){
+  let r = 0, t = 0;
+  E.ex.forEach((x, i) => x.parts.forEach((p, j) => { if (p.kind === "explain") return; t++; if (mockRight(E, p, mockKey(i, j))) r++; }));
+  return [r, t];
+}
+/* every block of key points: part A questions, then part B explanations */
+function mockBlocks(E){
+  const out = [];
+  E.qa.forEach(id => { const o = OPEN.find(x => x.id === id); if (o) out.push({ key: id, points: o.points }); });
+  E.ex.forEach((x, i) => x.parts.forEach((p, j) => { if (p.kind === "explain") out.push({ key: "b" + mockKey(i, j), points: p.points }); }));
+  return out;
+}
+function mockPts(E){ const B = mockBlocks(E); return [B.reduce((a, b) => a + (E.ticks[b.key] || []).length, 0), B.reduce((a, b) => a + b.points.length, 0)]; }
+const pctOf = ([a, b]) => b ? Math.round(a / b * 100) : 0;
+function viewMock(){
+  let E = MS.get("mock", null);
+  if (!E || !E.qa || !E.ex || !MOCK_FMT[E.min]) { E = newMock(90); MS.set("mock", E); }
+  const root = h("div", { class: "mod exampage mockpage" });
+  let tick = 0;
+  const save = () => MS.set("mock", E);
+  const fmtT = ms => { const s = Math.max(0, Math.round(ms / 1000)), m = Math.floor(s / 60); return `${m}:${String(s % 60).padStart(2, "0")}`; };
+  const Q = () => E.qa.map(id => OPEN.find(o => o.id === id)).filter(Boolean);
+  const L = "ABCD";
+  function part(p, k, phase){
+    const tag = p.kind === "explain" ? "Explain" : p.kind === "mcq" ? "Choose" : "Calculate";
+    let body = "", cls = "";
+    if (phase === "write"){
+      if (p.kind === "num") body = `<div class="ans"><label class="field"><input inputmode="decimal" autocomplete="off" aria-label="Your answer to ${p.n}" data-mnum="${k}" value="${esc(E.nums[k] || "")}">${p.unit ? `<span class="unit">${p.unit}</span>` : ""}</label></div>`;
+      if (p.kind === "mcq") body = `<div class="opts">${p.opts.map((o, j) => `<button class="opt${E.picks[k] === j ? " sel" : ""}" type="button" data-mpick="${k}" data-j="${j}" aria-pressed="${E.picks[k] === j}"><span class="k">${L[j]}</span><span>${o}</span></button>`).join("")}</div>`;
+      if (p.kind === "explain") body = `<textarea class="tdta" data-ans="b${k}" placeholder="Write your explanation as in the exam.">${esc(E.ans["b" + k] || "")}</textarea>`;
+    } else {
+      if (p.kind === "num"){
+        const raw = String(E.nums[k] || "").trim(), good = mockRight(E, p, k), d = p.unit === "" ? 2 : Number.isInteger(Math.round(p.ans * 100) / 100) ? 0 : 2;
+        cls = good ? " ok" : " bad";
+        body = `<div class="ans"><label class="field"><input disabled value="${esc(raw || "No answer")}" aria-label="Your answer to ${p.n}">${p.unit ? `<span class="unit">${p.unit}</span>` : ""}</label></div>
+          <div class="verdict ${good ? "ok" : "bad"}"><div class="vh"><b>${good ? "Correct" : raw ? "Not quite" : "No answer"}</b>${good ? "" : `<span>The answer is <span class="exp">${p.unit === "€" ? eur(p.ans, d) : fmt(p.ans, d)}</span></span>`}</div>${p.calc ? `<div class="calc">${p.calc}</div>` : ""}<p>${p.why}</p></div>`;
+      }
+      if (p.kind === "mcq"){
+        const pick = E.picks[k], good = pick === p.right;
+        cls = good ? " ok" : " bad";
+        body = `<div class="opts">${p.opts.map((o, j) => `<button class="opt${j === p.right ? " right" : j === pick ? " wrong" : ""}" type="button" disabled><span class="k">${L[j]}</span><span>${o}</span></button>`).join("")}</div>
+          <div class="verdict ${good ? "ok" : "bad"}"><div class="vh"><b>${good ? "Correct" : pick === undefined ? "No answer" : "Not quite"}</b></div><p>${p.why}</p></div>`;
+      }
+      if (p.kind === "explain") body = marked("b" + k, E.ans["b" + k], p.points, p.model);
+    }
+    return `<article class="card tdpart${cls}"><div class="qhead"><span class="qn">${p.n}</span><span class="qtag">${tag}</span></div><p class="qtext">${p.text}</p>${body}</article>`;
+  }
+  function marked(key, text, points, model){
+    const t = E.ticks[key] || [];
+    return `<div class="exmine"><p class="lbl">Your answer</p><p>${text && text.trim() ? esc(text).replace(/\n/g, "<br>") : "(no answer)"}</p></div>
+      <div class="tdmodel"><div class="ochk"><h3>Key points <span data-xs="${key}">${t.length}/${points.length}</span></h3><ul>${points.map((x, q) => `<li><label><input type="checkbox" data-xt="${key}" data-k="${q}" ${t.includes(q) ? "checked" : ""}><span>${x}</span></label></li>`).join("")}</ul></div><details class="oans"><summary>Model answer</summary>${model.map(m => `<p>${m}</p>`).join("")}</details></div>`;
+  }
+  const partB = phase => E.ex.map((x, i) => `<section class="tdex mockex"><div class="tdstate"><span class="tdn">Exercise ${i + 1}</span><h2>${x.title}</h2>${x.data}</div>${x.parts.map((p, j) => part(p, mockKey(i, j), phase)).join("")}</section>`).join("");
+  function tips(auto, pts){
+    const out = [], a = pctOf(auto), w = pctOf(pts);
+    if (a >= 80 && w >= 60) out.push("Exam-ready on this draw. Try the longer format, or draw new questions tomorrow.");
+    if (a < 80) out.push(`Redo the exercises you missed in <a href="#td">Tutorials</a>: same method, new numbers each time.`);
+    if (w < 60) out.push(`Your writing misses key points. Reread the model answers, then rewrite the weakest answer from memory in <a href="#open">Open questions</a>.`);
+    return out.map(t => `<p>${t}</p>`).join("");
+  }
+  function histHtml(){
+    const H = MS.get("mockHist", []).slice(-5).reverse();
+    if (!H.length) return "";
+    return `<section class="mkhist"><h2>Your last mock exams</h2><ol>${H.map(x => `<li><span class="num">${new Date(x.t).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</span><span>${x.min} min</span><span><b class="num">${x.auto[0]}/${x.auto[1]}</b> calculations</span><span><b class="num">${pctOf(x.pts)}%</b> key points</span></li>`).join("")}</ol></section>`;
+  }
+  function paint(){
+    cancelAnimationFrame(tick);
+    const phase = E.end ? "mark" : E.start ? "write" : "ready";
+    const qs = Q(), aMin = qs.reduce((a, o) => a + o.min, 0);
+    const lede = phase === "ready" ? "The final has two parts: open questions on the lectures, then an exercise like the tutorials. The syllabus does not give the length or the number of questions, so pick a length and treat this as training, not a prediction."
+      : phase === "write" ? "Write in full sentences and show your working. Nothing is marked until you finish. Your answers are saved on this device as you type."
+      : "The calculations are marked. Now mark your writing: tick only what your answer states clearly.";
+    let html = `<a class="tocback" href="#open">${ICO.back}Open questions</a>${mhead("Macroeconomics", "Mock exam", lede)}`;
+    if (phase === "ready"){
+      html += `<div class="exready">
+        <div class="mklen" role="group" aria-label="Length of the mock exam">${Object.keys(MOCK_FMT).map(Number).map(m => `<button type="button" data-len="${m}" aria-pressed="${E.min === m}"><b>${m} minutes</b><span>${MOCK_FMT[m].open} questions and ${MOCK_FMT[m].ex} exercise${MOCK_FMT[m].ex > 1 ? "s" : ""}</span></button>`).join("")}</div>
+        <div class="mkparts">
+          <section><h2>Part A: open questions</h2><ol class="exlist">${qs.map(o => `<li><span class="osrc" style="--c:${CH[o.ch].c}">${CH[o.ch].short}</span>${o.q}</li>`).join("")}</ol></section>
+          <section><h2>Part B: exercise</h2><ol class="exlist">${E.ex.map(x => `<li>${x.title}<small>${x.parts.length} questions, new numbers</small></li>`).join("")}</ol></section>
+        </div>
+        <div class="row"><button class="btn primary big" type="button" data-start>Start the clock: ${E.min} minutes</button><button class="btn glassy big" type="button" data-new>Draw other questions</button></div>
+        <p class="muted small">Suggested split: about ${aMin} minutes for part A, ${Math.max(10, E.min - aMin - 5)} for part B, 5 to reread.</p>
+        ${histHtml()}</div>`;
+    } else {
+      const auto = mockAuto(E), pts = mockPts(E);
+      html += `<div class="exbar is-${phase}"><div><b class="num" data-clock>${phase === "write" ? fmtT(E.start + E.min * 60000 - Date.now()) : `${auto[0]}/${auto[1]}`}</b><span data-xsum>${phase === "write" ? "left" : `calculations right · ${pctOf(pts)}% of key points`}</span></div><div class="mbar"><i data-tbar></i></div>${phase === "write" ? `<button class="btn primary small" type="button" data-finish>Finish and mark</button>` : `<button class="btn glassy small" type="button" data-new>New mock exam</button>`}</div>
+        <div class="exqs">
+          <h2 class="mkpart">Part A: open questions</h2>
+          ${qs.map((o, i) => `<section class="exq" style="--c:${CH[o.ch].c}"><p class="kicker">Question ${i + 1} · ${CH[o.ch].title} · about ${o.min} min</p><h2>${o.q}</h2>
+            ${phase === "write" ? `<textarea class="tdta" data-ans="${o.id}" placeholder="Your answer">${esc(E.ans[o.id] || "")}</textarea><span class="muted small" data-wc="${o.id}"></span>` : marked(o.id, E.ans[o.id], o.points, o.model)}</section>`).join("")}
+          <h2 class="mkpart">Part B: exercise</h2>
+          ${partB(phase)}
+        </div>
+        ${phase === "mark" ? `<section class="exend"><div class="mkscore"><div><b class="num">${auto[0]}/${auto[1]}</b><span>calculations and choices right, marked by the code</span></div><div><b class="num" data-xpct>${pctOf(pts)}%</b><span>of the key points, marked by you</span></div></div><div data-tips>${tips(auto, pts)}</div><div class="row"><button class="btn primary" type="button" data-new>New mock exam</button><a class="btn glassy" href="#td">Tutorials</a></div><div data-rvslot></div></section>` : ""}`;
+    }
+    root.innerHTML = html;
+    root.querySelectorAll("textarea[data-ans]").forEach(ta => {
+      const id = ta.dataset.ans, wc = root.querySelector(`[data-wc="${id}"]`), cnt = () => { if (!wc) return; const n = ta.value.trim().split(/\s+/).filter(Boolean).length; wc.textContent = n ? `${n} words` : ""; };
+      cnt(); let t; ta.addEventListener("input", () => { cnt(); clearTimeout(t); t = setTimeout(() => { E.ans[id] = ta.value; save(); }, 300); });
+    });
+    if (phase === "write"){
+      const clock = root.querySelector("[data-clock]"), bar = root.querySelector("[data-tbar]"), barBox = root.querySelector(".exbar");
+      const run = () => { if (!root.isConnected) return; const left = E.start + E.min * 60000 - Date.now(); clock.textContent = fmtT(left); bar.style.width = Math.max(0, left / (E.min * 60000) * 100) + "%"; barBox.classList.toggle("late", left < 10 * 60000); if (left <= 0){ finish(); return; } tick = requestAnimationFrame(run); };
+      tick = requestAnimationFrame(run);
+    }
+    if (phase === "mark"){ root.querySelector("[data-tbar]").style.width = pctOf(mockAuto(E)) + "%"; const slot = root.querySelector("[data-rvslot]"); if (slot) mountReviewSlot(slot); }
+  }
+  function collect(){
+    root.querySelectorAll("textarea[data-ans]").forEach(ta => { E.ans[ta.dataset.ans] = ta.value; });
+    root.querySelectorAll("[data-mnum]").forEach(inp => { E.nums[inp.dataset.mnum] = inp.value; });
+  }
+  function finish(){
+    collect(); E.end = Date.now(); save();
+    const H = MS.get("mockHist", []); H.push({ t: E.end, min: E.min, auto: mockAuto(E), pts: mockPts(E) }); MS.set("mockHist", H.slice(-20));
+    paint(); window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  function rescore(){
+    const auto = mockAuto(E), pts = mockPts(E); save();
+    const H = MS.get("mockHist", []), last = H.find(x => x.t === E.end); if (last){ last.pts = pts; MS.set("mockHist", H); }
+    const s = root.querySelector("[data-xsum]"); if (s) s.textContent = `calculations right · ${pctOf(pts)}% of key points`;
+    const p = root.querySelector("[data-xpct]"); if (p) p.textContent = pctOf(pts) + "%";
+    const tp = root.querySelector("[data-tips]"); if (tp) tp.innerHTML = tips(auto, pts);
+  }
+  let numT;
+  root.addEventListener("input", e => { const inp = e.target.closest("[data-mnum]"); if (!inp) return; E.nums[inp.dataset.mnum] = inp.value; clearTimeout(numT); numT = setTimeout(save, 250); });
+  root.addEventListener("click", e => {
+    if (e.target.closest("[data-start]")){ E.start = Date.now(); save(); paint(); window.scrollTo(0, 0); return; }
+    if (e.target.closest("[data-new]")){ E = newMock(E.min); save(); paint(); window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+    const ln = e.target.closest("[data-len]"); if (ln){ E = newMock(+ln.dataset.len); save(); paint(); return; }
+    const pk = e.target.closest("[data-mpick]");
+    if (pk && E.start && !E.end){ const k = pk.dataset.mpick, j = +pk.dataset.j; E.picks[k] = j; save(); pk.parentElement.querySelectorAll(".opt").forEach(b => { const on = b === pk; b.classList.toggle("sel", on); b.setAttribute("aria-pressed", String(on)); }); return; }
+    const f = e.target.closest("[data-finish]");
+    if (f){ if (!f.dataset.armed){ f.dataset.armed = "1"; f.textContent = "Tap again to finish"; setTimeout(() => { if (f.isConnected){ delete f.dataset.armed; f.textContent = "Finish and mark"; } }, 3500); return; } finish(); }
+  });
+  root.addEventListener("change", e => {
+    const cb = e.target.closest("[data-xt]"); if (!cb) return;
+    const key = cb.dataset.xt, k = +cb.dataset.k, t = new Set(E.ticks[key] || []);
+    if (cb.checked) t.add(k); else t.delete(k);
+    E.ticks[key] = [...t];
+    const b = mockBlocks(E).find(x => x.key === key), sc = root.querySelector(`[data-xs="${key}"]`); if (sc && b) sc.textContent = `${t.size}/${b.points.length}`;
+    rescore();
+  });
+  root.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.matches("[data-mnum]")) e.preventDefault(); });
+  paint();
+  return root;
+}
+const MOCK_BANNER = () => `<a class="tdfull mkbanner" href="#mock"><span><b>Mock exam</b><span>Open questions on the lectures, then an exercise like the tutorials. Timed, then marked.</span></span>${ICO.arrow}</a>`;
+
+const MODVIEWS = { mock: viewMock, td: viewTD, tdex: viewTDEx, learn: viewLearn, chapter: viewChapter, drills: viewDrills, quiz: viewQuiz, cards: viewCards, open: viewOpen, openq: viewOpenQ, recap: viewRecap };
+const TITLES = { mock: "Mock exam", td: "Tutorials", tdex: "Tutorials", learn: "Learn", chapter: "Learn", drills: "Drills", quiz: "Quiz", cards: "Flashcards", open: "Open questions", openq: "Open questions", recap: "Recap" };
 /* header height drives the layout of the case view */
 new ResizeObserver(() => document.documentElement.style.setProperty("--hdr", document.querySelector(".hdr").offsetHeight + "px")).observe(document.querySelector(".hdr"));
 
@@ -2732,7 +2962,8 @@ const SEARCH_EXTRA = () => [
   ...TD_TYPES.map(t => ({ kind: "Tutorial", t: t.title, s: t.what, href: "#td-" + t.id, c: "var(--leak)", where: "Tutorials, exercise like TD 1" })),
   { kind: "Page", t: "Full cases", s: "10 exam-style cases production chain national accounts household multiplier growth", href: "#cases", c: "var(--flow)", where: "Cases" },
   { kind: "Page", t: "Drills", s: "short exercises streak sprint numbers", href: "#drills", c: "var(--inj)", where: "Drills" },
-  { kind: "Page", t: "Recap", s: "one page summary cheat sheet all cards formulas", href: "#recap", c: "var(--ch4)", where: "Learn" }
+  { kind: "Page", t: "Recap", s: "one page summary cheat sheet all cards formulas", href: "#recap", c: "var(--ch4)", where: "Learn" },
+  { kind: "Page", t: "Mock exam", s: "final exam practice timed open questions tutorial exercise 60 90 120 minutes", href: "#mock", c: "var(--leak)", where: "Open questions and an exercise, timed" }
 ];
 /* ---------- search: every card, exam question and case, one keystroke away (/ or Ctrl K) ---------- */
 const norm = s => String(s == null ? "" : s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/<[^>]+>/g, " ");
@@ -2843,7 +3074,7 @@ function render(){
   const r = route();
   STAGE.stops.forEach(f => f && f()); STAGE.stops = [];
   STAGE.view = r.view; AURA.set(r.view !== "case"); TINT();
-  const NAVOF = { case: "cases", chapter: "learn", openq: "open", tdex: "td", recap: "learn" };
+  const NAVOF = { case: "cases", chapter: "learn", openq: "open", tdex: "td", recap: "learn", mock: "open" };
   document.querySelectorAll(".nav a").forEach(a => { const on = a.dataset.route === (NAVOF[r.view] || r.view); a.setAttribute("aria-current", on ? "page" : "false"); if (on) a.scrollIntoView({ block: "nearest", inline: "nearest" }); });
   const app = $("#app");
   if (r.view === "case"){

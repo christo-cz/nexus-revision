@@ -209,20 +209,21 @@ Coordinatrice : Nuria Tolsá Caballero. 18 h, 2 ECTS, 9 séances (4 cours, 5 TD)
 
 ## Modules de révision du lab Macroeconomics (en place)
 
-Navigation par hash dans `/macro/` : `#home`, `#learn`, `#learn-<chapitre>`, `#cases`, `#caseN`, `#drills`, `#quiz` (`#quiz-<chapitre>`), `#cards` (`#cards-<chapitre>`), `#open`, `#open-oN`. Chapitres : `thought`, `activity`, `determinants`, `growth`.
+Navigation par hash dans `/macro/` : `#home`, `#learn`, `#learn-<chapitre>`, `#cases`, `#caseN`, `#drills`, `#quiz` (`#quiz-<chapitre>`), `#cards` (`#cards-<chapitre>`), `#open`, `#open-oN`, `#mock`, `#recap`. Chapitres : `thought`, `activity`, `determinants`, `growth`.
 
 - **Contenu** (constantes JS dans la page, rédigées à partir des slides, reformulées) : `COURSE` (4 chapitres, sections, fiches : `line`, `points`, `formula`, `example`, `trap`, `exam`), `QUIZ` (QCM, bonne réponse en position 0 dans les données, mélangée à l'affichage), `CARDS` (flashcards), `OPEN` (questions ouvertes : réponse modèle + points clés à cocher).
 - **Learn** : fiches à cocher « I know this », sommaire collant, widgets interactifs (frise des écoles, tableau classiques/Keynes, tableau des agents, schéma du circuit, fonction de consommation, courbe d'investissement, tours du multiplicateur).
 - **Drills** : générateurs `GEN` (nombres aléatoires, réponse calculée par le code), série, sprint de 60 s.
 - **Quiz**, **Flashcards** (pile, touches Espace / ← / →), **Open questions** (texte sauvegardé, grille de points).
-- Progression dans `flow-v1` : `learn`, `drills`, `quiz`, `cards`, `open`.
+- Progression dans `flow-v1` : `learn`, `drills`, `quiz`, `cards`, `open`, `td`, `mock` (examen blanc en cours ou terminé), `mockHist` (20 derniers résultats).
+- **Mock exam** (`#mock`) : les deux parties du final. Partie A : questions ouvertes tirées dans `OPEN` (toujours une sur l'histoire de la pensée, puis une par chapitre). Partie B : un ou plusieurs exercices de TD générés par `TD_GEN` (les chiffres sont enregistrés avec l'examen, pour survivre à un rechargement). Durée au choix, 60, 90 ou 120 minutes (`MOCK_FMT`), car le syllabus ne la donne pas : la page le dit. Rien n'est corrigé avant « Finish and mark » (deux appuis) ou la fin du temps ; ensuite les calculs et les QCM sont notés par le code, l'écriture par l'étudiant avec les points clés. Bannière « Mock exam » (feuille quadrillée avec marge rouge) sous les modules de l'accueil et en haut d'Open questions.
 - **Tutorials** (`#td`, `#td-<type>`, `#td-all`) : les 5 exercices du TD 1 avec des chiffres aléatoires. Calculs vérifiés par le code ; questions « explain » comparées à une réponse modèle avec points clés à cocher. Attention : dans le TD, W et J sont des montants prévus, et W ≠ J signifie un déséquilibre (W > J : contraction). Dans les comptes réalisés, W = J toujours. Les fiches distinguent les deux.
 - Vue d'un cas : carte des 30 questions cliquable (centre la question), blocs de données cliquables, carte entière verte ou rouge selon la réponse, bouton Restart.
 
 ## Ce qui reste à faire (dans cet ordre, sauf avis contraire d'Alexi)
 
 1. **Caler les full cases sur les vraies feuilles de TD.** TD 1 reçu (corrigé : équilibre AD/AS, fuites/injections, consommation keynésienne, choix intertemporel, multiplicateur) : il a servi à créer le module Tutorials (`#td`, générateurs `TD_GEN`) et à corriger Learn, Quiz, Flashcards, Drills et Open. Format de l'exercice d'examen : calculer puis expliquer/interpréter. À faire avec les TD suivants : même traitement.
-2. **Examen blanc chronométré** au format réel (questions ouvertes + exercice), dès qu'Alexi fournit l'examen blanc du prof.
+2. **Examen blanc** : une version générique existe (`#mock`, durée au choix). Dès qu'Alexi fournit l'examen blanc du prof, caler `MOCK_FMT` (durée, nombre de questions, barème) sur le vrai format.
 3. Ajouter les chapitres suivants (inflation et monnaie, marché du travail, politiques, climat) quand les slides sont disponibles.
 4. Plus tard, en option : un assistant IA limité au sujet de la matière. Il faudrait une Netlify Function avec une clé API côté serveur, **une vraie limite côté serveur** (pas seulement dans le navigateur) et un plafond de dépense. À ne faire qu'avec l'accord d'Alexi, car cela coûte de l'argent à chaque question.
 
