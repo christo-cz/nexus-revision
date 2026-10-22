@@ -22,6 +22,7 @@ Une page d'accueil (hub) qui liste les matières, et un « lab » par matière.
 /index.html        hub Nexus : haut de page en WebGL (feuille quadrillée en 3D), liste des matières, avis, auteur
 /favicon.svg       logo N de Nexus (dégradé bleu → violet → rose)
 /macro/index.html  lab « Macroeconomics » (Business Economics, semestre 1). Nom interne `flow` gardé pour les clés de stockage et l'API des avis.
+/management/index.html  lab « Fundamentals of Management and Organizations » (S1). Nom interne `mgmt` (stockage `mgmt-v1`, avis `lab: "mgmt"`).
 /CLAUDE.md         ce fichier
 /package.json      dépendance de la fonction des avis
 /netlify/functions/reviews.mjs   API des avis (GET liste + résumé, POST avis, POST suppression admin)
@@ -30,7 +31,8 @@ Une page d'accueil (hub) qui liste les matières, et un « lab » par matière.
 ## Avis des étudiants
 
 - Étoiles 1 à 5, tags fixes (liste `TAGS` dans la fonction, à garder identique côté pages), commentaire obligatoire de 10 à 600 caractères, prénom facultatif (« BBA1 student » sinon). Liens refusés. Publication immédiate.
-- Demandés sur la carte de bilan à la fin d'un cas, et via « Write a review » sur l'accueil du lab Macroeconomics. Affichés sur l'accueil du lab et résumés sur le hub (section « From the class »).
+- Labs acceptés par l'API : `flow` (Macroeconomics) et `mgmt` (Management). Un nouveau lab = l'ajouter à `LABS` dans la fonction et dans l'objet `LABS` du hub.
+- Demandés sur la carte de bilan à la fin d'un cas (et de l'examen blanc en Management), et via « Write a review » sur l'accueil de chaque lab. Affichés sur l'accueil du lab et résumés sur le hub (section « From the class »).
 - Anti-triche côté serveur : un avis par lab et par 24 h, à la fois par IP (hachée, jamais stockée en clair) et par appareil (`nexus-did`). Champ piège `website` contre les robots.
 - Mise en page volontairement différente du site de Zadig : pas d'histogramme de notes, pas de filtres en pastilles, pas de grille de cartes. Une ligne de résumé et des citations sur une colonne.
 - Suppression : la variable d'environnement `ADMIN_KEY` (au moins 8 caractères) se règle dans Netlify. Ouvrir `/?admin`, saisir la clé une fois : un lien « Delete » apparaît sous chaque avis (hub et labs).
@@ -43,7 +45,7 @@ Une nouvelle matière = un dossier `/<matiere>/index.html` autonome, plus une li
 
 - Élément signature : une feuille d'examen quadrillée (petits carreaux, trait renforcé tous les 5) en WebGL écrit à la main, sans librairie. Elle vit seule même sans interaction : le puits se promène sur un trajet qui ne se répète pas, des ondes de 4 couleurs (bleu, violet, rose, cyan) naissent au hasard, et de petits arcs électriques claquent de temps en temps dans la moitié haute. La souris prend la main sur le puits, un clic ou un toucher envoie une onde.
 - Garde-fous : pause hors écran et onglet caché, mode économe automatique si les images sont lentes (résolution réduite, une image sur deux, mais l'animation continue), image fixe si « mouvement réduit », fond quadrillé en CSS si WebGL est absent.
-- Sous le titre, directement dans le haut de page : une tuile par matière (Macroeconomics + 2 « Coming soon » : Financial Accounting, Management & Organization, à remplacer quand Alexi choisit). Survol : la tuile prend la couleur de sa matière, change de visuel (vitrine façon popterror.com) et s'incline vers la souris, les autres s'effacent. Sur téléphone : carrousel, la tuile centrée est mise en valeur. Un clic mène à l'overview de la matière, jamais directement à un cas.
+- Sous le titre, directement dans le haut de page : une tuile par matière (Macroeconomics, Management and Organizations, et Financial Accounting en « Coming soon »). Survol : la tuile prend la couleur de sa matière, change de visuel (vitrine façon popterror.com) et s'incline vers la souris, les autres s'effacent. Sur téléphone : carrousel, la tuile centrée est mise en valeur. Un clic mène à l'overview de la matière, jamais directement à un cas.
 - Ensuite : « How it works », avis, bloc auteur. Pas de sous-catégorie (« All cases », etc.) sur l'accueil.
 
 ## Effets communs (toutes les pages sauf l'exercice en cours)
@@ -78,7 +80,7 @@ Chaque page est un fichier unique : CSS et JS dans la page. Seules dépendances 
   - teal `--flow` pour la production et le revenu ;
   - ambre `--inj` pour les injections (I, G, X) ;
   - corail `--leak` pour les fuites (S, T, M).
-- Mode clair et mode sombre, définis par des variables CSS. Bouton de thème cyclique système / clair / sombre.
+- Deux thèmes seulement, sombre et clair, définis par des variables CSS (demande d'Alexi : plus de mode « Auto »). On arrive toujours en sombre ; le clair n'est utilisé que si le visiteur l'a choisi (`nexus-theme` = `light`, toute autre valeur, y compris l'ancien `system`, donne le sombre). Le petit script dans le `<head>` pose toujours `data-theme` avant l'affichage.
 - Tout doit fonctionner à 390 px de large, sans défilement horizontal.
 
 ## Lab « Macroeconomics » : Business Economics (S1)
@@ -168,6 +170,27 @@ Le cours annonce que chaque thème est étudié sous deux angles, classique ou n
   - demande effective ;
   - État-providence et politique contracyclique ;
   - exemples du Covid et de 2008.
+
+## Lab « Management » : Fundamentals of Management and Organizations (S1)
+
+Coordinatrice : Nuria Tolsá Caballero. 18 h, 2 ECTS, 9 séances (4 cours, 5 TD).
+
+**Évaluation :** 40 % présentation orale de groupe (séance 9 : un problème « people » réel d'une organisation, diagnostic avec au moins 2 théories, recommandations) ; 60 % examen écrit individuel de 90 minutes, des questions qui testent la compréhension ET l'application des concepts (cours, TD, lectures obligatoires). Le format exact des questions n'est pas publié : l'examen blanc du site le dit.
+
+**Contenu (4 cours + TD 1 et 2) :**
+1. Organizations, management, theories : problème = écart entre résultat voulu et obtenu (définir, trouver la cause, recommander) ; OB, 6 disciplines, 3 niveaux ; de l'intuition à la preuve, Theory of Planned Behavior ; définition d'une organisation (performance contrôlée, buts collectifs), 5 critères, foule / groupe / équipe / organisation ; écoles : administrative (Fayol, seulement nommée), bureaucratie (Weber, 3 autorités, 5 traits), efficacité (Taylor, Ford), humaniste (Hawthorne, Mayo, Herzberg, McGregor), contingence, contemporaine (Drucker, seulement nommée).
+2. Personality, values, attitudes : valeurs (Schwartz, cercle, voisines complémentaires, opposées incompatibles, dilemme du bonus) ; attitudes (3 composantes, 4 attitudes au travail, dissonance) ; personnalité (MBTI et ses limites, Big Five, test à 10 items avec items inversés 2-4-6-8-10, Barrick & Mount, « too much of a good thing », Grant 2013, biais de désirabilité sociale) ; TD 2 : Trait Activation Theory (Tett & Burnett 2003 ; la slide écrit « Trett », c'est une coquille), force de la situation et les 4 C.
+3. Decision-making and biases : System 1 / 2, quand l'intuition marche (Dane et al.), biais (confirmation, surconfiance, ancrage, disponibilité, aversion aux pertes, cadrage 72 % / 78 %, coût irrécupérable et escalade, biais d'action), perception sociale (halo, contraste, stéréotypes), attribution (biais d'autocomplaisance, erreur fondamentale, modèle de Kelley et cas de Peter), groupes (Asch, Milgram, groupthink), modèle rationnel et Simon.
+4. Motivation : direction, intensité, persistance ; Maslow (hiérarchie non confirmée) ; intrinsèque / extrinsèque ; SDT (3 besoins, continuum d'internalisation, supervision qui soutient l'autonomie, feedback informatif, Gmail) ; Herzberg ; Job Characteristics Model ; fixation d'objectifs (médiateurs, modérateurs, SMART) ; équité (6 façons de rétablir) ; justice organisationnelle.
+
+**Modules** (hash dans `/management/`) : `#home`, `#learn`, `#learn-<org|person|decide|motiv>`, `#cases`, `#case-<id>`, `#spot`, `#labs`, `#lab-<kelley|equity|bigfive|who>`, `#quiz`, `#cards`, `#open`, `#open-<id>`, `#exam`.
+- Accueil : élément signature en 3D (canvas 2D, sans librairie) : des personnes qui passent de foule à groupe, équipe puis organisation (les 4 formes du cours 1), rotation lente, la souris incline la scène et écarte les points, un clic passe à la forme suivante. Couleurs : baie `--pri` (individu, couleur du lab), violet `--c1` (organisation), orange `--c3` (décisions, groupes), bleu ciel `--c4` (motivation).
+- Learn : fiches + 10 modèles interactifs (test foule/organisation, frise des écoles, cercle de Schwartz avec distance calculée, force de la situation, énigmes System 1, cadrage, Kelley, continuum d'internalisation, JCM, équité).
+- Cases : 8 cas inventés, méthode du cours (problème, cause, recommandation), fiche à gauche et étapes à droite comme en macro ; étapes QCM, « select all », et rédaction comparée à une réponse modèle (juste si 60 % des points clés cochés).
+- Spot it : ~100 scènes, les fausses réponses viennent de la même famille ; série et sprint de 60 s.
+- Labs : Kelley (scènes générées), équité (chiffres générés, ratios calculés par le code), Big Five (scores calculés avec les réponses), « Who said what ».
+- Quiz, Flashcards, Exam questions (toutes les self-check questions des slides + cas d'application, réponses modèles et points clés), examen blanc de 90 minutes.
+- Progression dans `mgmt-v1` : `learn`, `cases`, `lastcase`, `spot`, `labs`, `kel`, `eqlab`, `big5`, `who`, `quiz`, `cards`, `open`, `exam`.
 
 ## Modules de révision du lab Macroeconomics (en place)
 

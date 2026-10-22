@@ -1,12 +1,12 @@
 // Student reviews for the Nexus labs.
-// GET  /api/reviews[?lab=flow]   -> summary per lab + latest reviews
+// GET  /api/reviews[?lab=flow|mgmt]   -> summary per lab + latest reviews
 // POST /api/reviews              -> { lab, stars, tags, text, name, did, website }  (website is a honeypot)
 // POST /api/reviews              -> { action: "delete", id, key }  (key = ADMIN_KEY set in Netlify)
 // Storage: Netlify Blobs, store "reviews". One document holds every review; one small key per sender and lab enforces the 24 h limit.
 import { getStore } from "@netlify/blobs";
 import { createHash, timingSafeEqual } from "node:crypto";
 
-export const LABS = ["flow"];
+export const LABS = ["flow", "mgmt"];
 export const TAGS = ["Exam-like", "Clear corrections", "Good on phone", "Saves time", "Too easy", "Too hard", "Found a mistake"];
 const DAY = 24 * 3600 * 1000, MAX_KEEP = 1000, LIST = 60;
 
