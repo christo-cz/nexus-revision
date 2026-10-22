@@ -49,7 +49,7 @@
   --macro:#4CC2BC; --acc:#8F9AFF; --mgmt:#FF7FB2; --on-c:#0D1024;
   --star:#E9AE4C; --bad:#F08A80; --scrim:13 16 36; color-scheme:dark;
 }
-:root.tint-light{--fg:#1B1712;--muted:#5F574A;--faint:#8D8474;--line:#D9CDB6;--line-2:#C4B596;--surface:#FFFBF2;--sunk:#EDE3CF;--macro:#0B7472;--star:#A86A06;--bad:#B4372E;color-scheme:light}
+:root.tint-light{--fg:#1B1712;--muted:#5F574A;--faint:#8D8474;--line:#D9CDB6;--line-2:#C4B596;--surface:#FFFBF2;--sunk:#EDE3CF;--macro:#0B7472;--mgmt:#B5386F;--acc:#4453D0;--on-c:#FFFFFF;--star:#A86A06;--bad:#B4372E;color-scheme:light}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{scroll-behavior:smooth}
@@ -150,6 +150,30 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 /* ---------- sections ---------- */
 main{display:flex;flex-direction:column;gap:110px;padding-block:72px 48px}
+/* pick up where you left off */
+.resume{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px}
+.rs{--rx:0deg;--ry:0deg;position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:6px 18px;padding:18px 20px;border-radius:18px;border:1px solid var(--line);background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);text-decoration:none;color:var(--fg);overflow:hidden;transform:rotateX(var(--rx)) rotateY(var(--ry));transition:transform .35s cubic-bezier(.2,.8,.2,1),background-color .35s,border-color .35s,color .35s,box-shadow .35s}
+.rs .ring{--p:0;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--c) calc(var(--p) * 360deg),color-mix(in srgb,var(--c) 18%,transparent) 0);position:relative;grid-row:span 2;transition:background .35s}
+.rs .ring::after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--bg);transition:background-color .35s}
+.rs .ring b{position:relative;z-index:1;font-family:var(--f-mono);font-size:.76rem}
+.rs .nm{font-family:var(--f-display);font-weight:700;font-size:1.15rem;color:var(--c);transition:color .35s}
+.rs .dt{font-size:.92rem;color:var(--muted);transition:color .35s}
+.rs .go{grid-row:span 2;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--c);color:var(--c);transition:transform .35s,background-color .35s,color .35s}
+.rs .go svg{width:18px;height:18px}
+.rs:hover{background:var(--c);border-color:var(--c);color:var(--on-c);box-shadow:0 26px 50px -26px var(--c);transform:rotateX(var(--rx)) rotateY(var(--ry)) translateY(-5px)}
+.rs:hover :is(.nm,.dt){color:var(--on-c)}
+.rs:hover .ring{background:conic-gradient(var(--on-c) calc(var(--p) * 360deg),color-mix(in srgb,var(--on-c) 30%,transparent) 0)}
+.rs:hover .ring::after{background:var(--c)}
+.rs:hover .go{background:var(--on-c);color:var(--c);border-color:var(--on-c);transform:rotate(-45deg)}
+/* blocks ease in as they enter the view */
+.rv-in{opacity:0;translate:0 24px;transition:opacity .8s cubic-bezier(.2,.8,.2,1),translate .9s cubic-bezier(.2,.8,.2,1)}
+.rv-in.rv-on{opacity:1;translate:none}
+/* moving between pages */
+@view-transition{navigation:auto}
+::view-transition-old(root){animation:vtOut .2s cubic-bezier(.4,0,1,1) both}
+::view-transition-new(root){animation:vtIn .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes vtOut{to{opacity:0}}
+@keyframes vtIn{from{opacity:0;transform:translateY(16px)}}
 @media (max-width:640px){main{gap:80px;padding-block:48px 40px}}
 .sh{display:flex;flex-direction:column;gap:8px;margin-bottom:26px}
 .sh h2{font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.03em}
@@ -328,6 +352,11 @@ main{display:flex;flex-direction:column;gap:110px;padding-block:72px 48px}
 </section>
 
 <main>
+  <section class="wrap" id="resume" aria-labelledby="resumeH" hidden>
+    <div class="sh"><h2 id="resumeH">Pick up where you left off</h2></div>
+    <div class="resume" id="resumeBody"></div>
+  </section>
+
   <section class="wrap" aria-labelledby="methodH">
     <div class="sh"><h2 id="methodH">How it works</h2></div>
     <div class="method">
@@ -703,6 +732,44 @@ void main(){
   else wake();
 })();
 
+
+/* ---------- pick up where you left off (reads the progress each lab keeps in this browser) ---------- */
+(function(){
+  const get = k => { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (e) { return {}; } };
+  const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  const rows = [];
+  const fl = get("flow-v1"), fc = fl.cases || {};
+  const fAns = i => Object.keys((fc[i] || {}).ans || {}).length;
+  let fDone = 0; for (let i = 1; i <= 10; i++) if (fAns(i) === 30) fDone++;
+  const fKnown = Object.keys(fl.learn || {}).length;
+  if (fl.last && fAns(fl.last) > 0 && fAns(fl.last) < 30) rows.push({ c: "var(--macro)", nm: "Macroeconomics", dt: `Case ${fl.last <= 10 ? fl.last : "practice"}: ${fAns(fl.last)} of 30 questions answered`, p: fAns(fl.last) / 30, lbl: `${fAns(fl.last)}/30`, href: `/macro/#case${fl.last}` });
+  else if (fDone || fKnown) rows.push({ c: "var(--macro)", nm: "Macroeconomics", dt: `${fDone} of 10 cases finished · ${fKnown} of 65 cards known`, p: fDone ? fDone / 10 : fKnown / 65, lbl: fDone ? `${fDone}/10` : `${fKnown}/65`, href: fDone < 10 ? "/macro/#cases" : "/macro/#learn" });
+  const MC = { hybrid: ["The hybrid slowdown", 6], bonus: ["One bonus, two camps", 6], callcenter: ["The call center that raised pay", 6], slump: ["The slump", 7], launch: ["The launch nobody questioned", 6], hiring: ["Hiring by type", 6], warehouse: ["The one best way", 6], scaleup: ["From team to organization", 5] };
+  const mg = get("mgmt-v1"), mc = mg.cases || {}, mAns = id => Object.keys((mc[id] || {}).ans || {}).length;
+  const mKnown = Object.keys(mg.learn || {}).length, mSolved = Object.keys(MC).filter(id => mAns(id) >= MC[id][1]).length;
+  const lc = mg.lastcase;
+  if (lc && MC[lc] && mAns(lc) > 0 && mAns(lc) < MC[lc][1]) rows.push({ c: "var(--mgmt)", nm: "Management", dt: `${MC[lc][0]}: ${mAns(lc)} of ${MC[lc][1]} steps done`, p: mAns(lc) / MC[lc][1], lbl: `${mAns(lc)}/${MC[lc][1]}`, href: `/management/#case-${lc}` });
+  else if (mSolved || mKnown) rows.push({ c: "var(--mgmt)", nm: "Management", dt: `${mSolved} of 8 cases solved · ${mKnown} of 79 cards known`, p: mKnown / 79, lbl: `${mKnown}/79`, href: mKnown < 79 ? "/management/#learn" : "/management/#cases" });
+  if (!rows.length) return;
+  document.getElementById("resumeBody").innerHTML = rows.map(r => `<a class="rs" href="${r.href}" style="--c:${r.c}"><span class="ring" style="--p:${Math.min(1, r.p).toFixed(3)}"><b>${r.lbl}</b></span><span class="nm">${r.nm}</span><span class="go" aria-hidden="true">${ARROW}</span><span class="dt">${r.dt}</span></a>`).join("");
+  document.getElementById("resume").hidden = false;
+  const fine = matchMedia("(hover: hover) and (pointer: fine)");
+  document.querySelectorAll(".rs").forEach(t => {
+    t.addEventListener("pointermove", e => { if (!fine.matches) return; const r = t.getBoundingClientRect(); t.style.setProperty("--ry", (((e.clientX - r.left) / r.width - .5) * 7).toFixed(2) + "deg"); t.style.setProperty("--rx", ((.5 - (e.clientY - r.top) / r.height) * 7).toFixed(2) + "deg"); });
+    t.addEventListener("pointerleave", () => { t.style.setProperty("--rx", "0deg"); t.style.setProperty("--ry", "0deg"); });
+  });
+})();
+
+/* ---------- sections ease in as they enter the view ---------- */
+(function(){
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting){ en.target.classList.add("rv-on"); io.unobserve(en.target); } }), { rootMargin: "0px 0px -8% 0px" });
+  document.querySelectorAll("main .sh, main .pt, main .resume, #voicesBody, main .credit").forEach((e, i) => {
+    if (e.getBoundingClientRect().top < innerHeight * .9) return;
+    e.classList.add("rv-in"); if (e.matches(".pt")) e.style.transitionDelay = ([...e.parentElement.children].indexOf(e) * 90) + "ms";
+    io.observe(e);
+  });
+})();
 
 /* ---------- reviews (from /api/reviews) ---------- */
 (function(){

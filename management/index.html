@@ -92,6 +92,7 @@ a{color:inherit}
 .btn.quiet{background:var(--surface);border-color:var(--line);color:var(--fg)}
 .btn.quiet:hover{border-color:var(--line-2)}
 .btn.small{padding:7px 12px;font-size:.86rem;border-radius:9px}
+.btn svg{width:18px;height:18px;flex:none}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 
 /* ---------- overview ---------- */
@@ -614,6 +615,48 @@ kbd{font-family:var(--f-mono);font-size:.72rem;border:1px solid currentColor;bor
 @media (max-width:1180px){.hdr-in{flex-wrap:wrap;height:auto;padding-block:8px;row-gap:4px}.nav{order:5;width:100%;margin-left:0}.nav a{padding:6px 10px}}
 @media (max-width:480px){.nav a[data-route="home"]{display:inline-block}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}.ov-title .w,.mtitle .w{transform:none}}
+/* reveal on scroll (uses translate so it composes with the tilt transform) */
+.rv-in{opacity:0;translate:0 22px;transition:opacity .7s cubic-bezier(.2,.8,.2,1),translate .8s cubic-bezier(.2,.8,.2,1),transform .35s cubic-bezier(.2,.8,.2,1),background-color .35s,border-color .35s,color .35s,filter .3s,box-shadow .35s}
+.rv-in.rv-on{opacity:1;translate:none}
+/* module headers: the circuit, in 3D, behind the title */
+.mod{isolation:isolate}
+.mod > .mini3d{position:absolute;top:0;right:0;width:min(56%,700px);height:min(470px,64vh);pointer-events:none;z-index:-1;-webkit-mask-image:radial-gradient(ellipse 72% 70% at 58% 50%,#000 50%,transparent 100%);mask-image:radial-gradient(ellipse 72% 70% at 58% 50%,#000 50%,transparent 100%)}
+.mini3d canvas{display:block;width:100%;height:100%}
+@media (max-width:700px){.mod > .mini3d{width:100%;height:280px;opacity:.45}}
+/* tiles lean toward the pointer, with a light under it */
+.mods{perspective:1200px}
+.modt,.chtile,.tdcard{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+.modt:hover{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-5px)}
+.chtile:hover{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-6px)}
+.tdcard:hover{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-4px)}
+.modt,.tdcard{position:relative;overflow:hidden}
+.tdlist{perspective:1200px}
+:is(.modt,.chtile,.tdcard)::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s;background:radial-gradient(340px circle at var(--gx,50%) var(--gy,50%),rgb(255 255 255 / .2),transparent 62%)}
+:is(.modt,.chtile,.tdcard):hover::after{opacity:1}
+/* micro-interactions */
+.burst{position:fixed;z-index:80;pointer-events:none;width:0;height:0}
+.burst i{position:absolute;left:-3.5px;top:-3.5px;width:7px;height:7px;border-radius:50%;animation:burst .75s cubic-bezier(.15,.8,.25,1) both}
+@keyframes burst{0%{transform:translate(0,0) scale(.3);opacity:1}70%{opacity:1}100%{transform:translate(var(--x),var(--y)) scale(.9);opacity:0}}
+.bump{display:inline-block;animation:bump .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes bump{40%{transform:scale(1.35)}}
+.fdeck{position:relative;width:min(560px,calc(100% - 24px));isolation:isolate}
+.fdeck .flip{width:100%;display:block}
+.fdeck::before,.fdeck::after{content:"";position:absolute;inset:0;border-radius:22px;border:1px solid var(--glass-line);background:var(--glass);z-index:-1;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.fdeck::before{transform:translate(9px,10px) rotate(1.8deg)}
+.fdeck::after{transform:translate(18px,20px) rotate(3.6deg);opacity:.55}
+.fdeck[data-n="0"]::before,.fdeck[data-n="0"]::after,.fdeck[data-n="1"]::after{display:none}
+@media (max-width:600px){.fdeck::before{transform:translate(6px,8px) rotate(1.4deg)}.fdeck::after{transform:translate(12px,15px) rotate(2.8deg)}}
+.flip.enter{animation:cardIn .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes cardIn{from{transform:translate(9px,10px) rotate(1.8deg) scale(.985);opacity:.4}}
+.flip.fly-r{transition:transform .26s cubic-bezier(.5,0,.9,.5),opacity .26s;transform:translateX(75%) rotate(12deg);opacity:0}
+.flip.fly-l{transition:transform .26s cubic-bezier(.5,0,.9,.5),opacity .26s;transform:translate(-35%,8px) rotate(-8deg) scale(.92);opacity:0}
+/* page changes (also between pages: hub ⇄ labs) */
+@view-transition{navigation:auto}
+.hdr{view-transition-name:hdr}
+::view-transition-old(root){animation:vtOut .18s cubic-bezier(.4,0,1,1) both}
+::view-transition-new(root){animation:vtIn .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes vtOut{to{opacity:0}}
+@keyframes vtIn{from{opacity:0;transform:translateY(14px)}}
 
 /* full-screen invitation */
 .fsinv{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;align-items:center;gap:12px;max-width:calc(100% - 32px);padding:10px 10px 10px 16px;border-radius:16px;border:1px solid color-mix(in srgb,var(--fg) 14%,transparent);background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);box-shadow:0 18px 50px -20px rgb(0 0 0 / .45);color:var(--fg);transform:translate(-50%,140%);opacity:0;transition:transform .55s cubic-bezier(.2,.9,.25,1.15),opacity .35s}
@@ -899,12 +942,15 @@ details.oans summary{cursor:pointer;font-family:var(--f-display);font-weight:700
 details.oans[open] summary{margin-bottom:8px}
 .exend{border:1px solid var(--glass-line);background:var(--glass);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:12px;max-width:980px}
 .exend h2{font-size:1.8rem}
-/* reveal on scroll */
-.rv-in{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
-.rv-in.rv-on{opacity:1;transform:none}
+/* tilt and light on the Management tiles (the shared block covers .modt and .chtile) */
+:is(.ccard,.labt)::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s;background:radial-gradient(340px circle at var(--gx,50%) var(--gy,50%),rgb(255 255 255 / .22),transparent 62%)}
+:is(.ccard,.labt):hover::after{opacity:1}
+@media (max-width:700px){.mod > .mini3d{opacity:.42}}
 
 .chapter .kicker,.labpage .kicker,.oq-page .kicker{color:var(--c)}
 .exq .tdmodel{align-items:start}
+
+@view-transition{navigation:auto}
 </style>
 </head>
 <body>
@@ -943,6 +989,16 @@ function parseNum(s){
   return Number(s);
 }
 const say = t => { const l = $("#live"); l.textContent = ""; setTimeout(() => l.textContent = t, 30); };
+/* a small burst of dots in the lab colours, for a right answer */
+const BURST = ["--pri", "--c1", "--c3", "--c4"];
+function burst(at, cols = BURST){
+  if (!at || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const r = at.getBoundingClientRect(), cs = getComputedStyle(document.documentElement), C = cols.map(v => cs.getPropertyValue(v).trim());
+  const layer = document.createElement("div"); layer.className = "burst"; layer.style.left = (r.left + Math.min(32, r.width / 2)) + "px"; layer.style.top = (r.top + r.height / 2) + "px";
+  for (let i = 0; i < 16; i++){ const d = document.createElement("i"), a = Math.random() * Math.PI * 2, dist = 24 + Math.random() * 52; d.style.setProperty("--x", (Math.cos(a) * dist).toFixed(1) + "px"); d.style.setProperty("--y", (Math.sin(a) * dist).toFixed(1) + "px"); d.style.background = C[i % C.length]; d.style.animationDelay = Math.round(Math.random() * 70) + "ms"; layer.append(d); }
+  document.body.append(layer); setTimeout(() => layer.remove(), 1000);
+}
+const bump = el => { if (!el) return; el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump"); };
 
 /* ---------- theme (shared with the Nexus hub) ---------- */
 const ICON = {
@@ -2197,7 +2253,7 @@ function viewChapter(id){
   root.addEventListener("click", e => {
     const kb = e.target.closest("[data-know]");
     if (kb){ const k = MS.get("learn", {}), id = kb.dataset.know; if (k[id]) delete k[id]; else k[id] = 1; MS.set("learn", k);
-      const on = !!k[id]; kb.setAttribute("aria-pressed", String(on)); kb.querySelector("span").textContent = on ? "Known" : "I know this"; kb.closest(".note").classList.toggle("known", on); counts(); }
+      const on = !!k[id]; if (on) burst(kb, ["--ok", "--pri"]); kb.setAttribute("aria-pressed", String(on)); kb.querySelector("span").textContent = on ? "Known" : "I know this"; kb.closest(".note").classList.toggle("known", on); counts(); }
     const sb = e.target.closest("[data-sec]");
     if (sb){ const t = root.querySelector(`[data-seci="${sb.dataset.sec}"]`); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); }
   });
@@ -2240,7 +2296,7 @@ function viewQuiz(pre){
       <p class="dqt">${q.q}</p><div class="opts">${q.order.map((j, k) => `<button class="opt" type="button" data-pick="${j}"><span class="k">${L[k]}</span><span>${q.o[j]}</span></button>`).join("")}</div><div class="dout"></div></div>`;
     W.onclick = e => {
       const pb = e.target.closest("[data-pick]");
-      if (pb && !q.done){ q.done = true; const j = +pb.dataset.pick, good = j === q.a; if (good) score++; else wrong.push(q);
+      if (pb && !q.done){ q.done = true; const j = +pb.dataset.pick, good = j === q.a; if (good){ score++; burst(pb); } else wrong.push(q);
         W.querySelectorAll(".opt").forEach(b => { b.disabled = true; const v = +b.dataset.pick; if (v === q.a) b.classList.add("right"); else if (v === j) b.classList.add("wrong"); });
         const box = W.querySelector(".qzq"); box.classList.add(good ? "ok" : "bad");
         W.querySelector(".dout").innerHTML = `<div class="verdict ${good ? "ok" : "bad"}"><div class="vh"><b>${good ? "Correct" : "Not quite"}</b></div><p>${q.why}</p></div><button class="btn quiet small next" type="button" data-nx>${i + 1 < Qs.length ? "Next question" : "See my score"} ${ICO.arrow}<kbd>Enter</kbd></button>`;
@@ -2282,12 +2338,15 @@ function viewCards(pre){
     root.querySelector("[data-fbar]").style.width = (total ? kn / total * 100 : 0) + "%"; root.querySelector("[data-fcount]").textContent = `${kn} of ${total} known · ${deck.length} left in the pile`;
     if (!deck.length){ stage.innerHTML = `<div class="sprintend"><span class="kicker">Pile empty</span><h2>You know all ${total} cards</h2><div class="row"><button class="btn primary" type="button" data-resetk>Start over</button><a class="btn glassy" href="#quiz">Take a quiz</a></div></div>`; return; }
     const c = deck[0], C = CH[c.ch];
-    stage.innerHTML = `<button class="flip" type="button" aria-label="Flip the card" style="--c:${C.c}"><span class="face front"><em>${C.short}</em><b>${c.f}</b><small>Click or press Space to flip</small></span><span class="face back"><em>${c.f}</em><b>${c.b}</b></span></button>
+    stage.innerHTML = `<div class="fdeck" data-n="${Math.min(2, deck.length - 1)}"><button class="flip enter" type="button" aria-label="Flip the card" style="--c:${C.c}"><span class="face front"><em>${C.short}</em><b>${c.f}</b><small>Click or press Space to flip</small></span><span class="face back"><em>${c.f}</em><b>${c.b}</b></span></button></div>
       <div class="fact"><button class="btn glassy big" type="button" data-again>Again <kbd>←</kbd></button><button class="btn primary big" type="button" data-know>I knew it <kbd>→</kbd></button></div>`;
   }
   const flip = () => { const f = stage.querySelector(".flip"); if (f) f.classList.toggle("on"); };
-  const again = () => { if (!deck.length) return; deck.push(deck.shift()); paint(); };
-  const got = () => { if (!deck.length) return; const k = known(); k[deck[0].i] = 1; MS.set("cards", k); deck.shift(); paint(); };
+  /* the card leaves the deck: to the right when known, to the back when it comes again */
+  let busy = false;
+  const leave = (dir, fn) => { const f = stage.querySelector(".flip"); if (busy) return; if (!f || matchMedia("(prefers-reduced-motion: reduce)").matches){ fn(); return; } busy = true; f.classList.add("fly-" + dir); setTimeout(() => { busy = false; fn(); }, 260); };
+  const again = () => { if (!deck.length) return; leave("l", () => { deck.push(deck.shift()); paint(); }); };
+  const got = () => { if (!deck.length) return; burst(stage.querySelector("[data-know]"), ["--ok", "--pri", "--c3"]); leave("r", () => { const k = known(); k[deck[0].i] = 1; MS.set("cards", k); deck.shift(); paint(); }); };
   root.addEventListener("click", e => {
     const cb = e.target.closest("[data-ch]"); if (cb){ const k = cb.dataset.ch; if (sel.has(k) && sel.size > 1) sel.delete(k); else sel.add(k); cb.classList.toggle("on", sel.has(k)); cb.setAttribute("aria-pressed", String(sel.has(k))); build(true); }
     if (e.target.closest(".flip")) flip();
@@ -2430,7 +2489,7 @@ const WIDGETS = {
   },
   puzzles(el){
     el.innerHTML = `<h3 class="wt">Answer fast: System 1 at work</h3><p class="wcap">Pick the first answer that comes to mind, then let System 2 check.</p><div class="puz">${PUZZLES.map((p, i) => `<div class="pz" data-p="${i}"><p>${p.q}</p><div class="row">${p.o.map((o, j) => `<button class="btn glassy small" type="button" data-o="${j}">${o}</button>`).join("")}</div><p class="pzo" hidden></p></div>`).join("")}</div>`;
-    el.addEventListener("click", e => { const b = e.target.closest("[data-o]"); if (!b) return; const box = b.closest(".pz"), p = PUZZLES[+box.dataset.p], good = +b.dataset.o === p.r; box.querySelectorAll("[data-o]").forEach(x => { x.disabled = true; x.classList.toggle("pzr", +x.dataset.o === p.r); }); const o = box.querySelector(".pzo"); o.hidden = false; o.innerHTML = `<b class="${good ? "ok" : "bad"}">${good ? "System 2 won." : "System 1 won this time."}</b> ${p.why}`; });
+    el.addEventListener("click", e => { const b = e.target.closest("[data-o]"); if (!b) return; const box = b.closest(".pz"), p = PUZZLES[+box.dataset.p], good = +b.dataset.o === p.r; box.querySelectorAll("[data-o]").forEach(x => { x.disabled = true; x.classList.toggle("pzr", +x.dataset.o === p.r); }); if (good) burst(b); const o = box.querySelector(".pzo"); o.hidden = false; o.innerHTML = `<b class="${good ? "ok" : "bad"}">${good ? "System 2 won." : "System 1 won this time."}</b> ${p.why}`; });
   },
   framing(el){
     let frame = "gain";
@@ -2529,7 +2588,6 @@ function route(){
   return { view: "home" };
 }
 function go(hash){ if (location.hash === "#" + hash) render(); else location.hash = hash; }
-window.addEventListener("hashchange", render);
 const words = s => s.split(" ").map((w, i) => `<span class="w" style="animation-delay:${i * 80 + 100}ms">${w}</span>`).join(" ");
 const RND = (a, b) => a + Math.random() * (b - a);
 
@@ -2608,12 +2666,12 @@ function viewHome(){
    Team: one ring turning around a shared goal, each person linked to the next. Organization: a 3D hierarchy with
    roles (colours), reporting lines and a pulse that runs down the structure. The scene turns slowly in 3D, the
    pointer tilts it and pushes people aside; clicking the hero moves to the next formation. */
-function mountSwarm(hero){
-  const cv = hero.querySelector("canvas"), ctx = cv.getContext("2d");
-  const btns = [...hero.querySelectorAll("[data-form]")], def = hero.querySelector(".formdef"), txt = hero.querySelector(".fh-in");
+function mountSwarm(hero, o = {}){
+  const cv = o.canvas || hero.querySelector("canvas"), ctx = cv.getContext("2d");
+  const btns = o.mini ? [] : [...hero.querySelectorAll("[data-form]")], def = o.mini ? null : hero.querySelector(".formdef"), txt = o.mini ? null : hero.querySelector(".fh-in");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const N = innerWidth < 821 ? 84 : 132, K = 5, DEPTS = 4;
-  let W = 0, H = 0, dpr = 1, area = { cx: 0, cy: 0, R: 100 }, dark = true, col = {}, mode = 0, since = 0, nextAuto = 5.4, auto = !reduce, hoverLock = false;
+  const N = o.N || (innerWidth < 821 ? 84 : 132), K = 5, DEPTS = 4, start = o.mode || 0;
+  let W = 0, H = 0, dpr = 1, area = { cx: 0, cy: 0, R: 100 }, dark = true, col = {}, mode = start, since = 0, nextAuto = 5.4, auto = !reduce && !o.mini, hoverLock = false;
   let raf = 0, dead = false, onScreen = true, last = performance.now(), T = 0, slow = 0, frames = 0, low = false;
   const mouse = { x: -1e4, y: -1e4, nx: 0, ny: 0, tx: 0, ty: 0, in: false };
   const hx = s => { s = s.trim(); if (s.startsWith("#")) return [1, 3, 5].map(i => parseInt(s.slice(i, i + 2), 16)); const m = s.match(/\d+(\.\d+)?/g); return m ? m.slice(0, 3).map(Number) : [128, 128, 128]; };
@@ -2653,7 +2711,7 @@ function mountSwarm(hero){
     return [mx + Math.cos(b) * .24, .23 + lv * .21, mz + Math.sin(b) * .24];
   }
   function tcol(p){
-    if (mode === 0) return col.muted;
+    if (mode === 0) return o.vivid ? [col.pri, col.c1, col.c3, col.c4][p.i % 4] : col.muted;
     if (mode === 1) return [col.pri, col.c1, col.c3, col.c4, col.fg][p.cl];
     if (mode === 2) return col.pri;
     if (p.lvl === 0) return col.fg;
@@ -2664,7 +2722,8 @@ function mountSwarm(hero){
     const r = hero.getBoundingClientRect();
     dpr = Math.min(low ? 1 : 2, devicePixelRatio || 1); W = r.width; H = r.height;
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
-    if (W < 821){
+    if (o.mini){ const n = W < 700; area = { cx: W * (n ? .5 : .58), cy: H * (n ? .46 : .5), R: Math.min(W * (n ? .3 : .27), H * .34) }; }
+    else if (W < 821){
       const tb = txt ? txt.querySelector(".row") : null, top = tb ? tb.getBoundingClientRect().bottom - r.top + 20 : H * .55;
       const avail = Math.max(260, H - top);
       area = { cx: W / 2, cy: top + avail / 2, R: Math.min(W * .3, avail * .33) };
@@ -2743,10 +2802,11 @@ function mountSwarm(hero){
     if (onScreen && !document.hidden) raf = requestAnimationFrame(step);
   }
   const kick = () => { if (!raf && !dead && !reduce && onScreen && !document.hidden){ last = performance.now(); raf = requestAnimationFrame(step); } };
-  const onMove = e => { const r = hero.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; mouse.in = e.pointerType === "mouse"; mouse.tx = (mouse.x / W - .5) * 2; mouse.ty = (mouse.y / H - .5) * 2; };
   const onLeave = () => { mouse.in = false; mouse.x = mouse.y = -1e4; mouse.tx = mouse.ty = 0; };
+  const onMove = e => { const r = hero.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; if (o.mini && (mouse.y > H + 40 || mouse.y < -40)){ onLeave(); return; } mouse.in = e.pointerType === "mouse"; mouse.tx = (mouse.x / W - .5) * 2; mouse.ty = (mouse.y / H - .5) * 2; };
   const onClick = e => { if (e.target.closest("a,button,input,textarea")) return; auto = false; setMode(mode + 1); };
-  hero.addEventListener("pointermove", onMove, { passive: true }); hero.addEventListener("pointerleave", onLeave); hero.addEventListener("click", onClick);
+  const moveHost = o.mini ? window : hero;
+  moveHost.addEventListener("pointermove", onMove, { passive: true }); if (!o.mini){ hero.addEventListener("pointerleave", onLeave); hero.addEventListener("click", onClick); }
   btns.forEach((b, i) => {
     b.addEventListener("click", () => { auto = false; setMode(i); });
     b.addEventListener("pointerenter", e => { if (e.pointerType !== "mouse") return; hoverLock = true; setMode(i); });
@@ -2758,8 +2818,8 @@ function mountSwarm(hero){
   const onTheme = () => { readCols(); if (reduce){ P.forEach(p => p.c = tcol(p).slice()); draw(); } }; addEventListener("nexus-theme", onTheme);
   readCols(); size();
   P.forEach(p => { p.c = tcol(p).slice(); });
-  if (reduce) setMode(3, true); else kick();
-  return () => { dead = true; cancelAnimationFrame(raf); io.disconnect(); document.removeEventListener("visibilitychange", onVis); removeEventListener("resize", onResize); removeEventListener("nexus-theme", onTheme); };
+  if (reduce) setMode(o.mini ? start : 3, true); else kick();
+  return () => { dead = true; cancelAnimationFrame(raf); io.disconnect(); document.removeEventListener("visibilitychange", onVis); removeEventListener("resize", onResize); removeEventListener("nexus-theme", onTheme); if (o.mini) window.removeEventListener("pointermove", onMove); };
 }
 
 /* =====================================================================
@@ -2883,7 +2943,7 @@ function stepCard(C, s, i, P){
     const box = h("div", { class: "opts", role: "group", "aria-label": "Options" });
     const btns = order.map((j, k) => h("button", { class: "opt", type: "button", "data-j": String(j) }, h("span", { class: "k" }, L[k]), h("span", {}, s.o[j])));
     const lock = sel => btns.forEach(b => { const j = +b.dataset.j; b.disabled = true; if (j === s.a) b.classList.add("right"); else if (j === sel) b.classList.add("wrong"); });
-    btns.forEach(b => b.addEventListener("click", () => { const j = +b.dataset.j, ok = j === s.a; lock(j); record(ok, j); show(ok, s.why); say(ok ? "Correct." : "Not quite."); focusNext(); }));
+    btns.forEach(b => b.addEventListener("click", () => { const j = +b.dataset.j, ok = j === s.a; if (ok) burst(b); lock(j); record(ok, j); show(ok, s.why); say(ok ? "Correct." : "Not quite."); focusNext(); }));
     card.addEventListener("keydown", e => { if (btns[0].disabled || e.target.matches("textarea,input")) return; const k = { a: 0, b: 1, c: 2, d: 3, e: 4, "1": 0, "2": 1, "3": 2, "4": 3, "5": 4 }[e.key.toLowerCase()]; if (k != null && btns[k]){ e.preventDefault(); btns[k].click(); } });
     box.append(...btns); card.append(box, out);
     if (prev){ lock(prev.v); show(prev.ok, s.why); }
@@ -2898,6 +2958,7 @@ function stepCard(C, s, i, P){
       const sel = btns.filter(b => b.getAttribute("aria-pressed") === "true").map(b => +b.dataset.j);
       if (!sel.length){ chk.textContent = "Select at least one option"; return; }
       const ok = sel.length === right.size && sel.every(j => right.has(j));
+      if (ok) burst(chk);
       lock(sel); record(ok, sel); show(ok, s.why, ok ? "Correct" : `Not quite: ${s.right.length} correct option${s.right.length > 1 ? "s" : ""}`); focusNext();
     });
     box.append(...btns); card.append(box, h("div", { class: "row" }, chk), out);
@@ -2958,7 +3019,7 @@ function viewSpot(pre){
   function verdict(good){
     cur.done = true; tot++; if (good){ ok++; streak++; } else streak = 0;
     const s = MS.get("spot", { best: 0, sprint: 0 }); if (streak > s.best){ s.best = streak; MS.set("spot", s); }
-    stats();
+    stats(); if (good) bump(S("streak"));
     dq.classList.add(good ? "ok" : "bad");
     dq.querySelector(".dout").innerHTML = `<div class="verdict ${good ? "ok" : "bad"}"><div class="vh"><b>${good ? "Correct" : "Not quite"}</b>${good ? "" : `<span>It is <b>${cur.label}</b>.</span>`}</div><p>${cur.why}</p></div><button class="btn quiet small next" type="button" data-next>Next ${ICO.arrow}<kbd>Enter</kbd></button>`;
     dq.querySelector("[data-next]").focus({ preventScroll: true });
@@ -2970,7 +3031,7 @@ function viewSpot(pre){
     const mb = e.target.closest("[data-mode]");
     if (mb){ mode = mb.dataset.mode; root.querySelectorAll("[data-mode]").forEach(b => b.setAttribute("aria-pressed", String(b === mb))); streak = 0; ok = 0; tot = 0; stats(); if (mode === "sprint") startSprint(); else { sprintOn = false; timer.hidden = true; next(); } }
     const ob = e.target.closest("[data-o]");
-    if (ob && cur && !cur.done){ const j = +ob.dataset.o; dq.querySelectorAll(".opt").forEach((b, i) => { b.disabled = true; if (i === cur.right) b.classList.add("right"); else if (i === j) b.classList.add("wrong"); }); verdict(j === cur.right); }
+    if (ob && cur && !cur.done){ const j = +ob.dataset.o; if (j === cur.right) burst(ob); dq.querySelectorAll(".opt").forEach((b, i) => { b.disabled = true; if (i === cur.right) b.classList.add("right"); else if (i === j) b.classList.add("wrong"); }); verdict(j === cur.right); }
     if (e.target.closest("[data-next]")) next();
     if (e.target.closest("[data-again]")) startSprint();
   });
@@ -3071,6 +3132,7 @@ function labKelley(){
     const st = MS.get("kel", { best: 0, n: 0 }); st.n = (st.n || 0) + 1; if (streak > (st.best || 0)) st.best = streak; MS.set("kel", st); stats();
     box.querySelectorAll("[data-k]").forEach(b => { b.disabled = true; const k = b.dataset.k, right = k === "a" ? (cur.ext ? "ext" : "int") : cur.v[k]; if (b.dataset.v === right) b.classList.add("right"); else if (b.getAttribute("aria-pressed") === "true") b.classList.add("wrong"); });
     box.querySelectorAll("[data-cue]").forEach(li => { const k = li.dataset.cue; li.insertAdjacentHTML("afterbegin", `<em class="${cur.v[k] === "H" ? "hi" : "lo"}">${KDIM[k][0]}: ${cur.v[k] === "H" ? "high" : "low"}</em>`); });
+    if (good){ burst(box.querySelector('[data-k="a"].right')); bump(S("streak")); }
     box.querySelector("[data-kcheck]").remove(); box.querySelector("[data-kmsg]").remove();
     box.classList.add(good ? "ok" : "bad");
     box.querySelector(".dout").innerHTML = `<div class="verdict ${good ? "ok" : "bad"}"><div class="vh"><b>${good ? "Correct" : "Not quite"}</b><span>${cur.ext ? "External attribution: the situation." : "Internal attribution: the person."}</span></div>
@@ -3138,13 +3200,14 @@ function labEquity(){
     if (nb){
       const stepEl = nb.closest(".eqstep"), inp = stepEl.querySelector("input"), v = parseNum(inp.value); if (Number.isNaN(v)){ inp.focus(); return; }
       const isMe = nb.dataset.eqnum === "r1", target = isMe ? E.r1 : E.r2, good = Math.abs(v - target) <= .06;
+      if (good) burst(inp);
       inp.disabled = true; nb.remove();
       done(good, stepEl.querySelector(".eqo"), `<div class="vh"><b>${good ? "Correct" : "Not quite"}</b>${good ? "" : `<span>The ratio is <span class="exp">€${fmt(target, 2)}</span></span>`}</div><div class="calc">${isMe ? `€${fmt(E.pay1)} / ${E.h1} h = ${per(E.pay1, E.h1)} per weekly hour` : `€${fmt(E.pay2)} / ${E.h2} h = ${per(E.pay2, E.h2)} per weekly hour`}</div>`);
       const nx = box.querySelector(`[data-st="${isMe ? 1 : 2}"]`); nx.hidden = false; const ni = nx.querySelector("input"); if (ni) ni.focus({ preventScroll: true }); else nx.querySelector(".opt").focus({ preventScroll: true });
     }
     const vb = e.target.closest("[data-eqv]");
     if (vb && !vb.disabled){
-      const stepEl = vb.closest(".eqstep"), good = vb.dataset.eqv === E.state;
+      const stepEl = vb.closest(".eqstep"), good = vb.dataset.eqv === E.state; if (good) burst(vb);
       stepEl.querySelectorAll(".opt").forEach(b => { b.disabled = true; if (b.dataset.eqv === E.state) b.classList.add("right"); else if (b === vb) b.classList.add("wrong"); });
       const pct = Math.abs(E.diff * 100);
       done(good, stepEl.querySelector(".eqo"), `<div class="vh"><b>${good ? "Correct" : "Not quite"}</b></div><div class="calc">(${per(E.pay1, E.h1)} − ${per(E.pay2, E.h2)}) / ${per(E.pay2, E.h2)} = ${E.diff < 0 ? "−" : "+"}${fmt(pct, 1)}%</div><p>${E.state === "eq" ? "The ratios are within 2% of each other: no real gap, so no tension to reduce." : E.state === "under" ? `${E.me} gets less per unit of input than ${E.ref}: perceived inequity creates tension that ${E.me} will try to reduce.` : `${E.me} gets more per unit of input than ${E.ref}. Over-reward also creates tension (often guilt), usually weaker.`}</p>`);
@@ -3157,7 +3220,7 @@ function labEquity(){
     }
     const rb = e.target.closest("[data-eqr]");
     if (rb && !rb.disabled){
-      const stepEl = rb.closest(".eqstep"), good = rb.dataset.eqr === E.quote[1];
+      const stepEl = rb.closest(".eqstep"), good = rb.dataset.eqr === E.quote[1]; if (good) burst(rb);
       stepEl.querySelectorAll(".opt").forEach(b => { b.disabled = true; if (b.dataset.eqr === E.quote[1]) b.classList.add("right"); else if (b === rb) b.classList.add("wrong"); });
       done(good, stepEl.querySelector(".eqo"), `<div class="vh"><b>${good ? "Correct" : "Not quite"}</b><span>${E.quote[1]}.</span></div><p>The six ways: change inputs, change outcomes, distort perceptions of self, distort perceptions of others, choose a different referent, leave the field.</p>`);
       finish();
@@ -3234,7 +3297,7 @@ function labWho(){
     if (b && !b.disabled){
       if (selA == null){ b.classList.add("shake"); setTimeout(() => b.classList.remove("shake"), 400); return; }
       const ta = W.querySelector(`[data-wa="${selA}"]`);
-      if (+b.dataset.wb === selA){ ta.disabled = b.disabled = true; ta.classList.remove("on"); ta.classList.add("done"); b.classList.add("done"); found++; selA = null;
+      if (+b.dataset.wb === selA){ burst(b, ["--ok", "--pri", "--c1"]); ta.disabled = b.disabled = true; ta.classList.remove("on"); ta.classList.add("done"); b.classList.add("done"); found++; selA = null;
         if (found === pairs.length){ cancelAnimationFrame(raf); const t = (performance.now() - t0) / 1000, st = MS.get("who", {}); const rec = !miss && (!st.best || t < st.best); if (rec){ st.best = t; MS.set("who", st); }
           W.insertAdjacentHTML("afterend", `<div class="sprintend wend"><span class="kicker">Round done</span><h2>${fmt(t, 1)} s · ${miss} mistake${miss === 1 ? "" : "s"}</h2><p class="muted">${rec ? "New best clean round." : miss ? "A clean round (no mistakes) can set a record." : "Clean round."}</p><div class="row"><button class="btn primary" type="button" data-wagain>Next round</button></div></div>`);
           S("best").textContent = fmt(MS.get("who", {}).best || t, 1) + " s"; }
@@ -3353,11 +3416,17 @@ function focusCard(card, instant){
 /* ---------- render ---------- */
 const MODVIEWS = { learn: viewLearn, chapter: viewChapter, cases: viewCases, spot: viewSpot, labs: viewLabs, lab: viewLab, quiz: viewQuiz, cards: viewCards, open: viewOpen, openq: viewOpenQ, exam: viewExam };
 const TITLES = { learn: "Learn", chapter: "Learn", cases: "Cases", spot: "Spot it", labs: "Labs", lab: "Labs", quiz: "Quiz", cards: "Flashcards", open: "Exam questions", openq: "Exam questions", exam: "Mock exam" };
+/* the formation that lives in the header of each module page (same people as on the overview) */
+const MINI = {
+  learn: { mode: 3 }, cases: { mode: 2 }, spot: { mode: 1 }, labs: { mode: 0, vivid: true }, quiz: { mode: 3 }, cards: { mode: 1 }, open: { mode: 2 },
+  chapter: id => ({ org: { mode: 3 }, person: { mode: 0, vivid: true }, decide: { mode: 1 }, motiv: { mode: 2 } })[id] || { mode: 3 },
+  lab: id => ({ kelley: { mode: 1 }, equity: { mode: 2 }, bigfive: { mode: 0, vivid: true }, who: { mode: 3 } })[id] || { mode: 0 }
+};
 new ResizeObserver(() => document.documentElement.style.setProperty("--hdr", document.querySelector(".hdr").offsetHeight + "px")).observe(document.querySelector(".hdr"));
-const STAGE = { stop: null, view: null };
+const STAGE = { stops: [], view: null };
 function render(){
   const r = route();
-  if (STAGE.stop){ STAGE.stop(); STAGE.stop = null; }
+  STAGE.stops.forEach(f => f && f()); STAGE.stops = [];
   STAGE.view = r.view; AURA.set(r.view !== "case"); TINT();
   document.body.dataset.view = r.view;
   const NAVOF = { case: "cases", chapter: "learn", openq: "open", exam: "open", lab: "labs" };
@@ -3368,30 +3437,64 @@ function render(){
     const c = CASES.find(x => x.id === r.id) || CASES[0];
     document.title = `Case ${c.n}: ${c.title} · Management`;
   } else if (MODVIEWS[r.view]){
-    app.replaceChildren(MODVIEWS[r.view](r.id));
+    const view = MODVIEWS[r.view](r.id);
+    app.replaceChildren(view);
     document.title = (TITLES[r.view] || "Management") + " · Management and Organizations";
     window.scrollTo(0, 0);
-    if (r.view === "chapter") STAGE.stop = mountReveal(app);
+    const mini = typeof MINI[r.view] === "function" ? MINI[r.view](r.id) : MINI[r.view];
+    if (mini && view.classList.contains("mod")){
+      const box = h("div", { class: "mini3d", "aria-hidden": "true" }, h("canvas"));
+      view.prepend(box);
+      STAGE.stops.push(mountSwarm(box, { mini: true, N: innerWidth < 700 ? 48 : 76, ...mini }));
+    }
+    STAGE.stops.push(mountReveal(app));
   } else {
     app.replaceChildren(viewHome());
-    const fh = app.querySelector(".fhero"); if (fh) STAGE.stop = mountSwarm(fh);
+    const fh = app.querySelector(".fhero"); if (fh) STAGE.stops.push(mountSwarm(fh));
     const rs = app.querySelector("#reviews"); if (rs) mountReviewSection(rs);
     document.title = "Fundamentals of Management and Organizations · Nexus";
     if (location.hash === "#reviews") setTimeout(() => { const s = $("#reviews"); if (s) s.scrollIntoView(); }, 60); else window.scrollTo(0, 0);
+    STAGE.stops.push(mountReveal(app));
   }
 }
-/* note cards ease in as they enter the view (once) */
+/* blocks ease in as they enter the view, once */
 function mountReveal(app){
   if (matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return null;
-  const els = [...app.querySelectorAll(".note,.widget")]; els.forEach(e => e.classList.add("rv-in"));
-  const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting){ en.target.classList.add("rv-on"); io.unobserve(en.target); } }), { rootMargin: "0px 0px -8% 0px" });
-  els.forEach(e => io.observe(e));
+  const els = [...app.querySelectorAll(".note,.widget,.page > .sec,.page > .exam,.page > .credit,.modt,.chtile,.ccard,.labt,.oitem,.b5bar,.method3,.steps li")];
+  const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting){ const t = en.target; t.classList.add("rv-on"); io.unobserve(t); if (t.style.transitionDelay) setTimeout(() => { t.style.transitionDelay = ""; }, 900); } }), { rootMargin: "0px 0px -6% 0px" });
+  els.forEach(e => {
+    const r = e.getBoundingClientRect();
+    if (r.top < innerHeight * .92) return;
+    e.classList.add("rv-in");
+    const sib = e.parentElement ? [...e.parentElement.children].filter(x => x.matches(".modt,.chtile,.ccard,.labt,.b5bar,.steps li")) : [];
+    const k = sib.indexOf(e); if (k > 0) e.style.transitionDelay = (k % 4) * 70 + "ms";
+    io.observe(e);
+  });
   return () => io.disconnect();
 }
+/* tiles lean toward the pointer, with a soft light under it */
+(function tilt(){
+  const SEL = ".modt,.chtile,.ccard,.labt", fine = matchMedia("(hover: hover) and (pointer: fine)"), reduce = matchMedia("(prefers-reduced-motion: reduce)");
+  let cur = null;
+  const reset = t => { t.style.removeProperty("--rx"); t.style.removeProperty("--ry"); };
+  document.addEventListener("pointermove", e => {
+    if (!fine.matches || reduce.matches || e.pointerType !== "mouse") return;
+    const t = e.target.closest ? e.target.closest(SEL) : null;
+    if (cur && cur !== t) reset(cur);
+    cur = t; if (!t) return;
+    const r = t.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+    t.style.setProperty("--ry", ((x - .5) * 8).toFixed(2) + "deg"); t.style.setProperty("--rx", ((.5 - y) * 8).toFixed(2) + "deg");
+    t.style.setProperty("--gx", (x * 100).toFixed(1) + "%"); t.style.setProperty("--gy", (y * 100).toFixed(1) + "%");
+  }, { passive: true });
+  document.addEventListener("pointerleave", () => { if (cur){ reset(cur); cur = null; } });
+})();
 FS.bind($("#fsBtn"));
 if (route().view !== "case") FS.invite($("#fsBtn"));
-/* aubergine ink → indigo night → ember, which stays (dark); blush paper → lavender → apricot, which stays (light) */
-const TINT = scrollTint(dark => STAGE.view === "case" ? null : dark ? ["#120D14", "#14112A", "#2A140C"] : ["#FAF5F7", "#F0EDFB", "#FCEADB"], () => innerHeight * 0.55, 0.9);
+/* aubergine ink → indigo night → deep berry, which stays (dark); blush paper → lavender → apricot, which stays (light) */
+const TINT = scrollTint(dark => STAGE.view === "case" ? null : dark ? ["#120D14", "#15112C", "#2C0C20"] : ["#FAF5F7", "#F0EDFB", "#FCEADB"], () => innerHeight * 0.55, 0.9);
+/* page changes cross-fade where the browser can do it (the header stays still) */
+const canVT = !!document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches;
+window.addEventListener("hashchange", () => { if (canVT) document.startViewTransition(render); else render(); });
 render();
 </script>
 </body>

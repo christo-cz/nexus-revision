@@ -633,6 +633,48 @@ kbd{font-family:var(--f-mono);font-size:.72rem;border:1px solid currentColor;bor
 @media (max-width:1180px){.hdr-in{flex-wrap:wrap;height:auto;padding-block:8px;row-gap:4px}.nav{order:5;width:100%;margin-left:0}.nav a{padding:6px 10px}}
 @media (max-width:480px){.nav a[data-route="home"]{display:inline-block}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}.ov-title .w,.mtitle .w{transform:none}}
+/* reveal on scroll (uses translate so it composes with the tilt transform) */
+.rv-in{opacity:0;translate:0 22px;transition:opacity .7s cubic-bezier(.2,.8,.2,1),translate .8s cubic-bezier(.2,.8,.2,1),transform .35s cubic-bezier(.2,.8,.2,1),background-color .35s,border-color .35s,color .35s,filter .3s,box-shadow .35s}
+.rv-in.rv-on{opacity:1;translate:none}
+/* module headers: the circuit, in 3D, behind the title */
+.mod{isolation:isolate}
+.mod > .mini3d{position:absolute;top:0;right:0;width:min(56%,700px);height:min(470px,64vh);pointer-events:none;z-index:-1;-webkit-mask-image:radial-gradient(ellipse 72% 70% at 58% 50%,#000 50%,transparent 100%);mask-image:radial-gradient(ellipse 72% 70% at 58% 50%,#000 50%,transparent 100%)}
+.mini3d canvas{display:block;width:100%;height:100%}
+@media (max-width:700px){.mod > .mini3d{width:100%;height:280px;opacity:.45}}
+/* tiles lean toward the pointer, with a light under it */
+.mods{perspective:1200px}
+.modt,.chtile,.tdcard{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+.modt:hover{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-5px)}
+.chtile:hover{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-6px)}
+.tdcard:hover{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-4px)}
+.modt,.tdcard{position:relative;overflow:hidden}
+.tdlist{perspective:1200px}
+:is(.modt,.chtile,.tdcard)::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s;background:radial-gradient(340px circle at var(--gx,50%) var(--gy,50%),rgb(255 255 255 / .2),transparent 62%)}
+:is(.modt,.chtile,.tdcard):hover::after{opacity:1}
+/* micro-interactions */
+.burst{position:fixed;z-index:80;pointer-events:none;width:0;height:0}
+.burst i{position:absolute;left:-3.5px;top:-3.5px;width:7px;height:7px;border-radius:50%;animation:burst .75s cubic-bezier(.15,.8,.25,1) both}
+@keyframes burst{0%{transform:translate(0,0) scale(.3);opacity:1}70%{opacity:1}100%{transform:translate(var(--x),var(--y)) scale(.9);opacity:0}}
+.bump{display:inline-block;animation:bump .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes bump{40%{transform:scale(1.35)}}
+.fdeck{position:relative;width:min(560px,calc(100% - 24px));isolation:isolate}
+.fdeck .flip{width:100%;display:block}
+.fdeck::before,.fdeck::after{content:"";position:absolute;inset:0;border-radius:22px;border:1px solid var(--glass-line);background:var(--glass);z-index:-1;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.fdeck::before{transform:translate(9px,10px) rotate(1.8deg)}
+.fdeck::after{transform:translate(18px,20px) rotate(3.6deg);opacity:.55}
+.fdeck[data-n="0"]::before,.fdeck[data-n="0"]::after,.fdeck[data-n="1"]::after{display:none}
+@media (max-width:600px){.fdeck::before{transform:translate(6px,8px) rotate(1.4deg)}.fdeck::after{transform:translate(12px,15px) rotate(2.8deg)}}
+.flip.enter{animation:cardIn .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes cardIn{from{transform:translate(9px,10px) rotate(1.8deg) scale(.985);opacity:.4}}
+.flip.fly-r{transition:transform .26s cubic-bezier(.5,0,.9,.5),opacity .26s;transform:translateX(75%) rotate(12deg);opacity:0}
+.flip.fly-l{transition:transform .26s cubic-bezier(.5,0,.9,.5),opacity .26s;transform:translate(-35%,8px) rotate(-8deg) scale(.92);opacity:0}
+/* page changes (also between pages: hub ⇄ labs) */
+@view-transition{navigation:auto}
+.hdr{view-transition-name:hdr}
+::view-transition-old(root){animation:vtOut .18s cubic-bezier(.4,0,1,1) both}
+::view-transition-new(root){animation:vtIn .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes vtOut{to{opacity:0}}
+@keyframes vtIn{from{opacity:0;transform:translateY(14px)}}
 
 /* full-screen invitation */
 .fsinv{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;align-items:center;gap:12px;max-width:calc(100% - 32px);padding:10px 10px 10px 16px;border-radius:16px;border:1px solid color-mix(in srgb,var(--fg) 14%,transparent);background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);box-shadow:0 18px 50px -20px rgb(0 0 0 / .45);color:var(--fg);transform:translate(-50%,140%);opacity:0;transition:transform .55s cubic-bezier(.2,.9,.25,1.15),opacity .35s}
@@ -687,6 +729,16 @@ function parseNum(s){
   return Number(s);
 }
 const say = t => { const l = $("#live"); l.textContent = ""; setTimeout(() => l.textContent = t, 30); };
+/* a small burst of dots in the lab colours, for a right answer */
+const BURST = ["--flow", "--inj", "--leak"];
+function burst(at, cols = BURST){
+  if (!at || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const r = at.getBoundingClientRect(), cs = getComputedStyle(document.documentElement), C = cols.map(v => cs.getPropertyValue(v).trim());
+  const layer = document.createElement("div"); layer.className = "burst"; layer.style.left = (r.left + Math.min(32, r.width / 2)) + "px"; layer.style.top = (r.top + r.height / 2) + "px";
+  for (let i = 0; i < 16; i++){ const d = document.createElement("i"), a = Math.random() * Math.PI * 2, dist = 24 + Math.random() * 52; d.style.setProperty("--x", (Math.cos(a) * dist).toFixed(1) + "px"); d.style.setProperty("--y", (Math.sin(a) * dist).toFixed(1) + "px"); d.style.background = C[i % C.length]; d.style.animationDelay = Math.round(Math.random() * 70) + "ms"; layer.append(d); }
+  document.body.append(layer); setTimeout(() => layer.remove(), 1000);
+}
+const bump = el => { if (!el) return; el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump"); };
 
 /* ---------- theme (shared with the Nexus hub) ---------- */
 const ICON = {
@@ -889,7 +941,6 @@ function route(){
   return { view: "home" };
 }
 function go(hash){ if (location.hash === "#" + hash) render(); else location.hash = hash; }
-window.addEventListener("hashchange", render);
 
 /* ---------- author credit (same block on every Nexus page) ---------- */
 const ME = { name: "Christo Czysz", cls: "EDHEC BBA1, English track, Lille campus", insta: "christo.cz", linkedin: "https://www.linkedin.com/search/results/people/?keywords=Christo%20Czysz", mail: ["christo.czysz", "edhec.com"] };
@@ -1102,7 +1153,7 @@ function cardFor(q, i, Q, P, seed){
       const v = parseNum(inp.value);
       if (Number.isNaN(v)){ inp.focus(); inp.setAttribute("aria-invalid", "true"); inp.placeholder = "Type a number"; return; }
       const ok = Math.abs(v - q.ans) <= Math.max(q.tol, Math.abs(q.ans) * 0.002);
-      record(ok, inp.value); lock(); show(ok);
+      record(ok, inp.value); lock(); show(ok); if (ok) burst(inp);
       setTimeout(() => { const nb = out.querySelector(".next"); if (nb) nb.focus({ preventScroll: true }); }, 30);
     };
     btn.addEventListener("click", go); inp.addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); go(); } });
@@ -1113,7 +1164,7 @@ function cardFor(q, i, Q, P, seed){
     const L = "ABCD";
     const btns = q.opts.map((o, j) => h("button", { class: "opt", type: "button" }, h("span", { class: "k" }, L[j]), h("span", {}, o)));
     const lock = sel => btns.forEach((b, j) => { b.disabled = true; if (j === q.right) b.classList.add("right"); else if (j === sel) b.classList.add("wrong"); });
-    btns.forEach((b, j) => b.addEventListener("click", () => { const ok = j === q.right; lock(j); record(ok, j); show(ok); setTimeout(() => { const nb = out.querySelector(".next"); if (nb) nb.focus({ preventScroll: true }); }, 30); }));
+    btns.forEach((b, j) => b.addEventListener("click", () => { const ok = j === q.right; lock(j); record(ok, j); show(ok); if (ok) burst(b); setTimeout(() => { const nb = out.querySelector(".next"); if (nb) nb.focus({ preventScroll: true }); }, 30); }));
     card.addEventListener("keydown", e => { if (btns[0].disabled) return; const k = { a: 0, b: 1, c: 2, d: 3, "1": 0, "2": 1, "3": 2, "4": 3 }[e.key.toLowerCase()]; if (k != null && btns[k] && !e.target.matches("input")){ e.preventDefault(); btns[k].click(); } });
     box.append(...btns); card.append(box, out);
     if (prev){ lock(prev.v); show(prev.ok); }
@@ -1357,7 +1408,8 @@ function mountFlow(hero, opts = {}){
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); gl.viewport(0, 0, cv.width, cv.height);
     const narrow = W < 820;
     let g;
-    if (narrow){ const rx = Math.min(W * 0.27, 150), ry = 74; g = { cx: W / 2, cy: H - 205, rx, ry, out: 54 }; }
+    if (opts.mini){ const R = Math.min(W * (W < 700 ? .3 : .2), H * .44); g = { cx: W * (W < 700 ? .5 : .58), cy: H * .5, rx: R, ry: R, out: R * .5 }; }
+    else if (narrow){ const rx = Math.min(W * 0.27, 150), ry = 74; g = { cx: W / 2, cy: H - 205, rx, ry, out: 54 }; }
     else { const rx = Math.min(W * 0.17, opts.compact ? 190 : 260), ry = Math.min(H * (opts.compact ? 0.2 : 0.2), opts.compact ? 92 : 150); g = { cx: Math.min(W * 0.72, W - rx - 170), cy: H * 0.53, rx, ry, out: opts.compact ? 80 : 120 }; }
     const o = g.out, lp = th => loopAt(g, th);
     g.src = {
@@ -1370,7 +1422,7 @@ function mountFlow(hero, opts = {}){
     };
     for (const k in g.src){ const s = g.src[k], j = lp(s.th); if (s.from){ s.a = s.from; s.b = j; } else { s.a = j; s.b = s.to; } const m = [(s.a[0] + s.b[0]) / 2, (s.a[1] + s.b[1]) / 2], v = [m[0] - g.cx, m[1] - g.cy], n = Math.hypot(v[0], v[1]) || 1; s.c = [m[0] + v[0] / n * 26, m[1] + v[1] / n * 26]; }
     geo = g;
-    const nLoop = narrow ? 360 : (opts.compact ? 460 : 720), nStr = narrow ? 34 : (opts.compact ? 40 : 62);
+    const nLoop = opts.mini ? (W < 700 ? 200 : 320) : narrow ? 360 : (opts.compact ? 460 : 720), nStr = opts.mini ? (W < 700 ? 16 : 26) : narrow ? 34 : (opts.compact ? 40 : 62);
     if (!P.length || P._n !== nLoop + nStr * 6){
       P = []; P._n = nLoop + nStr * 6;
       for (let i = 0; i < nLoop; i++) P.push({ k: 0, s: Math.random(), v: 0.045 + Math.random() * 0.03, lane: (Math.random() - .5) * (narrow ? 22 : 34), z: 2.6 + Math.random() * 3.4, dx: 0, dy: 0, vx: 0, vy: 0 });
@@ -1395,12 +1447,18 @@ function mountFlow(hero, opts = {}){
   const onOver = e => { const t = e.target.closest && e.target.closest("[data-hl]"); setHL(t ? t.dataset.hl : null); };
   document.addEventListener("pointerover", onOver);
   const M = { x: -1e4, y: -1e4, on: false };
-  const onMove = e => { const r = hero.getBoundingClientRect(); M.x = e.clientX - r.left; M.y = e.clientY - r.top; M.on = true; };
   const onLeave = () => { M.on = false; M.x = M.y = -1e4; };
-  hero.addEventListener("pointermove", onMove); hero.addEventListener("pointerleave", onLeave);
+  const onMove = e => { const r = hero.getBoundingClientRect(); M.x = e.clientX - r.left; M.y = e.clientY - r.top; M.on = true; M.nx = M.x / Math.max(1, W) - .5; M.ny = M.y / Math.max(1, H) - .5; if (opts.mini && (M.y > H + 40 || M.y < -40)) onLeave(); };
+  const moveHost = opts.mini ? window : hero;
+  moveHost.addEventListener("pointermove", onMove); if (!opts.mini) hero.addEventListener("pointerleave", onLeave);
   function bez(a, c, b, t){ const u = 1 - t; return [u * u * a[0] + 2 * u * t * c[0] + t * t * b[0], u * u * a[1] + 2 * u * t * c[1] + t * t * b[1]]; }
+  let T3 = 0, yawS = 0, pitS = 0;
   function step(dt){
     const g = geo; let o = 0;
+    /* mini scene: the whole circuit lies on a plane that turns slowly in 3D; the pointer tilts it */
+    T3 += dt; const tY = T3 * .22 + (M.on ? (M.nx || 0) * .9 : 0), tP = .5 + (M.on ? (M.ny || 0) * .25 : 0);
+    yawS += (tY - yawS) * Math.min(1, dt * 3); pitS += (tP - pitS) * Math.min(1, dt * 3);
+    const cyw = Math.cos(yawS), syw = Math.sin(yawS), sP = Math.min(.85, Math.max(.25, pitS)), cP = Math.sqrt(1 - sP * sP);
     for (let i = 0; i < 7; i++) wt[i] += (wtT[i] - wt[i]) * Math.min(1, dt * 7);
     for (const p of P){
       p.s += p.v * dt * (p.k ? 1 : 1); if (p.s >= 1) p.s -= 1;
@@ -1412,13 +1470,15 @@ function mountFlow(hero, opts = {}){
         const inj = p.k <= 3; c = inj ? col.inj : col.leak;
         a = inj ? Math.min(1, p.s / 0.2) : Math.min(1, (1 - p.s) / 0.35);
       }
+      let sc = 1;
+      if (opts.mini){ const u = x - g.cx, v = y - g.cy, u1 = u * cyw - v * syw, v1 = u * syw + v * cyw; sc = 3 / (3 + v1 * cP / g.rx); x = g.cx + u1 * sc; y = g.cy + v1 * sP * sc; a *= .55 + .45 * Math.min(1, sc); }
       /* pointer pushes particles aside, a spring brings them back */
       const ddx = x + p.dx - M.x, ddy = y + p.dy - M.y, d2 = ddx * ddx + ddy * ddy, R = 120;
       if (d2 < R * R){ const d = Math.sqrt(d2) || 1, f = (1 - d / R) ** 2 * 2600; p.vx += ddx / d * f * dt; p.vy += ddy / d * f * dt; }
       p.vx += -p.dx * 22 * dt; p.vy += -p.dy * 22 * dt; const damp = Math.pow(0.02, dt); p.vx *= damp; p.vy *= damp;
       p.dx += p.vx * dt; p.dy += p.vy * dt;
       const w = wt[p.k];
-      data[o++] = x + p.dx; data[o++] = y + p.dy; data[o++] = p.z * (0.7 + 0.45 * w) * (dark ? 1.3 : 1);
+      data[o++] = x + p.dx; data[o++] = y + p.dy; data[o++] = p.z * sc * (0.7 + 0.45 * w) * (dark ? 1.3 : 1);
       data[o++] = c[0]; data[o++] = c[1]; data[o++] = c[2]; data[o++] = Math.min(1, a * w * (dark ? 1 : 0.9));
     }
   }
@@ -1434,7 +1494,7 @@ function mountFlow(hero, opts = {}){
   addEventListener("nexus-theme", onTheme);
   readColors(); layout();
   if (reduce){ step(0); draw(); } else wake();
-  return () => { dead = true; cancelAnimationFrame(raf); io.disconnect(); document.removeEventListener("pointerover", onOver); document.removeEventListener("visibilitychange", onVis); removeEventListener("resize", onResize); removeEventListener("nexus-theme", onTheme); };
+  return () => { dead = true; cancelAnimationFrame(raf); io.disconnect(); document.removeEventListener("pointerover", onOver); document.removeEventListener("visibilitychange", onVis); removeEventListener("resize", onResize); removeEventListener("nexus-theme", onTheme); if (opts.mini) window.removeEventListener("pointermove", onMove); };
 }
 
 /* ---------- colour aura that follows the pointer (teal → amber → coral across the screen) ---------- */
@@ -2063,7 +2123,7 @@ function viewChapter(id){
   root.addEventListener("click", e => {
     const kb = e.target.closest("[data-know]");
     if (kb){ const k = MS.get("learn", {}), id = kb.dataset.know; if (k[id]) delete k[id]; else k[id] = 1; MS.set("learn", k);
-      const on = !!k[id]; kb.setAttribute("aria-pressed", String(on)); kb.querySelector("span").textContent = on ? "Known" : "I know this"; kb.closest(".note").classList.toggle("known", on); counts(); }
+      const on = !!k[id]; if (on) burst(kb, ["--ok", "--flow"]); kb.setAttribute("aria-pressed", String(on)); kb.querySelector("span").textContent = on ? "Known" : "I know this"; kb.closest(".note").classList.toggle("known", on); counts(); }
     const sb = e.target.closest("[data-sec]");
     if (sb){ const t = root.querySelector(`[data-seci="${sb.dataset.sec}"]`); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); }
   });
@@ -2235,7 +2295,7 @@ function viewDrills(){
   function verdict(good, extra){
     cur.done = true; tot++; if (good){ ok++; streak++; } else streak = 0;
     const s = MS.get("drills", { best: 0, sprint: 0 }); if (streak > s.best){ s.best = streak; MS.set("drills", s); }
-    stats();
+    stats(); if (good) bump(S("streak"));
     dq.classList.remove("ok", "bad"); dq.classList.add(good ? "ok" : "bad");
     dq.querySelector(".dout").innerHTML = `<div class="verdict ${good ? "ok" : "bad"}"><div class="vh"><b>${good ? "Correct" : "Not quite"}</b>${extra || ""}</div>${cur.calc ? `<div class="calc">${cur.calc}</div>` : ""}<p>${cur.why}</p></div><button class="btn quiet small next" type="button" data-next>Next ${ICO.arrow}<kbd>Enter</kbd></button>`;
     const nb = dq.querySelector("[data-next]"); nb.focus({ preventScroll: true });
@@ -2243,7 +2303,7 @@ function viewDrills(){
   }
   function check(){
     if (cur.done) return;
-    if (cur.kind === "num"){ const inp = dq.querySelector("input"), v = parseNum(inp.value); if (Number.isNaN(v)){ inp.focus(); return; } inp.disabled = true; const good = Math.abs(v - cur.ans) <= Math.max(cur.tol, Math.abs(cur.ans) * 0.002);
+    if (cur.kind === "num"){ const inp = dq.querySelector("input"), v = parseNum(inp.value); if (Number.isNaN(v)){ inp.focus(); return; } inp.disabled = true; const good = Math.abs(v - cur.ans) <= Math.max(cur.tol, Math.abs(cur.ans) * 0.002); if (good) burst(inp);
       const d = cur.unit === "%" || cur.unit === "" ? 2 : Number.isInteger(Math.round(cur.ans * 100) / 100) ? 0 : 2;
       verdict(good, good ? "" : `<span>The answer is <span class="exp">${cur.unit === "€" ? eur(cur.ans, d) : fmt(cur.ans, d) + (cur.unit ? " " + cur.unit : "")}</span></span>`); }
   }
@@ -2254,7 +2314,7 @@ function viewDrills(){
     if (mb){ mode = mb.dataset.mode; root.querySelectorAll("[data-mode]").forEach(b => b.setAttribute("aria-pressed", String(b === mb))); streak = 0; ok = 0; tot = 0; stats(); if (mode === "sprint") startSprint(); else { sprintOn = false; timer.hidden = true; next(); } }
     if (e.target.closest("[data-go]")) check();
     const ob = e.target.closest("[data-o]");
-    if (ob && !cur.done){ const j = +ob.dataset.o; dq.querySelectorAll(".opt").forEach((b, i) => { b.disabled = true; if (i === cur.right) b.classList.add("right"); else if (i === j) b.classList.add("wrong"); }); verdict(j === cur.right); }
+    if (ob && !cur.done){ const j = +ob.dataset.o; dq.querySelectorAll(".opt").forEach((b, i) => { b.disabled = true; if (i === cur.right) b.classList.add("right"); else if (i === j) b.classList.add("wrong"); }); if (j === cur.right) burst(ob); verdict(j === cur.right); }
     if (e.target.closest("[data-next]")) next();
     if (e.target.closest("[data-again]")) startSprint();
   });
@@ -2306,7 +2366,7 @@ function viewQuiz(pre){
       <p class="dqt">${q.q}</p><div class="opts">${q.order.map((j, k) => `<button class="opt" type="button" data-pick="${j}"><span class="k">${L[k]}</span><span>${q.o[j]}</span></button>`).join("")}</div><div class="dout"></div></div>`;
     W.onclick = e => {
       const pb = e.target.closest("[data-pick]");
-      if (pb && !q.done){ q.done = true; const j = +pb.dataset.pick, good = j === q.a; if (good) score++; else wrong.push(q);
+      if (pb && !q.done){ q.done = true; const j = +pb.dataset.pick, good = j === q.a; if (good){ score++; burst(pb); } else wrong.push(q);
         W.querySelectorAll(".opt").forEach(b => { b.disabled = true; const v = +b.dataset.pick; if (v === q.a) b.classList.add("right"); else if (v === j) b.classList.add("wrong"); });
         const box = W.querySelector(".qzq"); box.classList.add(good ? "ok" : "bad");
         W.querySelector(".dout").innerHTML = `<div class="verdict ${good ? "ok" : "bad"}"><div class="vh"><b>${good ? "Correct" : "Not quite"}</b></div><p>${q.why}</p></div><button class="btn quiet small next" type="button" data-nx>${i + 1 < Qs.length ? "Next question" : "See my score"} ${ICO.arrow}<kbd>Enter</kbd></button>`;
@@ -2348,12 +2408,15 @@ function viewCards(pre){
     root.querySelector("[data-fbar]").style.width = (total ? kn / total * 100 : 0) + "%"; root.querySelector("[data-fcount]").textContent = `${kn} of ${total} known · ${deck.length} left in the pile`;
     if (!deck.length){ stage.innerHTML = `<div class="sprintend"><span class="kicker">Pile empty</span><h2>You know all ${total} cards</h2><div class="row"><button class="btn primary" type="button" data-resetk>Start over</button><a class="btn glassy" href="#quiz">Take a quiz</a></div></div>`; return; }
     const c = deck[0], C = CH[c.ch];
-    stage.innerHTML = `<button class="flip" type="button" aria-label="Flip the card" style="--c:${C.c}"><span class="face front"><em>${C.short}</em><b>${c.f}</b><small>Click or press Space to flip</small></span><span class="face back"><em>${c.f}</em><b>${c.b}</b></span></button>
+    stage.innerHTML = `<div class="fdeck" data-n="${Math.min(2, deck.length - 1)}"><button class="flip enter" type="button" aria-label="Flip the card" style="--c:${C.c}"><span class="face front"><em>${C.short}</em><b>${c.f}</b><small>Click or press Space to flip</small></span><span class="face back"><em>${c.f}</em><b>${c.b}</b></span></button></div>
       <div class="fact"><button class="btn glassy big" type="button" data-again>Again <kbd>←</kbd></button><button class="btn primary big" type="button" data-know>I knew it <kbd>→</kbd></button></div>`;
   }
   const flip = () => { const f = stage.querySelector(".flip"); if (f) f.classList.toggle("on"); };
-  const again = () => { if (!deck.length) return; deck.push(deck.shift()); paint(); };
-  const got = () => { if (!deck.length) return; const k = known(); k[deck[0].i] = 1; MS.set("cards", k); deck.shift(); paint(); };
+  /* the card leaves the deck: to the right when known, to the back when it comes again */
+  let busy = false;
+  const leave = (dir, fn) => { const f = stage.querySelector(".flip"); if (busy) return; if (!f || matchMedia("(prefers-reduced-motion: reduce)").matches){ fn(); return; } busy = true; f.classList.add("fly-" + dir); setTimeout(() => { busy = false; fn(); }, 260); };
+  const again = () => { if (!deck.length) return; leave("l", () => { deck.push(deck.shift()); paint(); }); };
+  const got = () => { if (!deck.length) return; burst(stage.querySelector("[data-know]"), ["--ok", "--flow", "--inj"]); leave("r", () => { const k = known(); k[deck[0].i] = 1; MS.set("cards", k); deck.shift(); paint(); }); };
   root.addEventListener("click", e => {
     const cb = e.target.closest("[data-ch]"); if (cb){ const k = cb.dataset.ch; if (sel.has(k) && sel.size > 1) sel.delete(k); else sel.add(k); cb.classList.toggle("on", sel.has(k)); cb.setAttribute("aria-pressed", String(sel.has(k))); build(true); }
     if (e.target.closest(".flip")) flip();
@@ -2591,10 +2654,12 @@ const TITLES = { td: "Tutorials", tdex: "Tutorials", learn: "Learn", chapter: "L
 new ResizeObserver(() => document.documentElement.style.setProperty("--hdr", document.querySelector(".hdr").offsetHeight + "px")).observe(document.querySelector(".hdr"));
 
 /* ---------- render ---------- */
-const STAGE = { stop: null, view: null };
+const STAGE = { stops: [], view: null };
+/* module pages get a small 3D circuit in their header */
+const MINI_VIEWS = new Set(["learn", "chapter", "td", "drills", "quiz", "cards", "open"]);
 function render(){
   const r = route();
-  if (STAGE.stop){ STAGE.stop(); STAGE.stop = null; }
+  STAGE.stops.forEach(f => f && f()); STAGE.stops = [];
   STAGE.view = r.view; AURA.set(r.view !== "case"); TINT();
   const NAVOF = { case: "cases", chapter: "learn", openq: "open", tdex: "td" };
   document.querySelectorAll(".nav a").forEach(a => { const on = a.dataset.route === (NAVOF[r.view] || r.view); a.setAttribute("aria-current", on ? "page" : "false"); if (on) a.scrollIntoView({ block: "nearest", inline: "nearest" }); });
@@ -2604,12 +2669,19 @@ function render(){
     app.replaceChildren(viewCase(seed));
     document.title = `Case ${seed <= 10 ? seed : "practice"} · Macroeconomics`;
   } else if (MODVIEWS[r.view]){
-    app.replaceChildren(MODVIEWS[r.view](r.id));
+    const view = MODVIEWS[r.view](r.id);
+    app.replaceChildren(view);
     document.title = (TITLES[r.view] || "Macroeconomics") + " · Macroeconomics";
     window.scrollTo(0, 0);
+    if (MINI_VIEWS.has(r.view) && view.classList.contains("mod")){
+      const box = h("div", { class: "mini3d", "aria-hidden": "true" }, h("canvas"));
+      view.prepend(box);
+      STAGE.stops.push(mountFlow(box, { mini: true }));
+    }
+    STAGE.stops.push(mountReveal(app));
   } else {
     app.replaceChildren(r.view === "cases" ? viewCases() : viewHome());
-    const fh = app.querySelector(".fhero"); if (fh) STAGE.stop = mountFlow(fh, { compact: r.view === "cases" });
+    const fh = app.querySelector(".fhero"); if (fh) STAGE.stops.push(mountFlow(fh, { compact: r.view === "cases" }));
     app.querySelectorAll(".casecard").forEach(c => {
       c.addEventListener("pointermove", e => { if (e.pointerType !== "mouse") return; const b = c.getBoundingClientRect(); c.style.setProperty("--ry", (((e.clientX - b.left) / b.width - .5) * 12).toFixed(1) + "deg"); c.style.setProperty("--rx", ((.5 - (e.clientY - b.top) / b.height) * 12).toFixed(1) + "deg"); });
       c.addEventListener("pointerleave", () => { c.style.removeProperty("--rx"); c.style.removeProperty("--ry"); });
@@ -2617,8 +2689,39 @@ function render(){
     const rs = app.querySelector("#reviews"); if (rs) mountReviewSection(rs);
     document.title = "Macroeconomics · Nexus";
     if (location.hash === "#reviews") setTimeout(() => { const s = $("#reviews"); if (s) s.scrollIntoView(); }, 60); else window.scrollTo(0, 0);
+    STAGE.stops.push(mountReveal(app));
   }
 }
+/* blocks ease in as they enter the view, once */
+function mountReveal(app){
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return null;
+  const els = [...app.querySelectorAll(".note,.widget,.page > .sec,.page > .exam,.page > .credit,.modt,.chtile,.tdcard,.oitem,.steps li,.casecard")];
+  const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting){ const t = en.target; t.classList.add("rv-on"); io.unobserve(t); if (t.style.transitionDelay) setTimeout(() => { t.style.transitionDelay = ""; }, 900); } }), { rootMargin: "0px 0px -6% 0px" });
+  els.forEach(e => {
+    if (e.getBoundingClientRect().top < innerHeight * .92) return;
+    e.classList.add("rv-in");
+    const sib = e.parentElement ? [...e.parentElement.children].filter(x => x.matches(".modt,.chtile,.tdcard,.steps li,.casecard")) : [];
+    const k = sib.indexOf(e); if (k > 0) e.style.transitionDelay = (k % 5) * 60 + "ms";
+    io.observe(e);
+  });
+  return () => io.disconnect();
+}
+/* tiles lean toward the pointer, with a soft light under it */
+(function tilt(){
+  const SEL = ".modt,.chtile,.tdcard", fine = matchMedia("(hover: hover) and (pointer: fine)"), reduce = matchMedia("(prefers-reduced-motion: reduce)");
+  let cur = null;
+  const reset = t => { t.style.removeProperty("--rx"); t.style.removeProperty("--ry"); };
+  document.addEventListener("pointermove", e => {
+    if (!fine.matches || reduce.matches || e.pointerType !== "mouse") return;
+    const t = e.target.closest ? e.target.closest(SEL) : null;
+    if (cur && cur !== t) reset(cur);
+    cur = t; if (!t) return;
+    const r = t.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+    t.style.setProperty("--ry", ((x - .5) * 8).toFixed(2) + "deg"); t.style.setProperty("--rx", ((.5 - y) * 8).toFixed(2) + "deg");
+    t.style.setProperty("--gx", (x * 100).toFixed(1) + "%"); t.style.setProperty("--gy", (y * 100).toFixed(1) + "%");
+  }, { passive: true });
+  document.addEventListener("pointerleave", () => { if (cur){ reset(cur); cur = null; } });
+})();
 document.addEventListener("click", e => {
   const t = e.target.closest("[data-act='random']"); if (!t) return;
   go("case" + (11 + Math.floor(Math.random() * 1e6)));
@@ -2627,6 +2730,9 @@ FS.bind($("#fsBtn"));
 if (route().view !== "case") FS.invite($("#fsBtn"));
 /* teal ink → amber dusk → deep coral, which stays (dark); mint paper → cream → blush, which stays (light) */
 const TINT = scrollTint(dark => STAGE.view === "case" ? null : dark ? ["#0B1719", "#2B1D09", "#3D1218"] : ["#EEF6F4", "#FBEFD6", "#FCDCD5"], () => innerHeight * 0.55, 0.9);
+/* page changes cross-fade where the browser can do it (the header stays still) */
+const canVT = !!document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches;
+window.addEventListener("hashchange", () => { if (canVT && route().view !== "case") document.startViewTransition(render); else render(); });
 render();
 </script>
 </body>
