@@ -73,7 +73,7 @@ Chaque page est un fichier unique : CSS et JS dans la page. Seules dépendances 
 - Fond de Management : aubergine → indigo nuit → baie profonde (sombre), papier rosé → lavande → abricot (clair).
 - Haut de page (hub, accueil Macroeconomics, accueil Management) : la scène bascule en arrière et s'efface quand on fait défiler (`heroTilt`).
 - Hub : tuiles dans l'ordre Macroeconomics, Management, puis Financial Accounting (bientôt). Au survol, la tuile Management montre une foule qui se range en organigramme.
-- Hub : « Pick up where you left off » lit `flow-v1` et `mgmt-v1` pour proposer de reprendre (la liste des cas Management et leur nombre d'étapes est recopiée dans le hub, à tenir à jour si on ajoute un cas).
+- Hub : « Pick up where you left off » lit `flow-v1` et `mgmt-v1` pour proposer de reprendre (un examen blanc en cours passe en premier, avec les minutes restantes) (la liste des cas Management et leur nombre d'étapes est recopiée dans le hub, à tenir à jour si on ajoute un cas).
 - Le texte posé sur une pastille pleine verte ou rouge utilise `var(--bg)` (dans `.mod`, `--surface` est un verre transparent).
 
 ## Principes de contenu (ce qui fait la qualité du site)

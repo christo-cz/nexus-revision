@@ -806,6 +806,11 @@ heroTilt(document.getElementById("hero"));
   const lc = mg.lastcase;
   if (lc && MC[lc] && mAns(lc) > 0 && mAns(lc) < MC[lc][1]) rows.push({ c: "var(--mgmt)", nm: "Management", dt: `${MC[lc][0]}: ${mAns(lc)} of ${MC[lc][1]} steps done`, p: mAns(lc) / MC[lc][1], lbl: `${mAns(lc)}/${MC[lc][1]}`, href: `/management/#case-${lc}` });
   else if (mSolved || mKnown) rows.push({ c: "var(--mgmt)", nm: "Management", dt: `${mSolved} of 8 cases solved · ${mKnown} of 79 cards known`, p: mKnown / 79, lbl: `${mKnown}/79`, href: mKnown < 79 ? "/management/#learn" : "/management/#cases" });
+  /* a mock exam on the clock comes first */
+  const clock = (E, min, nm, c, href) => { if (!E || !E.start || E.end) return; const left = E.start + min * 60000 - Date.now(), m = Math.max(0, Math.ceil(left / 60000));
+    rows.unshift({ c, nm, dt: left > 0 ? `Mock exam on the clock: ${m} minute${m > 1 ? "s" : ""} left` : "Mock exam: time is up. Open it to mark your answers", p: Math.min(1, Math.max(0, 1 - left / (min * 60000))), lbl: `${m}m`, href }); };
+  clock(mg.exam, 90, "Management", "var(--mgmt)", "/management/#exam");
+  if (fl.mock) clock(fl.mock, fl.mock.min || 90, "Macroeconomics", "var(--macro)", "/macro/#mock");
   if (!rows.length) return;
   document.getElementById("resumeBody").innerHTML = rows.map(r => `<a class="rs" href="${r.href}" style="--c:${r.c}"><span class="ring" style="--p:${Math.min(1, r.p).toFixed(3)}"><b>${r.lbl}</b></span><span class="nm">${r.nm}</span><span class="go" aria-hidden="true">${ARROW}</span><span class="dt">${r.dt}</span></a>`).join("");
   document.getElementById("resume").hidden = false;
