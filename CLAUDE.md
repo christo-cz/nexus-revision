@@ -4,7 +4,8 @@ Site public de révision pour la promo EDHEC BBA1 (track anglais, campus de Lill
 Une page d'accueil (hub) qui liste les matières, et un « lab » par matière.
 
 - En ligne : https://nexus-revision-bba1.netlify.app (projet Netlify `nexus-revision-bba1`, public, relié à ce dépôt). Chaque push sur `main` est mis en ligne automatiquement.
-- Le site est statique : du HTML, CSS et JS écrits à la main, sans framework, sans build et sans serveur. Ne rien ajouter qui demande une étape de build.
+- Le site est statique : du HTML, CSS et JS écrits à la main, sans framework et sans étape de build. Ne rien ajouter qui demande une étape de build.
+- Seule exception côté serveur, validée par Alexi : la fonction Netlify des avis (`netlify/functions/reviews.mjs`, route `/api/reviews`), qui stocke dans Netlify Blobs (store `reviews`). Dépendance unique : `@netlify/blobs`, déclarée dans `package.json`.
 - Modèle d'inspiration : le site d'un camarade (midterms-work.netlify.app), en particulier son « IT-4U Ledger Lab ». On s'en inspire pour l'ergonomie, sans copier ni son code ni son identité visuelle.
 
 ## Façon de travailler avec Alexi
@@ -21,7 +22,18 @@ Une page d'accueil (hub) qui liste les matières, et un « lab » par matière.
 /favicon.svg       logo N de Nexus (dégradé bleu → violet → rose)
 /macro/index.html  « Flow », le lab de Business Economics (macroéconomie, semestre 1)
 /CLAUDE.md         ce fichier
+/package.json      dépendance de la fonction des avis
+/netlify/functions/reviews.mjs   API des avis (GET liste + résumé, POST avis, POST suppression admin)
 ```
+
+## Avis des étudiants
+
+- Étoiles 1 à 5, tags fixes (liste `TAGS` dans la fonction, à garder identique côté pages), commentaire obligatoire de 10 à 600 caractères, prénom facultatif (« BBA1 student » sinon). Liens refusés. Publication immédiate.
+- Demandés sur la carte de bilan à la fin d'un cas, et via « Rate Flow » sur l'accueil de Flow. Affichés sur l'accueil de Flow et résumés sur le hub (section « From the class »).
+- Anti-triche côté serveur : un avis par lab et par 24 h, à la fois par IP (hachée, jamais stockée en clair) et par appareil (`nexus-did`). Champ piège `website` contre les robots.
+- Mise en page volontairement différente du site de Zadig : pas d'histogramme de notes, pas de filtres en pastilles, pas de grille de cartes. Une ligne de résumé et des citations sur une colonne.
+- Suppression : la variable d'environnement `ADMIN_KEY` (au moins 8 caractères) se règle dans Netlify. Ouvrir `/?admin`, saisir la clé une fois : un lien « Delete » apparaît sous chaque avis (hub et Flow).
+- Ne jamais écrire de faux avis, même pour « amorcer » la section.
 
 Une nouvelle matière = un dossier `/<matiere>/index.html` autonome, plus une carte dans `/index.html`.
 Chaque page est un fichier unique : CSS et JS dans la page. Seules dépendances externes autorisées : Google Fonts.
@@ -37,7 +49,7 @@ Chaque page est un fichier unique : CSS et JS dans la page. Seules dépendances 
    - le bloc de données utilisé par la question courante s'allume à gauche (IntersectionObserver) ;
    - sur téléphone, colonne unique, case sheet repliable, et chaque question rappelle ses données (`.snip`).
 5. **Saisie tolérante.** Les nombres acceptent `1600`, `1,600`, `1 600`, `0,75`, `0.75`, `4.2%` (fonction `parseNum`). La tolérance d'erreur est définie par question.
-6. **Progression** enregistrée uniquement dans le navigateur (`localStorage`, clé `flow-v1` pour la macro, `nexus-theme` pour le thème, partagé par le hub et tous les labs). Chaque lecture et écriture est protégée par un try/catch. Pas de compte utilisateur.
+6. **Progression** enregistrée uniquement dans le navigateur (`localStorage`, clé `flow-v1` pour la macro, `nexus-theme` pour le thème, partagé par le hub et tous les labs ; `nexus-did`, `nexus-reviewed` et `nexus-admin-key` pour les avis). Chaque lecture et écriture est protégée par un try/catch. Pas de compte utilisateur.
 7. **Juridique.** Pas de logo ni de charte EDHEC. Garder la mention « A student project to help with revision. Not an official EDHEC website. » Ne pas reprendre mot pour mot de longs passages des slides : reformuler.
 
 ## Identité visuelle

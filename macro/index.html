@@ -204,7 +204,7 @@ a{color:inherit}
 .next{align-self:flex-start;display:inline-flex;align-items:center;gap:8px}
 .next kbd{font-family:var(--f-mono);font-size:.72rem;border:1px solid var(--line-2);border-radius:5px;padding:1px 5px;color:var(--muted);font-weight:500}
 @media (hover:none){.next kbd{display:none}}
-.end{scroll-snap-align:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px}
+.end{scroll-snap-align:start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px}
 .end h2{font-size:1.4rem}
 .blocks-sum{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
 @media (max-width:560px){.blocks-sum{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -228,6 +228,49 @@ a{color:inherit}
   .qs.has-cur .card:not(.cur){opacity:1}
   .card{padding:18px}
 }
+/* ---------- reviews ---------- */
+.rv-sum{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px}
+.rv-avg{display:flex;align-items:baseline;gap:8px}
+.rv-avg b{font-family:var(--f-display);font-size:1.6rem;line-height:1}
+.rv-avg > span:last-child{color:var(--muted);font-size:.9rem}
+.rv-tags{display:flex;flex-wrap:wrap;gap:6px}
+.rv-tags span{font-size:.8rem;font-weight:600;padding:4px 10px;border-radius:8px;background:var(--sunk);color:var(--muted)}
+.rv-tags span i{font-style:normal;font-family:var(--f-mono);color:var(--fg);margin-left:4px}
+.st{color:var(--inj);letter-spacing:1px;font-size:.95rem;white-space:nowrap}
+.st .off{color:var(--line-2)}
+.rv-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.rv{display:flex;flex-direction:column;gap:6px;padding:16px 0;border-bottom:1px solid var(--line);max-width:68ch}
+.rv-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font-size:.88rem}
+.rv-h b{font-weight:700}
+.rv-h .when{color:var(--faint)}
+.rv p{white-space:pre-line;overflow-wrap:anywhere}
+.rv .rv-tags span{font-size:.74rem;padding:2px 8px}
+.rv-del{margin-left:auto;border:0;background:none;color:var(--bad);font-size:.8rem;font-weight:700;text-decoration:underline}
+.rv-empty{color:var(--muted);font-size:.95rem}
+.rv-form{display:flex;flex-direction:column;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;max-width:640px}
+.end .rv-form{background:var(--bg);max-width:none}
+.rv-form h3{font-size:1.1rem}
+.rv-form fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;min-width:0}
+.rv-form legend,.rv-form .lbl{font-size:.88rem;font-weight:700;padding:0;margin-bottom:8px}
+.rv-form .opt-l{font-weight:500;color:var(--muted)}
+.stars{display:flex;align-items:center;gap:2px}
+.stars button{border:0;background:none;padding:4px;font-size:1.9rem;line-height:1;color:var(--line-2);transition:color .1s,transform .1s}
+.stars button.on{color:var(--inj)}
+.stars button:active{transform:scale(.9)}
+.stars output{margin-left:10px;font-size:.9rem;color:var(--muted);font-weight:600}
+.tagpick{display:flex;flex-wrap:wrap;gap:8px}
+.tagpick button{border:1.5px solid var(--line);background:var(--surface);border-radius:99px;padding:6px 12px;font-size:.86rem;font-weight:600;color:var(--muted)}
+.tagpick button[aria-pressed="true"]{border-color:var(--flow);background:var(--flow-soft);color:var(--fg)}
+.rv-form textarea,.rv-form input[type=text]{width:100%;border:1.5px solid var(--line-2);border-radius:11px;background:var(--surface);padding:11px 13px;font:inherit;font-size:.96rem;line-height:1.5;outline:none;resize:vertical}
+.rv-form textarea{min-height:96px}
+.rv-form textarea:focus,.rv-form input[type=text]:focus{border-color:var(--flow)}
+.rv-form .cnt{font-size:.78rem;color:var(--faint);align-self:flex-end;font-family:var(--f-mono)}
+.rv-form .two{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end}
+@media (max-width:520px){.rv-form .two{grid-template-columns:1fr}}
+.rv-form .msg{font-size:.9rem;font-weight:600}
+.rv-form .msg.err{color:var(--bad)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.rv-thanks{display:flex;gap:10px;align-items:center;background:var(--ok-soft);border-radius:12px;padding:12px 16px;font-weight:600;font-size:.95rem}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
@@ -490,6 +533,7 @@ function viewHome(){
     <div class="sec-h"><h2>Full cases</h2><p>30 questions each, about 25 minutes.</p></div>
     <div class="cases">${Array.from({ length: 10 }, (_, i) => caseCard(i + 1)).join("")}</div>
   </section>
+  <section class="sec" id="rvSec" aria-label="Reviews"></section>
   <section class="exam" aria-label="How the course is graded">
     <div><span class="eyebrow">How you are graded</span><h2 style="margin-top:6px">The final exam is 60%</h2><p>Open questions on the lectures, plus one exercise like the tutorials.</p></div>
     <div><div class="split" aria-hidden="true"><i style="width:60%;background:var(--flow)"></i><i style="width:30%;background:var(--inj)"></i><i style="width:10%;background:var(--leak)"></i></div>
@@ -537,7 +581,8 @@ function viewCase(seed){
       ? `<h2>${TOTAL - done} question${TOTAL - done > 1 ? "s" : ""} to go</h2><p class="muted">Your score so far: ${right} right out of ${done}.</p><div class="row"><button class="btn primary" type="button" data-act="first-open">Go to the next unanswered question</button></div>`
       : `<span class="eyebrow">Case finished</span><h2>${P.pct}% · ${right} of ${TOTAL} right</h2>
          <div class="blocks-sum">${blocks.map(b => { const qb = Q.filter(q => q.blk === b), r = qb.filter(q => P.ans[q.id] && P.ans[q.id].ok).length; return `<div class="bs"><b>${r}/${qb.length}</b><span>${b} · ${BLOCKS[b]}</span></div>`; }).join("")}</div>
-         <div class="row">${wrong ? `<button class="btn quiet" type="button" data-act="first-wrong">Review my ${wrong} mistake${wrong > 1 ? "s" : ""}</button>` : ""}<a class="btn primary" href="#case${seed < 10 ? seed + 1 : 1}">Next case →</a><button class="btn quiet" type="button" data-act="reset">Start again</button></div>`;
+         <div class="row">${wrong ? `<button class="btn quiet" type="button" data-act="first-wrong">Review my ${wrong} mistake${wrong > 1 ? "s" : ""}</button>` : ""}<a class="btn primary" href="#case${seed < 10 ? seed + 1 : 1}">Next case →</a><button class="btn quiet" type="button" data-act="reset">Start again</button></div><div data-rvslot></div>`;
+    const slot = end.querySelector("[data-rvslot]"); if (slot) mountReviewSlot(slot);
   }
   root.addEventListener("answered", refresh);
   root.addEventListener("click", e => {
@@ -633,6 +678,103 @@ function cardFor(q, i, Q, P, seed){
   return card;
 }
 
+/* ---------- reviews (shared API: /api/reviews) ---------- */
+const RV = { api: "/api/reviews", lab: "flow", data: null, loading: null };
+const RV_WORDS = ["", "Not useful", "Could be better", "Good", "Very good", "Excellent"];
+const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+function deviceId(){ let d = lsGet("nexus-did", null); if (!d){ d = Math.random().toString(36).slice(2) + Date.now().toString(36); lsSet("nexus-did", d); } return d; }
+function starStr(n){ return `<span class="st" role="img" aria-label="${n} out of 5 stars">${"★".repeat(n)}<span class="off">${"★".repeat(5 - n)}</span></span>`; }
+function ago(ts){ const d = Math.floor((Date.now() - ts) / 86400000); if (d <= 0) return "today"; if (d === 1) return "yesterday"; if (d < 30) return d + " days ago"; return new Date(ts).toLocaleDateString("en-GB", { day: "numeric", month: "short" }); }
+function recentlyReviewed(){ const m = lsGet("nexus-reviewed", {}); return m[RV.lab] && Date.now() - m[RV.lab] < 86400000; }
+function rvLoad(force){
+  if (RV.data && !force) return Promise.resolve(RV.data);
+  if (RV.loading && !force) return RV.loading;
+  RV.loading = fetch(RV.api + "?lab=" + RV.lab, { headers: { accept: "application/json" } }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(d => (RV.data = d)).catch(() => (RV.data = null)).finally(() => { RV.loading = null; });
+  return RV.loading;
+}
+function rvItem(r){
+  const admin = lsGet("nexus-admin-key", "");
+  return `<li class="rv" data-id="${esc(r.id)}"><div class="rv-h">${starStr(r.stars)}<b>${esc(r.name || "BBA1 student")}</b><span class="when">${ago(r.at)}</span>${admin ? `<button class="rv-del" type="button" data-rvdel="${esc(r.id)}">Delete</button>` : ""}</div><p>${esc(r.text)}</p>${r.tags.length ? `<div class="rv-tags">${r.tags.map(x => `<span>${esc(x)}</span>`).join("")}</div>` : ""}</li>`;
+}
+function rvSummary(s){
+  if (!s || !s.count) return "";
+  const top = Object.entries(s.tags).sort((a, b) => b[1] - a[1]).slice(0, 4);
+  return `<div class="rv-sum"><div class="rv-avg"><b class="num">${s.avg.toFixed(1)}</b>${starStr(Math.round(s.avg))}<span>${s.count} review${s.count > 1 ? "s" : ""}</span></div>${top.length ? `<div class="rv-tags" aria-label="Most mentioned">${top.map(([k, v]) => `<span>${esc(k)}<i>${v}</i></span>`).join("")}</div>` : ""}</div>`;
+}
+function rvForm(onDone){
+  const f = h("form", { class: "rv-form", novalidate: true });
+  const tags = (RV.data && RV.data.tags) || ["Exam-like", "Clear corrections", "Good on phone", "Saves time", "Too easy", "Too hard", "Found a mistake"];
+  f.innerHTML = `<h3>How was Flow?</h3>
+    <fieldset><legend>Your rating</legend><div class="stars" role="radiogroup" aria-label="Rating">${[1, 2, 3, 4, 5].map(n => `<button type="button" role="radio" aria-checked="false" data-star="${n}" aria-label="${n} star${n > 1 ? "s" : ""}: ${RV_WORDS[n]}">★</button>`).join("")}<output aria-live="polite"></output></div></fieldset>
+    <fieldset><legend>What stood out? <span class="opt-l">Optional, up to 4</span></legend><div class="tagpick">${tags.map(x => `<button type="button" aria-pressed="false" data-tag="${esc(x)}">${esc(x)}</button>`).join("")}</div></fieldset>
+    <fieldset><label class="lbl" for="rvText">Your review</label><textarea id="rvText" maxlength="600" placeholder="What helped you? What is missing?"></textarea><span class="cnt" aria-hidden="true">0/600</span></fieldset>
+    <div class="two"><div><label class="lbl" for="rvName" style="display:block">First name <span class="opt-l">optional</span></label><input type="text" id="rvName" maxlength="32" autocomplete="given-name" placeholder="Leave blank to stay anonymous"></div>
+      <button class="btn primary" type="submit">Post review</button></div>
+    <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+    <p class="msg" role="status"></p>`;
+  let stars = 0;
+  const starBtns = [...f.querySelectorAll("[data-star]")], out = f.querySelector("output"), msg = f.querySelector(".msg"), ta = f.querySelector("textarea"), cnt = f.querySelector(".cnt");
+  const paint = n => starBtns.forEach((b, i) => b.classList.toggle("on", i < n));
+  starBtns.forEach((b, i) => {
+    b.addEventListener("click", () => { stars = i + 1; paint(stars); starBtns.forEach((x, j) => x.setAttribute("aria-checked", String(j === i))); out.textContent = RV_WORDS[stars]; msg.textContent = ""; });
+    b.addEventListener("mouseenter", () => paint(i + 1)); b.addEventListener("mouseleave", () => paint(stars));
+    b.addEventListener("keydown", e => { const d = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 }[e.key]; if (d){ e.preventDefault(); const n = Math.min(5, Math.max(1, (stars || 0) + d)); starBtns[n - 1].click(); starBtns[n - 1].focus(); } });
+  });
+  f.querySelectorAll("[data-tag]").forEach(b => b.addEventListener("click", () => {
+    const on = b.getAttribute("aria-pressed") === "true";
+    if (!on && f.querySelectorAll('[data-tag][aria-pressed="true"]').length >= 4){ msg.className = "msg err"; msg.textContent = "Pick up to 4 tags."; return; }
+    b.setAttribute("aria-pressed", String(!on)); msg.textContent = "";
+  }));
+  ta.addEventListener("input", () => { cnt.textContent = ta.value.length + "/600"; });
+  f.addEventListener("submit", async e => {
+    e.preventDefault();
+    const fail = (m, el) => { msg.className = "msg err"; msg.textContent = m; if (el) el.focus(); };
+    if (!stars) return fail("Choose a number of stars.", starBtns[0]);
+    if (ta.value.trim().length < 10) return fail("Write at least a short sentence (10 characters).", ta);
+    const btn = f.querySelector("[type=submit]"); btn.disabled = true; btn.textContent = "Posting…"; msg.className = "msg"; msg.textContent = "";
+    const body = { lab: RV.lab, stars, tags: [...f.querySelectorAll('[data-tag][aria-pressed="true"]')].map(b => b.dataset.tag), text: ta.value, name: f.querySelector("#rvName").value, did: deviceId(), website: f.querySelector("[name=website]").value };
+    try {
+      const r = await fetch(RV.api, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok){ btn.disabled = false; btn.textContent = "Post review"; if (r.status === 429){ const m = lsGet("nexus-reviewed", {}); m[RV.lab] = Date.now(); lsSet("nexus-reviewed", m); } return fail(d.error || "Something went wrong. Try again."); }
+      const m = lsGet("nexus-reviewed", {}); m[RV.lab] = Date.now(); lsSet("nexus-reviewed", m);
+      if (RV.data && d.item){ RV.data.items.unshift(d.item); const s = RV.data.labs[RV.lab]; s.avg = ((s.avg || 0) * s.count + d.item.stars) / (s.count + 1); s.count++; d.item.tags.forEach(x => s.tags[x] = (s.tags[x] || 0) + 1); }
+      onDone && onDone();
+    } catch (err){ btn.disabled = false; btn.textContent = "Post review"; fail("No connection. Check your internet and try again."); }
+  });
+  return f;
+}
+const thanks = () => h("div", { class: "rv-thanks", role: "status" }, "✓ Thanks for your review. It helps the next students.");
+function mountReviewSlot(slot){
+  if (recentlyReviewed()){ slot.replaceChildren(thanks()); return; }
+  rvLoad();
+  slot.replaceChildren(rvForm(() => { slot.replaceChildren(thanks()); say("Review posted."); }));
+}
+function mountReviewSection(sec){
+  const draw = () => {
+    const d = RV.data, s = d && d.labs && d.labs[RV.lab];
+    const canWrite = !recentlyReviewed();
+    sec.innerHTML = `<div class="sec-h"><h2>What the class says</h2>${d && canWrite ? `<button class="btn quiet small" type="button" data-rvwrite>Rate Flow</button>` : ""}</div><div data-rvform></div>`;
+    if (!d){ sec.insertAdjacentHTML("beforeend", `<p class="rv-empty">Reviews could not be loaded right now.</p>`); return; }
+    if (!s || !s.count){ sec.insertAdjacentHTML("beforeend", `<p class="rv-empty">No reviews yet. Finish a case and be the first to say what you think.</p>`); }
+    else {
+      const items = d.items.filter(r => r.lab === RV.lab), first = items.slice(0, 4);
+      sec.insertAdjacentHTML("beforeend", rvSummary(s) + `<ul class="rv-list">${first.map(rvItem).join("")}</ul>` + (items.length > 4 ? `<button class="btn quiet small" type="button" data-rvmore style="align-self:flex-start">Show all ${items.length} reviews</button>` : ""));
+    }
+  };
+  sec.addEventListener("click", e => {
+    if (e.target.closest("[data-rvmore]")){ const d = RV.data; sec.querySelector(".rv-list").innerHTML = d.items.filter(r => r.lab === RV.lab).map(rvItem).join(""); e.target.remove(); }
+    if (e.target.closest("[data-rvwrite]")){ const slot = sec.querySelector("[data-rvform]"); e.target.closest("[data-rvwrite]").remove(); slot.replaceChildren(rvForm(() => { draw(); sec.querySelector("[data-rvform]").replaceChildren(thanks()); })); slot.querySelector(".stars button").focus(); }
+    const del = e.target.closest("[data-rvdel]");
+    if (del){ if (!del.dataset.armed){ del.dataset.armed = "1"; del.textContent = "Tap again to delete"; return; }
+      fetch(RV.api, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "delete", id: del.dataset.rvdel, key: lsGet("nexus-admin-key", "") }) }).then(r => r.ok ? rvLoad(true).then(draw) : r.json().then(x => { del.textContent = x.error || "Failed"; })); }
+  });
+  sec.innerHTML = `<div class="sec-h"><h2>What the class says</h2></div><p class="rv-empty">Loading reviews…</p>`;
+  rvLoad().then(draw);
+}
+
 /* ---------- render ---------- */
 function render(){
   const r = route();
@@ -644,6 +786,7 @@ function render(){
     document.title = `Case ${seed <= 10 ? seed : "practice"} · Flow`;
   } else {
     app.replaceChildren(r.view === "cases" ? viewCases() : viewHome());
+    const rs = app.querySelector("#rvSec"); if (rs) mountReviewSection(rs);
     document.title = "Flow · Macro Lab";
     window.scrollTo(0, 0);
   }

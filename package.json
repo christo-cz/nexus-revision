@@ -1,0 +1,9 @@
+{
+  "name": "nexus-revision",
+  "private": true,
+  "type": "module",
+  "description": "Static revision site. The only server code is netlify/functions/reviews.mjs.",
+  "dependencies": {
+    "@netlify/blobs": "11.1.3"
+  }
+}

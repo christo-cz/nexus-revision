@@ -19,7 +19,7 @@
   color-scheme:light;
   --bg:#F4F4F8; --surface:#FFFFFF; --sunk:#EAEAF1; --line:#DADAE5; --fg:#14112A; --muted:#5C5A70; --faint:#8D8BA0;
   --brand1:#3B5BFF; --brand2:#8E6CFF; --brand3:#FF5FA2;
-  --flow:#0B7472; --flow-soft:#DCEFEC;
+  --flow:#0B7472; --flow-soft:#DCEFEC; --star:#B06F07; --line-2:#C4C4D4; --bad:#B4372E;
   --f-display:"Familjen Grotesk","Avenir Next","Segoe UI",system-ui,sans-serif;
   --f-body:"Public Sans","Segoe UI",system-ui,-apple-system,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
@@ -27,11 +27,11 @@
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0F0E19; --surface:#18172A; --sunk:#211F36; --line:#2D2B45; --fg:#ECEBF7; --muted:#A8A6BF; --faint:#76748E;
-  --flow:#4CC2BC; --flow-soft:#13302F; color-scheme:dark;
+  --flow:#4CC2BC; --flow-soft:#13302F; --star:#E9AE4C; --line-2:#3C3A58; --bad:#F08A80; color-scheme:dark;
 }}
 :root[data-theme="dark"]{
   --bg:#0F0E19; --surface:#18172A; --sunk:#211F36; --line:#2D2B45; --fg:#ECEBF7; --muted:#A8A6BF; --faint:#76748E;
-  --flow:#4CC2BC; --flow-soft:#13302F; color-scheme:dark;
+  --flow:#4CC2BC; --flow-soft:#13302F; --star:#E9AE4C; --line-2:#3C3A58; --bad:#F08A80; color-scheme:dark;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -78,6 +78,30 @@ a.subj:hover{border-color:var(--c);box-shadow:0 6px 22px rgb(20 17 42 / .08)}
 .fact{border-top:2px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:4px}
 .fact h3{font-size:1rem}
 .fact p{font-size:.9rem;color:var(--muted)}
+.voices{display:flex;flex-direction:column;gap:18px}
+.voices-h{display:flex;flex-direction:column;gap:6px}
+.voices-h h2{font-size:1.5rem}
+.voices-h p{color:var(--muted);font-size:.95rem}
+.labline{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;border-left:3px solid var(--c);padding:4px 0 4px 14px;text-decoration:none}
+.labline .nm{font-family:var(--f-display);font-weight:700;font-size:1.05rem;color:var(--c)}
+.labline .avg{font-family:var(--f-mono);font-weight:700}
+.labline .n{color:var(--muted);font-size:.9rem}
+.labline .tg{display:flex;flex-wrap:wrap;gap:6px}
+.labline .tg span{font-size:.78rem;font-weight:600;padding:3px 9px;border-radius:8px;background:var(--sunk);color:var(--muted)}
+.st{color:var(--star);letter-spacing:1px;white-space:nowrap}
+.st .off{color:var(--line-2)}
+.quotes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.quote{display:flex;flex-direction:column;gap:6px;padding:16px 0;border-top:1px solid var(--line);max-width:68ch}
+.quote p{font-size:1rem;white-space:pre-line;overflow-wrap:anywhere}
+.quote .meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font-size:.85rem;color:var(--muted)}
+.quote .meta b{color:var(--fg)}
+.quote .lab{font-weight:700;color:var(--c)}
+.quote .del{margin-left:auto;border:0;background:none;color:var(--bad);font:inherit;font-size:.8rem;font-weight:700;text-decoration:underline;cursor:pointer}
+.voices .empty{color:var(--muted)}
+.voices .more{align-self:flex-start;border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:7px 12px;font:inherit;font-size:.86rem;font-weight:700;color:var(--fg);cursor:pointer;text-decoration:none}
+.admin{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px dashed var(--line-2);border-radius:12px;padding:12px;font-size:.88rem}
+.admin input{border:1px solid var(--line-2);border-radius:8px;background:var(--surface);color:var(--fg);padding:7px 10px;font:inherit;min-width:0;flex:1 1 200px}
+.admin button{border:0;border-radius:8px;padding:8px 12px;font:inherit;font-weight:700;background:var(--fg);color:var(--bg);cursor:pointer}
 .foot{border-top:1px solid var(--line);padding-top:18px;font-size:.82rem;color:var(--muted);display:flex;flex-direction:column;gap:4px}
 </style>
 </head>
@@ -110,6 +134,11 @@ a.subj:hover{border-color:var(--c);box-shadow:0 6px 22px rgb(20 17 42 / .08)}
       <div class="subj-h"><span class="label">Coming next</span><h2>More courses</h2></div>
       <div class="subj-b"><p>New labs arrive during the semester. Flow grows with each new chapter.</p></div>
     </div>
+  </section>
+
+  <section class="voices" id="voices" aria-labelledby="voicesH">
+    <div class="voices-h"><h2 id="voicesH">From the class</h2><p>Reviews from students who used the labs. Posted after finishing a case.</p></div>
+    <div id="voicesBody"><p class="empty">Loading reviews…</p></div>
   </section>
 
   <section class="facts">
@@ -147,6 +176,45 @@ a.subj:hover{border-color:var(--c);box-shadow:0 6px 22px rgb(20 17 42 / .08)}
       document.getElementById("flowGo").textContent = "Continue →";
     }
   } catch (e) {}
+})();
+/* Reviews from /api/reviews */
+(function(){
+  const LABS = { flow: { name: "Flow", href: "/macro/#rvSec", c: "var(--flow)" } };
+  const body = document.getElementById("voicesBody"), sec = document.getElementById("voices");
+  const get = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const stars = n => `<span class="st" role="img" aria-label="${n} out of 5 stars">${"★".repeat(n)}<span class="off">${"★".repeat(5 - n)}</span></span>`;
+  const ago = ts => { const d = Math.floor((Date.now() - ts) / 86400000); return d <= 0 ? "today" : d === 1 ? "yesterday" : d < 30 ? d + " days ago" : new Date(ts).toLocaleDateString("en-GB", { day: "numeric", month: "short" }); };
+  let admin = get("nexus-admin-key", "");
+  if (/[?&]admin\b/.test(location.search)){
+    const box = document.createElement("div"); box.className = "admin";
+    box.innerHTML = admin ? `Admin mode is on: a Delete link shows under each review. <button type="button">Turn off</button>` : `<label for="ak">Admin key</label><input id="ak" type="password" autocomplete="off"><button type="button">Save</button>`;
+    box.querySelector("button").addEventListener("click", () => { try { if (admin) localStorage.removeItem("nexus-admin-key"); else localStorage.setItem("nexus-admin-key", JSON.stringify(box.querySelector("input").value.trim())); } catch (e) {} location.reload(); });
+    sec.append(box);
+  }
+  let all = false, data = null;
+  function draw(){
+    if (!data){ body.innerHTML = `<p class="empty">Reviews could not be loaded right now.</p>`; return; }
+    const lines = Object.entries(LABS).map(([k, L]) => {
+      const s = data.labs[k]; if (!s || !s.count) return "";
+      const top = Object.entries(s.tags).sort((a, b) => b[1] - a[1]).slice(0, 3);
+      return `<a class="labline" href="${L.href}" style="--c:${L.c}"><span class="nm">${L.name}</span><span class="avg">${s.avg.toFixed(1)}</span>${stars(Math.round(s.avg))}<span class="n">${s.count} review${s.count > 1 ? "s" : ""}</span>${top.length ? `<span class="tg">${top.map(([t, n]) => `<span>${esc(t)} · ${n}</span>`).join("")}</span>` : ""}</a>`;
+    }).join("");
+    if (!lines){ body.innerHTML = `<p class="empty">No reviews yet. Finish a case in <a href="/macro/">Flow</a> and be the first.</p>`; return; }
+    const items = data.items.filter(r => LABS[r.lab]), shown = all || admin ? items : items.slice(0, 3);
+    body.innerHTML = `<div style="display:flex;flex-direction:column;gap:10px">${lines}</div>
+      <ul class="quotes" style="margin-top:14px">${shown.map(r => `<li class="quote" style="--c:${LABS[r.lab].c}"><p>${esc(r.text)}</p><div class="meta">${stars(r.stars)}<b>${esc(r.name || "BBA1 student")}</b><span class="lab">${LABS[r.lab].name}</span><span>${ago(r.at)}</span>${admin ? `<button class="del" type="button" data-del="${esc(r.id)}">Delete</button>` : ""}</div></li>`).join("")}</ul>
+      ${shown.length < items.length ? `<button class="more" type="button" data-more>Show all ${items.length} reviews</button>` : ""}`;
+  }
+  body.addEventListener("click", e => {
+    if (e.target.closest("[data-more]")){ all = true; draw(); }
+    const d = e.target.closest("[data-del]");
+    if (d){ if (!d.dataset.armed){ d.dataset.armed = "1"; d.textContent = "Tap again to delete"; return; }
+      fetch("/api/reviews", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "delete", id: d.dataset.del, key: admin }) })
+        .then(r => r.ok ? load() : r.json().then(x => { d.textContent = x.error || "Failed"; })); }
+  });
+  function load(){ return fetch("/api/reviews", { headers: { accept: "application/json" } }).then(r => r.ok ? r.json() : null).catch(() => null).then(d => { data = d; draw(); }); }
+  load();
 })();
 </script>
 </body>
