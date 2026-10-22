@@ -50,6 +50,7 @@
   --macro:#4CC2BC; --acc:#8F9AFF; --mgmt:#FF7FB2; --on-c:#0D1024;
   --star:#E9AE4C; --bad:#F08A80; --scrim:13 16 36; color-scheme:dark;
 }
+:root.tint-light{--fg:#1B1712;--muted:#5F574A;--faint:#8D8474;--line:#D9CDB6;--line-2:#C4B596;--surface:#FFFBF2;--sunk:#EDE3CF;--macro:#0B7472;--star:#A86A06;--bad:#B4372E;color-scheme:light}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{scroll-behavior:smooth}
@@ -416,7 +417,7 @@ const FS = (() => {
 /* ---------- background colour that follows the scroll ----------
    Two or three colours, blended in OKLab so the fade looks even. The last colour is reached at `end` of the scroll
    and then stays. */
-function scrollTint(getStops, getStart, end = 0.85){
+function scrollTint(getStops, getStart, end = 0.85, onTint = null){
   const root = document.documentElement;
   const dark = () => { const t = root.dataset.theme; return t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches); };
   const lin = c => { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
@@ -430,12 +431,13 @@ function scrollTint(getStops, getStart, end = 0.85){
   function upd(){
     raf = 0;
     const stops = getStops(dark());
-    if (!stops){ root.style.removeProperty("--bg"); root.style.removeProperty("--scrim"); return; }
+    if (!stops){ root.style.removeProperty("--bg"); root.style.removeProperty("--scrim"); if (onTint) onTint([0, 0, 0]); return; }
     const start = getStart(), span = Math.max(1, (root.scrollHeight - innerHeight) * end - start);
     const p = Math.min(1, Math.max(0, (scrollY - start) / span)), e = p * p * (3 - 2 * p);
     const x = e * (stops.length - 1), i = Math.min(stops.length - 2, Math.floor(x)), f = x - i;
     const a = toLab(stops[i]), b = toLab(stops[i + 1]), c = toRGB(a.map((v, k) => v + (b[k] - v) * f));
     root.style.setProperty("--bg", `rgb(${c.join(" ")})`); root.style.setProperty("--scrim", c.join(" "));
+    if (onTint) onTint(c);
   }
   const q = () => { if (!raf) raf = requestAnimationFrame(upd); };
   addEventListener("scroll", q, { passive: true }); addEventListener("resize", q); addEventListener("nexus-theme", q);
@@ -444,8 +446,10 @@ function scrollTint(getStops, getStart, end = 0.85){
 }
 
 FS.bind(document.getElementById("fsBtn"));
-/* two colours over the whole descent: night navy → deep wine (dark), paper → rose (light). The last one stays. */
-scrollTint(dark => dark ? ["#0D1024", "#4A0F35"] : ["#F5F6FB", "#FFD3E3"], () => document.getElementById("hero").offsetHeight * 0.12, 0.92);
+/* two colours over the whole descent, ending on a warm ecru that stays: night navy → ecru (dark), paper → ecru (light).
+   When the background turns light in dark mode, the text switches to ink (class tint-light). */
+scrollTint(dark => dark ? ["#0D1024", "#EEE3CC"] : ["#F5F6FB", "#F1E6D0"], () => document.getElementById("hero").offsetHeight * 0.12, 0.92,
+  c => { const lum = (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255; document.documentElement.classList.toggle("tint-light", lum > 0.52); });
 applyTheme();
 
 /* ---------- course tiles: progress, 3D tilt, centred tile on phones ---------- */

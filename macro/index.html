@@ -146,17 +146,30 @@ a{color:inherit}
 
 /* ---------- case workbook ---------- */
 .book{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.2fr);height:calc(100dvh - var(--hdr) - env(safe-area-inset-top,0px))}
-.sheet{overflow-y:auto;overscroll-behavior:contain;background:var(--surface);border-right:1px solid var(--line);padding-block:24px 48px;padding-left:var(--gut);padding-right:24px;display:flex;flex-direction:column;gap:16px}
+.sheet{overflow-y:auto;overscroll-behavior:contain;background:color-mix(in srgb,var(--surface) 45%,var(--bg));border-right:1px solid var(--line);padding-block:22px 48px;padding-left:var(--gut);padding-right:22px;display:flex;flex-direction:column;gap:12px}
 .sheet-h{display:flex;flex-direction:column;gap:4px}
 .sheet-h h1{font-size:1.55rem}
 .sheet-h p{font-size:.88rem;color:var(--muted)}
-.blk{border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;transition:border-color .25s,background-color .25s,opacity .25s}
+.blk{position:relative;border:1px solid transparent;background:var(--surface);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;box-shadow:0 1px 0 var(--line);transition:border-color .25s,background-color .25s,opacity .25s,transform .2s}
+.blk:hover{border-color:var(--line-2)}
+.blk .go{position:absolute;top:12px;right:14px;font-size:.74rem;font-weight:700;color:var(--flow);opacity:0;transition:opacity .2s}
+.blk:hover .go,.blk:focus-visible .go{opacity:1}
 .blk h2{font-size:.98rem;display:flex;gap:10px;align-items:center}
 .blk h2 .tg{font-family:var(--f-mono);font-size:.74rem;font-weight:700;width:22px;height:22px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;background:var(--sunk);color:var(--muted)}
 .blk p{font-size:.92rem;line-height:1.55}
 .blk.on{border-color:var(--flow);background:var(--flow-soft)}
 .blk.on h2 .tg{background:var(--flow);color:var(--on-flow)}
-.sheet.focus .blk:not(.on){opacity:.55}
+.sheet.focus .blk:not(.on){opacity:.72}
+.sheet.focus .blk:not(.on):hover{opacity:1}
+.qmap{display:flex;flex-direction:column;gap:6px;background:var(--surface);border-radius:14px;padding:12px 14px;box-shadow:0 1px 0 var(--line)}
+.qmap-h{display:flex;justify-content:space-between;align-items:baseline;font-size:.8rem;color:var(--muted);font-weight:600;margin-bottom:2px}
+.qrow{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.qrow .lt{font-family:var(--f-mono);font-size:.72rem;font-weight:700;color:var(--faint);width:16px}
+.qsq{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--line-2);background:transparent;font-family:var(--f-mono);font-size:.74rem;font-weight:700;color:var(--muted);display:inline-flex;align-items:center;justify-content:center;padding:0;transition:transform .15s,background-color .2s,border-color .2s}
+.qsq:hover{transform:translateY(-2px);border-color:var(--fg);color:var(--fg)}
+.qsq.ok{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.qsq.bad{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.qsq.cur{box-shadow:0 0 0 2.5px var(--bg),0 0 0 4.5px var(--flow)}
 .tw{overflow-x:auto}
 .tbl{width:100%;border-collapse:collapse;font-size:.9rem}
 .tbl th{font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);text-align:left;font-weight:700;padding:4px 6px;border-bottom:1px solid var(--line)}
@@ -188,6 +201,17 @@ a{color:inherit}
 .qhead{display:flex;align-items:center;gap:10px}
 .qn{font-family:var(--f-mono);font-size:.8rem;font-weight:700;min-width:30px;height:30px;border-radius:99px;display:inline-flex;align-items:center;justify-content:center;padding:0 8px;background:var(--sunk);color:var(--muted)}
 .card.ok .qn{background:var(--ok);color:var(--surface)} .card.bad .qn{background:var(--bad);color:var(--surface)}
+.card.ok{background:var(--ok-soft);border-color:color-mix(in srgb,var(--ok) 55%,transparent)}
+.card.bad{background:var(--bad-soft);border-color:color-mix(in srgb,var(--bad) 55%,transparent)}
+.card.ok.cur{border-color:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 28%,transparent),var(--shadow)}
+.card.bad.cur{border-color:var(--bad);box-shadow:0 0 0 3px color-mix(in srgb,var(--bad) 28%,transparent),var(--shadow)}
+.card:is(.ok,.bad) .verdict{background:color-mix(in srgb,var(--surface) 60%,transparent)}
+.card:is(.ok,.bad) .field{background:color-mix(in srgb,var(--surface) 70%,transparent)}
+.restart{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:5px 11px;font-size:.8rem;font-weight:700;color:var(--muted);white-space:nowrap}
+.restart:hover{color:var(--fg);border-color:var(--line-2)}
+.restart[data-armed]{color:var(--bad);border-color:var(--bad)}
+.restart svg{width:14px;height:14px}
+@media (max-width:620px){.restart .tl{display:none}}
 .qtag{font-size:.8rem;font-weight:600;color:var(--muted)}
 .qtext{font-size:1.06rem;font-weight:500;line-height:1.5;max-width:60ch}
 .snip{display:none;font-family:var(--f-mono);font-size:.82rem;color:var(--muted);background:var(--sunk);border-radius:9px;padding:8px 11px;line-height:1.5}
@@ -543,7 +567,7 @@ function sheetHtml(K){
   <div class="sheet-h"><span class="eyebrow">${K.seed <= 10 ? `Case ${K.seed} of 10` : "Practice case"}</span><h1>The economy of ${K.country}</h1>
     <p>Round to two decimals. Commas and dots both work.</p></div>
   <button class="btn quiet small sheet-toggle" type="button" data-act="sheet" aria-expanded="false">Show the case data</button>
-  <section class="blk" data-blk="A"><h2>${tg("A")}Production chain (€)</h2>
+  <section class="blk" data-blk="A" data-act="jump" tabindex="0" title="Go to the questions on this part"><span class="go">Go to questions</span><h2>${tg("A")}Production chain (€)</h2>
     <p>${f1} sells ${g1} to ${f2.toLowerCase()} for ${eur(K.s1)}. It buys no inputs.</p>
     <p>${f2} makes ${g2} and sells them to ${f3.toLowerCase()} for ${eur(K.s2)}.</p>
     <p>${f3} sells ${g3} to households for ${eur(K.s3)}.</p>
@@ -551,17 +575,17 @@ function sheetHtml(K){
       <tr><td>${f1}</td><td class="n">${eur(K.s1)}</td><td class="n">${eur(K.wages[0])}</td></tr>
       <tr><td>${f2}</td><td class="n">${eur(K.s2)}</td><td class="n">${eur(K.wages[1])}</td></tr>
       <tr><td>${f3}</td><td class="n">${eur(K.s3)}</td><td class="n">${eur(K.wages[2])}</td></tr></tbody></table></div></section>
-  <section class="blk" data-blk="B"><h2>${tg("B")}National accounts (€ bn)</h2>
+  <section class="blk" data-blk="B" data-act="jump" tabindex="0" title="Go to the questions on this part"><span class="go">Go to questions</span><h2>${tg("B")}National accounts (€ bn)</h2>
     <div class="tw"><table class="tbl"><tbody>
       ${row("Household consumption C", fmt(K.C))}${row("Investment I", fmt(K.I), "k-inj")}${row("Public spending G", fmt(K.G), "k-inj")}${row("Exports X", fmt(K.X), "k-inj")}${row("Imports M", fmt(K.M), "k-leak")}${row("Taxes net of transfers T", fmt(K.T), "k-leak")}${row("Saving S", fmt(K.S), "k-leak")}
     </tbody></table></div></section>
-  <section class="blk" data-blk="C"><h2>${tg("C")}A household (€ per month)</h2>
+  <section class="blk" data-blk="C" data-act="jump" tabindex="0" title="Go to the questions on this part"><span class="go">Go to questions</span><h2>${tg("C")}A household (€ per month)</h2>
     <p>Income ${eur(K.inc)}. Taxes ${eur(K.tax)}.</p>
     <p>Consumption function: <span class="mono">C = ${K.C0} + ${K.c}·Yd</span></p></section>
-  <section class="blk" data-blk="D"><h2>${tg("D")}Investment boost (€ bn)</h2>
+  <section class="blk" data-blk="D" data-act="jump" tabindex="0" title="Go to the questions on this part"><span class="go">Go to questions</span><h2>${tg("D")}Investment boost (€ bn)</h2>
     <p>Firms invest ${eur(K.dI)} bn more. MPC across the economy: ${K.c}.</p>
     <p class="muted">Assume spare capacity and no change in imports.</p></section>
-  <section class="blk" data-blk="E"><h2>${tg("E")}Growth: two goods, base year n</h2>
+  <section class="blk" data-blk="E" data-act="jump" tabindex="0" title="Go to the questions on this part"><span class="go">Go to questions</span><h2>${tg("E")}Growth: two goods, base year n</h2>
     <div class="tw"><table class="tbl"><thead><tr><th>Good</th><th class="n">Price n</th><th class="n">Qty n</th><th class="n">Price n+1</th><th class="n">Qty n+1</th></tr></thead><tbody>
       <tr><td>${K.g1}</td><td class="n">€${fmt(K.p1)}</td><td class="n">${K.q1} m</td><td class="n">€${fmt(K.p1b)}</td><td class="n">${K.qn1} m</td></tr>
       <tr><td>${K.g2}</td><td class="n">€${fmt(K.p2)}</td><td class="n">${K.q2} m</td><td class="n">€${fmt(K.p2b, 1)}</td><td class="n">${K.qn2} m</td></tr></tbody></table></div>
@@ -671,11 +695,14 @@ function viewCase(seed){
   const K = makeCase(seed), Q = questions(K), P = progress(seed);
   const root = h("div", { class: "book" });
   const sheet = h("aside", { class: "sheet closed", "aria-label": "Case data", html: sheetHtml(K) });
+  const qmap = h("nav", { class: "qmap", "aria-label": "Jump to a question" });
+  qmap.innerHTML = `<div class="qmap-h"><span>Questions</span><span id="qmapInfo"></span></div>` + Object.keys(BLOCKS).map(b => `<div class="qrow"><span class="lt">${b}</span>${Q.map((q, i) => q.blk === b ? `<button class="qsq" type="button" data-act="goq" data-i="${i}" aria-label="Question ${i + 1}">${i + 1}</button>` : "").join("")}</div>`).join("");
+  sheet.querySelector(".sheet-h").after(qmap);
   const qs = h("section", { class: "qs", "aria-label": "Questions" });
   const blocks = Object.keys(BLOCKS);
   const bar = h("div", { class: "bar" });
   bar.innerHTML = `<div class="bar-row"><nav class="chips" aria-label="Jump to a part">${blocks.map(b => `<button class="chip" type="button" data-act="jump" data-blk="${b}" title="${BLOCKS[b]}"><span class="tg">${b}</span>${SHORT[b]}<span class="cnt" data-cnt="${b}"></span></button>`).join("")}</nav>
-    <div class="score"><b class="num" id="sc"></b><span id="sc2"></span></div></div><div class="prog" aria-hidden="true"><i class="r" id="pr"></i><i class="w" id="pw"></i></div>`;
+    <div class="score"><b class="num" id="sc"></b><span id="sc2"></span></div><button class="restart" type="button" data-act="reset" data-label="Restart" title="Erase your answers and start this case again"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="tl">Restart</span></button></div><div class="prog" aria-hidden="true"><i class="r" id="pr"></i><i class="w" id="pw"></i></div>`;
   qs.append(bar);
   const cards = Q.map((q, i) => cardFor(q, i, Q, P, seed));
   const end = h("section", { class: "end", "aria-label": "End of the case" });
@@ -685,6 +712,8 @@ function viewCase(seed){
   function refresh(){
     const done = Q.filter(q => P.ans[q.id]).length, right = Q.filter(q => P.ans[q.id] && P.ans[q.id].ok).length, wrong = done - right;
     $("#sc", root).textContent = `${done}/${TOTAL}`;
+    qmap.querySelectorAll(".qsq").forEach(s => { const a = P.ans[Q[+s.dataset.i].id]; s.classList.toggle("ok", !!a && a.ok); s.classList.toggle("bad", !!a && !a.ok); });
+    $("#qmapInfo", root).textContent = `${right} right, ${wrong} wrong`;
     $("#sc2", root).textContent = done ? `${right} right` : "answered";
     $("#pr", root).style.width = (right / TOTAL * 100) + "%"; $("#pw", root).style.width = (wrong / TOTAL * 100) + "%";
     blocks.forEach(b => { const qb = Q.filter(q => q.blk === b), d = qb.filter(q => P.ans[q.id]).length; const el = root.querySelector(`[data-cnt="${b}"]`); el.textContent = `${d}/${qb.length}`; el.parentElement.classList.toggle("full", d === qb.length); });
@@ -694,10 +723,11 @@ function viewCase(seed){
       ? `<h2>${TOTAL - done} question${TOTAL - done > 1 ? "s" : ""} to go</h2><p class="muted">Your score so far: ${right} right out of ${done}.</p><div class="row"><button class="btn primary" type="button" data-act="first-open">Go to the next unanswered question</button></div>`
       : `<span class="eyebrow">Case finished</span><h2>${P.pct}% · ${right} of ${TOTAL} right</h2>
          <div class="blocks-sum">${blocks.map(b => { const qb = Q.filter(q => q.blk === b), r = qb.filter(q => P.ans[q.id] && P.ans[q.id].ok).length; return `<div class="bs"><b>${r}/${qb.length}</b><span>${b} · ${BLOCKS[b]}</span></div>`; }).join("")}</div>
-         <div class="row">${wrong ? `<button class="btn quiet" type="button" data-act="first-wrong">Review my ${wrong} mistake${wrong > 1 ? "s" : ""}</button>` : ""}<a class="btn primary" href="#case${seed < 10 ? seed + 1 : 1}">Next case →</a><button class="btn quiet" type="button" data-act="reset">Start again</button></div><div data-rvslot></div>`;
+         <div class="row">${wrong ? `<button class="btn quiet" type="button" data-act="first-wrong">Review my ${wrong} mistake${wrong > 1 ? "s" : ""}</button>` : ""}<a class="btn primary" href="#case${seed < 10 ? seed + 1 : 1}">Next case →</a><button class="btn quiet" type="button" data-act="reset" data-label="Restart this case">Restart this case</button></div><div data-rvslot></div>`;
     const slot = end.querySelector("[data-rvslot]"); if (slot) mountReviewSlot(slot);
   }
   root.addEventListener("answered", refresh);
+  sheet.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("blk")){ e.preventDefault(); e.target.click(); } });
   root.addEventListener("click", e => {
     const t = e.target.closest("[data-act]"); if (!t) return;
     const a = t.dataset.act;
@@ -706,13 +736,15 @@ function viewCase(seed){
     if (a === "jump"){ focusCard(cards.find(c => c.dataset.blk === t.dataset.blk && !P.ans[c.dataset.id]) || cards.find(c => c.dataset.blk === t.dataset.blk)); }
     if (a === "first-open"){ focusCard(cards.find(c => !P.ans[c.dataset.id])); }
     if (a === "first-wrong"){ focusCard(cards.find(c => P.ans[c.dataset.id] && !P.ans[c.dataset.id].ok)); }
-    if (a === "reset"){ if (t.dataset.armed){ saveProgress(seed, { ans: {} }); render(); } else { t.dataset.armed = "1"; t.textContent = "Tap again to erase your answers"; setTimeout(() => { if (t.isConnected){ delete t.dataset.armed; t.textContent = "Start again"; } }, 4000); } }
+    if (a === "goq"){ focusCard(cards[+t.dataset.i]); }
+    if (a === "reset"){ const lab = t.querySelector(".tl") || t; if (t.dataset.armed){ saveProgress(seed, { ans: {} }); render(); } else { t.dataset.armed = "1"; lab.textContent = "Tap again to erase"; setTimeout(() => { if (t.isConnected){ delete t.dataset.armed; lab.textContent = t.dataset.label || "Restart"; } }, 4000); } }
   });
   /* the question in the middle of the view drives the highlights */
   requestAnimationFrame(() => {
     const desk = matchMedia("(min-width: 981px)").matches;
     const setCur = card => {
       cards.forEach(c => c.classList.toggle("cur", c === card)); qs.classList.add("has-cur");
+      qmap.querySelectorAll(".qsq").forEach(s => s.classList.toggle("cur", cards[+s.dataset.i] === card));
       const blk = card.dataset.blk;
       sheet.classList.add("focus");
       sheet.querySelectorAll(".blk").forEach(b => b.classList.toggle("on", b.dataset.blk === blk));
@@ -720,8 +752,19 @@ function viewCase(seed){
       if (desk){ const b = sheet.querySelector(`.blk[data-blk="${blk}"]`); if (b){ const top = b.getBoundingClientRect().top - sheet.getBoundingClientRect().top + sheet.scrollTop - 16; if (Math.abs(sheet.scrollTop - top) > 40) sheet.scrollTo({ top, behavior: "smooth" }); } }
       else { const chip = bar.querySelector(`.chip[data-blk="${blk}"]`); if (chip) chip.scrollIntoView({ block: "nearest", inline: "nearest" }); }
     };
-    const io = new IntersectionObserver(ents => { for (const en of ents) if (en.isIntersecting) setCur(en.target); }, { root: desk ? qs : null, rootMargin: desk ? "-42% 0px -42% 0px" : "-40% 0px -50% 0px" });
-    cards.forEach(c => io.observe(c));
+    /* the current question is the card closest to the centre of the scrolling area (the snap point) */
+    let lock = 0, raf = 0, last = null;
+    const pick = () => {
+      raf = 0; if (performance.now() < lock) return;
+      let mid;
+      if (desk){ const r = qs.getBoundingClientRect(); mid = r.top + 120 + (qs.clientHeight - 144) / 2; }
+      else { const b = bar.getBoundingClientRect(); mid = b.bottom + (innerHeight - b.bottom) / 2; }
+      let best = null, bd = 1e9;
+      for (const c of cards){ const r = c.getBoundingClientRect(), d = Math.abs(r.top + r.height / 2 - mid); if (d < bd){ bd = d; best = c; } }
+      if (best && best !== last){ last = best; setCur(best); }
+    };
+    (desk ? qs : window).addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(pick); }, { passive: true });
+    root.addEventListener("focuscard", e => { last = e.detail; setCur(e.detail); lock = performance.now() + 900; setTimeout(() => { lock = 0; pick(); }, 950); });
     const first = cards.find(c => !P.ans[c.dataset.id]);
     if (first && first !== cards[0]) focusCard(first, true); else setCur(cards[0]);
   });
@@ -730,6 +773,7 @@ function viewCase(seed){
 }
 function focusCard(card, instant){
   if (!card) return;
+  if (card.classList.contains("card")) card.dispatchEvent(new CustomEvent("focuscard", { bubbles: true, detail: card }));
   card.scrollIntoView({ block: "center", behavior: instant || matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   const target = card.querySelector("input:not([disabled]), .opt:not([disabled])") || card.querySelector("[data-act='next']");
   if (target) setTimeout(() => target.focus({ preventScroll: true }), instant ? 0 : 380);
@@ -939,7 +983,7 @@ const FS = (() => {
 /* ---------- background colour that follows the scroll ----------
    Two or three colours, blended in OKLab so the fade looks even. The last colour is reached at `end` of the scroll
    and then stays. */
-function scrollTint(getStops, getStart, end = 0.85){
+function scrollTint(getStops, getStart, end = 0.85, onTint = null){
   const root = document.documentElement;
   const dark = () => { const t = root.dataset.theme; return t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches); };
   const lin = c => { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
@@ -953,12 +997,13 @@ function scrollTint(getStops, getStart, end = 0.85){
   function upd(){
     raf = 0;
     const stops = getStops(dark());
-    if (!stops){ root.style.removeProperty("--bg"); root.style.removeProperty("--scrim"); return; }
+    if (!stops){ root.style.removeProperty("--bg"); root.style.removeProperty("--scrim"); if (onTint) onTint([0, 0, 0]); return; }
     const start = getStart(), span = Math.max(1, (root.scrollHeight - innerHeight) * end - start);
     const p = Math.min(1, Math.max(0, (scrollY - start) / span)), e = p * p * (3 - 2 * p);
     const x = e * (stops.length - 1), i = Math.min(stops.length - 2, Math.floor(x)), f = x - i;
     const a = toLab(stops[i]), b = toLab(stops[i + 1]), c = toRGB(a.map((v, k) => v + (b[k] - v) * f));
     root.style.setProperty("--bg", `rgb(${c.join(" ")})`); root.style.setProperty("--scrim", c.join(" "));
+    if (onTint) onTint(c);
   }
   const q = () => { if (!raf) raf = requestAnimationFrame(upd); };
   addEventListener("scroll", q, { passive: true }); addEventListener("resize", q); addEventListener("nexus-theme", q);
