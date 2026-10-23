@@ -19,7 +19,7 @@ Une page d'accueil (hub) qui liste les matières, et un « lab » par matière.
 ## Structure
 
 ```
-/index.html        hub Nexus : haut de page en WebGL (feuille quadrillée en 3D), liste des matières, avis, auteur
+/index.html        hub Nexus : haut de page en WebGL (feuille quadrillée en 3D, mis en pause quand il a presque quitté l'écran), liste des matières, avis, auteur
 /favicon.svg       logo N de Nexus (dégradé bleu → violet → rose)
 /macro/index.html  lab « Macroeconomics » (Business Economics, semestre 1). Nom interne `flow` gardé pour les clés de stockage et l'API des avis.
 /management/index.html  lab « Fundamentals of Management and Organizations » (S1). Nom interne `mgmt` (stockage `mgmt-v1`, avis `lab: "mgmt"`).
@@ -55,13 +55,12 @@ Une nouvelle matière = un dossier `/<matiere>/index.html` autonome, plus une li
 - Élément signature : une feuille d'examen quadrillée (petits carreaux, trait renforcé tous les 5) en WebGL écrit à la main, sans librairie. Elle vit seule même sans interaction : le puits se promène sur un trajet qui ne se répète pas, des ondes de 4 couleurs (bleu, violet, rose, cyan) naissent au hasard, et de petits arcs électriques claquent de temps en temps dans la moitié haute. La souris prend la main sur le puits, un clic ou un toucher envoie une onde.
 - Garde-fous : pause hors écran et onglet caché, mode économe automatique si les images sont lentes (résolution réduite, une image sur deux, mais l'animation continue), image fixe si « mouvement réduit », fond quadrillé en CSS si WebGL est absent.
 - Sous le titre, le menu signature (demande d'Alexi : un menu 3D qu'on peut tourner, original, différent du carrousel de verre de Zadig) : **un crayon hexagonal en 3D** (CSS 3D écrit à la main, sans librairie, `#penUI`).
-  - Chaque face du crayon, laquée de sa couleur et marquée en lettres dorées, est une entrée : Macroeconomics, Management, Global Challenges, Mock exams (les trois examens blancs), The class wall (`#reviews`, avec la note moyenne), How it works (`#how`).
+  - Chaque face du crayon, laquée de sa couleur et marquée en lettres dorées, est une entrée : Macroeconomics, Management, Global Challenges, Mock exams (les trois examens blancs : trois boutons neutres avec un losange de la couleur de la matière, qui prennent cette couleur au survol ou au toucher), The class wall (`#reviews`, avec la note moyenne), How it works (`#how`).
   - On le tourne en le faisant glisser (de haut en bas à la souris, de côté au doigt, les glissements verticaux font toujours défiler la page), avec de l'inertie puis un aimantage sur la face la plus proche. Pastilles et flèches pour le clavier, carte en dessous avec le lien.
   - Un clic sur la face de devant ouvre l'entrée ; sur une autre face, le crayon tourne jusqu'à elle. Éclairage calculé par face (lumière en haut et devant), gomme, virole, pointe taillée en bois et mine.
   - À l'arrivée, le crayon roule sur la feuille jusqu'à sa place, puis fait un petit quart de tour pour montrer qu'il tourne.
   - Si « mouvement réduit » est demandé ou si le navigateur ne gère pas la 3D, les anciennes tuiles s'affichent à la place (`#tiles`, toujours dans la page). Survol : la tuile prend la couleur de sa matière, change de visuel (vitrine façon popterror.com) et s'incline vers la souris, les autres s'effacent. Sur téléphone : carrousel, la tuile centrée est mise en valeur. Un clic mène à l'overview de la matière, jamais directement à un cas.
-- Ensuite : « How it works », avis, bloc auteur. Pas de sous-catégorie (« All cases », etc.) sur l'accueil.
-- Sous « How it works », une bande de feuille d'examen (`#spec`) montre une question tirée en direct par de petits générateurs (multiplicateur, APC, valeur ajoutée, équité), avec la ligne de calcul ; nouveau tirage toutes les 7,5 s quand elle est visible (pas au survol, pas en mouvement réduit) et bouton « Draw another ». Les réponses sont calculées par le code, comme dans les labs.
+- Ensuite : « How it works » (trois points, plus de question tirée en direct, retirée le 23 octobre à la demande d'Alexi), avis, bloc auteur. Pas de sous-catégorie (« All cases », etc.) sur l'accueil.
 
 ## Effets communs (toutes les pages sauf l'exercice en cours)
 
