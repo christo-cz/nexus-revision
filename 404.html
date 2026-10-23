@@ -16,14 +16,14 @@
 :root{
   color-scheme:dark;
   --bg:#0D1024; --fg:#ECEDFA; --muted:#A8ADD2; --line:#2A3060; --line-2:#3A4178; --surface:#161A3A;
-  --grid:150 165 255; --pen:#FF6B6B; --macro:#4CC2BC; --mgmt:#FF7FB2;
+  --grid:150 165 255; --pen:#FF6B6B; --macro:#4CC2BC; --mgmt:#FF7FB2; --sgc:#8EE26B;
   --f-display:"Familjen Grotesk","Avenir Next","Segoe UI",system-ui,sans-serif;
   --f-body:"Public Sans","Segoe UI",system-ui,-apple-system,sans-serif;
 }
 :root[data-theme="light"]{
   color-scheme:light;
   --bg:#F5F6FB; --fg:#12142B; --muted:#565B78; --line:#D9DCEA; --line-2:#C2C6DB; --surface:#FFFFFF;
-  --grid:70 92 190; --pen:#C8322F; --macro:#0B7472; --mgmt:#B5386F;
+  --grid:70 92 190; --pen:#C8322F; --macro:#0B7472; --mgmt:#B5386F; --sgc:#3B7A18;
 }
 *{box-sizing:border-box}
 html,body{min-height:100%}
@@ -60,6 +60,7 @@ p{margin:0;color:var(--muted);max-width:52ch;font-size:1.06rem}
   <nav class="go" aria-label="Courses">
     <a href="/macro/" style="--c:var(--macro)"><b>Macroeconomics</b><span>Cases, tutorials, mock exam</span></a>
     <a href="/management/" style="--c:var(--mgmt)"><b>Management and Organizations</b><span>Cases, labs, exam questions</span></a>
+    <a href="/global/" style="--c:var(--sgc)"><b>Societal and Global Challenges</b><span>Causal diagrams, key figures, mock exam</span></a>
     <a href="/" style="--c:var(--fg)"><b>All courses</b><span>The Nexus home page</span></a>
   </nav>
   <p class="legal">A student project to help with revision. Not an official EDHEC website.</p>
