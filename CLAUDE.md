@@ -241,13 +241,29 @@ Neuf séances de 2 h (dont l'atelier 2tonnes). **Évaluation :** 20 % travail de
 
 ## Modules de révision du lab Macroeconomics (en place)
 
-Navigation par hash dans `/macro/` : `#home`, `#learn`, `#learn-<chapitre>`, `#cases`, `#caseN`, `#drills`, `#quiz` (`#quiz-<chapitre>`), `#cards` (`#cards-<chapitre>`), `#open`, `#open-oN`, `#mock`, `#recap`. Chapitres : `thought`, `activity`, `determinants`, `growth`.
+Navigation par hash dans `/macro/` : `#home`, `#learn`, `#learn-<chapitre>`, `#cases`, `#caseN`, `#drills`, `#spot`, `#quiz` (`#quiz-<chapitre>`), `#cards` (`#cards-<chapitre>`), `#open`, `#open-oN`, `#mock`, `#recap`. Chapitres : `thought`, `activity`, `determinants`, `growth`.
 
 - **Contenu** (constantes JS dans la page, rédigées à partir des slides, reformulées) : `COURSE` (4 chapitres, sections, fiches : `line`, `points`, `formula`, `example`, `trap`, `exam`), `QUIZ` (QCM, bonne réponse en position 0 dans les données, mélangée à l'affichage), `CARDS` (flashcards), `OPEN` (questions ouvertes : réponse modèle + points clés à cocher).
-- **Learn** : fiches à cocher « I know this », sommaire collant, widgets interactifs (frise des écoles, tableau classiques/Keynes, tableau des agents, schéma du circuit, fonction de consommation, courbe d'investissement, tours du multiplicateur).
+- **Learn** : fiches à cocher « I know this », sommaire collant, 18 modèles interactifs. Une section peut en porter plusieurs (`widget: ["realgdp", "ppp", "hdi"]`). Liste :
+  - frise des écoles ; tableau classiques/Keynes ; tableau des agents ; schéma du circuit ;
+  - fonction de consommation ; courbe d'investissement ; tours du multiplicateur ;
+  - ajoutés le 23 octobre pour être au niveau de Management :
+    - avantage comparatif de Ricardo (ses chiffres de 1817 ou des chiffres tirés, prédiction puis production mondiale avant/après) ;
+    - Say contre Keynes (chaîne animée, et ce que chacun prédit si l'incertitude monte) ;
+    - valeur ajoutée le long de la chaîne blé → farine → pain (les trois approches du PIB et le double comptage) ;
+    - emplois = ressources (C + I + G + X contre Y + M) ;
+    - balance des fuites et injections prévues (la production s'ajuste jusqu'à Y*) ;
+    - choix intertemporel de Fisher (droite de budget qui pivote avec r) ;
+    - croissance trimestrielle à qualifier (expansion, ralentissement, récession au sens de l'INSEE, un seul trimestre négatif) ;
+    - PIB nominal et réel (deux biens) ;
+    - PPA façon indice Big Mac (prix inventés) ;
+    - IDH avec la méthode du PNUD (profils inventés) ;
+    - vagues de Kondratiev et destruction créatrice (stylisé).
 - **Drills** : générateurs `GEN` (nombres aléatoires, réponse calculée par le code), série, sprint de 60 s.
+- **Spot it** (`#spot`) : même moteur que Management (`viewSpot`), 159 énoncés en 19 familles (école, auteur, motif de détention de la monnaie, vue classique ou keynésienne, agent, fuite ou injection, approche du PIB, W contre J, déterminant et nature de l'investissement, propensions, multiplicateur, phase du cycle, nominal ou réel, mesure, ce que le PIB compte, sources de la croissance, Fisher, Kuznets, Schumpeter, Kondratiev, Rosling). Données `FAMILIES` et `SPOT` dans la page. Progression `spot` dans `flow-v1`.
+- Accueil : 8 tuiles de modules (Learn, Tutorials, Drills, Spot it, Quiz, Flashcards, Open questions, Recap), puis la bannière de l'examen blanc.
 - **Quiz**, **Flashcards** (pile, touches Espace / ← / →), **Open questions** (texte sauvegardé, grille de points).
-- Progression dans `flow-v1` : `learn`, `drills`, `quiz`, `cards`, `open`, `td`, `mock` (examen blanc en cours ou terminé), `mockHist` (20 derniers résultats).
+- Progression dans `flow-v1` : `learn`, `drills`, `spot`, `quiz`, `cards`, `open`, `td`, `mock` (examen blanc en cours ou terminé), `mockHist` (20 derniers résultats).
 - **Mock exam** (`#mock`) : les deux parties du final. Partie A : questions ouvertes tirées dans `OPEN` (toujours une sur l'histoire de la pensée, puis une par chapitre). Partie B : un ou plusieurs exercices de TD générés par `TD_GEN` (les chiffres sont enregistrés avec l'examen, pour survivre à un rechargement). Durée au choix, 60, 90 ou 120 minutes (`MOCK_FMT`), car le syllabus ne la donne pas : la page le dit. Rien n'est corrigé avant « Finish and mark » (deux appuis) ou la fin du temps ; ensuite les calculs et les QCM sont notés par le code, l'écriture par l'étudiant avec les points clés. Bannière « Mock exam » (feuille quadrillée avec marge rouge) sous les modules de l'accueil et en haut d'Open questions.
 - **Tutorials** (`#td`, `#td-<type>`, `#td-all`) : les 5 exercices du TD 1 avec des chiffres aléatoires. Calculs vérifiés par le code ; questions « explain » comparées à une réponse modèle avec points clés à cocher. Attention : dans le TD, W et J sont des montants prévus, et W ≠ J signifie un déséquilibre (W > J : contraction). Dans les comptes réalisés, W = J toujours. Les fiches distinguent les deux.
 - Vue d'un cas : carte des 30 questions cliquable (centre la question), blocs de données cliquables, carte entière verte ou rouge selon la réponse, bouton Restart.

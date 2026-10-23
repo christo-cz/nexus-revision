@@ -850,6 +850,30 @@ html.theme-vt::view-transition-new(root){animation:themeReveal .65s cubic-bezier
 @keyframes fspulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--fg) 0%,transparent)}50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--fg) 22%,transparent)}}
 .fs-pulse{animation:fspulse 1.1s ease-in-out 3}
 @media (prefers-reduced-motion:reduce){.fsinv{transition:none}.fs-pulse{animation:none}}
+/* spot it */
+.spotq .scene{font-family:var(--f-display);font-size:clamp(1.25rem,2.6vw,1.6rem);font-weight:600;line-height:1.35;letter-spacing:-.01em}
+.spotq .qzprog{justify-content:space-between}
+/* ---------- learn models added 23 Oct ---------- */
+.wbtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.wq{font-weight:700;margin:16px 0 0}
+.wsrc{font-size:.8rem;color:var(--faint);margin-top:6px}
+.wtop{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.btn.okb{background:var(--ok);color:var(--bg);border-color:transparent}
+.btn.badb{background:var(--bad);color:var(--bg);border-color:transparent}
+.btn:disabled{cursor:default}
+.widget .verdict{margin-top:12px}
+.ricbars{max-width:440px;margin-top:10px}
+.chain{list-style:none;margin:18px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px}
+.chain li{position:relative;display:flex;align-items:center;min-height:78px;border:1.5px solid var(--c,var(--pri));border-radius:14px;padding:14px 12px;background:var(--surface);font-weight:700;font-size:.92rem;line-height:1.35}
+.chain li:not(:last-child)::after{content:"→";position:absolute;right:-23px;top:50%;transform:translateY(-50%);color:var(--c,var(--pri));font-size:1.15rem;font-weight:700}
+.chain.go li{animation:chainOn .55s cubic-bezier(.2,.8,.2,1) calc(var(--i) * .32s) both}
+@keyframes chainOn{from{opacity:.15;transform:translateY(8px);border-color:var(--line)}}
+@media (max-width:700px){.chain{grid-template-columns:1fr;gap:22px}.chain li{min-height:0}.chain li:not(:last-child)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-22px;transform:translateX(-50%)}}
+.wv{cursor:pointer;outline:none}
+.wv:focus-visible rect{stroke:var(--pri);stroke-width:2}
+.wavec{display:flex;flex-direction:column;gap:4px;margin-top:8px;font-size:.95rem}
+.wavec span{color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.chain.go li{animation:none}}
 /* ================= Management lab: specific components ================= */
 .btn svg{width:18px;height:18px;flex:none}
 .nbox.ex{background:var(--pri-soft)} .nbox.ex .nb-h{color:var(--pri)}
@@ -2799,7 +2823,7 @@ function viewChapter(id){
     </aside>
     <div class="chbody">
       ${mhead(`Session ${c.n}`, c.title, c.intro)}
-      ${c.sections.map((sec, i) => `<section class="nsec" data-seci="${i}"><h2>${sec.title}</h2>${sec.widget ? `<div class="widget" data-widget="${sec.widget}"></div>` : ""}${sec.cards.map(k => noteCard(k, known[k.id])).join("")}</section>`).join("")}
+      ${c.sections.map((sec, i) => `<section class="nsec" data-seci="${i}"><h2>${sec.title}</h2>${[].concat(sec.widget || []).map(w => `<div class="widget" data-widget="${w}"></div>`).join("")}${sec.cards.map(k => noteCard(k, known[k.id])).join("")}</section>`).join("")}
       <nav class="chnext">${prev ? `<a class="btn glassy" href="#learn-${prev.id}">${ICO.back}${prev.title}</a>` : "<span></span>"}<a class="btn primary" href="#quiz-${c.id}">Test this session</a>${next ? `<a class="btn glassy" href="#learn-${next.id}">${next.title}${ICO.arrow}</a>` : "<span></span>"}</nav>
     </div>
   </div>` });

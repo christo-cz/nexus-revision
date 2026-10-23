@@ -926,6 +926,30 @@ html.theme-vt::view-transition-new(root){animation:themeReveal .65s cubic-bezier
 @keyframes fspulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--fg) 0%,transparent)}50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--fg) 22%,transparent)}}
 .fs-pulse{animation:fspulse 1.1s ease-in-out 3}
 @media (prefers-reduced-motion:reduce){.fsinv{transition:none}.fs-pulse{animation:none}}
+/* spot it */
+.spotq .scene{font-family:var(--f-display);font-size:clamp(1.25rem,2.6vw,1.6rem);font-weight:600;line-height:1.35;letter-spacing:-.01em}
+.spotq .qzprog{justify-content:space-between}
+/* ---------- learn models added 23 Oct ---------- */
+.wbtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.wq{font-weight:700;margin:16px 0 0}
+.wsrc{font-size:.8rem;color:var(--faint);margin-top:6px}
+.wtop{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.btn.okb{background:var(--ok);color:var(--bg);border-color:transparent}
+.btn.badb{background:var(--bad);color:var(--bg);border-color:transparent}
+.btn:disabled{cursor:default}
+.widget .verdict{margin-top:12px}
+.ricbars{max-width:440px;margin-top:10px}
+.chain{list-style:none;margin:18px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px}
+.chain li{position:relative;display:flex;align-items:center;min-height:78px;border:1.5px solid var(--c,var(--flow));border-radius:14px;padding:14px 12px;background:var(--surface);font-weight:700;font-size:.92rem;line-height:1.35}
+.chain li:not(:last-child)::after{content:"→";position:absolute;right:-23px;top:50%;transform:translateY(-50%);color:var(--c,var(--flow));font-size:1.15rem;font-weight:700}
+.chain.go li{animation:chainOn .55s cubic-bezier(.2,.8,.2,1) calc(var(--i) * .32s) both}
+@keyframes chainOn{from{opacity:.15;transform:translateY(8px);border-color:var(--line)}}
+@media (max-width:700px){.chain{grid-template-columns:1fr;gap:22px}.chain li{min-height:0}.chain li:not(:last-child)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-22px;transform:translateX(-50%)}}
+.wv{cursor:pointer;outline:none}
+.wv:focus-visible rect{stroke:var(--flow);stroke-width:2}
+.wavec{display:flex;flex-direction:column;gap:4px;margin-top:8px;font-size:.95rem}
+.wavec span{color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.chain.go li{animation:none}}
 </style>
 </head>
 <body>
@@ -937,6 +961,7 @@ html.theme-vt::view-transition-new(root){animation:themeReveal .65s cubic-bezier
     <a href="#cases" data-route="cases">Cases</a>
     <a href="#td" data-route="td">Tutorials</a>
     <a href="#drills" data-route="drills">Drills</a>
+    <a href="#spot" data-route="spot">Spot it</a>
     <a href="#quiz" data-route="quiz">Quiz</a>
     <a href="#cards" data-route="cards">Flashcards</a>
     <a href="#open" data-route="open">Open questions</a>
@@ -1182,6 +1207,7 @@ function route(){
   if (/^td-\w+$/.test(hs)) return { view: "tdex", id: hs.slice(3) };
   if (/^learn-\w+$/.test(hs)) return { view: "chapter", id: hs.slice(6) };
   if (hs === "drills") return { view: "drills" };
+  if (hs === "spot") return { view: "spot" };
   if (hs === "quiz" || /^quiz-\w+$/.test(hs)) return { view: "quiz", id: hs.slice(5) };
   if (hs === "cards" || /^cards-\w+$/.test(hs)) return { view: "cards", id: hs.slice(6) };
   if (hs === "open") return { view: "open" };
@@ -1938,7 +1964,7 @@ const COURSE = [
       points: ["Wealth means goods that meet needs, created by productive labour, not precious metals.", "Agriculture is the only productive activity; industry transforms and trade exchanges.", "Three classes: productive farmers, sterile manufacturers and merchants, and landowners.", "\"Laissez faire, laissez passer\" (Vincent de Gournay): let people act and let goods move freely.", "Freedom and private property are natural rights. They are the forerunners of economic liberalism."],
       trap: "Physiocrats are liberal, but they are not Classical: for them only agriculture creates value." }
   ]},
-  { title: "The Classical school", cards: [
+  { title: "The Classical school", widget: ["ricardo"], cards: [
     { id: "t-class", title: "Who and when",
       line: "Born with the Industrial Revolution: labour, markets and freedom at the centre.",
       points: ["Adam Smith, The Wealth of Nations (1776).", "David Ricardo, Principles of Political Economy and Taxation (1817).", "Jean-Baptiste Say and Say's Law.", "John Stuart Mill, Principles of Political Economy (1848).", "Six principles: theory of value, liberalism, the market, Say's Law, a minimal State, neutral money."] },
@@ -1977,7 +2003,7 @@ const COURSE = [
       points: ["The stock market crash ruined investors, who could no longer repay their debts.", "Banks could no longer finance the economy and went bankrupt.", "Activity came to a standstill.", "The Classical answer was to wait for a return to equilibrium. It did not come."],
       exam: "1929 is the bridge between the Classical view and Keynes." }
   ]},
-  { title: "Keynes", cards: [
+  { title: "Keynes", widget: ["saykeynes"], cards: [
     { id: "t-keynes", title: "Keynes and the General Theory (1936)",
       line: "The founder of modern macroeconomics breaks with the Classics on four points.",
       points: ["Level of analysis: the whole economy.", "Money: not neutral.", "Aggregate demand: it drives output.", "The State: it should intervene."] },
@@ -2017,7 +2043,7 @@ const COURSE = [
       line: "Not really an agent, since it has no main function, but it records all trade with non-residents.",
       points: ["Imports, exports, income transfers to and from abroad."] }
   ]},
-  { title: "Aggregates and GDP three ways", cards: [
+  { title: "Aggregates and GDP three ways", widget: ["valueadded"], cards: [
     { id: "a-agg", title: "Aggregates",
       line: "An aggregate adds up individual quantities to describe the whole country.",
       points: ["Examples: GDP, household consumption, investment, the money supply.", "GDP is the most studied: it adds up the output of every firm."] },
@@ -2040,13 +2066,13 @@ const COURSE = [
       example: "If households buy all the bread and there is no investment, State or trade: Y = C = €200,000.",
       trap: "Only final purchases count. The mill buying wheat is intermediate consumption, not investment." }
   ]},
-  { title: "Aggregate demand", cards: [
+  { title: "Aggregate demand", widget: ["demand"], cards: [
     { id: "a-ad", title: "The four uses of output",
       line: "Demand comes from households (C), firms (I), the State (G) and abroad (X).",
       points: ["C: household consumption, which brings well-being.", "I: what firms buy to increase, improve or replace equipment. Investment is a flow over a period, added to the capital stock.", "G: State purchases of goods and services, and its staff.", "X: exports, demanded by the rest of the world."],
       trap: "The slides say exports make goods \"leak\" out of the country. In the circuit, though, X is an injection: foreign spending that brings income in." }
   ]},
-  { title: "The economic circuit", widget: "circuit", cards: [
+  { title: "The economic circuit", widget: ["circuit", "balance"], cards: [
     { id: "a-simple", title: "The simplified circular flow",
       line: "Two agents only: households and firms. Nothing leaks out, nothing comes in.",
       points: ["Households spend all their income: no saving.", "Firms pay out all their revenue as income: no investment.", "Result: the economy is stationary, the same from one year to the next."] },
@@ -2121,7 +2147,7 @@ const COURSE = [
       points: ["Richer households, and richer countries, should have a lower APC and a higher APS.", "As living standards rise, a country's APC should slowly fall.", "Kuznets (Nobel 1971), on US data: true in the short run, but in the long run the APC and APS are stable.", "So Keynes' view is static: it ignores the choice between consuming now and later."],
       exam: "A classic open question: state the psychological law, its implications, then Kuznets' test." }
   ]},
-  { title: "Fisher: the intertemporal choice", cards: [
+  { title: "Fisher: the intertemporal choice", widget: ["fisher"], cards: [
     { id: "d-fisher", title: "Saving as postponed consumption",
       line: "Saving is not a leftover: it finances future consumption.",
       points: ["Irving Fisher (1930).", "Saved money can be hoarded as cash (no interest) or lent to an agent who needs funds.", "Lending turns saving into a financial investment and gives the saver a financing capacity.", "A loan transfers purchasing power from the present to the future."] },
@@ -2174,7 +2200,7 @@ const COURSE = [
 { id: "growth", n: 4, title: "Economic growth", short: "Growth", c: "var(--ch4)",
   intro: "How growth is measured, what GDP does and does not capture, and what makes economies grow.",
   sections: [
-  { title: "Measuring growth", cards: [
+  { title: "Measuring growth", widget: ["quarters"], cards: [
     { id: "g-rate", title: "The growth rate",
       line: "The percentage change in GDP from one period to the next.",
       formula: "g = (GDP n+1 − GDP n) / GDP n × 100",
@@ -2186,7 +2212,7 @@ const COURSE = [
       example: "+0.6%, +0.4%, +0.2%, +0.1% is a slowdown. +0.4%, −0.2%, −0.3%, +0.1% is a recession.",
       trap: "A slowdown is not a recession: GDP still grows." }
   ]},
-  { title: "GDP", cards: [
+  { title: "GDP", widget: ["realgdp", "ppp", "hdi"], cards: [
     { id: "g-def", title: "What GDP is",
       line: "The market value of all final goods and services produced in a country over a given period.",
       points: ["Market value: goods are counted at their market prices.", "Final goods only: bought by their final user. Intermediate goods are inside the final price, so excluding them avoids double counting.", "Territorial: the output of all resident units, whatever their nationality.", "One period: usually a year or a quarter."] },
@@ -2220,7 +2246,7 @@ const COURSE = [
       points: ["Modern growth lets more people live longer, not just consume more.", "It has relied on an exponential rise in CO₂ emissions, which drives climate change.", "It reshuffled power between continents and countries."],
       example: "Hans Rosling's \"200 countries, 200 years, 4 minutes\" shows it in one animation." }
   ]},
-  { title: "What drives growth", cards: [
+  { title: "What drives growth", widget: ["waves"], cards: [
     { id: "g-endo-g", title: "Endogenous: the role of government",
       line: "Public goods make an economy more productive.",
       points: ["Good, well-maintained infrastructure: roads, power, telecoms.", "An effective education system: a skilled workforce.", "Enough public R&D to drive innovation."] },
@@ -2508,7 +2534,7 @@ function viewChapter(id){
     </aside>
     <div class="chbody">
       ${mhead(`Chapter ${c.n}`, c.title, c.intro)}
-      ${c.sections.map((sec, i) => `<section class="nsec" data-seci="${i}"><h2>${sec.title}</h2>${sec.widget ? `<div class="widget" data-widget="${sec.widget}"></div>` : ""}${sec.cards.map(k => noteCard(k, known[k.id])).join("")}</section>`).join("")}
+      ${c.sections.map((sec, i) => `<section class="nsec" data-seci="${i}"><h2>${sec.title}</h2>${[].concat(sec.widget || []).map(w => `<div class="widget" data-widget="${w}"></div>`).join("")}${sec.cards.map(k => noteCard(k, known[k.id])).join("")}</section>`).join("")}
       <nav class="chnext">${prev ? `<a class="btn glassy" href="#learn-${prev.id}">${ICO.back}${prev.title}</a>` : "<span></span>"}<a class="btn primary" href="#quiz-${c.id}">Test this chapter</a>${next ? `<a class="btn glassy" href="#learn-${next.id}">${next.title}${ICO.arrow}</a>` : "<span></span>"}</nav>
     </div>
   </div>` });
@@ -2620,8 +2646,552 @@ const WIDGETS = {
       out.innerHTML = `<div><dt>k = 1 / (1 − c)</dt><dd>${fmt(k, 2)}</dd></div><div><dt>ΔY = k × ΔI</dt><dd>€${fmt(tot, 1)} bn</dd></div><div><dt>After 3 rounds</dt><dd>€${fmt(di * (1 + c + c * c), 1)} bn</dd></div>`;
     };
     el.addEventListener("input", draw); draw();
+  },
+  /* ---- added 23 Oct: eleven more models, every number computed by the code ---- */
+  ricardo(el){
+    const ric = () => ({ A: { n: "England", c: 100, w: 120 }, B: { n: "Portugal", c: 90, w: 80 }, src: "Ricardo's own example (1817): hours of labour to make one unit." });
+    const fresh = () => {
+      let A, B;
+      do { const x = RI(60, 120, 5), y = RI(50, 110, 5); A = { n: "Country A", c: x, w: x + RI(2, 12) * 5 }; B = { n: "Country B", c: y + RI(2, 12) * 5, w: y }; } while (A.w / A.c - B.w / B.c < 0.15);
+      if (Math.random() < 0.5){ const t = A; A = { ...B, n: "Country A" }; B = { ...t, n: "Country B" }; }
+      return { A, B, src: "Generated numbers: hours of labour to make one unit." };
+    };
+    let D = ric(), guess = null;
+    el.innerHTML = `<div class="ric"><div class="tw"><table class="tbl cmp" data-t></table></div><p class="wsrc" data-src></p>
+      <p class="wq">Which country should specialise in wine?</p><div class="wbtns" data-g></div><div data-res></div>
+      <div class="wbtns"><button class="btn quiet small" type="button" data-ric>Ricardo's numbers</button><button class="btn quiet small" type="button" data-new>New numbers</button></div></div>`;
+    const draw = () => {
+      const { A, B } = D, oA = A.w / A.c, oB = B.w / B.c, wk = oA < oB ? "A" : "B", ck = wk === "A" ? "B" : "A", W = D[wk], C = D[ck];
+      const afterC = (C.c + C.w) / C.c, afterW = (W.c + W.w) / W.w;
+      const both = A.c < B.c && A.w < B.w ? A.n : B.c < A.c && B.w < A.w ? B.n : null;
+      el.querySelector("[data-t]").innerHTML = `<thead><tr><th></th><th>1 cloth</th><th>1 wine</th><th>1 wine costs</th></tr></thead><tbody>${[A, B].map(x => `<tr><th scope="row">${x.n}</th><td class="n">${x.c} h</td><td class="n">${x.w} h</td><td class="n">${guess ? fmt(x.w / x.c, 2) + " cloth" : "?"}</td></tr>`).join("")}</tbody>`;
+      el.querySelector("[data-src]").textContent = D.src;
+      el.querySelector("[data-g]").innerHTML = [["A", A.n], ["B", B.n]].map(([k, n]) => `<button class="btn ${guess === k ? (k === wk ? "okb" : "badb") : "glassy"} small" type="button" data-k="${k}"${guess ? " disabled" : ""}>${n}</button>`).join("");
+      const res = el.querySelector("[data-res]");
+      if (!guess){ res.innerHTML = ""; return; }
+      const X = v => 70 + v * 70, bar = (y, v, col, lab) => `<rect x="70" y="${y}" width="${X(v) - 70}" height="16" rx="4" fill="${col}"/><text x="${X(v) + 6}" y="${y + 12.5}" font-size="11" font-weight="700" fill="var(--fg)">${fmt(v, 2)}</text><text x="64" y="${y + 12.5}" font-size="10.5" text-anchor="end" fill="var(--muted)">${lab}</text>`;
+      res.innerHTML = `<div class="verdict ${guess === wk ? "ok" : "bad"}"><div class="vh"><b>${guess === wk ? "Right" : "Not quite"}</b><span>${W.n} makes the wine, ${C.n} the cloth.</span></div>
+        <p>One wine costs ${fmt(W.w / W.c, 2)} cloth in ${W.n} but ${fmt(C.w / C.c, 2)} cloth in ${C.n}. ${W.n} gives up less cloth for each wine: its comparative advantage is wine.${both ? ` ${both} is faster at both goods (absolute advantage in both), and trade still pays: comparative, not absolute, advantage decides.` : ""}</p></div>
+        <svg class="plot ricbars" viewBox="0 0 360 124" role="img" aria-label="World output before and after specialisation">
+          <text x="0" y="14" font-size="11.5" font-weight="700" fill="var(--fg)">Same hours of work, world output</text>
+          ${bar(26, 2, "var(--line-2)", "Cloth, before")}${bar(46, afterC, "var(--flow)", "Cloth, after")}${bar(80, 2, "var(--line-2)", "Wine, before")}${bar(100, afterW, "var(--leak)", "Wine, after")}
+</svg>
+        <p class="wnote">Before: each country makes 1 cloth and 1 wine. After: each makes only its good. ${C.n} uses its ${C.c + C.w} hours on cloth: ${C.c + C.w} ÷ ${C.c} = ${fmt(afterC, 2)} cloth. ${W.n} uses its ${W.c + W.w} hours on wine: ${W.c + W.w} ÷ ${W.w} = ${fmt(afterW, 2)} wine. More of both goods than 2 and 2: trade is not zero-sum.</p>`;
+    };
+    el.addEventListener("click", e => {
+      const g = e.target.closest("[data-k]"); if (g && !guess){ guess = g.dataset.k; draw(); if (guess === (D.A.w / D.A.c < D.B.w / D.B.c ? "A" : "B")) burst(g); }
+      if (e.target.closest("[data-ric]")){ D = ric(); guess = null; draw(); }
+      if (e.target.closest("[data-new]")){ D = fresh(); guess = null; draw(); }
+    });
+    draw();
+  },
+  saykeynes(el){
+    const V = {
+      say: { c: "var(--flow)", base: ["Firms produce", "Production pays wages and suppliers", "Those incomes buy other goods", "What is produced finds a buyer"],
+        shock: ["A product fails to sell", "Only for a while, in one sector", "Producers switch activity", "No lasting overproduction: wait"],
+        note: "Say's Law: supply creates its own demand. A crisis can only come from outside the system (a war, a drought).", snote: "The Classical answer to a slump: markets self-correct, so wait for equilibrium. In 1929 it did not come." },
+      keynes: { c: "var(--leak)", base: ["Firms expect a level of demand", "They set output from it", "Then hire the jobs they need", "Demand decides supply"],
+        shock: ["Uncertainty: people hoard money", "Expected demand falls", "Firms cut output and jobs", "The State supports demand"],
+        note: "Effective demand: the demand entrepreneurs expect when they decide to produce. Say's Law reversed.", snote: "Liquidity preference: in doubt, households and firms keep their money. Unemployment can last, so the State acts: transfers, public spending, as in 2008 and during Covid." }
+    };
+    let v = "say", shock = false;
+    el.innerHTML = `<div class="wtop"><div class="seg" role="group" aria-label="School"><button type="button" data-v="say" aria-pressed="true">Classical (Say)</button><button type="button" data-v="keynes" aria-pressed="false">Keynes</button></div>
+      <button class="btn quiet small" type="button" data-shock aria-pressed="false">What if uncertainty rises?</button></div><ol class="chain" aria-live="polite"></ol><p class="wnote" data-n></p>`;
+    const draw = () => {
+      const S = V[v], steps = shock ? S.shock : S.base;
+      el.style.setProperty("--c", shock && v === "keynes" ? "var(--leak)" : S.c);
+      const ol = el.querySelector(".chain"); ol.innerHTML = steps.map((t, i) => `<li style="--i:${i}"><span>${t}</span></li>`).join("");
+      ol.classList.remove("go"); void ol.offsetWidth; ol.classList.add("go");
+      el.querySelector("[data-n]").textContent = shock ? S.snote : S.note;
+      el.querySelectorAll("[data-v]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === v)));
+      el.querySelector("[data-shock]").setAttribute("aria-pressed", String(shock));
+    };
+    el.addEventListener("click", e => { const b = e.target.closest("[data-v]"); if (b){ v = b.dataset.v; draw(); } if (e.target.closest("[data-shock]")){ shock = !shock; draw(); } });
+    draw();
+  },
+  valueadded(el){
+    el.innerHTML = `<div class="wgrid"><svg class="plot" viewBox="0 0 360 270" role="img" aria-label="Value added along the bread chain"></svg>
+      <div class="wctl"><label>The farm sells its wheat for <output data-o="s1"></output><input type="range" min="20" max="120" step="5" value="50" data-r="s1"></label>
+      <label>The mill adds <output data-o="v2"></output><input type="range" min="10" max="100" step="5" value="30" data-r="v2"></label>
+      <label>The bakery adds <output data-o="v3"></output><input type="range" min="20" max="200" step="10" value="120" data-r="v3"></label>
+      <label>Wages, as a share of value added <output data-o="w"></output><input type="range" min="30" max="90" step="5" value="60" data-r="w"></label>
+      <dl class="wout"></dl></div></div><p class="wcap">In € thousand. Hatched: what each firm bought from the one before (intermediate consumption). Coloured: the value it adds. The last bar stacks the three values added: it is exactly the price of the bread.</p>`;
+    const svg = el.querySelector("svg"), out = el.querySelector(".wout"), R = n => +el.querySelector(`[data-r="${n}"]`).value, O = (n, t) => { el.querySelector(`[data-o="${n}"]`).textContent = t; };
+    const draw = () => {
+      const s1 = R("s1"), v2 = R("v2"), v3 = R("v3"), w = R("w") / 100, s2 = s1 + v2, s3 = s2 + v3, sum = s1 + s2 + s3, gdp = s1 + v2 + v3;
+      O("s1", eur(s1) + "k"); O("v2", eur(v2) + "k"); O("v3", eur(v3) + "k"); O("w", fmt(w * 100) + "%");
+      const top = Math.max(sum, 10), Y = v => 228 - v / top * 200, H = v => v / top * 200, cols = ["var(--inj)", "var(--ch4)", "var(--flow)"];
+      const col = (x, ic, va, k, lab) => `${ic ? `<rect x="${x}" y="${Y(ic)}" width="46" height="${H(ic)}" fill="url(#hatch)" stroke="var(--line-2)"/>` : ""}<rect x="${x}" y="${Y(ic + va)}" width="46" height="${H(va)}" fill="${cols[k]}"/><text x="${x + 23}" y="${Y(ic + va) - 5}" font-size="10.5" text-anchor="middle" font-weight="700" fill="var(--fg)">${fmt(ic + va)}</text><text x="${x + 23}" y="246" font-size="10" text-anchor="middle" fill="var(--muted)">${lab}</text>`;
+      svg.innerHTML = `<defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--sunk,transparent)"/><path d="M0 0V6" stroke="var(--line-2)" stroke-width="2"/></pattern></defs>
+        <path d="M14 228H350" stroke="var(--line)"/>
+        ${col(18, 0, s1, 0, "Farm")}${col(78, s1, v2, 1, "Mill")}${col(138, s2, v3, 2, "Bakery")}
+        <rect x="214" y="${Y(s1)}" width="46" height="${H(s1)}" fill="${cols[0]}"/><rect x="214" y="${Y(s1 + v2)}" width="46" height="${H(v2)}" fill="${cols[1]}"/><rect x="214" y="${Y(gdp)}" width="46" height="${H(v3)}" fill="${cols[2]}"/>
+        <text x="237" y="${Y(gdp) - 5}" font-size="10.5" text-anchor="middle" font-weight="700" fill="var(--fg)">${fmt(gdp)}</text><text x="237" y="246" font-size="10" text-anchor="middle" fill="var(--muted)">Σ VA</text><text x="237" y="259" font-size="10" text-anchor="middle" fill="var(--muted)">= GDP</text>
+        <rect x="290" y="${Y(sum)}" width="46" height="${H(sum)}" fill="none" stroke="var(--leak)" stroke-width="2" stroke-dasharray="5 4"/><text x="313" y="${Y(sum) - 5}" font-size="10.5" text-anchor="middle" font-weight="700" fill="var(--leak)">${fmt(sum)}</text><text x="313" y="246" font-size="10" text-anchor="middle" fill="var(--leak)">All sales</text><text x="313" y="259" font-size="10" text-anchor="middle" fill="var(--leak)">(wrong)</text>`;
+      out.innerHTML = `<div><dt>Production: Σ values added</dt><dd>${eur(gdp)}k</dd></div><div><dt>Income: wages + profits</dt><dd>${eur(w * gdp)}k + ${eur((1 - w) * gdp)}k</dd></div><div><dt>Expenditure: bread bought, C</dt><dd>${eur(s3)}k</dd></div><div><dt>Sum of all sales</dt><dd style="color:var(--leak)">${eur(sum)}k</dd></div><div><dt>Counted twice or more</dt><dd style="color:var(--leak)">${eur(sum - gdp)}k</dd></div>`;
+    };
+    el.addEventListener("input", draw); draw();
+  },
+  demand(el){
+    el.innerHTML = `<div class="wgrid"><svg class="plot" viewBox="0 0 360 230" role="img" aria-label="Resources equal uses"></svg>
+      <div class="wctl">${[["C", "Consumption C", 600, 1800, 1100], ["I", "Investment I", 100, 600, 300], ["G", "Public spending G", 100, 700, 350], ["X", "Exports X", 100, 800, 400], ["M", "Imports M", 100, 800, 450]].map(([k, t, a, b, v]) => `<label>${t} <output data-o="${k}"></output><input type="range" min="${a}" max="${b}" step="10" value="${v}" data-r="${k}"></label>`).join("")}<dl class="wout"></dl></div></div>
+      <p class="wcap">€ bn. The two bars always have the same length: what is produced or imported (Y + M) is consumed, invested, bought by the State or exported.</p>`;
+    const svg = el.querySelector("svg"), out = el.querySelector(".wout"), R = n => +el.querySelector(`[data-r="${n}"]`).value;
+    const draw = () => {
+      const C = R("C"), I = R("I"), G = R("G"), X = R("X"), M = R("M"), Y = C + I + G + X - M, tot = Y + M, sc = 330 / Math.max(tot, 1);
+      ["C", "I", "G", "X", "M"].forEach(k => { el.querySelector(`[data-o="${k}"]`).textContent = fmt(R(k)); });
+      let x = 15; const seg = (v, col, lab, y) => { const w = v * sc, s = `<rect x="${x}" y="${y}" width="${Math.max(0, w - 2)}" height="40" rx="5" fill="${col}"/>${w > 26 ? `<text x="${x + w / 2 - 1}" y="${y + 25}" font-size="12" font-weight="700" text-anchor="middle" fill="var(--bg)">${lab}</text>` : ""}`; x += w; return s; };
+      const uses = seg(C, "var(--flow)", "C", 40) + seg(I, "var(--inj)", "I", 40) + seg(G, "var(--inj)", "G", 40) + seg(X, "var(--inj)", "X", 40);
+      x = 15; const res = seg(Y, "var(--flow)", "Y", 150) + seg(M, "var(--leak)", "M", 150);
+      svg.innerHTML = `<text x="15" y="30" font-size="11.5" font-weight="700" fill="var(--muted)">Uses: C + I + G + X</text>${uses}<text x="15" y="140" font-size="11.5" font-weight="700" fill="var(--muted)">Resources: Y + M</text>${res}
+        <path d="M${15 + (C + I + G) * sc} 86V100H15V86" fill="none" stroke="var(--fg)" stroke-width="1.2"/><text x="17" y="114" font-size="10.5" fill="var(--fg)">Domestic demand C + I + G = ${fmt(C + I + G)}</text>`;
+      const nx = X - M;
+      out.innerHTML = `<div><dt>GDP Y = C + I + G + (X − M)</dt><dd>${fmt(Y)}</dd></div><div><dt>Domestic demand C + I + G</dt><dd>${fmt(C + I + G)}</dd></div><div><dt>Net foreign demand X − M</dt><dd style="color:${nx < 0 ? "var(--leak)" : "var(--ok)"}">${nx < 0 ? "−" : "+"}${fmt(Math.abs(nx))}</dd></div><div><dt>Trade balance</dt><dd>${nx > 0 ? "surplus" : nx < 0 ? "deficit" : "balanced"}</dd></div>`;
+    };
+    el.addEventListener("input", draw); draw();
+  },
+  balance(el){
+    const C0 = 50, T = 200, m = 0.1, X = 150;
+    el.innerHTML = `<div class="wgrid"><svg class="plot" viewBox="0 0 360 250" role="img" aria-label="Planned leakages and injections on a scale"></svg>
+      <div class="wctl"><label>Output Y <output data-o="y"></output><input type="range" min="600" max="3800" step="1" value="1400" data-r="y"></label>
+      <label>MPC c <output data-o="c"></output><input type="range" min="0.6" max="0.85" step="0.05" value="0.75" data-r="c"></label>
+      <label>Investment I <output data-o="i"></output><input type="range" min="150" max="450" step="10" value="300" data-r="i"></label>
+      <label>Public spending G <output data-o="g"></output><input type="range" min="150" max="400" step="10" value="250" data-r="g"></label>
+      <dl class="wout"></dl><button class="btn primary small" type="button" data-adj>Let firms react</button></div></div>
+      <p class="wcap">Planned values, as in the tutorial: C = ${C0} + c(Y − T), T = ${T}, M = ${m}·Y, X = ${X} (€ bn). Firms change output until planned leakages equal planned injections.</p>`;
+    const svg = el.querySelector("svg"), out = el.querySelector(".wout"), ry = el.querySelector('[data-r="y"]'), R = n => +el.querySelector(`[data-r="${n}"]`).value, O = (n, t) => { el.querySelector(`[data-o="${n}"]`).textContent = t; };
+    let anim = 0;
+    const calc = y => { const c = R("c"), s = 1 - c, S = -C0 + s * (y - T), M = m * y, I = R("i"), G = R("g"); return { c, s, S, M, I, G, W: S + T + M, J: I + G + X, ys: (C0 - c * T + I + G + X) / (s + m) }; };
+    const draw = () => {
+      const y = +ry.value, k = calc(y), d = k.W - k.J, ang = Math.max(-13, Math.min(13, d / k.J * 45));
+      O("y", fmt(y)); O("c", fmt(k.c, 2)); O("i", fmt(k.I)); O("g", fmt(k.G));
+      const top = 1000, Hh = v => Math.max(0, v) / top * 95;
+      const stack = (parts, x0) => { let y0 = 0; return parts.map(([v, col, lab]) => { const hh = Hh(v), s = `<rect x="${x0}" y="${-y0 - hh}" width="64" height="${Math.max(0, hh - 1.5)}" rx="3" fill="${col}"/>${hh > 13 ? `<text x="${x0 + 32}" y="${-y0 - hh / 2 + 4}" font-size="10.5" font-weight="700" text-anchor="middle" fill="var(--bg)">${lab}</text>` : ""}`; y0 += hh; return s; }).join(""); };
+      const L = stack([[k.S, "var(--leak)", "S"], [T, "var(--leak)", "T"], [k.M, "var(--leak)", "M"]], -32), Rr = stack([[k.I, "var(--inj)", "I"], [k.G, "var(--inj)", "G"], [X, "var(--inj)", "X"]], -32);
+      const a = ang * Math.PI / 180, lx = 180 - 120 * Math.cos(a), ly = 150 + 120 * Math.sin(a), rx = 180 + 120 * Math.cos(a), rY = 150 - 120 * Math.sin(a);
+      svg.innerHTML = `<path d="M180 150L160 232H200Z" fill="var(--line-2)"/><path d="M130 232H230" stroke="var(--line-2)" stroke-width="3" stroke-linecap="round"/>
+        <path d="M${lx} ${ly}L${rx} ${rY}" stroke="var(--fg)" stroke-width="4" stroke-linecap="round"/><circle cx="180" cy="150" r="6" fill="var(--fg)"/>
+        <g transform="translate(${lx} ${ly})"><path d="M-36 0H36" stroke="var(--fg)" stroke-width="2"/>${L}<text y="18" font-size="11" font-weight="700" text-anchor="middle" fill="var(--leak)">W = ${fmt(k.W)}</text></g>
+        <g transform="translate(${rx} ${rY})"><path d="M-36 0H36" stroke="var(--fg)" stroke-width="2"/>${Rr}<text y="18" font-size="11" font-weight="700" text-anchor="middle" fill="var(--inj)">J = ${fmt(k.J)}</text></g>
+        <text x="180" y="248" font-size="11" text-anchor="middle" font-weight="700" fill="${Math.abs(d) < 3 ? "var(--ok)" : d > 0 ? "var(--leak)" : "var(--flow)"}">${Math.abs(d) < 3 ? "W = J: equilibrium" : d > 0 ? "W > J: output falls ▼" : "W < J: output rises ▲"}</text>`;
+      out.innerHTML = `<div><dt>Saving S = −${C0} + s(Y − T)</dt><dd>${fmt(k.S)}</dd></div><div><dt>Leakages W = S + T + M</dt><dd>${fmt(k.W)}</dd></div><div><dt>Injections J = I + G + X</dt><dd>${fmt(k.J)}</dd></div><div><dt>Equilibrium Y*</dt><dd>${fmt(k.ys)}</dd></div>
+        <p class="wnote" style="margin:4px 0 0">${Math.abs(d) < 3 ? "Firms sell what they produce; inventories are stable." : d > 0 ? `More income leaks out than comes in, by ${fmt(d)}. Unsold goods pile up and firms cut output.` : `More income comes in than leaks out, by ${fmt(-d)}. Inventories fall and firms raise output.`}</p>`;
+    };
+    el.addEventListener("input", e => { if (e.target.matches("[data-r]")){ cancelAnimationFrame(anim); draw(); } });
+    el.querySelector("[data-adj]").addEventListener("click", () => {
+      const target = calc(+ry.value).ys;
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches){ ry.value = target; draw(); return; }
+      cancelAnimationFrame(anim); const y0 = +ry.value, t0 = performance.now();
+      const step = t => { const p = Math.min(1, (t - t0) / 2200), e = 1 - Math.pow(1 - p, 3); ry.value = y0 + (target - y0) * e; draw(); if (p < 1 && el.isConnected) anim = requestAnimationFrame(step); };
+      anim = requestAnimationFrame(step);
+    });
+    draw();
+  },
+  fisher(el){
+    const Y1 = 1000, Y2 = 1000;
+    el.innerHTML = `<div class="wgrid"><svg class="plot" viewBox="0 0 360 270" role="img" aria-label="Consumption today against consumption next year"></svg>
+      <div class="wctl"><label>Interest rate r <output data-o="r"></output><input type="range" min="0" max="20" step="1" value="10" data-r="r"></label>
+      <label>Consumption this year <output data-o="c1"></output><input type="range" min="0" max="1900" step="10" value="600" data-r="c1"></label><dl class="wout"></dl></div></div>
+      <p class="wcap">Income: €${fmt(Y1)} this year and €${fmt(Y2)} next year (point E). Dashed: the line at r = 0%. Saving moves purchasing power to next year at the rate r; borrowing brings it forward. A higher rate turns the line around E: waiting pays more.</p>`;
+    const svg = el.querySelector("svg"), out = el.querySelector(".wout"), rr = el.querySelector('[data-r="r"]'), rc = el.querySelector('[data-r="c1"]');
+    const draw = () => {
+      const r = +rr.value / 100, xi = Y1 + Y2 / (1 + r), yi = Y2 + Y1 * (1 + r);
+      if (+rc.value > xi) rc.value = Math.floor(xi / 10) * 10;
+      const c1 = +rc.value, S = Y1 - c1, c2 = Y2 + S * (1 + r), mx = 2500, X = v => 46 + v / mx * 300, Yv = v => 236 - v / mx * 216;
+      el.querySelector('[data-o="r"]').textContent = fmt(r * 100) + "%"; el.querySelector('[data-o="c1"]').textContent = eur(c1);
+      svg.innerHTML = `<path d="M46 236H350M46 236V14" stroke="var(--line)"/>
+        <path d="M${X(Y1 + Y2)} ${Yv(0)}L${X(0)} ${Yv(Y1 + Y2)}" stroke="var(--faint)" stroke-dasharray="4 5"/>
+        <path d="M${X(xi)} ${Yv(0)}L${X(0)} ${Yv(yi)}" stroke="var(--inj)" stroke-width="3"/>
+        <path d="M${X(c1)} 236V${Yv(c2)}H46" stroke="var(--flow)" stroke-dasharray="3 4" fill="none"/>
+        <circle cx="${X(Y1)}" cy="${Yv(Y2)}" r="5" fill="var(--fg)"/><text x="${X(Y1) + 8}" y="${Yv(Y2) - 8}" font-size="11" font-weight="700" fill="var(--fg)">E</text>
+        <circle cx="${X(c1)}" cy="${Yv(c2)}" r="7" fill="var(--flow)"/>
+        <text x="350" y="252" font-size="11" text-anchor="end" fill="var(--muted)">Consumption this year</text><text x="40" y="12" font-size="11" fill="var(--muted)">Next year</text>`;
+      out.innerHTML = `<div><dt>${S >= 0 ? "Saving S = income − consumption" : "Borrowing"}</dt><dd>${eur(Math.abs(S))}</dd></div><div><dt>Next year: ${fmt(Y2)} ${S >= 0 ? "+" : "−"} ${fmt(Math.abs(S))} × ${fmt(1 + r, 2)}</dt><dd>${eur(c2)}</dd></div><div><dt>€1 spent now costs next year</dt><dd>${eur(1 + r, 2)}</dd></div>
+        <p class="wnote" style="margin:4px 0 0">${S > 0 ? `Giving up ${eur(S)} today buys ${eur(S * (1 + r))} next year: the interest rate is the reward for waiting.` : S < 0 ? `Consuming more than this year's income means borrowing ${eur(-S)} and repaying ${eur(-S * (1 + r))} next year.` : "Consume exactly your income each year: no saving, no borrowing."}</p>`;
+    };
+    el.addEventListener("input", draw); draw();
+  },
+  quarters(el){
+    const OPTS = ["Steady growth", "Slowdown", "Recession", "One negative quarter only"];
+    const kind = r => { for (let i = 1; i < r.length; i++) if (r[i] < 0 && r[i - 1] < 0) return 2; if (r.some(x => x < 0)) return 3; const l = r.slice(-4); return l.every((x, i) => i === 0 || x < l[i - 1]) ? 1 : 0; };
+    const gen = () => {
+      const t = RI(0, 3), r1 = () => RI(2, 9) / 10; let r;
+      for (let tries = 0; tries < 50; tries++){
+        if (t === 0) r = Array.from({ length: 8 }, () => RI(3, 8) / 10);
+        if (t === 1){ let v = RI(8, 11) / 10; r = [r1(), r1(), r1()]; for (let i = 0; i < 5; i++){ r.push(Math.max(0.1, Math.round(v * 10) / 10)); v -= RI(1, 2) / 10; } }
+        if (t === 2){ const at = RI(2, 4), len = RI(2, 3); r = Array.from({ length: 8 }, (_, i) => i >= at && i < at + len ? -RI(1, 6) / 10 : i >= at + len ? RI(1, 4) / 10 : r1()); }
+        if (t === 3){ const at = RI(2, 5); r = Array.from({ length: 8 }, (_, i) => i === at ? -RI(1, 4) / 10 : r1()); }
+        if (kind(r) === t) break;
+      }
+      let L = 500; const lev = [L]; r.forEach(x => { L *= 1 + x / 100; lev.push(L); });
+      return { r, lev, k: kind(r) };
+    };
+    let D = gen(), pick = null;
+    el.innerHTML = `<svg class="plot" viewBox="0 0 640 230" role="img" aria-label="Quarterly GDP growth"></svg><p class="wq">How would you describe these two years?</p><div class="wbtns" data-o></div><div data-res></div><div class="wbtns"><button class="btn quiet small" type="button" data-new>New economy</button></div>`;
+    const QN = ["Q1", "Q2", "Q3", "Q4", "Q1", "Q2", "Q3", "Q4"];
+    const draw = () => {
+      const { r, lev, k } = D, mx = Math.max(1, ...r.map(Math.abs)), Y0 = 130, Hs = 90 / mx, nar = innerWidth < 640, VW = nar ? 360 : 640, st = nar ? 40 : 72, bw = nar ? 28 : 40, x0 = nar ? 36 : 60;
+      const svg = el.querySelector("svg"); svg.setAttribute("viewBox", `0 0 ${VW} 230`);
+      svg.innerHTML = `<path d="M${x0 - 14} ${Y0}H${VW - 6}" stroke="var(--line-2)"/><text x="${x0 - 18}" y="${Y0 + 4}" font-size="10" text-anchor="end" fill="var(--muted)">0%</text>
+        ${r.map((x, i) => { const bx = x0 + i * st, h = Math.abs(x) * Hs, y = x >= 0 ? Y0 - h : Y0, col = x < 0 ? "var(--leak)" : "var(--flow)"; return `<rect x="${bx}" y="${y}" width="${bw}" height="${Math.max(2, h)}" rx="4" fill="${col}"/><text x="${bx + bw / 2}" y="${x >= 0 ? y - 6 : y + h + 13}" font-size="${nar ? 10.5 : 11.5}" font-weight="700" text-anchor="middle" fill="${col}">${x > 0 ? "+" : x < 0 ? "−" : ""}${fmt(Math.abs(x), 1)}%</text><text x="${bx + bw / 2}" y="${226}" font-size="10" text-anchor="middle" fill="var(--muted)">${QN[i]}</text><text x="${bx + bw / 2}" y="${212}" font-size="${nar ? 8.5 : 9.5}" text-anchor="middle" fill="var(--faint)">${fmt(lev[i + 1], nar ? 0 : 1)}</text>`; }).join("")}
+        <text x="${x0 - 14}" y="12" font-size="10.5" fill="var(--muted)">${nar ? "Real GDP growth, quarter by quarter. Grey: GDP, € bn." : "Quarterly growth of real GDP. Grey: the GDP level, € bn (start 500)."}</text>`;
+      el.querySelector("[data-o]").innerHTML = OPTS.map((o, i) => `<button class="btn small ${pick == null ? "glassy" : i === k ? "okb" : i === pick ? "badb" : "glassy"}" type="button" data-p="${i}"${pick != null ? " disabled" : ""}>${o}</button>`).join("");
+      const res = el.querySelector("[data-res]");
+      if (pick == null){ res.innerHTML = ""; return; }
+      const neg = r.map((x, i) => x < 0 ? i : -1).filter(i => i >= 0);
+      const why = [
+        "Growth stays positive and does not keep falling: a normal expansion.",
+        `The last four quarters are positive but each is weaker (${r.slice(-4).map(x => "+" + fmt(x, 1) + "%").join(", ")}). GDP still grows: a slowdown, not a recession.`,
+        `GDP falls ${neg.length} quarters in a row. INSEE's definition of a recession: at least two consecutive quarters of falling GDP. If it lasted several years, it would be a depression.`,
+        "GDP falls in one quarter only. INSEE needs at least two consecutive quarters of decline to call it a recession."][k];
+      res.innerHTML = `<div class="verdict ${pick === k ? "ok" : "bad"}"><div class="vh"><b>${pick === k ? "Right" : "Not quite"}</b><span>${OPTS[k]}.</span></div><p>${why}</p></div>`;
+    };
+    el.addEventListener("click", e => { const p = e.target.closest("[data-p]"); if (p && pick == null){ pick = +p.dataset.p; draw(); if (pick === D.k) burst(el.querySelector(".okb")); } if (e.target.closest("[data-new]")){ D = gen(); pick = null; draw(); } });
+    draw();
+  },
+  realgdp(el){
+    const G = [["Bread", 1000, 2], ["Haircuts", 200, 20]];
+    el.innerHTML = `<div class="wgrid"><svg class="plot" viewBox="0 0 360 250" role="img" aria-label="Nominal and real GDP"></svg>
+      <div class="wctl">${G.map(([n], i) => `<label>${n}: price change <output data-o="p${i}"></output><input type="range" min="-10" max="20" step="1" value="${i ? 8 : 5}" data-r="p${i}"></label><label>${n}: quantity change <output data-o="q${i}"></output><input type="range" min="-10" max="20" step="1" value="${i ? 2 : 3}" data-r="q${i}"></label>`).join("")}<dl class="wout"></dl></div></div>
+      <p class="wcap">Year n: 1,000 loaves at €2 and 200 haircuts at €20, so GDP = €6,000. Real GDP values year n+1's quantities at year n's prices.</p>`;
+    const svg = el.querySelector("svg"), out = el.querySelector(".wout"), R = n => +el.querySelector(`[data-r="${n}"]`).value;
+    const pc = v => (v > 0 ? "+" : v < 0 ? "−" : "") + fmt(Math.abs(v), 1) + "%";
+    const draw = () => {
+      const g = G.map(([n, q, p], i) => ({ n, q, p, q1: q * (1 + R("q" + i) / 100), p1: p * (1 + R("p" + i) / 100) }));
+      g.forEach((x, i) => { el.querySelector(`[data-o="p${i}"]`).textContent = pc(R("p" + i)); el.querySelector(`[data-o="q${i}"]`).textContent = pc(R("q" + i)); });
+      const n0 = g.reduce((a, x) => a + x.p * x.q, 0), nom = g.reduce((a, x) => a + x.p1 * x.q1, 0), real = g.reduce((a, x) => a + x.p * x.q1, 0);
+      const gn = (nom / n0 - 1) * 100, gr = (real / n0 - 1) * 100, top = Math.max(n0, nom, real) * 1.12, Y = v => 210 - v / top * 190;
+      const bar = (x, v, col, l1, l2) => `<rect x="${x}" y="${Y(v)}" width="70" height="${210 - Y(v)}" rx="6" fill="${col}"/><text x="${x + 35}" y="${Y(v) - 6}" font-size="11.5" font-weight="700" text-anchor="middle" fill="var(--fg)">${eur(v)}</text><text x="${x + 35}" y="228" font-size="10.5" text-anchor="middle" fill="var(--muted)">${l1}</text><text x="${x + 35}" y="242" font-size="10.5" text-anchor="middle" fill="var(--muted)">${l2}</text>`;
+      svg.innerHTML = `<path d="M14 210H350" stroke="var(--line)"/>${bar(30, n0, "var(--line-2)", "Year n", "")}${bar(145, nom, "var(--inj)", "n+1 nominal", "current prices")}${bar(260, real, "var(--flow)", "n+1 real", "prices of year n")}`;
+      out.innerHTML = `<div><dt>Nominal growth</dt><dd>${pc(gn)}</dd></div><div><dt>Real growth (volume)</dt><dd>${pc(gr)}</dd></div><div><dt>Gap due to prices</dt><dd>${pc(gn - gr)}</dd></div>
+        <p class="wnote" style="margin:4px 0 0">${gn > gr + 0.05 ? "Prices rose, so nominal growth overstates real growth." : gn < gr - 0.05 ? "Prices fell, so nominal growth understates real growth." : "Prices did not move on average: nominal and real growth match."}</p>`;
+    };
+    el.addEventListener("input", draw); draw();
+  },
+  ppp(el){
+    const GDPX = 3000;
+    el.innerHTML = `<div class="wgrid"><svg class="plot" viewBox="0 0 360 230" role="img" aria-label="A burger priced in two countries"></svg>
+      <div class="wctl"><label>Burger in the euro area <output data-o="pe"></output><input type="range" min="4" max="6" step="0.1" value="5" data-r="pe"></label>
+      <label>Same burger in Country X, in crowns <output data-o="px"></output><input type="range" min="20" max="90" step="1" value="40" data-r="px"></label>
+      <label>Market exchange rate, crowns per euro <output data-o="e"></output><input type="range" min="5" max="14" step="0.1" value="10" data-r="e"></label><dl class="wout"></dl></div></div>
+      <p class="wcap">Generated prices, in the spirit of The Economist's Big Mac index. Country X produces 3,000 bn crowns of GDP.</p>`;
+    const svg = el.querySelector("svg"), out = el.querySelector(".wout"), R = n => +el.querySelector(`[data-r="${n}"]`).value;
+    const burger = (cx, s, col) => `<g transform="translate(${cx} 112) scale(${s})"><path d="M-46 -6C-46 -40 46 -40 46 -6Z" fill="var(--inj)"/><rect x="-50" y="-4" width="100" height="8" rx="4" fill="var(--ok)"/><rect x="-48" y="6" width="96" height="14" rx="7" fill="${col}"/><path d="M-46 24H46C46 38 -46 38 -46 24Z" fill="var(--inj)"/></g>`;
+    const draw = () => {
+      const pe = R("pe"), px = R("px"), e = R("e"), ppp = px / pe, inEur = px / e, val = (ppp / e - 1) * 100;
+      el.querySelector('[data-o="pe"]').textContent = eur(pe, 2); el.querySelector('[data-o="px"]').textContent = fmt(px) + " kr"; el.querySelector('[data-o="e"]').textContent = fmt(e, 1);
+      const s1 = 1, s2 = Math.max(0.35, Math.min(1.6, inEur / pe));
+      svg.innerHTML = `${burger(95, s1, "var(--leak)")}${burger(265, s2, "var(--leak)")}
+        <text x="95" y="178" font-size="12" font-weight="700" text-anchor="middle" fill="var(--fg)">${eur(pe, 2)}</text><text x="95" y="194" font-size="10.5" text-anchor="middle" fill="var(--muted)">Euro area</text>
+        <text x="265" y="178" font-size="12" font-weight="700" text-anchor="middle" fill="var(--fg)">${eur(inEur, 2)}</text><text x="265" y="194" font-size="10.5" text-anchor="middle" fill="var(--muted)">Country X, at the market rate</text>
+        <text x="180" y="222" font-size="11.5" font-weight="700" text-anchor="middle" fill="${Math.abs(val) < 1 ? "var(--ok)" : val < 0 ? "var(--flow)" : "var(--leak)"}">${Math.abs(val) < 1 ? "The crown is at its PPP value" : `The crown is ${val < 0 ? "undervalued" : "overvalued"} by ${fmt(Math.abs(val))}%`}</text>`;
+      out.innerHTML = `<div><dt>Implied PPP rate = ${fmt(px)} ÷ ${fmt(pe, 2)}</dt><dd>${fmt(ppp, 2)} kr/€</dd></div><div><dt>Market rate</dt><dd>${fmt(e, 1)} kr/€</dd></div><div><dt>GDP of X at the market rate</dt><dd>€${fmt(GDPX / e)} bn</dd></div><div><dt>GDP of X at PPP</dt><dd>€${fmt(GDPX / ppp)} bn</dd></div>
+        <p class="wnote" style="margin:4px 0 0">${val < -1 ? "Things are cheaper in X than the market rate suggests, so its GDP at PPP is bigger: PPP corrects for the cost of living." : val > 1 ? "Things are dearer in X, so its GDP at PPP is smaller than at the market rate." : "Both rates give the same GDP."}</p>`;
+    };
+    el.addEventListener("input", draw); draw();
+  },
+  hdi(el){
+    const P = { a: { le: 77, eys: 16.2, mys: 13.6, gni: 65000, n: "Rich, weaker health" }, b: { le: 83, eys: 18, mys: 13.2, gni: 62000, n: "Same income, stronger health and education" }, c: { le: 62, eys: 9, mys: 4.5, gni: 2500, n: "Low income" } };
+    el.innerHTML = `<div class="wgrid"><svg class="plot" viewBox="0 0 360 230" role="img" aria-label="Human Development Index"></svg>
+      <div class="wctl"><div class="wbtns">${Object.entries(P).map(([k, p]) => `<button class="btn quiet small" type="button" data-p="${k}">${p.n}</button>`).join("")}</div>
+      <label>Life expectancy <output data-o="le"></output><input type="range" min="45" max="85" step="0.5" value="77" data-r="le"></label>
+      <label>Expected years of schooling <output data-o="eys"></output><input type="range" min="4" max="20" step="0.1" value="16.2" data-r="eys"></label>
+      <label>Mean years of schooling (adults) <output data-o="mys"></output><input type="range" min="1" max="14" step="0.1" value="13.6" data-r="mys"></label>
+      <label>GNI per person, PPP <output data-o="gni"></output><input type="range" min="2.7" max="4.9" step="0.01" value="${Math.log10(65000).toFixed(2)}" data-r="gni"></label><dl class="wout"></dl></div></div>
+      <p class="wcap">UNDP method: each dimension becomes an index from 0 to 1 (life 20 to 85 years; schooling 18 and 15 years; income $100 to $75,000, on a log scale), then HDI is their geometric mean. Profiles are made up, not real countries.</p>`;
+    const svg = el.querySelector("svg"), out = el.querySelector(".wout"), R = n => +el.querySelector(`[data-r="${n}"]`).value;
+    const cl = v => Math.max(0, Math.min(1, v));
+    const draw = () => {
+      const le = R("le"), eys = R("eys"), mys = R("mys"), gni = Math.pow(10, R("gni"));
+      const ih = cl((le - 20) / 65), ie = (cl(eys / 18) + cl(mys / 15)) / 2, ii = cl((Math.log(gni) - Math.log(100)) / (Math.log(75000) - Math.log(100))), hdi = Math.cbrt(ih * ie * ii), ar = (ih + ie + ii) / 3;
+      const o = (k, t) => { el.querySelector(`[data-o="${k}"]`).textContent = t; }; o("le", fmt(le, 1) + " y"); o("eys", fmt(eys, 1) + " y"); o("mys", fmt(mys, 1) + " y"); o("gni", "$" + fmt(gni));
+      const bar = (y, v, col, lab) => `<text x="0" y="${y + 13}" font-size="11" fill="var(--muted)">${lab}</text><rect x="92" y="${y}" width="190" height="18" rx="9" fill="var(--sunk,var(--line))"/><rect x="92" y="${y}" width="${190 * v}" height="18" rx="9" fill="${col}"/><text x="290" y="${y + 13}" font-size="11.5" font-weight="700" fill="var(--fg)">${fmt(v, 3)}</text>`;
+      svg.innerHTML = `${bar(14, ih, "var(--ok)", "Health")}${bar(44, ie, "var(--ch4)", "Education")}${bar(74, ii, "var(--inj)", "Income")}
+        <text x="180" y="152" font-family="var(--f-display)" font-size="46" font-weight="700" text-anchor="middle" fill="var(--flow)">${fmt(hdi, 3)}</text><text x="180" y="174" font-size="11.5" text-anchor="middle" fill="var(--muted)">HDI = ∛(health × education × income)</text>
+        <text x="180" y="204" font-size="11" text-anchor="middle" fill="var(--fg)">${hdi >= 0.8 ? "Very high" : hdi >= 0.7 ? "High" : hdi >= 0.55 ? "Medium" : "Low"} human development</text>`;
+      out.innerHTML = `<div><dt>Simple average of the three</dt><dd>${fmt(ar, 3)}</dd></div><p class="wnote" style="margin:4px 0 0">The geometric mean punishes imbalance: a high income cannot fully make up for poor health or education. That is how a country with a lower GDP per person can rank higher on HDI.</p>`;
+    };
+    el.addEventListener("click", e => { const b = e.target.closest("[data-p]"); if (!b) return; const p = P[b.dataset.p]; el.querySelector('[data-r="le"]').value = p.le; el.querySelector('[data-r="eys"]').value = p.eys; el.querySelector('[data-r="mys"]').value = p.mys; el.querySelector('[data-r="gni"]').value = Math.log10(p.gni).toFixed(2); draw(); });
+    el.addEventListener("input", draw); draw();
+  },
+  waves(el){
+    const KW = [[1780, 1840, "Steam engine, cotton textiles", "Mechanised mills replace spinning and weaving at home."], [1840, 1890, "Railways, steel", "Railways replace stagecoaches and canal barges for long journeys."],
+      [1890, 1940, "Electricity, chemicals", "Electric light replaces gas lamps; electric motors replace steam engines in factories."], [1940, 1990, "Cars, oil, petrochemicals", "Cars and lorries replace horse-drawn transport; plastics replace older materials."],
+      [1990, 2030, "Information and communication technologies", "Computers and the internet replace typewriters, film photography and much of the paper post."]];
+    let on = 0;
+    el.innerHTML = `<svg class="plot" viewBox="0 0 640 210" role="img" aria-label="Kondratiev long waves"></svg><div class="wavec" aria-live="polite"></div>
+      <p class="wcap">Stylised long waves of about 50 years. The dates are approximate and vary from one author to another. Tap a wave.</p>`;
+    let X = y => 20 + (y - 1780) / 250 * 600, nar = false;
+    const draw = () => {
+      nar = innerWidth < 640; const VW = nar ? 360 : 640; X = y => 12 + (y - 1780) / 250 * (VW - 24); el.querySelector("svg").setAttribute("viewBox", `0 0 ${VW} 210`);
+      let d = ""; for (let y = 1780; y <= 2030; y += 2){ let i = KW.findIndex(w => y >= w[0] && y < w[1]); if (i < 0) i = 4; const w = KW[i], p = (y - w[0]) / (w[1] - w[0]); d += (y === 1780 ? "M" : "L") + X(y).toFixed(1) + " " + (130 - Math.sin(p * Math.PI) * 70 - (y - 1780) * 0.06).toFixed(1); }
+      el.querySelector("svg").innerHTML = `<path d="M${X(1780)} 160H${X(2030)}" stroke="var(--line)"/>
+        ${KW.map((w, i) => `<g class="wv${i === on ? " on" : ""}" data-w="${i}" tabindex="0" role="button" aria-pressed="${i === on}" aria-label="${w[0]} to ${w[1] === 2030 ? "today" : w[1]}: ${w[2]}"><rect x="${X(w[0])}" y="20" width="${X(w[1]) - X(w[0])}" height="160" fill="${i === on ? "color-mix(in srgb,var(--flow) 14%,transparent)" : "transparent"}"/><text x="${(X(w[0]) + X(w[1])) / 2}" y="198" font-size="10.5" text-anchor="middle" fill="var(--muted)">${nar ? w[0] : `${w[0]}–${i === 4 ? "today" : w[1]}`}</text><text x="${(X(w[0]) + X(w[1])) / 2}" y="40" font-size="12" font-weight="700" text-anchor="middle" fill="${i === on ? "var(--flow)" : "var(--faint)"}">${i + 1}</text></g>`).join("")}
+        <path d="${d}" fill="none" stroke="var(--flow)" stroke-width="3" stroke-linecap="round"/>`;
+      const w = KW[on]; el.querySelector(".wavec").innerHTML = `<b>Wave ${on + 1}, ${w[0]} to ${on === 4 ? "today" : w[1]}: ${w[2]}</b><span>Creative destruction: ${w[3]}</span>`;
+    };
+    el.addEventListener("click", e => { const g = e.target.closest("[data-w]"); if (g){ on = +g.dataset.w; draw(); } });
+    el.addEventListener("keydown", e => { const g = e.target.closest("[data-w]"); if (g && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); on = +g.dataset.w; draw(); el.querySelector(`[data-w="${on}"]`).focus(); } });
+    draw();
   }
 };
+
+/* =====================================================================
+   SPOT IT: name what you read (school, author, agent, leakage, measure...). Wrong options come from the same family.
+   Written from the slides; the right answer is the one the course gives.
+   ===================================================================== */
+const FAMILIES = {
+  school: { q: "Which school of thought?", ch: "thought", opts: ["Mercantilists", "Physiocrats", "Classicals", "Neoclassicals", "Keynes"] },
+  who: { q: "Who is it?", ch: "thought", opts: ["Adam Smith", "David Ricardo", "Jean-Baptiste Say", "John Stuart Mill", "François Quesnay", "Vincent de Gournay", "Bodin and Hume", "Léon Walras", "Carl Menger", "Alfred Marshall", "Vilfredo Pareto", "John Maynard Keynes"] },
+  motive: { q: "Which motive for holding money (Keynes)?", ch: "thought", opts: ["Transaction", "Precautionary", "Speculative"] },
+  view: { q: "Classical or Keynesian view?", ch: "thought", opts: ["Classical view", "Keynesian view"] },
+  agent: { q: "Which economic agent?", ch: "activity", opts: ["Households", "Firms", "The State", "Financial institutions", "The rest of the world"] },
+  flow: { q: "Which leakage or injection?", ch: "activity", opts: ["S, saving", "T, taxes", "M, imports", "I, investment", "G, public spending", "X, exports"] },
+  approach: { q: "Which way of measuring GDP?", ch: "activity", opts: ["Production approach", "Income approach", "Expenditure approach"] },
+  wj: { q: "What happens to output?", ch: "activity", opts: ["Output falls", "Output rises", "Output stays the same"] },
+  invdet: { q: "Which determinant of investment?", ch: "determinants", opts: ["Interest rate", "Expectations", "Technological progress", "Capacity utilisation", "Public policies"] },
+  invkind: { q: "Is it investment I?", ch: "determinants", opts: ["Physical investment", "Intangible investment", "Financial investment, not I", "Intermediate consumption, not I"] },
+  prop: { q: "Which concept?", ch: "determinants", opts: ["Marginal propensity to consume", "Average propensity to consume", "Marginal propensity to save", "Break-even income", "Autonomous consumption"] },
+  mult: { q: "Bigger or smaller multiplier?", ch: "determinants", opts: ["Bigger multiplier", "Smaller multiplier"] },
+  econd: { q: "Who is it?", ch: "determinants", opts: ["Irving Fisher", "Simon Kuznets", "John Maynard Keynes"] },
+  phase: { q: "Which word?", ch: "growth", opts: ["Expansion", "Slowdown", "Recession", "Depression"] },
+  nomreal: { q: "Nominal or real?", ch: "growth", opts: ["Nominal", "Real"] },
+  measure: { q: "Which measure?", ch: "growth", opts: ["GDP", "GNP", "GDP per capita", "GDP in PPP", "HDI"] },
+  gdplim: { q: "Does it show up in GDP?", ch: "growth", opts: ["Counted in GDP", "Not counted, or badly counted"] },
+  driver: { q: "Which source of growth?", ch: "growth", opts: ["Endogenous: government", "Endogenous: economic factors", "Schumpeter: clusters of innovations"] },
+  econg: { q: "Who is it?", ch: "growth", opts: ["Joseph Schumpeter", "Nikolai Kondratiev", "Hans Rosling"] }
+};
+const SPOT = [
+["school", "Wealth is a stock of gold and silver. The goal is a trade surplus.", "Mercantilists", "For the Mercantilists, precious metals are wealth and trade is zero-sum."],
+["school", "Protect the home market with tariffs, and build export manufacturing.", "Mercantilists", "Protectionism and a strong State: the Mercantilist recipe."],
+["school", "Trade is a zero-sum game: one country gains only at another's expense.", "Mercantilists", "Ricardo later showed the opposite: trade can benefit both sides."],
+["school", "Only agriculture is productive. Industry and trade are sterile.", "Physiocrats", "Quesnay and the Physiocrats: only land creates wealth."],
+["school", "Laissez faire, laissez passer.", "Physiocrats", "Vincent de Gournay's phrase, the motto of the Physiocrats, forerunners of liberalism."],
+["school", "Society has three classes: productive farmers, sterile manufacturers and merchants, and landowners.", "Physiocrats", "Quesnay's three classes (1758)."],
+["school", "Supply creates its own demand.", "Classicals", "Say's Law, one of the six Classical principles."],
+["school", "Money is a veil: it only moves prices.", "Classicals", "Neutral money (Mill) and the quantity theory."],
+["school", "The State should stick to justice, police and defence, and keep competition alive.", "Classicals", "The minimal State of the Classicals."],
+["school", "Free trade benefits both countries, through specialisation.", "Classicals", "Ricardo's comparative advantage: trade is not zero-sum."],
+["school", "Marginal analysis and general equilibrium: the birth of modern microeconomics.", "Neoclassicals", "Walras, Menger, Marshall, Pareto: Classical foundations plus marginal analysis."],
+["school", "Output depends on the demand firms expect.", "Keynes", "Effective demand: Say's Law reversed."],
+["school", "When activity slows, the State should spend more to support demand.", "Keynes", "Counter-cyclical policy and the welfare State."],
+["school", "Reason in aggregates and in a circuit, not market by market.", "Keynes", "Keynes' global level of analysis."],
+["who", "The invisible hand: by pursuing their own interest, individuals push society towards more wealth.", "Adam Smith", "Smith, The Wealth of Nations (1776)."],
+["who", "The Wealth of Nations, 1776.", "Adam Smith", "The founding book of the Classical school."],
+["who", "Each country gains by specialising in what it produces relatively best.", "David Ricardo", "Comparative advantage, Principles of Political Economy and Taxation (1817)."],
+["who", "Principles of Political Economy and Taxation, 1817.", "David Ricardo", "Ricardo's main work."],
+["who", "A product can fail to sell only for a while, in one sector: supply creates its own demand.", "Jean-Baptiste Say", "Say's Law."],
+["who", "Value comes from the utility people expect from a good.", "Jean-Baptiste Say", "The French Classics: use value, a subjective view."],
+["who", "Money is just a means of exchange; wealth is created in production.", "John Stuart Mill", "Mill, Principles of Political Economy (1848): neutral money."],
+["who", "Principles of Political Economy, 1848.", "John Stuart Mill", "The last great Classical treatise."],
+["who", "1758: only land creates wealth, industry and trade are sterile.", "François Quesnay", "Quesnay, leader of the Physiocrats."],
+["who", "Coined \"laissez faire, laissez passer\".", "Vincent de Gournay", "The course credits the phrase to Vincent de Gournay."],
+["who", "More money in circulation raises the price level, not output.", "Bodin and Hume", "The quantity theory of money."],
+["who", "General equilibrium: all markets at once.", "Léon Walras", "Walras, a founder of the Neoclassical school."],
+["who", "The marginalist revolution.", "Carl Menger", "Menger, one of the Neoclassical founders."],
+["who", "Partial equilibrium.", "Alfred Marshall", "Marshall studies one market at a time."],
+["who", "An optimum where nobody can be made better off without making someone worse off.", "Vilfredo Pareto", "The Pareto optimum."],
+["who", "The General Theory, 1936.", "John Maynard Keynes", "The founding book of modern macroeconomics."],
+["who", "Three motives to hold money: transaction, precaution, speculation.", "John Maynard Keynes", "Keynes: money is not neutral."],
+["motive", "Keeping cash to pay this month's rent and groceries.", "Transaction", "Money held to pay for everyday purchases."],
+["motive", "A firm keeps cash to pay next week's wages.", "Transaction", "Money held for planned payments."],
+["motive", "Keeping a cushion in case the car breaks down.", "Precautionary", "Money held for the unexpected."],
+["motive", "A household keeps savings at hand in case of a job loss.", "Precautionary", "Money held for the unexpected."],
+["motive", "Holding cash to buy shares when their price drops.", "Speculative", "Money held to seize the best investment."],
+["motive", "An investor waits in cash for a better opportunity.", "Speculative", "Money held to seize the best investment."],
+["view", "Crises come from outside the system: wars, droughts.", "Classical view", "Say's Law: no general, lasting overproduction."],
+["view", "Unemployment can last because demand is too weak.", "Keynesian view", "Effective demand drives output and jobs."],
+["view", "Printing more money only raises prices.", "Classical view", "Neutral money and the quantity theory."],
+["view", "In doubt, people hoard money and demand falls.", "Keynesian view", "Liquidity preference: money is not neutral."],
+["view", "Saving is what is left of current income.", "Keynesian view", "For Keynes saving is residual. For the Neoclassicals it is a choice rewarded by the interest rate."],
+["view", "Saving is a choice, rewarded by the interest rate.", "Classical view", "The Neoclassical view (Fisher), on the Classical side of the table."],
+["view", "Monetary policy should aim at price stability.", "Classical view", "The ECB's 2% target follows the quantity theory."],
+["view", "Transfers and benefits sustain income, so demand, so jobs.", "Keynesian view", "The welfare State supports demand."],
+["view", "Demand determines supply.", "Keynesian view", "Say's Law reversed."],
+["view", "Short-time work schemes and aid to firms during Covid.", "Keynesian view", "A counter-cyclical response: the State supports demand."],
+["view", "Wait: markets will return to equilibrium.", "Classical view", "The Classical answer to 1929. The return did not come."],
+["agent", "A bank grants a mortgage to a young couple.", "Financial institutions", "They turn deposits into loans."],
+["agent", "Collects deposits and turns them into loans.", "Financial institutions", "The main function of financial institutions."],
+["agent", "A car maker buys robots for its plant.", "Firms", "Firms produce market goods and invest."],
+["agent", "Its main resources are sales.", "Firms", "Firms live on what they sell."],
+["agent", "In the course model, invests but does not save.", "Firms", "Firms invest; households save."],
+["agent", "A family buys a new washing machine.", "Households", "Households consume to meet their needs."],
+["agent", "In the course model, saves but does not invest.", "Households", "Households save; firms invest."],
+["agent", "Pays unemployment benefits.", "The State", "Redistribution is a function of the State."],
+["agent", "Its main resources are taxes.", "The State", "The State funds non-market services with taxes."],
+["agent", "A Chinese firm buys French wine.", "The rest of the world", "Trade with non-residents is recorded in the rest of the world."],
+["agent", "Has no main function, but records all trade with non-residents.", "The rest of the world", "Not really an agent, as the course says."],
+["flow", "A household puts €200 into a savings account.", "S, saving", "Income not consumed leaks out of the circuit."],
+["flow", "Income that households do not consume.", "S, saving", "The definition of saving."],
+["flow", "Firms pay corporate tax.", "T, taxes", "Taxes are a leakage."],
+["flow", "Households pay income tax, net of the benefits they receive.", "T, taxes", "T is net of transfers: transfers are negative taxes."],
+["flow", "A French household buys an Italian car.", "M, imports", "The money goes to a foreign producer: a leakage."],
+["flow", "French tourists spend their holidays in Spain.", "M, imports", "Spending abroad by residents counts as imports."],
+["flow", "A firm builds a new warehouse.", "I, investment", "Investment is an injection, financed through banks."],
+["flow", "The government pays for a new high-speed line.", "G, public spending", "Public spending is an injection."],
+["flow", "The State hires teachers.", "G, public spending", "G includes the State's staff."],
+["flow", "A French aircraft maker sells planes to an American airline.", "X, exports", "Foreign spending brings income in: an injection."],
+["flow", "A Japanese tourist pays for a hotel in Lyon.", "X, exports", "A non-resident buying in France is a French export."],
+["approach", "Add up the value added of every firm.", "Production approach", "GDP = Σ values added."],
+["approach", "Sales minus intermediate consumption, firm by firm.", "Production approach", "That is each firm's value added."],
+["approach", "Add up wages and profits.", "Income approach", "All value added is paid out as wages or profits."],
+["approach", "Labour gets 60% of GDP, capital 40%.", "Income approach", "The split of GDP between wages and profits."],
+["approach", "Add up C + I + G + (X − M).", "Expenditure approach", "GDP as the sum of final spending."],
+["approach", "Count only final purchases, never intermediate ones.", "Expenditure approach", "The mill buying wheat is intermediate consumption."],
+["wj", "Planned: S = 50, T = 70, M = 30. I = 80, G = 40, X = 20.", "Output falls", "W = 150 > J = 140: inventories pile up and firms cut output."],
+["wj", "Planned: S = 100, T = 80, M = 60. I = 120, G = 90, X = 70.", "Output rises", "W = 240 < J = 280: inventories fall and firms raise output."],
+["wj", "Planned: S = 90, T = 110, M = 50. I = 100, G = 100, X = 50.", "Output stays the same", "W = 250 = J: equilibrium, inventories are stable."],
+["wj", "Unsold goods pile up in warehouses.", "Output falls", "Output exceeds demand: firms cut production."],
+["wj", "Inventories are running down.", "Output rises", "Demand exceeds output: firms produce more."],
+["wj", "From equilibrium, the State raises G and leaves T unchanged.", "Output rises", "Injections rise: W < J, so output rises."],
+["wj", "From equilibrium, households decide to save more.", "Output falls", "Leakages rise: W > J, so output falls."],
+["wj", "From equilibrium, households buy more imported goods.", "Output falls", "M is a leakage: W > J."],
+["invdet", "The central bank cuts rates, so loans are cheaper.", "Interest rate", "I = f(i), decreasing: a lower rate makes more projects profitable."],
+["invdet", "Rates rise from 2% to 6% and firms cancel projects.", "Interest rate", "The rate is the cost of investing."],
+["invdet", "Firms expect strong sales next year.", "Expectations", "Expected demand, sales and profits drive investment."],
+["invdet", "A new machine cuts production costs by 20%.", "Technological progress", "Higher productivity and lower costs encourage investment."],
+["invdet", "Factories run at 95% of capacity.", "Capacity utilisation", "Near full capacity, firms add equipment."],
+["invdet", "With half the machines idle, firms postpone buying new ones.", "Capacity utilisation", "With idle capacity, firms wait."],
+["invdet", "A tax credit for buying green equipment.", "Public policies", "Tax incentives, subsidies, infrastructure, cheap financing."],
+["invkind", "A bakery buys a new oven.", "Physical investment", "Machines, buildings, equipment."],
+["invkind", "A logistics firm builds a warehouse.", "Physical investment", "Buildings are physical investment."],
+["invkind", "A firm spends on R&D and patents.", "Intangible investment", "R&D, patents, licences, training, software, advertising."],
+["invkind", "A firm trains its staff.", "Intangible investment", "Training is intangible investment."],
+["invkind", "A firm spends on advertising and marketing.", "Intangible investment", "The course lists advertising and marketing as intangible investment."],
+["invkind", "A household buys shares of a listed company.", "Financial investment, not I", "Buying shares or bonds is a financial investment, not investment I in the accounts."],
+["invkind", "A firm buys government bonds.", "Financial investment, not I", "A financial placement, not productive capital."],
+["invkind", "A mill buys wheat to make flour.", "Intermediate consumption, not I", "Used up in production: it is intermediate consumption."],
+["prop", "The share of each extra euro of income that is consumed.", "Marginal propensity to consume", "c = ΔC / ΔYd."],
+["prop", "c in C = C₀ + c·Yd.", "Marginal propensity to consume", "The slope of the consumption function."],
+["prop", "Total consumption divided by disposable income.", "Average propensity to consume", "APC = C / Yd."],
+["prop", "C / Yd = 0.95.", "Average propensity to consume", "A ratio of totals, not of changes."],
+["prop", "The share of each extra euro that is saved, 1 − c.", "Marginal propensity to save", "s = ΔS / ΔYd = 1 − c."],
+["prop", "The income at which saving is zero.", "Break-even income", "Y_R = C₀ / (1 − c)."],
+["prop", "C₀ / (1 − c).", "Break-even income", "Below it, households dissave."],
+["prop", "What households spend even with no income.", "Autonomous consumption", "C₀, financed by past savings or borrowing."],
+["prop", "C₀ in C = C₀ + c·Yd.", "Autonomous consumption", "The fixed part of consumption."],
+["mult", "Households save a larger share of each extra euro.", "Smaller multiplier", "k = 1 / s: a higher MPS means a smaller multiplier."],
+["mult", "The MPC rises from 0.7 to 0.9.", "Bigger multiplier", "k goes from 3.3 to 10."],
+["mult", "The economy trades little with the rest of the world.", "Bigger multiplier", "Less extra income leaks out as imports."],
+["mult", "Imports absorb much of each extra euro.", "Smaller multiplier", "Imports are a leakage."],
+["mult", "There is spare capacity and unemployment.", "Bigger multiplier", "Firms can produce more instead of raising prices."],
+["mult", "Firms are at full capacity, so they raise prices.", "Smaller multiplier", "Extra demand turns into prices, not output."],
+["econd", "Saving is postponed consumption; the interest rate rewards waiting.", "Irving Fisher", "Fisher's intertemporal choice (1930)."],
+["econd", "The interest rate measures how much households prefer the present.", "Irving Fisher", "The rate compares consuming today and later."],
+["econd", "On US data, the APC is stable in the long run.", "Simon Kuznets", "Kuznets (Nobel 1971): Keynes' law holds only in the short run."],
+["econd", "When income rises, consumption rises by less, so the APC falls.", "John Maynard Keynes", "Keynes' psychological law."],
+["econd", "Consumption depends on current income; saving is what is left.", "John Maynard Keynes", "The current income hypothesis."],
+["phase", "+0.6%, +0.4%, +0.2%, +0.1%.", "Slowdown", "Growth stays positive but gets weaker."],
+["phase", "Growth stays positive but gets weaker.", "Slowdown", "A slowdown is not a recession: GDP still grows."],
+["phase", "+0.4%, −0.2%, −0.3%, +0.1%.", "Recession", "Two quarters of decline in a row (INSEE)."],
+["phase", "+0.3%, −0.1%, −0.4%, −0.2%.", "Recession", "Three quarters of decline in a row."],
+["phase", "GDP falls for two quarters in a row.", "Recession", "INSEE's definition."],
+["phase", "A recession that lasts several years, as in the 1930s.", "Depression", "A depression is a long recession."],
+["phase", "+0.5%, +0.6%, +0.7%, +0.8%.", "Expansion", "Positive and rising growth."],
+["nomreal", "GDP at current prices.", "Nominal", "Nominal uses the prices of the year itself."],
+["nomreal", "GDP at the prices of a base year.", "Real", "Real GDP removes inflation."],
+["nomreal", "104 units at this year's price of €11: €1,144.", "Nominal", "Current quantities at current prices."],
+["nomreal", "104 units at last year's price of €10: €1,040.", "Real", "Current quantities at base-year prices."],
+["nomreal", "The best measure to compare growth over time.", "Real", "It shows changes in quantities, not in prices."],
+["nomreal", "It cannot tell whether prices or output went up.", "Nominal", "Nominal GDP mixes both effects."],
+["measure", "The output of all resident units, whatever their nationality.", "GDP", "GDP follows the territory."],
+["measure", "Adds income received from abroad and removes income paid abroad.", "GNP", "GNP follows nationality."],
+["measure", "Best to compare countries of different sizes, though it hides inequality.", "GDP per capita", "GDP divided by population: an average."],
+["measure", "Converted with a rate that keeps the same purchasing power, in int-$.", "GDP in PPP", "Purchasing power parity."],
+["measure", "The Big Mac index is a simple version of it.", "GDP in PPP", "The same burger, priced everywhere."],
+["measure", "Adds health and education to income.", "HDI", "The UN's Human Development Index."],
+["measure", "Scandinavian countries rank above the US on it.", "HDI", "Thanks to health and education."],
+["gdplim", "You pay a cleaner to clean your flat.", "Counted in GDP", "A market service, sold at a price."],
+["gdplim", "You clean your own flat.", "Not counted, or badly counted", "Domestic work has no market price."],
+["gdplim", "Volunteering at a food bank.", "Not counted, or badly counted", "Volunteering has no market price."],
+["gdplim", "Undeclared cash work.", "Not counted, or badly counted", "The underground economy is missed or badly estimated."],
+["gdplim", "The pollution from a factory.", "Not counted, or badly counted", "Negative externalities are not subtracted."],
+["gdplim", "A firm pays a company to clean up an oil spill.", "Counted in GDP", "The clean-up is market output: GDP rises, though nobody is better off than before the spill."],
+["gdplim", "A restaurant meal.", "Counted in GDP", "A final service sold at its market price."],
+["gdplim", "Caring for an elderly parent at home, unpaid.", "Not counted, or badly counted", "Unpaid care has no market price."],
+["driver", "Good, well-maintained roads, power and telecoms.", "Endogenous: government", "Public goods make an economy more productive."],
+["driver", "An effective education system.", "Endogenous: government", "A skilled workforce."],
+["driver", "Enough public R&D to drive innovation.", "Endogenous: government", "Public research is a public good."],
+["driver", "Strong consumption and exports.", "Endogenous: economic factors", "Firms produce more to meet demand."],
+["driver", "High saving funds the loans firms need to invest.", "Endogenous: economic factors", "Saving and investment."],
+["driver", "Lower interest rates lift consumption and investment.", "Endogenous: economic factors", "The interest rate moves both parts of demand."],
+["driver", "A cluster of innovations: railways and steel.", "Schumpeter: clusters of innovations", "Innovations come in clusters and drive long cycles."],
+["driver", "Old activities disappear and more productive ones replace them.", "Schumpeter: clusters of innovations", "Creative destruction."],
+["econg", "Creative destruction.", "Joseph Schumpeter", "Old activities die, more productive ones replace them."],
+["econg", "Innovations come in clusters.", "Joseph Schumpeter", "Such as the steam engine or railways."],
+["econg", "Long waves of growth of about 50 years.", "Nikolai Kondratiev", "The Kondratiev cycles."],
+["econg", "200 countries, 200 years, 4 minutes.", "Hans Rosling", "His animation of modern growth."]
+];
+
+function spotItem(it){
+  const [fam, text, right, why] = it, F = FAMILIES[fam];
+  let opts = F.opts.slice();
+  if (opts.length > 4){ const others = shuffle(opts.filter(o => o !== right)).slice(0, 3); opts = shuffle([right, ...others]); }
+  else if (opts.length > 2) opts = shuffle(opts);
+  return { fam, ch: F.ch, q: F.q, text, opts, right: opts.indexOf(right), why, label: right };
+}
+function viewSpot(pre){
+  const sel = new Set(pre && CH[pre] ? [pre] : COURSE.map(c => c.id));
+  const st0 = MS.get("spot", { best: 0, sprint: 0 });
+  const root = h("div", { class: "mod", html: `
+  ${mhead("Macroeconomics", "Spot it", "Short statements and scenes. Name the school, the author, the agent, the leakage or the measure. Fast naming makes the open questions easier: you know which framework you are in.")}
+  <div class="drillbar"><div class="mchips">${COURSE.map(c => chipCh(c, sel.has(c.id))).join("")}</div>
+    <div class="seg" role="group" aria-label="Mode"><button type="button" data-mode="practice" aria-pressed="true">Practice</button><button type="button" data-mode="sprint" aria-pressed="false">Sprint 60 s</button></div></div>
+  <div class="drillstats"><div><b data-s="streak">0</b><span>streak</span></div><div><b data-s="best">${st0.best}</b><span>best streak</span></div><div><b data-s="score">0/0</b><span>this session</span></div><div><b data-s="sprint">${st0.sprint}</b><span>best sprint</span></div></div>
+  <div class="timer" hidden><i></i></div>
+  <article class="dq spotq" aria-live="polite"></article>` });
+  let mode = "practice", streak = 0, ok = 0, tot = 0, cur = null, t0 = 0, tick = 0, sprintOn = false, deck = [];
+  const dq = root.querySelector(".dq"), S = k => root.querySelector(`[data-s="${k}"]`), timer = root.querySelector(".timer");
+  const stats = () => { const s = MS.get("spot", { best: 0, sprint: 0 }); S("streak").textContent = streak; S("score").textContent = `${ok}/${tot}`; S("best").textContent = s.best; S("sprint").textContent = s.sprint; };
+  const refill = () => { deck = shuffle(SPOT.filter(it => sel.has(FAMILIES[it[0]].ch))); };
+  function next(){
+    if (!deck.length) refill();
+    if (!deck.length){ dq.innerHTML = `<p class="muted">Pick at least one chapter.</p>`; return; }
+    cur = spotItem(deck.pop()); cur.done = false; dq.classList.remove("ok", "bad");
+    const c = CH[cur.ch], L = "ABCD";
+    dq.style.setProperty("--c", c.c);
+    dq.innerHTML = `<div class="qzprog"><span class="tag">${c.short}</span><span>${cur.q}</span></div><p class="dqt scene">${cur.text}</p><div class="opts">${cur.opts.map((o, j) => `<button class="opt" type="button" data-o="${j}"><span class="k">${L[j]}</span><span>${o}</span></button>`).join("")}</div><div class="dout"></div>`;
+  }
+  function verdict(good){
+    cur.done = true; tot++; if (good){ ok++; streak++; } else streak = 0;
+    const s = MS.get("spot", { best: 0, sprint: 0 }); if (streak > s.best){ s.best = streak; MS.set("spot", s); }
+    stats(); if (good) bump(S("streak"));
+    if (tot === 15 && mode === "practice") nudgeReview("spot");
+    dq.classList.add(good ? "ok" : "bad");
+    dq.querySelector(".dout").innerHTML = `<div class="verdict ${good ? "ok" : "bad"}"><div class="vh"><b>${good ? "Correct" : "Not quite"}</b>${good ? "" : `<span>It is <b>${cur.label}</b>.</span>`}</div><p>${cur.why}</p></div><button class="btn quiet small next" type="button" data-next>Next ${ICO.arrow}<kbd>Enter</kbd></button>`;
+    dq.querySelector("[data-next]").focus({ preventScroll: true });
+    if (mode === "sprint" && sprintOn) setTimeout(() => { if (cur.done && sprintOn) next(); }, good ? 500 : 1500);
+  }
+  root.addEventListener("click", e => {
+    const cb = e.target.closest("[data-ch]");
+    if (cb){ const k = cb.dataset.ch; if (sel.has(k) && sel.size > 1) sel.delete(k); else sel.add(k); cb.classList.toggle("on", sel.has(k)); cb.setAttribute("aria-pressed", String(sel.has(k))); refill(); next(); }
+    const mb = e.target.closest("[data-mode]");
+    if (mb){ mode = mb.dataset.mode; root.querySelectorAll("[data-mode]").forEach(b => b.setAttribute("aria-pressed", String(b === mb))); streak = 0; ok = 0; tot = 0; stats(); if (mode === "sprint") startSprint(); else { sprintOn = false; timer.hidden = true; next(); } }
+    const ob = e.target.closest("[data-o]");
+    if (ob && cur && !cur.done){ const j = +ob.dataset.o; if (j === cur.right) burst(ob); dq.querySelectorAll(".opt").forEach((b, i) => { b.disabled = true; if (i === cur.right) b.classList.add("right"); else if (i === j) b.classList.add("wrong"); }); verdict(j === cur.right); }
+    if (e.target.closest("[data-next]")) next();
+    if (e.target.closest("[data-again]")) startSprint();
+  });
+  const onKey = e => {
+    if (!root.isConnected){ document.removeEventListener("keydown", onKey); return; }
+    if (!cur || (e.target.matches && e.target.matches("input,textarea"))) return;
+    if (e.key === "Enter" && cur.done){ e.preventDefault(); next(); return; }
+    const k = { a: 0, b: 1, c: 2, d: 3, "1": 0, "2": 1, "3": 2, "4": 3 }[e.key.toLowerCase()];
+    if (k != null && !cur.done){ const b = dq.querySelectorAll(".opt")[k]; if (b){ e.preventDefault(); b.click(); } }
+  };
+  document.addEventListener("keydown", onKey);
+  function startSprint(){
+    sprintOn = true; ok = 0; tot = 0; streak = 0; stats(); timer.hidden = false; t0 = performance.now(); refill(); next();
+    cancelAnimationFrame(tick);
+    const run = () => { if (!root.isConnected){ sprintOn = false; return; } const left = 1 - (performance.now() - t0) / 60000; timer.firstChild.style.width = Math.max(0, left * 100) + "%";
+      if (left <= 0){ sprintOn = false; const s = MS.get("spot", { best: 0, sprint: 0 }), rec = ok > s.sprint; if (rec){ s.sprint = ok; MS.set("spot", s); } stats();
+        dq.classList.remove("ok", "bad"); cur = null; dq.innerHTML = `<div class="sprintend"><span class="kicker">Time</span><h2>${ok} right out of ${tot}</h2><p class="muted">${rec ? "New personal best." : `Your best is ${s.sprint}.`}</p><div class="row"><button class="btn primary" type="button" data-again>Go again</button></div></div>`; nudgeReview("sprint"); return; }
+      tick = requestAnimationFrame(run); };
+    tick = requestAnimationFrame(run);
+  }
+  refill(); requestAnimationFrame(next);
+  return root;
+}
 
 /* ---------------- DRILLS: endless short exercises ---------------- */
 const RI = (a, b, s = 1) => a + s * Math.floor(Math.random() * ((b - a) / s + 1));
@@ -2876,9 +3446,11 @@ function modulesHtml(){
     ["#learn", "Learn", "The course in short cards, with interactive graphs.", `${L.known}/${L.total} cards known`, "var(--flow)", '<path d="M4 5h7a3 3 0 0 1 3 3v11a2 2 0 0 0-2-2H4zM20 5h-5a3 3 0 0 0-3 3v11a2 2 0 0 1 2-2h6z"/>'],
     ["#td", "Tutorials", "The tutorial exercises: calculate, then explain. New numbers each time.", (() => { const s = MS.get("td", {}); const n = Object.values(s).reduce((a, b) => a + b, 0); return n ? `${n} done` : "5 exercises"; })(), "var(--leak)", '<path d="M9 3h6l1 4H8z"/><rect x="4" y="7" width="16" height="14" rx="2"/><path d="M8 12h8M8 16h5"/>'],
     ["#drills", "Drills", "Endless short exercises. Streaks and a 60-second sprint.", `best streak ${d.best}`, "var(--inj)", '<path d="M13 3 5 14h6l-1 7 8-11h-6z"/>'],
+    ["#spot", "Spot it", "Name the school, the author, the agent, the leakage, the measure.", (() => { const sp = MS.get("spot", { best: 0 }); return sp.best ? `best streak ${sp.best}` : `${SPOT.length} scenes`; })(), "var(--ch4)", '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/>'],
     ["#quiz", "Quiz", "Exam-style multiple choice, explained.", qz.last ? `last ${Math.round(qz.last.score / qz.last.n * 100)}%` : `${QUIZ.length} questions`, "var(--leak)", '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17v.5"/>'],
     ["#cards", "Flashcards", "Definitions and formulas to flip.", `${fk}/${CARDS.length} known`, "var(--ch4)", '<rect x="3" y="6" width="14" height="12" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v10"/>'],
-    ["#open", "Open questions", "Write, compare with a model answer, tick the key points.", `${op}/${OPEN.length} tried`, "var(--flow)", '<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/>']
+    ["#open", "Open questions", "Write, compare with a model answer, tick the key points.", `${op}/${OPEN.length} tried`, "var(--flow)", '<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/>'],
+    ["#recap", "Recap", "Every card on one page: filter, scan, print before the exam.", `${L.total} cards`, "var(--inj)", '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h7"/>']
   ];
   return `<section class="sec"><div class="sec-h"><h2>Revise</h2><p>Learn the course, then train in every format.</p></div>
     <div class="mods">${M.map(m => `<a class="modt" href="${m[0]}" style="--c:${m[4]}"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${m[5]}</svg></span><b>${m[1]}</b><span class="md">${m[2]}</span><span class="ms">${m[3]}</span></a>`).join("")}</div>${MOCK_BANNER()}</section>`;
@@ -3219,8 +3791,8 @@ function viewMock(){
 }
 const MOCK_BANNER = () => `<a class="tdfull mkbanner" href="#mock"><span><b>Mock exam</b><span>Open questions on the lectures, then an exercise like the tutorials. Timed, then marked.</span></span>${ICO.arrow}</a>`;
 
-const MODVIEWS = { mock: viewMock, td: viewTD, tdex: viewTDEx, learn: viewLearn, chapter: viewChapter, drills: viewDrills, quiz: viewQuiz, cards: viewCards, open: viewOpen, openq: viewOpenQ, recap: viewRecap };
-const TITLES = { mock: "Mock exam", td: "Tutorials", tdex: "Tutorials", learn: "Learn", chapter: "Learn", drills: "Drills", quiz: "Quiz", cards: "Flashcards", open: "Open questions", openq: "Open questions", recap: "Recap" };
+const MODVIEWS = { mock: viewMock, td: viewTD, tdex: viewTDEx, learn: viewLearn, chapter: viewChapter, drills: viewDrills, spot: viewSpot, quiz: viewQuiz, cards: viewCards, open: viewOpen, openq: viewOpenQ, recap: viewRecap };
+const TITLES = { mock: "Mock exam", td: "Tutorials", tdex: "Tutorials", learn: "Learn", chapter: "Learn", drills: "Drills", spot: "Spot it", quiz: "Quiz", cards: "Flashcards", open: "Open questions", openq: "Open questions", recap: "Recap" };
 /* header height drives the layout of the case view */
 new ResizeObserver(() => document.documentElement.style.setProperty("--hdr", document.querySelector(".hdr").offsetHeight + "px")).observe(document.querySelector(".hdr"));
 
@@ -3232,6 +3804,7 @@ const SEARCH_EXTRA = () => [
   ...TD_TYPES.map(t => ({ kind: "Tutorial", t: t.title, s: t.what, href: "#td-" + t.id, c: "var(--leak)", where: "Tutorials, exercise like TD 1" })),
   { kind: "Page", t: "Full cases", s: "10 exam-style cases production chain national accounts household multiplier growth", href: "#cases", c: "var(--flow)", where: "Cases" },
   { kind: "Page", t: "Drills", s: "short exercises streak sprint numbers", href: "#drills", c: "var(--inj)", where: "Drills" },
+  { kind: "Page", t: "Spot it", s: "name the school author agent leakage injection measure sprint", href: "#spot", c: "var(--ch4)", where: "Spot it" },
   { kind: "Page", t: "Recap", s: "one page summary cheat sheet all cards formulas", href: "#recap", c: "var(--ch4)", where: "Learn" },
   { kind: "Page", t: "Mock exam", s: "final exam practice timed open questions tutorial exercise 60 90 120 minutes", href: "#mock", c: "var(--leak)", where: "Open questions and an exercise, timed" }
 ];
@@ -3339,7 +3912,7 @@ document.addEventListener("click", e => { if (e.target.closest("[data-search]"))
 /* ---------- render ---------- */
 const STAGE = { stops: [], view: null };
 /* module pages get a small 3D circuit in their header */
-const MINI_VIEWS = new Set(["learn", "chapter", "td", "drills", "quiz", "cards", "open", "recap"]);
+const MINI_VIEWS = new Set(["learn", "chapter", "td", "drills", "spot", "quiz", "cards", "open", "recap"]);
 function render(){
   const r = route();
   STAGE.stops.forEach(f => f && f()); STAGE.stops = [];
