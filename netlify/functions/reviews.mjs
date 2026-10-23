@@ -6,7 +6,7 @@
 import { getStore } from "@netlify/blobs";
 import { createHash, timingSafeEqual } from "node:crypto";
 
-export const LABS = ["flow", "mgmt"];
+export const LABS = ["flow", "mgmt", "sgc"];
 export const TAGS = ["Exam-like", "Clear corrections", "Good on phone", "Saves time", "Too easy", "Too hard", "Found a mistake"];
 const DAY = 24 * 3600 * 1000, MAX_KEEP = 1000, LIST = 60;
 

@@ -23,8 +23,9 @@ Une page d'accueil (hub) qui liste les matières, et un « lab » par matière.
 /favicon.svg       logo N de Nexus (dégradé bleu → violet → rose)
 /macro/index.html  lab « Macroeconomics » (Business Economics, semestre 1). Nom interne `flow` gardé pour les clés de stockage et l'API des avis.
 /management/index.html  lab « Fundamentals of Management and Organizations » (S1). Nom interne `mgmt` (stockage `mgmt-v1`, avis `lab: "mgmt"`).
+/global/index.html  lab « Societal and Global Challenges » (S1). Nom interne `sgc` (stockage `sgc-v1`, avis `lab: "sgc"`).
 /404.html          page « introuvable » servie par Netlify : « 404/20 » entouré au stylo rouge sur papier quadrillé, liens vers les labs
-/og.jpg, /macro/og.jpg, /management/og.jpg   images d'aperçu des liens partagés (1200 × 630, < 100 Ko pour WhatsApp), balises og: et twitter: dans chaque page. Adresses absolues vers le site en production : elles ne s'affichent qu'une fois `main` mis en ligne. Générées avec Playwright à partir d'une maquette HTML (pas d'étape de build dans le dépôt)
+/og.jpg, /macro/og.jpg, /management/og.jpg, /global/og.jpg   images d'aperçu des liens partagés (1200 × 630, < 100 Ko pour WhatsApp), balises og: et twitter: dans chaque page. Adresses absolues vers le site en production : elles ne s'affichent qu'une fois `main` mis en ligne. Générées avec Playwright à partir d'une maquette HTML (pas d'étape de build dans le dépôt)
 /CLAUDE.md         ce fichier
 /package.json      dépendance de la fonction des avis
 /netlify/functions/reviews.mjs   API des avis (GET liste + résumé, POST avis, POST suppression admin)
@@ -33,7 +34,7 @@ Une page d'accueil (hub) qui liste les matières, et un « lab » par matière.
 ## Avis des étudiants
 
 - Étoiles 1 à 5, tags fixes (liste `TAGS` dans la fonction, à garder identique côté pages), commentaire obligatoire de 10 à 600 caractères, prénom facultatif (« BBA1 student » sinon). Liens refusés. Publication immédiate.
-- Labs acceptés par l'API : `flow` (Macroeconomics) et `mgmt` (Management). Un nouveau lab = l'ajouter à `LABS` dans la fonction et dans l'objet `LABS` du hub.
+- Labs acceptés par l'API : `flow` (Macroeconomics), `mgmt` (Management) et `sgc` (Societal and Global Challenges). Un nouveau lab = l'ajouter à `LABS` dans la fonction et dans l'objet `LABS` du hub.
 - Demandés sur la carte de bilan à la fin d'un cas (et de l'examen blanc en Management), et via « Write a review » sur l'accueil de chaque lab. Affichés sur l'accueil du lab et résumés sur le hub (section « From the class »).
 - Anti-triche côté serveur : un avis par lab et par 24 h, à la fois par IP (hachée, jamais stockée en clair) et par appareil (`nexus-did`). Champ piège `website` contre les robots.
 - Mise en page volontairement différente du site de Zadig : pas d'histogramme de notes, pas de filtres en pastilles, pas de grille de cartes. Une ligne de résumé et des citations sur une colonne.
@@ -47,7 +48,7 @@ Une nouvelle matière = un dossier `/<matiere>/index.html` autonome, plus une li
 
 - Élément signature : une feuille d'examen quadrillée (petits carreaux, trait renforcé tous les 5) en WebGL écrit à la main, sans librairie. Elle vit seule même sans interaction : le puits se promène sur un trajet qui ne se répète pas, des ondes de 4 couleurs (bleu, violet, rose, cyan) naissent au hasard, et de petits arcs électriques claquent de temps en temps dans la moitié haute. La souris prend la main sur le puits, un clic ou un toucher envoie une onde.
 - Garde-fous : pause hors écran et onglet caché, mode économe automatique si les images sont lentes (résolution réduite, une image sur deux, mais l'animation continue), image fixe si « mouvement réduit », fond quadrillé en CSS si WebGL est absent.
-- Sous le titre, directement dans le haut de page : une tuile par matière (Macroeconomics, Management and Organizations, et Financial Accounting en « Coming soon »). Survol : la tuile prend la couleur de sa matière, change de visuel (vitrine façon popterror.com) et s'incline vers la souris, les autres s'effacent. Sur téléphone : carrousel, la tuile centrée est mise en valeur. Un clic mène à l'overview de la matière, jamais directement à un cas.
+- Sous le titre, directement dans le haut de page : une tuile par matière (Macroeconomics, Management and Organizations, Societal and Global Challenges ; Financial Accounting retiré à la demande d'Alexi). Survol : la tuile prend la couleur de sa matière, change de visuel (vitrine façon popterror.com) et s'incline vers la souris, les autres s'effacent. Sur téléphone : carrousel, la tuile centrée est mise en valeur. Un clic mène à l'overview de la matière, jamais directement à un cas.
 - Ensuite : « How it works », avis, bloc auteur. Pas de sous-catégorie (« All cases », etc.) sur l'accueil.
 - Sous « How it works », une bande de feuille d'examen (`#spec`) montre une question tirée en direct par de petits générateurs (multiplicateur, APC, valeur ajoutée, équité), avec la ligne de calcul ; nouveau tirage toutes les 7,5 s quand elle est visible (pas au survol, pas en mouvement réduit) et bouton « Draw another ». Les réponses sont calculées par le code, comme dans les labs.
 
@@ -209,6 +210,28 @@ Coordinatrice : Nuria Tolsá Caballero. 18 h, 2 ECTS, 9 séances (4 cours, 5 TD)
 - Labs : Kelley (scènes générées), équité (chiffres générés, ratios calculés par le code), Big Five (scores calculés avec les réponses), « Who said what ».
 - Quiz, Flashcards, Exam questions (toutes les self-check questions des slides + cas d'application, réponses modèles et points clés), examen blanc de 90 minutes.
 - Progression dans `mgmt-v1` : `learn`, `cases`, `lastcase`, `spot`, `labs`, `kel`, `eqlab`, `big5`, `who`, `quiz`, `cards`, `open`, `exam`, `examHist` (20 derniers examens blancs, affichés sur la page de départ de l'examen), `project` (cases cochées de la checklist du projet).
+
+## Lab « Global Challenges » : Societal and Global Challenges (S1)
+
+Neuf séances de 2 h (dont l'atelier 2tonnes). **Évaluation :** 20 % travail de groupe en classe (le TD de la séance 7 : arbre des causes de l'écart de salaire femmes-hommes), 80 % examen individuel organisé par le Hub sur les slides des séances 1 à 8 : savoir définir les concepts clés et comprendre les leçons des études empiriques montrées en cours. Selon Alexi : questions ouvertes ou « explain this notion », et très probablement un diagramme causal à dessiner.
+
+**Contenu reçu :** séances 1 à 6 et TD 7 (pas encore la séance 8, révision).
+1. Systems thinking : canicules (pic de chaleur, vague de chaleur, canicule et seuils), diagramme causal, signe d'un lien « toutes choses égales par ailleurs », boucles de rétroaction positives (renforçantes) et négatives (équilibrantes), règle de polarité (nombre pair ou impair de −), effet pervers (climatisation), diagramme des canicules, mesures macro/méso/micro, pensée systémique contre pensée linéaire.
+2. Développement durable : von Carlowitz (1713), rendement maximal durable (MSY), 3 principes, rapport Meadows (1972, 5 variables, capacité de charge, 2 boucles de population, méthode diagramme → paramétrage → simulation, recommandations, critiques), Brundtland (1987), 3 piliers (vivable, viable, équitable), jalons, ODD (17/169), 15 % sur la bonne voie, obstacles macro/méso/micro.
+3. Écologie : écologie (Haeckel), biosphère (Suess), écosystème (Tansley, biocénose + biotope), Vernadsky, résilience, point de bascule, éléments de bascule climatiques, cascades, Grande Accélération, Anthropocène, Holocène.
+4. Limites planétaires (Rockström 2009, 9 limites, 7 franchies en 2025 avec les années, limites cœur), météo/climat, +1,17 °C, biodiversité (3 types, 6e extinction, 5 facteurs directs IPBES), cacao et Lindt.
+5. Doughnut (Raworth 2012, 12 + 9 dimensions, 2025), pauvreté absolue (3,00 $/jour) et relative (60 % de la médiane, 1 337 €, 15,4 %), niveau de vie et unités de consommation, Palma, Gini, écart salarial 24/15/4 %, inégalités et problèmes sociaux.
+6. Modèle économique : économie, marché, capitalisme (Fulcher), économie de marché ; croissance brune, verte, sélective, décroissance ; les 4 scénarios ADEME 2050.
+7. TD : écart de salaire (21,8 %, Insee 2026), arbre des causes, exemple des homicides aux États-Unis, présenter, corroborer ou réfuter, sources fiables.
+
+**Modules** (hash dans `/global/`) : `#home`, `#learn`, `#learn-<systems|sd|ecology|bounds|social|economy|method>`, `#studio`, `#studio-<id>`, `#studio-free`, `#studio-drills`, `#sort`, `#figures`, `#quiz`, `#cards`, `#open`, `#open-<id>`, `#exam`, `#recap`.
+- Accueil : élément signature, le système des canicules (séance 1) en 3D vivante (canvas 2D) : variables environnementales au fond, sociales au milieu, économiques devant ; l'influence circule en impulsions sur chaque flèche (ocre pour +, cyan pour −). 5 vues : le système, boucle renforçante, boucles équilibrantes, effet pervers, « Your turn » (un clic sur une variable la fait monter et chaque variable atteinte monte ▲ ou baisse ▼, calculé à partir des signes).
+- **Causal studio** : 9 diagrammes (6 du cours : canicules, forêt de von Carlowitz, cacao, population, homicides, et l'écart de salaire, réponse à nous car les slides n'en donnent pas ; 3 cas d'entraînement : pêche, ZFE, Amazonie). Trois exercices par diagramme : remplir les signes, dessiner les liens (vérification lien par lien : juste, mauvais signe, manquant, en plus), voir la réponse du cours (pousser une variable, boucles). Tableau libre (ajouter, déplacer, relier, signes, boucles et effets calculés, téléchargement en PNG). Drills générés (signe d'un lien, polarité d'une boucle, effet le long des chemins).
+- Moteur commun (`sg_engine.js`) : boucles élémentaires et leur polarité par la règle du cours, chemins et effet net (monte, baisse, « ça dépend » si des chemins de signes opposés), propagation, dessin SVG des diagrammes (couleurs de la légende des slides : environnement vert, social rose, économie bleu). Rien n'est écrit à la main.
+- Learn : 89 fiches et 18 modèles interactifs (lire un lien, règle de polarité avec simulation, diagramme des canicules, forêt et MSY, deux boucles de population, trois piliers, bille et point de bascule avec hystérésis, Grande Accélération, roue des limites par année, facteurs IPBES, cacao, Doughnut, calculateur de niveau de vie et seuil de pauvreté, courbe de Lorenz avec Gini et Palma, quatre mots, quatre positions sur la croissance, scénarios ADEME côte à côte, homicides).
+- Sort it (classements, ~130 items), Key figures (33 chiffres avec source et leçon, mode « cacher les chiffres »), Quiz, Flashcards, Exam questions (définir, expliquer, appliquer, dessiner : réponses modèles et points clés, diagramme modèle), examen blanc 60 ou 90 min (notions + un diagramme construit flèche par flèche, comparé au diagramme du cours).
+- Progression dans `sgc-v1` : `learn`, `studio`, `board`, `cdrill`, `spot`, `figs`, `quiz`, `cards`, `open`, `exam`, `examHist`.
+- Le fichier est généré par `build_sg.py` (dossier de travail de la session, comme `build.py` pour Management) à partir des pièces communes extraites de la macro et des pièces propres au lab.
 
 ## Modules de révision du lab Macroeconomics (en place)
 

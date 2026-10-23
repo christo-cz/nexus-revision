@@ -33,7 +33,7 @@
   --fg:#12142B; --muted:#565B78; --faint:#8A8FA8;
   --grid:70 92 190; --grid-a:.16; --grid-major:.30;
   --b1:#3B5BFF; --b2:#8E6CFF; --b3:#FF5FA2; --b4:#22C4D6;
-  --macro:#0B7472; --acc:#4453D0; --mgmt:#B5386F; --on-c:#FFFFFF;
+  --macro:#0B7472; --acc:#4453D0; --mgmt:#B5386F; --sgc:#3B7A18; --on-c:#FFFFFF;
   --star:#B06F07; --bad:#B4372E;
   --scrim:245 246 251;
   --glass:color-mix(in srgb,var(--surface) 72%,transparent);
@@ -47,17 +47,17 @@
   --bg:#0D1024; --surface:#161A3A; --sunk:#1D2248; --line:#2A3060; --line-2:#3A4178;
   --fg:#ECEDFA; --muted:#A8ADD2; --faint:#7177A0;
   --grid:150 165 255; --grid-a:.2; --grid-major:.4;
-  --macro:#4CC2BC; --acc:#8F9AFF; --mgmt:#FF7FB2; --on-c:#0D1024;
+  --macro:#4CC2BC; --acc:#8F9AFF; --mgmt:#FF7FB2; --sgc:#8EE26B; --on-c:#0D1024;
   --star:#E9AE4C; --bad:#F08A80; --scrim:13 16 36; color-scheme:dark;
 }}
 :root[data-theme="dark"]{
   --bg:#0D1024; --surface:#161A3A; --sunk:#1D2248; --line:#2A3060; --line-2:#3A4178;
   --fg:#ECEDFA; --muted:#A8ADD2; --faint:#7177A0;
   --grid:150 165 255; --grid-a:.2; --grid-major:.4;
-  --macro:#4CC2BC; --acc:#8F9AFF; --mgmt:#FF7FB2; --on-c:#0D1024;
+  --macro:#4CC2BC; --acc:#8F9AFF; --mgmt:#FF7FB2; --sgc:#8EE26B; --on-c:#0D1024;
   --star:#E9AE4C; --bad:#F08A80; --scrim:13 16 36; color-scheme:dark;
 }
-:root.tint-light{--fg:#1B1712;--muted:#5F574A;--faint:#8D8474;--line:#D9CDB6;--line-2:#C4B596;--surface:#FFFBF2;--sunk:#EDE3CF;--macro:#0B7472;--mgmt:#B5386F;--acc:#4453D0;--on-c:#FFFFFF;--star:#A86A06;--bad:#B4372E;color-scheme:light}
+:root.tint-light{--fg:#1B1712;--muted:#5F574A;--faint:#8D8474;--line:#D9CDB6;--line-2:#C4B596;--surface:#FFFBF2;--sunk:#EDE3CF;--macro:#0B7472;--mgmt:#B5386F;--sgc:#3B7A18;--acc:#4453D0;--on-c:#FFFFFF;--star:#A86A06;--bad:#B4372E;color-scheme:light}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{scroll-behavior:smooth}
@@ -341,34 +341,31 @@ html.theme-vt::view-transition-new(root){animation:themeReveal .65s cubic-bezier
         <span class="glare" aria-hidden="true"></span>
       </a>
 
-      <div class="tile soon" tabindex="0" role="group" aria-label="Financial Accounting, coming soon" style="--c:var(--acc)">
+      <a class="tile" href="/global/" style="--c:var(--sgc)">
         <div class="vis" aria-hidden="true">
-          <svg class="va" viewBox="0 0 300 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M80 40h140M150 40v86"/>
-            <text x="115" y="32" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor" stroke="none" font-family="JetBrains Mono,monospace">Dr</text>
-            <text x="185" y="32" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor" stroke="none" font-family="JetBrains Mono,monospace">Cr</text>
-            <g opacity=".6"><path d="M92 60h44M92 78h30M92 96h40M164 60h36M164 78h44M164 96h24"/></g>
-            <path d="M92 114h44M164 114h44" stroke-width="2.5"/>
+          <svg class="va" viewBox="0 0 300 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- a causal loop: three variables, three signed arrows -->
+            <rect x="38" y="26" width="76" height="26" rx="7"/><rect x="186" y="26" width="76" height="26" rx="7"/><rect x="112" y="104" width="76" height="26" rx="7" fill="currentColor" fill-opacity=".14"/>
+            <path d="M118 36q32-14 64 0" opacity=".8"/><path d="m176 30 6 6-8 3" opacity=".8"/>
+            <path d="M226 56q8 34-34 54" opacity=".8"/><path d="m194 104-3 7 8 1" opacity=".8"/>
+            <path d="M108 112Q62 96 72 56" opacity=".8"/><path d="m67 62 5-7 5 6" opacity=".8"/>
+            <g fill="currentColor" stroke="none" font-family="JetBrains Mono,monospace" font-weight="700" font-size="13" text-anchor="middle"><text x="150" y="24">+</text><text x="226" y="94">−</text><text x="76" y="100">−</text><text x="150" y="82" font-size="16" opacity=".6">R</text></g>
           </svg>
-          <svg class="vb" viewBox="0 0 300 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <g fill="currentColor" stroke="none">
-              <rect class="drop" x="70" y="88" width="66" height="34" rx="4" style="--d:0ms"/>
-              <rect class="drop" x="70" y="50" width="66" height="34" rx="4" fill-opacity=".7" style="--d:90ms"/>
-              <rect class="drop" x="164" y="96" width="66" height="26" rx="4" style="--d:180ms"/>
-              <rect class="drop" x="164" y="66" width="66" height="26" rx="4" fill-opacity=".7" style="--d:270ms"/>
-              <rect class="drop" x="164" y="50" width="66" height="12" rx="3" fill-opacity=".45" style="--d:360ms"/>
-            </g>
-            <path class="draw" d="M60 34h180" style="--len:180;--d:420ms"/>
-            <path class="draw" d="M145 82h10M145 90h10" stroke-width="2.5" style="--len:10;--d:600ms"/>
+          <svg class="vb" viewBox="0 0 300 150" fill="none" stroke="currentColor" stroke-linecap="round">
+            <!-- the Doughnut draws itself: social foundation, ecological ceiling, overshoot -->
+            <circle class="draw" cx="150" cy="75" r="30" stroke-width="10" style="--len:189;--d:0ms" transform="rotate(-90 150 75)"/>
+            <circle class="draw" cx="150" cy="75" r="54" stroke-width="10" stroke-opacity=".55" style="--len:340;--d:200ms" transform="rotate(-90 150 75)"/>
+            <g stroke-width="3"><path class="draw" d="M150 16V4" style="--len:12;--d:520ms"/><path class="draw" d="M192 33l9-9" style="--len:13;--d:560ms"/><path class="draw" d="M209 75h14" style="--len:14;--d:600ms"/><path class="draw" d="M108 33l-8-8" style="--len:12;--d:640ms"/><path class="draw" d="M192 117l7 7" style="--len:10;--d:680ms"/><path class="draw" d="M91 75H80" style="--len:11;--d:720ms"/><path class="draw" d="M108 117l-6 6" style="--len:9;--d:760ms"/></g>
           </svg>
         </div>
         <div class="info">
-          <h3>Financial Accounting</h3>
-          <p class="what">Journal entries, the balance sheet, the income statement</p>
-          <p class="status"><span class="pill">Coming soon</span></p>
+          <h3>Societal and Global Challenges</h3>
+          <p class="what">Causal diagrams, planetary boundaries, the Doughnut, poverty, growth</p>
+          <p class="status" id="sgcStatus">9 causal diagrams · 89 cards</p>
         </div>
+        <span class="open" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
         <span class="glare" aria-hidden="true"></span>
-      </div>
+      </a>
 
     </nav>
   </div>
@@ -566,6 +563,8 @@ applyTheme();
     if (ans) document.getElementById("macroStatus").innerHTML = `<span class="track" aria-hidden="true"><i style="width:${ans / 300 * 100}%"></i></span>${done} of 10 cases finished`;
     const mg = JSON.parse(localStorage.getItem("mgmt-v1")) || {}, known = Object.keys(mg.learn || {}).length, mc = Object.values(mg.cases || {}).filter(c => c && c.ans && Object.keys(c.ans).length).length;
     if (known || mc) document.getElementById("mgmtStatus").innerHTML = `<span class="track" aria-hidden="true"><i style="width:${Math.min(100, known / 79 * 100)}%"></i></span>${known} of 79 cards known`;
+    const sg = JSON.parse(localStorage.getItem("sgc-v1")) || {}, sk = Object.keys(sg.learn || {}).length, sd = Object.values(sg.studio || {}).filter(x => x && x.best != null).length;
+    if (sk || sd) document.getElementById("sgcStatus").innerHTML = `<span class="track" aria-hidden="true"><i style="width:${Math.min(100, sk / 89 * 100)}%"></i></span>${sk} of 89 cards · ${sd} of 9 diagrams`;
   } catch (e) {}
   const tiles = [...document.querySelectorAll(".tile")], fine = matchMedia("(hover: hover) and (pointer: fine)");
   tiles.forEach(t => {
@@ -806,10 +805,13 @@ heroTilt(document.getElementById("hero"));
   const lc = mg.lastcase;
   if (lc && MC[lc] && mAns(lc) > 0 && mAns(lc) < MC[lc][1]) rows.push({ c: "var(--mgmt)", nm: "Management", dt: `${MC[lc][0]}: ${mAns(lc)} of ${MC[lc][1]} steps done`, p: mAns(lc) / MC[lc][1], lbl: `${mAns(lc)}/${MC[lc][1]}`, href: `/management/#case-${lc}` });
   else if (mSolved || mKnown) rows.push({ c: "var(--mgmt)", nm: "Management", dt: `${mSolved} of 8 cases solved · ${mKnown} of 79 cards known`, p: mKnown / 79, lbl: `${mKnown}/79`, href: mKnown < 79 ? "/management/#learn" : "/management/#cases" });
+  { const sv = get("sgc-v1"), sk = Object.keys(sv.learn || {}).length, sd = Object.values(sv.studio || {}).filter(x => x && x.best != null).length;
+    if (sk || sd) rows.push({ c: "var(--sgc)", nm: "Global Challenges", dt: `${sk} of 89 cards known · ${sd} of 9 causal diagrams drawn`, p: sk / 89, lbl: `${sk}/89`, href: sk < 89 ? "/global/#learn" : "/global/#studio" }); }
   /* a mock exam on the clock comes first */
   const clock = (E, min, nm, c, href) => { if (!E || !E.start || E.end) return; const left = E.start + min * 60000 - Date.now(), m = Math.max(0, Math.ceil(left / 60000));
     rows.unshift({ c, nm, dt: left > 0 ? `Mock exam on the clock: ${m} minute${m > 1 ? "s" : ""} left` : "Mock exam: time is up. Open it to mark your answers", p: Math.min(1, Math.max(0, 1 - left / (min * 60000))), lbl: `${m}m`, href }); };
   clock(mg.exam, 90, "Management", "var(--mgmt)", "/management/#exam");
+  const sgv = get("sgc-v1"); if (sgv.exam) clock(sgv.exam, sgv.exam.min || 60, "Global Challenges", "var(--sgc)", "/global/#exam");
   if (fl.mock) clock(fl.mock, fl.mock.min || 90, "Macroeconomics", "var(--macro)", "/macro/#mock");
   if (!rows.length) return;
   document.getElementById("resumeBody").innerHTML = rows.map(r => `<a class="rs" href="${r.href}" style="--c:${r.c}"><span class="ring" style="--p:${Math.min(1, r.p).toFixed(3)}"><b>${r.lbl}</b></span><span class="nm">${r.nm}</span><span class="go" aria-hidden="true">${ARROW}</span><span class="dt">${r.dt}</span></a>`).join("");
@@ -845,6 +847,9 @@ heroTilt(document.getElementById("hero"));
       return ["Macroeconomics", "var(--macro)", `Consumption is <b>C = ${C0} + ${c}Yd</b> and disposable income is <b>${f(Yd)}</b>. What share of income is consumed?`, [`C = ${C0} + ${c} × ${f(Yd)} = ${f(C, 0)}`, `APC = ${f(C, 0)} / ${f(Yd)} = <b>${f(C / Yd, 2)}</b>`]]; },
     () => { const w = RI(4, 12) * 50, fl = w + RI(3, 10) * 50, br = fl + RI(4, 14) * 50;
       return ["Macroeconomics", "var(--macro)", `A farmer sells wheat for <b>€${f(w)}</b> to a miller, who sells the flour for <b>€${f(fl)}</b> to a baker, who sells bread for <b>€${f(br)}</b>. What is the contribution to GDP?`, [`Values added: ${f(w)} + (${f(fl)} − ${f(w)}) + (${f(br)} − ${f(fl)})`, `GDP = <b>€${f(br)}</b>, the value of the final good`]]; },
+    () => { const LOOPS = [[["Indoor temperatures", 1], ["Air-conditioning use", -1]], [["Electricity consumption", 1], ["Electricity price", -1]], [["Global average temperature", 1], ["Soil drying", 1]], [["Population", 1], ["Births per year", 1]], [["Population", 1], ["Deaths per year", -1]], [["GHG concentration", 1], ["Global average temperature", 1], ["Heatwave frequency", 1], ["Soil drying", 1], ["Vegetation stress", -1], ["CO₂ absorption", -1]]];
+      const L = PICK(LOOPS), neg = L.filter(x => x[1] < 0).length, R = neg % 2 === 0;
+      return ["Global Challenges", "var(--sgc)", `In the course's diagrams: ${L.map(([v, sg]) => `${v} <b>${sg > 0 ? "+" : "−"}</b>`).join(" → ")} → back to ${L[0][0].toLowerCase()}. Reinforcing or balancing?`, [`${neg === 0 ? "Only + signs" : `${neg} minus sign${neg > 1 ? "s" : ""}, an ${neg % 2 ? "odd" : "even"} number`}`, `<b>${R ? "reinforcing" : "balancing"}</b>: the loop ${R ? "amplifies" : "attenuates"} the change`]]; },
     () => { let p1, h1, p2, h2, r1, r2; do { h1 = RI(30, 40); h2 = RI(30, 40); p1 = RI(18, 32) * 100; p2 = RI(18, 32) * 100; r1 = p1 / h1; r2 = p2 / h2; } while (Math.abs(r1 / r2 - 1) < .04);
       const under = r1 < r2;
       return ["Management", "var(--mgmt)", `You are paid <b>€${f(p1)}</b> a month for a <b>${h1}-hour</b> week. Your colleague is paid <b>€${f(p2)}</b> for a <b>${h2}-hour</b> week. What does equity theory predict?`, [`You: ${f(p1)} / ${h1} = ${f(r1, 1)}`, `Colleague: ${f(p2)} / ${h2} = ${f(r2, 1)}`, `<b>${under ? "under-rewarded" : "over-rewarded"}</b>: ${under ? "less effort, a request for more, or another referent" : "guilt, more effort, or a new reading of the inputs"}`]]; }
@@ -866,7 +871,7 @@ heroTilt(document.getElementById("hero"));
 
 /* ---------- reviews (from /api/reviews) ---------- */
 (function(){
-  const LABS = { flow: { name: "Macroeconomics", href: "/macro/#reviews", c: "var(--macro)" }, mgmt: { name: "Management", href: "/management/#reviews", c: "var(--mgmt)" } };
+  const LABS = { flow: { name: "Macroeconomics", href: "/macro/#reviews", c: "var(--macro)" }, mgmt: { name: "Management", href: "/management/#reviews", c: "var(--mgmt)" }, sgc: { name: "Global Challenges", href: "/global/#reviews", c: "var(--sgc)" } };
   const body = document.getElementById("voicesBody");
   const get = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -887,7 +892,7 @@ heroTilt(document.getElementById("hero"));
       const top = Object.entries(s.tags).sort((a, b) => b[1] - a[1]).slice(0, 3);
       return `<a class="labline" href="${L.href}" style="--c:${L.c}"><span class="nm">${L.name}</span><span class="avg">${s.avg.toFixed(1)}</span>${stars(Math.round(s.avg))}<span class="n">${s.count} review${s.count > 1 ? "s" : ""}</span>${top.length ? `<span class="tg">${top.map(([t, n]) => `<span>${esc(t)} (${n})</span>`).join("")}</span>` : ""}</a>`;
     }).join("");
-    if (!lines){ body.innerHTML = `<p class="empty">No reviews yet. Finish a case in <a href="/macro/">Macroeconomics</a> or <a href="/management/">Management</a> and be the first.</p>`; return; }
+    if (!lines){ body.innerHTML = `<p class="empty">No reviews yet. Try <a href="/macro/">Macroeconomics</a>, <a href="/management/">Management</a> or <a href="/global/">Global Challenges</a>, and be the first.</p>`; return; }
     const items = data.items.filter(r => LABS[r.lab]), shown = all || admin ? items : items.slice(0, 4);
     body.innerHTML = `<div style="display:flex;flex-direction:column;gap:10px">${lines}</div>
       <ul class="quotes">${shown.map(r => `<li class="quote" style="--c:${LABS[r.lab].c}"><p>${esc(r.text)}</p><div class="meta">${stars(r.stars)}<b>${esc(r.name || "BBA1 student")}</b><span class="lab">${LABS[r.lab].name}</span><span>${ago(r.at)}</span>${admin ? `<button class="del" type="button" data-del="${esc(r.id)}">Delete</button>` : ""}</div></li>`).join("")}</ul>
