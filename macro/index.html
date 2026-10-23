@@ -1481,8 +1481,20 @@ const NXR = (() => {
   const cache = {};
   function load(lab, force){
     const k = lab || "*";
-    if (!cache[k] || force) cache[k] = fetch(API + (lab ? "?lab=" + encodeURIComponent(lab) : ""), { headers: { accept: "application/json" } }).then(r => r.ok ? r.json() : null).catch(() => null);
+    const q = [lab ? "lab=" + encodeURIComponent(lab) : "", force ? "fresh=" + Date.now() : ""].filter(Boolean).join("&");   /* fresh= skips the CDN copy */
+    if (!cache[k] || force) cache[k] = fetch(API + (q ? "?" + q : ""), { headers: { accept: "application/json" } }).then(r => r.ok ? r.json() : null).catch(() => null);
     return cache[k];
+  }
+  function forget(id){
+    Object.keys(cache).forEach(k => {
+      cache[k] = cache[k].then(d => {
+        if (!d) return d;
+        const r = d.items.find(x => x.id === id); if (!r) return d;
+        d.items = d.items.filter(x => x.id !== id);
+        const s = d.labs[r.lab]; if (s && s.count){ s.avg = s.count > 1 ? (s.avg * s.count - r.stars) / (s.count - 1) : null; s.count--; r.tags.forEach(t => { if (s.tags[t]) s.tags[t]--; }); }
+        return d;
+      });
+    });
   }
   function remember(item){
     Object.keys(cache).forEach(k => {
@@ -1648,7 +1660,7 @@ const NXR = (() => {
       const avg = n ? sum / n : 0;
       const doneAll = keys.every(reviewed);
       const lines = o.labs ? keys.map(k => { const s = data.labs[k], L = o.labs[k]; return s && s.count ? `<a class="nx-labline" href="${L.href}" style="--c:${L.c}"><span class="nm">${esc(L.name)}</span><b>${s.avg.toFixed(1)}</b>${stars(Math.round(s.avg))}<span class="n">${s.count} review${s.count > 1 ? "s" : ""}</span></a>` : ""; }).join("") : "";
-      const tags = (() => { const t = {}; keys.forEach(k => { const s = data.labs[k]; if (s) Object.entries(s.tags).forEach(([a, b]) => { t[a] = (t[a] || 0) + b; }); }); return Object.entries(t).sort((a, b) => b[1] - a[1]).slice(0, 4); })();
+      const tags = (() => { const t = {}; keys.forEach(k => { const s = data.labs[k]; if (s) Object.entries(s.tags).forEach(([a, b]) => { t[a] = (t[a] || 0) + b; }); }); return Object.entries(t).filter(([, b]) => b > 0).sort((a, b) => b[1] - a[1]).slice(0, 4); })();
       return `<div class="nx-head">
         ${n ? `<div class="nx-score"><span class="nx-big" aria-hidden="true"><b>${avg.toFixed(1)}</b><i>/5</i>${RING}</span><div class="nx-sc"><span class="nx-sr">Average ${avg.toFixed(1)} out of 5.</span>${stars(Math.round(avg))}<span class="nx-cnt">${n} review${n > 1 ? "s" : ""} from the class</span>${tags.length ? `<span class="nx-most">Most said: ${tags.map(([a, b]) => `${esc(a)} <i>${b}</i>`).join(", ")}</span>` : ""}</div></div>` : ""}
         <div class="nx-plea"><p>${PLEA}</p><p class="nx-sig">Christo</p>
@@ -1672,7 +1684,11 @@ const NXR = (() => {
       if (del){
         if (!del.dataset.armed){ del.dataset.armed = "1"; del.textContent = "Tap again to delete"; return; }
         fetch(API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "delete", id: del.dataset.nxdel, key: admin }) })
-          .then(r => r.ok ? Promise.all(Object.keys(cache).map(k => load(k === "*" ? null : k, true))).then(() => load(o.labs ? null : o.lab)).then(d => { data = d; draw(); }) : r.json().then(x => { del.textContent = x.error || "Failed"; }));
+          .then(r => {
+            /* 404 = already gone (an earlier tap worked, the wall showed a cached copy): drop it here too */
+            if (r.ok || r.status === 404){ forget(del.dataset.nxdel); return load(o.labs ? null : o.lab).then(d => { data = d; draw(); }); }
+            return r.json().then(x => { del.textContent = x.error || "Failed"; });
+          }).catch(() => { del.textContent = "No connection. Try again."; });
       }
     });
     listeners.add(item => { if (!labsOf().includes(item.lab)) return; fresh = item.id; load(o.labs ? null : o.lab).then(d => { data = d; draw(); }); });
