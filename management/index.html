@@ -276,48 +276,156 @@ a{color:inherit}
   .card{padding:18px}
 }
 /* ---------- reviews ---------- */
-.rv-sum{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px}
-.rv-avg{display:flex;align-items:baseline;gap:8px}
-.rv-avg b{font-family:var(--f-display);font-size:1.6rem;line-height:1}
-.rv-avg > span:last-child{color:var(--muted);font-size:.9rem}
-.rv-tags{display:flex;flex-wrap:wrap;gap:6px}
-.rv-tags span{font-size:.8rem;font-weight:600;padding:4px 10px;border-radius:8px;background:var(--sunk);color:var(--muted)}
-.rv-tags span i{font-style:normal;font-family:var(--f-mono);color:var(--fg);margin-left:4px}
-.st{color:var(--c3);letter-spacing:1px;font-size:.95rem;white-space:nowrap}
-.st .off{color:var(--line-2)}
-.rv-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border-top:1px solid var(--line)}
-.rv{display:flex;flex-direction:column;gap:6px;padding:16px 0;border-bottom:1px solid var(--line);max-width:68ch}
-.rv-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font-size:.88rem}
-.rv-h b{font-weight:700}
-.rv-h .when{color:var(--faint)}
-.rv p{white-space:pre-line;overflow-wrap:anywhere}
-.rv .rv-tags span{font-size:.74rem;padding:2px 8px}
-.rv-del{margin-left:auto;border:0;background:none;color:var(--bad);font-size:.8rem;font-weight:700;text-decoration:underline}
-.rv-empty{color:var(--muted);font-size:.95rem}
+/* nxr-css:start (the reviews kit: same block in the hub and in every lab) */
+:root{--nx-acc:var(--pri,var(--acc,#4453D0));--nx-on:var(--on-pri,var(--on-c,#FFFFFF));--nx-red:#C42F28;--nx-gold:#B47806;
+  --nx-paper:#FCFCF8;--nx-ink:#1C1E2A;--nx-ink-2:#565A6C;--nx-rule:rgba(70,100,220,.13);--nx-margin:rgba(214,58,58,.45);--nx-pen:#C62D25;--nx-pgold:#A26A00;--nx-tape:rgba(255,255,255,.55);
+  --nx-shadow:0 1px 1px rgba(20,22,40,.10),0 12px 26px -14px rgba(20,22,40,.40);--nx-lift:0 2px 2px rgba(20,22,40,.12),0 24px 38px -16px rgba(20,22,40,.5)}
+:root[data-theme="dark"]{--nx-red:#FF7468;--nx-gold:#F2C14E;--nx-paper:#E6E8EF;--nx-tape:rgba(255,255,255,.35);
+  --nx-shadow:0 1px 1px rgba(0,0,0,.35),0 20px 36px -16px rgba(0,0,0,.8);--nx-lift:0 2px 2px rgba(0,0,0,.4),0 30px 46px -16px rgba(0,0,0,.85)}
+:root.tint-light{--nx-red:#C42F28;--nx-gold:#A86A06}
+.nx-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.nx-st{color:var(--nx-gold);letter-spacing:1px;font-size:.95rem;white-space:nowrap}
+.nx-st .off{color:var(--line-2)}
+.nx-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:12px 18px;font:inherit;font-weight:700;font-size:.96rem;line-height:1.2;background:var(--nx-acc);color:var(--nx-on);cursor:pointer;box-shadow:0 14px 28px -16px var(--nx-acc);transition:transform .12s,box-shadow .2s}
+.nx-btn svg{width:18px;height:18px;flex:none}
+.nx-btn:hover{transform:translateY(-1px)}
+.nx-btn:active{transform:scale(.97)}
+.nx-btn:disabled{opacity:.6;cursor:default;transform:none}
+.nx-link{border:0;background:none;padding:0;color:var(--nx-acc);font:inherit;font-weight:700;text-decoration:underline;cursor:pointer}
+.nx-empty{color:var(--muted)}
+.nx-thx{margin:0;display:flex;gap:10px;align-items:center;background:color-mix(in srgb,#2FA36B 17%,transparent);border-radius:12px;padding:12px 16px;font-weight:600;font-size:.95rem;color:var(--fg)}
+.nx-sig{font-style:italic;color:var(--muted)}
+.nx-sig::before{content:"— "}
+.nx-plea-s{margin:0;color:var(--muted);line-height:1.55;max-width:62ch}
+.nx-plea-s b{color:var(--fg)}
+
+/* wall: the head */
+.nx-head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px 52px;align-items:center}
+.nx-head:not(:has(.nx-score)){grid-template-columns:minmax(0,1fr)}
+@media (max-width:760px){.nx-head{grid-template-columns:minmax(0,1fr)}}
+.nx-score{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nx-big{position:relative;display:inline-flex;align-items:baseline;font-family:var(--f-display);font-weight:700;color:var(--nx-red);line-height:1;padding:16px 28px 18px;transform:rotate(-5deg)}
+.nx-big b{font-size:3.6rem;letter-spacing:-.02em}
+.nx-big i{font-style:normal;font-size:1.5rem;margin-left:3px;opacity:.85}
+.nx-ring{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.nx-ring path{fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1;stroke-dashoffset:0}
+.nx-sc{display:flex;flex-direction:column;gap:5px;min-width:0}
+.nx-sc .nx-st{font-size:1.3rem}
+.nx-cnt{font-weight:700}
+.nx-most{color:var(--muted);font-size:.86rem;max-width:34ch}
+.nx-most i{font-style:normal;font-family:var(--f-mono);color:var(--fg)}
+.nx-plea{border-left:3px solid var(--nx-red);padding:2px 0 2px 18px;display:flex;flex-direction:column;align-items:flex-start;gap:10px;max-width:62ch}
+.nx-plea p{margin:0;line-height:1.55}
+.nx-plea .nx-sig{margin-top:-4px}
+.nx-lines{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px 30px}
+.nx-labline{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;border-left:3px solid var(--c);padding:2px 0 2px 12px;text-decoration:none;color:var(--fg)}
+.nx-labline .nm{font-family:var(--f-display);font-weight:700;color:var(--c)}
+.nx-labline b{font-family:var(--f-display);font-size:1.1rem}
+.nx-labline .n{color:var(--muted);font-size:.88rem}
+.nx-more{margin-top:6px;border:1.5px solid var(--line);background:transparent;color:var(--fg);border-radius:12px;padding:10px 16px;font:inherit;font-weight:700;font-size:.92rem;cursor:pointer}
+
+/* wall: slips of exam paper, taped */
+.nx-wall{list-style:none;margin:22px 0 0;padding:0 4px;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:6px 30px;align-items:start}
+@media (min-width:600px){.nx-wall > .nx-slip:nth-child(3n+2){margin-top:36px}}
+.nx-slip{--c:var(--nx-acc);position:relative;display:block;min-width:0;margin:14px 0 20px;padding:16px 16px 14px 36px;color:var(--nx-ink);border-radius:2px 3px 3px 2px;
+  background:linear-gradient(90deg,transparent 24px,var(--nx-margin) 24px 25.5px,transparent 25.5px),repeating-linear-gradient(0deg,transparent 0 11px,var(--nx-rule) 11px 12px),repeating-linear-gradient(90deg,transparent 0 11px,var(--nx-rule) 11px 12px),var(--nx-paper);
+  box-shadow:var(--nx-shadow);transform:rotate(var(--r,0deg));transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s}
+.nx-slip::before{content:"";position:absolute;top:-10px;left:var(--tx,40%);width:74px;height:22px;background:color-mix(in srgb,var(--c) 45%,var(--nx-tape));transform:rotate(calc(var(--r,0deg) * -2.4 - 2deg));box-shadow:0 1px 2px rgba(0,0,0,.14)}
+@media (hover:hover){.nx-slip:hover{transform:rotate(0deg) translateY(-4px);box-shadow:var(--nx-lift)}}
+.nx-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.nx-slip .nx-st{color:var(--nx-pgold);font-size:1rem}
+.nx-slip .nx-st .off{color:rgba(28,30,42,.18)}
+.nx-grade{position:relative;display:inline-flex;align-items:baseline;color:var(--nx-pen);font-family:var(--f-display);font-weight:700;line-height:1;padding:8px 13px 9px;transform:rotate(-8deg);flex:none}
+.nx-grade b{font-size:1.4rem}
+.nx-grade i{font-style:normal;font-size:.8rem;margin-left:1px}
+.nx-grade .nx-ring path{stroke-width:3.6}
+.nx-txt{margin:0;font-size:.97rem;line-height:1.55;white-space:pre-line;overflow-wrap:anywhere}
+.nx-tg{margin:10px 0 0;display:flex;flex-wrap:wrap;gap:5px}
+.nx-tg span{font-size:.72rem;font-weight:700;padding:2px 8px;border:1px solid rgba(28,30,42,.2);border-radius:99px;color:var(--nx-ink-2);background:rgba(255,255,255,.65)}
+.nx-by{margin:12px 0 0;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;font-size:.82rem;color:var(--nx-ink-2)}
+.nx-by b{color:var(--nx-ink);font-family:var(--f-display);font-size:.96rem}
+.nx-lab{color:inherit;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.nx-lab::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.nx-lab:hover{text-decoration:underline}
+.nx-del{margin-top:8px;border:0;background:none;padding:0;color:var(--nx-pen);font:inherit;font-size:.8rem;font-weight:700;text-decoration:underline;cursor:pointer}
+.nx-blank{display:flex;flex-direction:column;align-items:flex-start;gap:14px;padding-bottom:18px}
+.nx-one{display:block;max-width:340px;margin:16px auto 6px}
+.nx-one > .nx-slip:nth-child(n){margin-top:14px}
+.nx-anim :is(.nx-slip,.nx-big) .nx-ring path{transition:stroke-dashoffset .85s cubic-bezier(.65,0,.35,1) .1s}
+.nx-anim :is(.nx-slip,.nx-big):not(.in) .nx-ring path{stroke-dashoffset:1}
+.nx-new{animation:nxpin .75s cubic-bezier(.2,.9,.25,1.15) both}
+@keyframes nxpin{from{opacity:0;transform:translateY(-30px) rotate(calc(var(--r,0deg) * 4)) scale(1.07);box-shadow:0 44px 54px -24px rgba(0,0,0,.45)}}
+
+/* the review form (inline slot, sheet) */
 .rv-form{display:flex;flex-direction:column;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;max-width:640px}
-.end .rv-form{background:var(--bg);max-width:none}
-.rv-form h3{font-size:1.1rem}
+.end .rv-form,.nx-slot .rv-form{background:var(--bg);max-width:none}
+.nx-slot{display:flex;flex-direction:column;gap:12px}
 .rv-form fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;min-width:0}
 .rv-form legend,.rv-form .lbl{font-size:.88rem;font-weight:700;padding:0;margin-bottom:8px}
 .rv-form .opt-l{font-weight:500;color:var(--muted)}
 .stars{display:flex;align-items:center;gap:2px}
-.stars button{border:0;background:none;padding:4px;font-size:1.9rem;line-height:1;color:var(--line-2);transition:color .1s,transform .1s}
-.stars button.on{color:var(--c3)}
+.stars button{border:0;background:none;padding:4px;font-size:1.9rem;line-height:1;color:var(--line-2);cursor:pointer;transition:color .1s,transform .1s}
+.stars button.on{color:var(--nx-gold)}
 .stars button:active{transform:scale(.9)}
 .stars output{margin-left:10px;font-size:.9rem;color:var(--muted);font-weight:600}
 .tagpick{display:flex;flex-wrap:wrap;gap:8px}
-.tagpick button{border:1.5px solid var(--line);background:var(--surface);border-radius:99px;padding:6px 12px;font-size:.86rem;font-weight:600;color:var(--muted)}
-.tagpick button[aria-pressed="true"]{border-color:var(--pri);background:var(--pri-soft);color:var(--fg)}
-.rv-form textarea,.rv-form input[type=text]{width:100%;border:1.5px solid var(--line-2);border-radius:11px;background:var(--surface);padding:11px 13px;font:inherit;font-size:.96rem;line-height:1.5;outline:none;resize:vertical}
+.tagpick button{border:1.5px solid var(--line);background:transparent;border-radius:99px;padding:6px 12px;font:inherit;font-size:.86rem;font-weight:600;color:var(--muted);cursor:pointer}
+.tagpick button[aria-pressed="true"]{border-color:var(--nx-acc);background:color-mix(in srgb,var(--nx-acc) 16%,transparent);color:var(--fg)}
+.rv-form textarea,.rv-form input[type=text]{width:100%;border:1.5px solid var(--line-2);border-radius:11px;background:var(--surface);color:var(--fg);padding:11px 13px;font:inherit;font-size:.96rem;line-height:1.5;outline:none;resize:vertical}
 .rv-form textarea{min-height:96px}
-.rv-form textarea:focus,.rv-form input[type=text]:focus{border-color:var(--pri)}
-.rv-form .cnt{font-size:.78rem;color:var(--faint);align-self:flex-end;font-family:var(--f-mono)}
+.rv-form textarea:focus,.rv-form input[type=text]:focus{border-color:var(--nx-acc)}
+.rv-form .cnt{font-size:.78rem;color:var(--faint,var(--muted));align-self:flex-end;font-family:var(--f-mono)}
 .rv-form .two{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end}
 @media (max-width:520px){.rv-form .two{grid-template-columns:1fr}}
-.rv-form .msg{font-size:.9rem;font-weight:600}
+.rv-form .msg{margin:0;font-size:.9rem;font-weight:600}
+.rv-form .msg:empty{display:none}
 .rv-form .msg.err{color:var(--bad)}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
-.rv-thanks{display:flex;gap:10px;align-items:center;background:var(--ok-soft);border-radius:12px;padding:12px 16px;font-weight:600;font-size:.95rem}
+.nx-pick{display:flex;flex-wrap:wrap;gap:8px}
+.nx-pick button{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--line);background:transparent;color:var(--fg);border-radius:12px;padding:9px 14px;font:inherit;font-weight:700;font-size:.92rem;cursor:pointer}
+.nx-pick button::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.nx-pick button[aria-checked="true"]{border-color:var(--c);background:color-mix(in srgb,var(--c) 16%,transparent)}
+.nx-pick button:disabled{opacity:.55;cursor:default}
+.nx-pick small{font-weight:500;color:var(--muted)}
+
+/* the sheet */
+dialog.nx-sheet{border:0;padding:0;margin:auto;width:min(640px,calc(100% - 24px));max-width:none;max-height:calc(100% - 24px);background:transparent;color:var(--fg);overflow:visible}
+dialog.nx-sheet::backdrop{background:rgba(6,8,18,.62);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px)}
+.nx-sh-in{position:relative;display:flex;flex-direction:column;gap:14px;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:22px;padding:24px;max-height:calc(100dvh - 24px);overflow:auto;box-shadow:0 40px 80px -30px rgba(0,0,0,.6);animation:nxup .45s cubic-bezier(.2,.9,.25,1)}
+@keyframes nxup{from{transform:translateY(28px);opacity:0}}
+.nx-sh-in h2{margin:0;font-size:1.45rem;padding-right:44px;text-wrap:balance}
+.nx-sh-in .rv-form{background:transparent;border:0;padding:0;max-width:none}
+.nx-sh-in .rv-form textarea,.nx-sh-in .rv-form input[type=text]{background:color-mix(in srgb,var(--fg) 5%,transparent)}
+.nx-x{position:absolute;top:12px;right:12px;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--fg);font:inherit;font-size:1.4rem;line-height:1;cursor:pointer}
+.nx-pinned{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.nx-pinned .nx-one{text-align:left;width:100%}
+.nx-ok{margin:0;font-weight:700;font-size:1.05rem}
+html:has(dialog.nx-sheet[open]){overflow:hidden}
+@media (max-width:560px){
+  dialog.nx-sheet{margin:auto 0 0;width:100%;max-height:94dvh}
+  .nx-sh-in{border-radius:22px 22px 0 0;border-bottom:0;padding:22px max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));max-height:94dvh;animation-name:nxsheet}
+  @keyframes nxsheet{from{transform:translateY(100%)}}
+}
+
+/* the nudge */
+.nx-nudge{position:fixed;z-index:70;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));width:min(360px,calc(100% - 32px));display:flex;flex-direction:column;gap:8px;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-left:4px solid var(--nx-red);border-radius:14px 18px 18px 14px;padding:16px 18px 12px;box-shadow:0 30px 60px -24px rgba(0,0,0,.6);opacity:0;transform:translateY(26px) rotate(1.5deg);transition:transform .55s cubic-bezier(.2,.9,.25,1.1),opacity .3s}
+.nx-nudge.show{opacity:1;transform:none}
+.nx-nudge .nx-x{top:8px;right:8px;width:32px;height:32px;border:0;font-size:1.25rem;color:var(--muted)}
+.nx-n1{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.06rem;padding-right:28px}
+.nx-n2{margin:0;color:var(--muted);font-size:.92rem;line-height:1.5}
+.nx-n2 b{color:var(--fg)}
+.nx-qs{display:flex;gap:2px}
+.nx-qs button{border:0;background:none;padding:2px 3px;font-size:2.05rem;line-height:1;color:var(--line-2);cursor:pointer;transition:color .1s,transform .15s}
+.nx-qs button.on{color:var(--nx-gold);transform:scale(1.1)}
+.nx-nf{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.86rem}
+.nx-later{border:0;background:none;padding:4px 0;color:var(--muted);font:inherit;font-weight:600;text-decoration:underline;cursor:pointer}
+@media (max-width:560px){.nx-nudge{left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));width:auto}}
+@media (prefers-reduced-motion:reduce){.nx-slip,.nx-nudge{transition:opacity .2s}.nx-new,.nx-sh-in{animation:none}.nx-anim :is(.nx-slip,.nx-big):not(.in) .nx-ring path{stroke-dashoffset:0}}
+:is(.nx-btn,.nx-x,.nx-more,.nx-link,.nx-later,.nx-qs button,.nx-pick button,.stars button,.tagpick button,.nx-labline,.nx-lab):focus-visible{outline:2.5px solid var(--nx-acc);outline-offset:2px}
+/* the review button in a lab header */
+.hdr .theme{white-space:nowrap}
+@media (max-width:1560px){#rvBtn .tl,#fsBtn .tl{display:none}}
+/* nxr-css:end */
 /* ---------- overview & case list: the living circular flow ---------- */
 #app{position:relative;z-index:1}
 .aura{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(640px circle at var(--ax,70%) var(--ay,40%),color-mix(in srgb,var(--ac,var(--pri)) 20%,transparent),transparent 70%);transition:opacity .4s}
@@ -1092,6 +1200,7 @@ details.oans[open] summary{margin-bottom:8px}
     <a href="#open" data-route="open">Exam questions</a>
   </nav>
   <span class="grow"></span>
+  <button class="theme" id="rvBtn" type="button" aria-label="Write a review"></button>
   <button class="theme" id="srchBtn" type="button" aria-label="Search the course (/)"></button>
   <button class="theme" id="fsBtn" type="button"></button>
   <button class="theme" id="themeBtn" type="button"></button>
@@ -1150,7 +1259,7 @@ $("#themeBtn").addEventListener("click", () => themeSwap($("#themeBtn"), () => {
 
 
 /* ---------- author credit (same block on every Nexus page) ---------- */
-const ME = { name: "Christo Czysz", cls: "EDHEC BBA1, English track, Lille campus", insta: "christo.cz", linkedin: "https://www.linkedin.com/search/results/people/?keywords=Christo%20Czysz", mail: ["christo.czysz", "edhec.com"] };
+const ME = { name: "Christo Czysz", cls: "EDHEC BBA1, English track, Lille campus", insta: "christo.cz", linkedin: "https://www.linkedin.com/in/christo-czysz-2a133a43a", mail: ["christo.czysz", "edhec.com"] };
 const ICONS = {
   ig: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>',
   li: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V17M8 7.2v.1M12 17v-6.5M12 13.4c0-1.7 1-2.9 2.5-2.9S17 11.4 17 13v4"/></svg>',
@@ -1164,101 +1273,249 @@ function creditHtml(){
 
 
 /* ---------- reviews (shared API: /api/reviews) ---------- */
-const RV = { api: "/api/reviews", lab: "mgmt", data: null, loading: null };
-const RV_WORDS = ["", "Not useful", "Could be better", "Good", "Very good", "Excellent"];
+const RV = { lab: "mgmt", name: "Management" };
 const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-function deviceId(){ let d = lsGet("nexus-did", null); if (!d){ d = Math.random().toString(36).slice(2) + Date.now().toString(36); lsSet("nexus-did", d); } return d; }
-function starStr(n){ return `<span class="st" role="img" aria-label="${n} out of 5 stars">${"★".repeat(n)}<span class="off">${"★".repeat(5 - n)}</span></span>`; }
-function ago(ts){ const d = Math.floor((Date.now() - ts) / 86400000); if (d <= 0) return "today"; if (d === 1) return "yesterday"; if (d < 30) return d + " days ago"; return new Date(ts).toLocaleDateString("en-GB", { day: "numeric", month: "short" }); }
-function recentlyReviewed(){ const m = lsGet("nexus-reviewed", {}); return m[RV.lab] && Date.now() - m[RV.lab] < 86400000; }
-function rvLoad(force){
-  if (RV.data && !force) return Promise.resolve(RV.data);
-  if (RV.loading && !force) return RV.loading;
-  RV.loading = fetch(RV.api + "?lab=" + RV.lab, { headers: { accept: "application/json" } }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(d => (RV.data = d)).catch(() => (RV.data = null)).finally(() => { RV.loading = null; });
-  return RV.loading;
-}
-function rvItem(r){
-  const admin = lsGet("nexus-admin-key", "");
-  return `<li class="rv" data-id="${esc(r.id)}"><div class="rv-h">${starStr(r.stars)}<b>${esc(r.name || "BBA1 student")}</b><span class="when">${ago(r.at)}</span>${admin ? `<button class="rv-del" type="button" data-rvdel="${esc(r.id)}">Delete</button>` : ""}</div><p>${esc(r.text)}</p>${r.tags.length ? `<div class="rv-tags">${r.tags.map(x => `<span>${esc(x)}</span>`).join("")}</div>` : ""}</li>`;
-}
-function rvSummary(s){
-  if (!s || !s.count) return "";
-  const top = Object.entries(s.tags).sort((a, b) => b[1] - a[1]).slice(0, 4);
-  return `<div class="rv-sum"><div class="rv-avg"><b class="num">${s.avg.toFixed(1)}</b>${starStr(Math.round(s.avg))}<span>${s.count} review${s.count > 1 ? "s" : ""}</span></div>${top.length ? `<div class="rv-tags" aria-label="Most mentioned">${top.map(([k, v]) => `<span>${esc(k)}<i>${v}</i></span>`).join("")}</div>` : ""}</div>`;
-}
-function rvForm(onDone){
-  const f = h("form", { class: "rv-form", novalidate: true });
-  const tags = (RV.data && RV.data.tags) || ["Exam-like", "Clear corrections", "Good on phone", "Saves time", "Too easy", "Too hard", "Found a mistake"];
-  f.innerHTML = `<h3>How is the Management lab?</h3>
-    <fieldset><legend>Your rating</legend><div class="stars" role="radiogroup" aria-label="Rating">${[1, 2, 3, 4, 5].map(n => `<button type="button" role="radio" aria-checked="false" data-star="${n}" aria-label="${n} star${n > 1 ? "s" : ""}: ${RV_WORDS[n]}">★</button>`).join("")}<output aria-live="polite"></output></div></fieldset>
-    <fieldset><legend>What stood out? <span class="opt-l">Optional, up to 4</span></legend><div class="tagpick">${tags.map(x => `<button type="button" aria-pressed="false" data-tag="${esc(x)}">${esc(x)}</button>`).join("")}</div></fieldset>
-    <fieldset><label class="lbl" for="rvText">Your review</label><textarea id="rvText" maxlength="600" placeholder="What helped you? What is missing?"></textarea><span class="cnt" aria-hidden="true">0/600</span></fieldset>
-    <div class="two"><div><label class="lbl" for="rvName" style="display:block">First name <span class="opt-l">optional</span></label><input type="text" id="rvName" maxlength="32" autocomplete="given-name" placeholder="Leave blank to stay anonymous"></div>
-      <button class="btn primary" type="submit">Post review</button></div>
-    <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
-    <p class="msg" role="status"></p>`;
-  let stars = 0;
-  const starBtns = [...f.querySelectorAll("[data-star]")], out = f.querySelector("output"), msg = f.querySelector(".msg"), ta = f.querySelector("textarea"), cnt = f.querySelector(".cnt");
-  const paint = n => starBtns.forEach((b, i) => b.classList.toggle("on", i < n));
-  starBtns.forEach((b, i) => {
-    b.addEventListener("click", () => { stars = i + 1; paint(stars); starBtns.forEach((x, j) => x.setAttribute("aria-checked", String(j === i))); out.textContent = RV_WORDS[stars]; msg.textContent = ""; });
-    b.addEventListener("mouseenter", () => paint(i + 1)); b.addEventListener("mouseleave", () => paint(stars));
-    b.addEventListener("keydown", e => { const d = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 }[e.key]; if (d){ e.preventDefault(); const n = Math.min(5, Math.max(1, (stars || 0) + d)); starBtns[n - 1].click(); starBtns[n - 1].focus(); } });
-  });
-  f.querySelectorAll("[data-tag]").forEach(b => b.addEventListener("click", () => {
-    const on = b.getAttribute("aria-pressed") === "true";
-    if (!on && f.querySelectorAll('[data-tag][aria-pressed="true"]').length >= 4){ msg.className = "msg err"; msg.textContent = "Pick up to 4 tags."; return; }
-    b.setAttribute("aria-pressed", String(!on)); msg.textContent = "";
-  }));
-  ta.addEventListener("input", () => { cnt.textContent = ta.value.length + "/600"; });
-  f.addEventListener("submit", async e => {
-    e.preventDefault();
-    const fail = (m, el) => { msg.className = "msg err"; msg.textContent = m; if (el) el.focus(); };
-    if (!stars) return fail("Choose a number of stars.", starBtns[0]);
-    if (ta.value.trim().length < 10) return fail("Write at least a short sentence (10 characters).", ta);
-    const btn = f.querySelector("[type=submit]"); btn.disabled = true; btn.textContent = "Posting…"; msg.className = "msg"; msg.textContent = "";
-    const body = { lab: RV.lab, stars, tags: [...f.querySelectorAll('[data-tag][aria-pressed="true"]')].map(b => b.dataset.tag), text: ta.value, name: f.querySelector("#rvName").value, did: deviceId(), website: f.querySelector("[name=website]").value };
-    try {
-      const r = await fetch(RV.api, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
-      const d = await r.json().catch(() => ({}));
-      if (!r.ok){ btn.disabled = false; btn.textContent = "Post review"; if (r.status === 429){ const m = lsGet("nexus-reviewed", {}); m[RV.lab] = Date.now(); lsSet("nexus-reviewed", m); } return fail(d.error || "Something went wrong. Try again."); }
-      const m = lsGet("nexus-reviewed", {}); m[RV.lab] = Date.now(); lsSet("nexus-reviewed", m);
-      if (RV.data && d.item){ RV.data.items.unshift(d.item); const s = RV.data.labs[RV.lab]; s.avg = ((s.avg || 0) * s.count + d.item.stars) / (s.count + 1); s.count++; d.item.tags.forEach(x => s.tags[x] = (s.tags[x] || 0) + 1); }
-      onDone && onDone();
-    } catch (err){ btn.disabled = false; btn.textContent = "Post review"; fail("No connection. Check your internet and try again."); }
-  });
-  return f;
-}
-const thanks = () => h("div", { class: "rv-thanks", role: "status" }, "✓ Thanks for your review. It helps the next students.");
-function mountReviewSlot(slot){
-  if (recentlyReviewed()){ slot.replaceChildren(thanks()); return; }
-  rvLoad();
-  slot.replaceChildren(rvForm(() => { slot.replaceChildren(thanks()); say("Review posted."); }));
-}
-function mountReviewSection(sec){
-  const draw = () => {
-    const d = RV.data, s = d && d.labs && d.labs[RV.lab];
-    const canWrite = !recentlyReviewed();
-    sec.innerHTML = `<div class="sec-h"><h2>What the class says</h2>${d && canWrite ? `<button class="btn quiet small" type="button" data-rvwrite>Write a review</button>` : ""}</div><div data-rvform></div>`;
-    if (!d){ sec.insertAdjacentHTML("beforeend", `<p class="rv-empty">Reviews could not be loaded right now.</p>`); return; }
-    if (!s || !s.count){ sec.insertAdjacentHTML("beforeend", `<p class="rv-empty">No reviews yet. Solve a case and be the first to say what you think.</p>`); }
-    else {
-      const items = d.items.filter(r => r.lab === RV.lab), first = items.slice(0, 4);
-      sec.insertAdjacentHTML("beforeend", rvSummary(s) + `<ul class="rv-list">${first.map(rvItem).join("")}</ul>` + (items.length > 4 ? `<button class="btn quiet small" type="button" data-rvmore style="align-self:flex-start">Show all ${items.length} reviews</button>` : ""));
+/* nxr:start (Nexus reviews kit: the wall, the review sheet and the nudge. The same block lives in the hub and in every lab: edit it in one place and copy it.) */
+const NXR = (() => {
+  const API = "/api/reviews", DAY = 864e5;
+  const WORDS = ["", "Not useful", "Could be better", "Good", "Very good", "Excellent"];
+  const TAGS = ["Exam-like", "Clear corrections", "Good on phone", "Saves time", "Too easy", "Too hard", "Found a mistake"];
+  const WHAT = { case: "a full case", quiz: "a quiz", deck: "the whole flashcard pile", sprint: "a 60-second sprint", drills: "15 drills", diagram: "a causal diagram",
+    figures: "every key figure", open: "five exam answers", exam: "a mock exam", chapter: "a whole chapter", td: "a tutorial exercise", lab: "a lab", spot: "a Spot it round" };
+  const get = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
+  const put = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+  const sget = k => { try { return sessionStorage.getItem(k); } catch (e) { return null; } };
+  const sput = (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) {} };
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const still = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const announce = t => { const l = document.getElementById("live"); if (l){ l.textContent = ""; setTimeout(() => { l.textContent = t; }, 40); } };
+  const did = () => { let d = get("nexus-did", null); if (!d){ d = Math.random().toString(36).slice(2) + Date.now().toString(36); put("nexus-did", d); } return d; };
+  const reviewed = lab => { const m = get("nexus-reviewed", {}); return !!(m[lab] && Date.now() - m[lab] < DAY); };
+  const markDone = lab => { const m = get("nexus-reviewed", {}); m[lab] = Date.now(); put("nexus-reviewed", m); };
+  const stars = n => `<span class="nx-st" role="img" aria-label="${n} out of 5 stars">${"★".repeat(n)}<span class="off">${"★".repeat(5 - n)}</span></span>`;
+  const ago = ts => { const d = Math.floor((Date.now() - ts) / DAY); if (d <= 0) return "today"; if (d === 1) return "yesterday"; if (d < 30) return d + " days ago"; return new Date(ts).toLocaleDateString("en-GB", { day: "numeric", month: "short" }); };
+  const unit = s => { let x = 2166136261; for (const c of String(s)) x = Math.imul(x ^ c.charCodeAt(0), 16777619); return (x >>> 0) / 4294967295; };
+  /* a red-pen circle, drawn by hand around a grade */
+  const RING = '<svg class="nx-ring" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M76 7C58 1 23 3 10 16-1 28 8 50 37 55c28 4 58-5 58-23S74 6 46 6C35 7 27 9 20 13"/></svg>';
+  const PEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>';
+
+  /* ---- data: one request per page and lab, shared by every part of the page ---- */
+  const cache = {};
+  function load(lab, force){
+    const k = lab || "*";
+    if (!cache[k] || force) cache[k] = fetch(API + (lab ? "?lab=" + encodeURIComponent(lab) : ""), { headers: { accept: "application/json" } }).then(r => r.ok ? r.json() : null).catch(() => null);
+    return cache[k];
+  }
+  function remember(item){
+    Object.keys(cache).forEach(k => {
+      if (k !== "*" && k !== item.lab) return;
+      cache[k] = cache[k].then(d => {
+        if (!d || d.items.some(r => r.id === item.id)) return d;
+        d.items.unshift(item);
+        const s = d.labs[item.lab] || (d.labs[item.lab] = { count: 0, avg: 0, tags: {} });
+        s.avg = ((s.avg || 0) * s.count + item.stars) / (s.count + 1); s.count++;
+        item.tags.forEach(t => { s.tags[t] = (s.tags[t] || 0) + 1; });
+        return d;
+      });
+    });
+  }
+  const listeners = new Set();
+  const changed = item => { remember(item); listeners.forEach(f => f(item)); };
+
+  /* ---- one review, as a slip of exam paper taped to the wall ---- */
+  function slip(r, o = {}){
+    const u = unit(r.id), rot = ((u * 2 - 1) * 1.7).toFixed(2), tape = (14 + unit(r.id + "t") * 52).toFixed(0);
+    const L = o.labs && o.labs[r.lab];
+    return `<li class="nx-slip${o.fresh === r.id ? " nx-new" : ""}" style="--r:${rot}deg;--tx:${tape}%${L ? `;--c:${L.c}` : ""}">
+      <div class="nx-top">${stars(r.stars)}<span class="nx-grade" aria-hidden="true"><b>${r.stars}</b><i>/5</i>${RING}</span></div>
+      <p class="nx-txt">${esc(r.text)}</p>
+      ${r.tags && r.tags.length ? `<p class="nx-tg">${r.tags.map(t => `<span>${esc(t)}</span>`).join("")}</p>` : ""}
+      <p class="nx-by"><b>${esc(r.name || "BBA1 student")}</b>${L ? `<a class="nx-lab" href="${L.href}">${esc(L.name)}</a>` : ""}<span>${ago(r.at)}</span></p>
+      ${o.admin ? `<button class="nx-del" type="button" data-nxdel="${esc(r.id)}">Delete</button>` : ""}</li>`;
+  }
+  function reveal(box){
+    const items = box.querySelectorAll(".nx-slip:not(.in), .nx-big:not(.in)");
+    if (still() || !("IntersectionObserver" in window)){ items.forEach(x => x.classList.add("in")); return; }
+    box.classList.add("nx-anim");
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ setTimeout(() => e.target.classList.add("in"), 120 + Math.random() * 260); io.unobserve(e.target); } }), { rootMargin: "0px 0px -10% 0px" });
+    items.forEach(x => io.observe(x));
+  }
+
+  /* ---- the form ---- */
+  function form(o){
+    const f = document.createElement("form"); f.className = "rv-form nx-form"; f.noValidate = true;
+    const picker = o.labs ? Object.entries(o.labs).map(([k, L]) => `<button type="button" role="radio" aria-checked="false" data-lab="${k}" style="--c:${L.c}"${reviewed(k) ? " disabled" : ""}>${esc(L.name)}${reviewed(k) ? " <small>done today</small>" : ""}</button>`).join("") : "";
+    f.innerHTML = `${o.labs ? `<fieldset><legend>Which subject?</legend><div class="nx-pick" role="radiogroup" aria-label="Subject">${picker}</div></fieldset>` : ""}
+      <fieldset><legend>Your rating</legend><div class="stars" role="radiogroup" aria-label="Rating">${[1, 2, 3, 4, 5].map(n => `<button type="button" role="radio" aria-checked="false" data-star="${n}" aria-label="${n} star${n > 1 ? "s" : ""}: ${WORDS[n]}">★</button>`).join("")}<output aria-live="polite"></output></div></fieldset>
+      <fieldset><legend>What stood out? <span class="opt-l">Optional, up to 4</span></legend><div class="tagpick">${TAGS.map(x => `<button type="button" aria-pressed="false" data-tag="${esc(x)}">${esc(x)}</button>`).join("")}</div></fieldset>
+      <fieldset><label class="lbl" for="nxText${o.uid || ""}">Your review</label><textarea id="nxText${o.uid || ""}" maxlength="600" placeholder="What helped you? What is missing? What should I fix?"></textarea><span class="cnt" aria-hidden="true">0/600</span></fieldset>
+      <div class="two"><div><label class="lbl" for="nxName${o.uid || ""}" style="display:block">First name <span class="opt-l">optional</span></label><input type="text" id="nxName${o.uid || ""}" maxlength="32" autocomplete="given-name" placeholder="Leave blank to stay anonymous"></div>
+        <button class="nx-btn" type="submit">${PEN}Pin my review</button></div>
+      <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+      <p class="msg" role="status"></p>`;
+    let rating = 0, lab = o.labs ? null : o.lab;
+    const sb = [...f.querySelectorAll("[data-star]")], out = f.querySelector("output"), msg = f.querySelector(".msg"), ta = f.querySelector("textarea"), cnt = f.querySelector(".cnt");
+    const paint = n => sb.forEach((b, i) => b.classList.toggle("on", i < n));
+    const setStars = n => { rating = n; paint(n); sb.forEach((x, j) => x.setAttribute("aria-checked", String(j === n - 1))); out.textContent = WORDS[n]; msg.textContent = ""; };
+    sb.forEach((b, i) => {
+      b.addEventListener("click", () => setStars(i + 1));
+      b.addEventListener("mouseenter", () => paint(i + 1)); b.addEventListener("mouseleave", () => paint(rating));
+      b.addEventListener("keydown", e => { const d = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 }[e.key]; if (d){ e.preventDefault(); const n = Math.min(5, Math.max(1, (rating || 0) + d)); setStars(n); sb[n - 1].focus(); } });
+    });
+    if (o.stars) setStars(o.stars);
+    f.querySelectorAll("[data-lab]").forEach(b => b.addEventListener("click", () => { lab = b.dataset.lab; f.querySelectorAll("[data-lab]").forEach(x => x.setAttribute("aria-checked", String(x === b))); msg.textContent = ""; }));
+    if (o.labs && o.lab && !reviewed(o.lab)){ const b = f.querySelector(`[data-lab="${o.lab}"]`); if (b) b.click(); }
+    f.querySelectorAll("[data-tag]").forEach(b => b.addEventListener("click", () => {
+      const on = b.getAttribute("aria-pressed") === "true";
+      if (!on && f.querySelectorAll('[data-tag][aria-pressed="true"]').length >= 4){ msg.className = "msg err"; msg.textContent = "Pick up to 4 tags."; return; }
+      b.setAttribute("aria-pressed", String(!on)); msg.textContent = "";
+    }));
+    ta.addEventListener("input", () => { cnt.textContent = ta.value.length + "/600"; });
+    f.addEventListener("submit", async e => {
+      e.preventDefault();
+      const fail = (m, el) => { msg.className = "msg err"; msg.textContent = m; if (el) el.focus(); };
+      if (!lab) return fail("Choose the subject you are reviewing.", f.querySelector("[data-lab]:not([disabled])"));
+      if (!rating) return fail("Choose a number of stars.", sb[0]);
+      if (ta.value.trim().length < 10) return fail("Write at least a short sentence (10 characters).", ta);
+      const btn = f.querySelector("[type=submit]"); btn.disabled = true; btn.lastChild.textContent = "Pinning…"; msg.className = "msg"; msg.textContent = "";
+      const body = { lab, stars: rating, tags: [...f.querySelectorAll('[data-tag][aria-pressed="true"]')].map(b => b.dataset.tag), text: ta.value, name: f.querySelector("input[type=text]").value, did: did(), website: f.querySelector("[name=website]").value };
+      try {
+        const r = await fetch(API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok){ btn.disabled = false; btn.lastChild.textContent = "Pin my review"; if (r.status === 429) markDone(lab); return fail(d.error || "Something went wrong. Try again."); }
+        markDone(lab); announce("Review posted. Thank you.");
+        const item = d.item || { id: "local-" + Date.now(), lab, stars: rating, tags: body.tags, text: ta.value.trim(), name: body.name.trim(), at: Date.now() };
+        changed(item); o.onDone && o.onDone(item);
+      } catch (err){ btn.disabled = false; btn.lastChild.textContent = "Pin my review"; fail("No connection. Check your internet and try again."); }
+    });
+    return f;
+  }
+
+  const PLEA = `<b>A review helps me a lot.</b> I build Nexus on my own, for our class. Thirty seconds of feedback tells me what to fix next, and it shows the others that the site is worth their time.`;
+
+  /* ---- the sheet: the form in a dialog, from any page ---- */
+  let uid = 0;
+  function sheet(o = {}){
+    const open = document.querySelector("dialog.nx-sheet"); if (open) return;
+    const d = document.createElement("dialog"); d.className = "nx-sheet"; d.setAttribute("aria-labelledby", "nxSheetH");
+    d.innerHTML = `<div class="nx-sh-in"><button class="nx-x" type="button" aria-label="Close">×</button>
+      <h2 id="nxSheetH">${o.labs ? "Write a review" : `Review the ${esc(o.name)} lab`}</h2>
+      <p class="nx-plea-s">${PLEA} <span class="nx-sig">Christo</span></p><div data-f></div></div>`;
+    const prev = document.activeElement;
+    const f = form({ ...o, uid: "s" + (++uid), onDone: item => {
+      d.querySelector("[data-f]").innerHTML = `<div class="nx-pinned"><p class="nx-ok">Pinned to the wall. Thank you, it really helps.</p><ul class="nx-wall nx-one">${slip(item, { labs: o.labs, fresh: item.id })}</ul><button class="nx-btn" type="button" data-close>Close</button></div>`;
+      const c = d.querySelector("[data-close]"); c.focus(); o.onDone && o.onDone(item);
+    } });
+    d.querySelector("[data-f]").append(f);
+    document.body.append(d);
+    d.addEventListener("close", () => { d.remove(); if (prev && prev.focus) prev.focus(); });
+    d.addEventListener("click", e => { if (e.target === d || e.target.closest(".nx-x,[data-close]")) d.close(); });
+    if (d.showModal) d.showModal(); else d.setAttribute("open", "");
+    requestAnimationFrame(() => { const t = o.stars ? f.querySelector("textarea") : (f.querySelector('[data-lab][aria-checked="false"]:not([disabled])') && !o.lab ? f.querySelector("[data-lab]:not([disabled])") : f.querySelector("[data-star]")); if (t) t.focus({ preventScroll: true }); });
+  }
+
+  /* ---- the nudge: once per visit, after the visitor finishes something ---- */
+  function nudge(o, kind){
+    if (reviewed(o.lab) || sget("nexus-rv-nudge") || document.querySelector(".nx-nudge, dialog.nx-sheet")) return;
+    const later = get("nexus-rv-later", []).filter(t => Date.now() - t < 4 * DAY);
+    if (later.length >= 2) return;
+    setTimeout(() => {
+      if (document.querySelector(".nx-nudge, dialog.nx-sheet")) return;
+      const vis = [...document.querySelectorAll(".rv-form")].some(x => { const b = x.getBoundingClientRect(); return b.height && b.bottom > 0 && b.top < innerHeight; });
+      if (vis) return;
+      sput("nexus-rv-nudge", "1");
+      const el = document.createElement("aside"); el.className = "nx-nudge"; el.setAttribute("aria-label", "Review request");
+      el.innerHTML = `<button class="nx-x" type="button" aria-label="Close">×</button>
+        <p class="nx-n1">You just finished ${WHAT[kind] || "a module"}.</p>
+        <p class="nx-n2">How would you rate the ${esc(o.name)} lab? <b>A review would help me a lot.</b></p>
+        <div class="nx-qs" role="group" aria-label="Rate the ${esc(o.name)} lab">${[1, 2, 3, 4, 5].map(n => `<button type="button" data-q="${n}" aria-label="${n} star${n > 1 ? "s" : ""}: ${WORDS[n]}">★</button>`).join("")}</div>
+        <div class="nx-nf"><span class="nx-sig">Christo, who builds Nexus</span><button class="nx-later" type="button">Not now</button></div>`;
+      document.body.append(el);
+      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("show")));
+      const qs = [...el.querySelectorAll("[data-q]")];
+      qs.forEach((b, i) => { b.addEventListener("mouseenter", () => qs.forEach((x, j) => x.classList.toggle("on", j <= i))); b.addEventListener("focus", () => qs.forEach((x, j) => x.classList.toggle("on", j <= i))); });
+      el.querySelector(".nx-qs").addEventListener("mouseleave", () => qs.forEach(x => x.classList.remove("on")));
+      const close = later => {
+        if (!el.isConnected) return;
+        if (later){ const l = get("nexus-rv-later", []); l.push(Date.now()); put("nexus-rv-later", l.slice(-5)); }
+        el.classList.remove("show"); setTimeout(() => el.remove(), 450);
+      };
+      el.addEventListener("click", e => {
+        const q = e.target.closest("[data-q]");
+        if (q){ close(false); sheet({ ...o, stars: +q.dataset.q }); return; }
+        if (e.target.closest(".nx-x, .nx-later")) close(true);
+      });
+      el.addEventListener("keydown", e => { if (e.key === "Escape") close(true); });
+      setTimeout(() => { if (el.isConnected && !el.matches(":hover, :focus-within")) close(false); }, 40000);
+    }, 1100);
+  }
+
+  /* ---- inline slot, at the end of a case or a mock exam ---- */
+  function slot(el, o){
+    if (reviewed(o.lab)){ el.innerHTML = `<p class="nx-thx">✓ Your review is on the wall. Thank you, it helps.</p>`; return; }
+    const w = document.createElement("div"); w.className = "nx-slot";
+    w.innerHTML = `<p class="nx-plea-s"><b>Before you go: a review would help me a lot.</b> It tells me what to fix next, and it shows the others that the site is worth their time. <span class="nx-sig">Christo</span></p>`;
+    w.append(form({ ...o, uid: "i" + (++uid), onDone: () => { el.innerHTML = `<p class="nx-thx">✓ Pinned to the wall. Thank you, it really helps.</p>`; } }));
+    el.replaceChildren(w);
+  }
+
+  /* ---- the wall ---- */
+  function wall(box, o){
+    const admin = get("nexus-admin-key", "");
+    let all = false, data = null, fresh = null;
+    const labsOf = () => o.labs ? Object.keys(o.labs) : [o.lab];
+    function head(){
+      const keys = labsOf();
+      let n = 0, sum = 0; keys.forEach(k => { const s = data.labs[k]; if (s && s.count){ n += s.count; sum += s.avg * s.count; } });
+      const avg = n ? sum / n : 0;
+      const doneAll = keys.every(reviewed);
+      const lines = o.labs ? keys.map(k => { const s = data.labs[k], L = o.labs[k]; return s && s.count ? `<a class="nx-labline" href="${L.href}" style="--c:${L.c}"><span class="nm">${esc(L.name)}</span><b>${s.avg.toFixed(1)}</b>${stars(Math.round(s.avg))}<span class="n">${s.count} review${s.count > 1 ? "s" : ""}</span></a>` : ""; }).join("") : "";
+      const tags = (() => { const t = {}; keys.forEach(k => { const s = data.labs[k]; if (s) Object.entries(s.tags).forEach(([a, b]) => { t[a] = (t[a] || 0) + b; }); }); return Object.entries(t).sort((a, b) => b[1] - a[1]).slice(0, 4); })();
+      return `<div class="nx-head">
+        ${n ? `<div class="nx-score"><span class="nx-big" aria-hidden="true"><b>${avg.toFixed(1)}</b><i>/5</i>${RING}</span><div class="nx-sc"><span class="nx-sr">Average ${avg.toFixed(1)} out of 5.</span>${stars(Math.round(avg))}<span class="nx-cnt">${n} review${n > 1 ? "s" : ""} from the class</span>${tags.length ? `<span class="nx-most">Most said: ${tags.map(([a, b]) => `${esc(a)} <i>${b}</i>`).join(", ")}</span>` : ""}</div></div>` : ""}
+        <div class="nx-plea"><p>${PLEA}</p><p class="nx-sig">Christo</p>
+          ${doneAll ? `<p class="nx-thx">✓ Your review is on the wall. Thank you.</p>` : `<button class="nx-btn" type="button" data-nxwrite>${PEN}Write a review</button>`}</div>
+        ${lines ? `<div class="nx-lines">${lines}</div>` : ""}</div>`;
     }
-  };
-  sec.addEventListener("click", e => {
-    if (e.target.closest("[data-rvmore]")){ const d = RV.data; sec.querySelector(".rv-list").innerHTML = d.items.filter(r => r.lab === RV.lab).map(rvItem).join(""); e.target.remove(); }
-    if (e.target.closest("[data-rvwrite]")){ const slot = sec.querySelector("[data-rvform]"); e.target.closest("[data-rvwrite]").remove(); slot.replaceChildren(rvForm(() => { draw(); sec.querySelector("[data-rvform]").replaceChildren(thanks()); })); slot.querySelector(".stars button").focus(); }
-    const del = e.target.closest("[data-rvdel]");
-    if (del){ if (!del.dataset.armed){ del.dataset.armed = "1"; del.textContent = "Tap again to delete"; return; }
-      fetch(RV.api, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "delete", id: del.dataset.rvdel, key: lsGet("nexus-admin-key", "") }) }).then(r => r.ok ? rvLoad(true).then(draw) : r.json().then(x => { del.textContent = x.error || "Failed"; })); }
-  });
-  sec.innerHTML = `<div class="sec-h"><h2>What the class says</h2></div><p class="rv-empty">Loading reviews…</p>`;
-  rvLoad().then(draw);
-}
+    function draw(){
+      if (!data){ box.innerHTML = `<p class="nx-empty">Reviews could not be loaded right now. <button class="nx-link" type="button" data-nxwrite>Write one anyway</button></p>`; return; }
+      const keys = labsOf();
+      const items = data.items.filter(r => keys.includes(r.lab));
+      const cap = o.labs ? 9 : 6, shown = all || admin ? items : items.slice(0, cap);
+      const empty = `<li class="nx-slip nx-blank" style="--r:-1.2deg;--tx:40%"><p class="nx-txt"><b>This wall is empty.</b> Your review could be the first one pinned here.</p><button class="nx-btn" type="button" data-nxwrite>${PEN}Pin the first review</button></li>`;
+      box.innerHTML = head() + `<ul class="nx-wall">${items.length ? shown.map(r => slip(r, { labs: o.labs, admin, fresh })).join("") : empty}</ul>` +
+        (shown.length < items.length ? `<button class="nx-more" type="button" data-nxmore>Show all ${items.length} reviews</button>` : "");
+      reveal(box); fresh = null;
+    }
+    box.addEventListener("click", e => {
+      if (e.target.closest("[data-nxmore]")){ all = true; draw(); return; }
+      if (e.target.closest("[data-nxwrite]")){ sheet({ lab: o.lab, name: o.name, labs: o.labs }); return; }
+      const del = e.target.closest("[data-nxdel]");
+      if (del){
+        if (!del.dataset.armed){ del.dataset.armed = "1"; del.textContent = "Tap again to delete"; return; }
+        fetch(API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "delete", id: del.dataset.nxdel, key: admin }) })
+          .then(r => r.ok ? Promise.all(Object.keys(cache).map(k => load(k === "*" ? null : k, true))).then(() => load(o.labs ? null : o.lab)).then(d => { data = d; draw(); }) : r.json().then(x => { del.textContent = x.error || "Failed"; }));
+      }
+    });
+    listeners.add(item => { if (!labsOf().includes(item.lab)) return; fresh = item.id; load(o.labs ? null : o.lab).then(d => { data = d; draw(); }); });
+    box.innerHTML = `<p class="nx-empty">Loading reviews…</p>`;
+    load(o.labs ? null : o.lab).then(d => { data = d; draw(); });
+  }
+
+  /* a lab home: the section heading, then the wall */
+  function section(sec, o){
+    sec.innerHTML = `<div class="sec-h"><h2>What the class says</h2></div><div class="nx-host"></div>`;
+    wall(sec.querySelector(".nx-host"), o);
+  }
+  return { load, reviewed, form, sheet, nudge, slot, wall, section, stars, PEN };
+})();
+/* nxr:end */
+function mountReviewSlot(slot){ NXR.slot(slot, RV); }
+function mountReviewSection(sec){ NXR.section(sec, RV); }
+function nudgeReview(kind){ NXR.nudge(RV, kind); }
+(function(){ const b = document.getElementById("rvBtn"); if (!b) return; b.innerHTML = NXR.PEN + '<span class="tl">Review</span>'; b.title = "Write a review"; b.setAttribute("aria-label", "Write a review"); b.addEventListener("click", () => NXR.sheet(RV)); })();
 
 /* ---------- full screen that survives page changes ----------
    Browsers always leave full screen when the page changes. So while in full screen, links to another Nexus page
@@ -2389,7 +2646,7 @@ function viewChapter(id){
   root.addEventListener("click", e => {
     const kb = e.target.closest("[data-know]");
     if (kb){ const k = MS.get("learn", {}), id = kb.dataset.know; if (k[id]) delete k[id]; else k[id] = 1; MS.set("learn", k);
-      const on = !!k[id]; if (on) burst(kb, ["--ok", "--pri"]); kb.setAttribute("aria-pressed", String(on)); kb.querySelector("span").textContent = on ? "Known" : "I know this"; kb.closest(".note").classList.toggle("known", on); counts(); }
+      const on = !!k[id]; if (on) burst(kb, ["--ok", "--pri"]); kb.setAttribute("aria-pressed", String(on)); kb.querySelector("span").textContent = on ? "Known" : "I know this"; kb.closest(".note").classList.toggle("known", on); counts(); if (on && !root.querySelector(".note:not(.known)")) nudgeReview("chapter"); }
     const sb = e.target.closest("[data-sec]");
     if (sb){ const t = root.querySelector(`[data-seci="${sb.dataset.sec}"]`); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); }
   });
@@ -2447,6 +2704,7 @@ function viewQuiz(pre){
       <div class="row">${wrong.length ? `<button class="btn primary" type="button" data-retry>Retry my ${wrong.length} mistake${wrong.length > 1 ? "s" : ""}</button>` : ""}<button class="btn glassy" type="button" data-new>New quiz</button><a class="btn glassy" href="#learn">Back to the course</a></div>
       ${wrong.length ? `<h3>Review</h3><ul class="review">${wrong.map(q => `<li><p class="rq">${q.q}</p><p class="ra">${ICO.check}<span>${q.o[q.a]}</span></p><p class="muted">${q.why}</p></li>`).join("")}</ul>` : ""}</div>`;
     W.onclick = e => { if (e.target.closest("[data-retry]")) start(shuffle(wrong.map(q => ({ ...q, done: false })))); if (e.target.closest("[data-new]")) setup(); };
+    nudgeReview("quiz");
   }
   root.addEventListener("keydown", e => {
     if (e.target.matches("input,textarea")) return;
@@ -2482,7 +2740,7 @@ function viewCards(pre){
   let busy = false;
   const leave = (dir, fn) => { const f = stage.querySelector(".flip"); if (busy) return; if (!f || matchMedia("(prefers-reduced-motion: reduce)").matches){ fn(); return; } busy = true; f.classList.add("fly-" + dir); setTimeout(() => { busy = false; fn(); }, 260); };
   const again = () => { if (!deck.length) return; leave("l", () => { deck.push(deck.shift()); paint(); }); };
-  const got = () => { if (!deck.length) return; burst(stage.querySelector("[data-know]"), ["--ok", "--pri", "--c3"]); leave("r", () => { const k = known(); k[deck[0].i] = 1; MS.set("cards", k); deck.shift(); paint(); }); };
+  const got = () => { if (!deck.length) return; burst(stage.querySelector("[data-know]"), ["--ok", "--pri", "--c3"]); leave("r", () => { const k = known(); k[deck[0].i] = 1; MS.set("cards", k); deck.shift(); paint(); if (!deck.length) nudgeReview("deck"); }); };
   root.addEventListener("click", e => {
     const cb = e.target.closest("[data-ch]"); if (cb){ const k = cb.dataset.ch; if (sel.has(k) && sel.size > 1) sel.delete(k); else sel.add(k); cb.classList.toggle("on", sel.has(k)); cb.setAttribute("aria-pressed", String(sel.has(k))); build(true); }
     if (e.target.closest(".flip")) flip();
@@ -3165,6 +3423,7 @@ function viewSpot(pre){
     cur.done = true; tot++; if (good){ ok++; streak++; } else streak = 0;
     const s = MS.get("spot", { best: 0, sprint: 0 }); if (streak > s.best){ s.best = streak; MS.set("spot", s); }
     stats(); if (good) bump(S("streak"));
+    if (tot === 15 && mode === "practice") nudgeReview("spot");
     dq.classList.add(good ? "ok" : "bad");
     dq.querySelector(".dout").innerHTML = `<div class="verdict ${good ? "ok" : "bad"}"><div class="vh"><b>${good ? "Correct" : "Not quite"}</b>${good ? "" : `<span>It is <b>${cur.label}</b>.</span>`}</div><p>${cur.why}</p></div><button class="btn quiet small next" type="button" data-next>Next ${ICO.arrow}<kbd>Enter</kbd></button>`;
     dq.querySelector("[data-next]").focus({ preventScroll: true });
@@ -3193,7 +3452,7 @@ function viewSpot(pre){
     cancelAnimationFrame(tick);
     const run = () => { if (!root.isConnected){ sprintOn = false; return; } const left = 1 - (performance.now() - t0) / 60000; timer.firstChild.style.width = Math.max(0, left * 100) + "%";
       if (left <= 0){ sprintOn = false; const s = MS.get("spot", { best: 0, sprint: 0 }), rec = ok > s.sprint; if (rec){ s.sprint = ok; MS.set("spot", s); } stats();
-        dq.classList.remove("ok", "bad"); cur = null; dq.innerHTML = `<div class="sprintend"><span class="kicker">Time</span><h2>${ok} right out of ${tot}</h2><p class="muted">${rec ? "New personal best." : `Your best is ${s.sprint}.`}</p><div class="row"><button class="btn primary" type="button" data-again>Go again</button></div></div>`; return; }
+        dq.classList.remove("ok", "bad"); cur = null; dq.innerHTML = `<div class="sprintend"><span class="kicker">Time</span><h2>${ok} right out of ${tot}</h2><p class="muted">${rec ? "New personal best." : `Your best is ${s.sprint}.`}</p><div class="row"><button class="btn primary" type="button" data-again>Go again</button></div></div>`; nudgeReview("sprint"); return; }
       tick = requestAnimationFrame(run); };
     tick = requestAnimationFrame(run);
   }
@@ -3274,7 +3533,7 @@ function labKelley(){
     const res = { d: ans.d === cur.v.d, c: ans.c === cur.v.c, s: ans.s === cur.v.s, a: (ans.a === "ext") === cur.ext };
     const good = res.d && res.c && res.s && res.a;
     tot++; if (good){ ok++; streak++; } else streak = 0;
-    const st = MS.get("kel", { best: 0, n: 0 }); st.n = (st.n || 0) + 1; if (streak > (st.best || 0)) st.best = streak; MS.set("kel", st); stats();
+    const st = MS.get("kel", { best: 0, n: 0 }); st.n = (st.n || 0) + 1; if (streak > (st.best || 0)) st.best = streak; MS.set("kel", st); stats(); if (tot === 8) nudgeReview("lab");
     box.querySelectorAll("[data-k]").forEach(b => { b.disabled = true; const k = b.dataset.k, right = k === "a" ? (cur.ext ? "ext" : "int") : cur.v[k]; if (b.dataset.v === right) b.classList.add("right"); else if (b.getAttribute("aria-pressed") === "true") b.classList.add("wrong"); });
     box.querySelectorAll("[data-cue]").forEach(li => { const k = li.dataset.cue; li.insertAdjacentHTML("afterbegin", `<em class="${cur.v[k] === "H" ? "hi" : "lo"}">${KDIM[k][0]}: ${cur.v[k] === "H" ? "high" : "low"}</em>`); });
     if (good){ burst(box.querySelector('[data-k="a"].right')); bump(S("streak")); }
@@ -3333,7 +3592,7 @@ function labEquity(){
   }
   function done(good, el, html){ el.innerHTML = `<div class="verdict ${good ? "ok" : "bad"}">${html}</div>`; }
   function finish(){
-    tot++; const st = MS.get("eqlab", { n: 0 }); st.n++; MS.set("eqlab", st);
+    tot++; const st = MS.get("eqlab", { n: 0 }); st.n++; MS.set("eqlab", st); if (tot === 6) nudgeReview("lab");
     const allOk = !box.querySelector(".eqo .verdict.bad");
     if (allOk) ok++; stats();
     box.classList.add(allOk ? "ok" : "bad");
@@ -3444,7 +3703,7 @@ function labWho(){
       const ta = W.querySelector(`[data-wa="${selA}"]`);
       if (+b.dataset.wb === selA){ burst(b, ["--ok", "--pri", "--c1"]); ta.disabled = b.disabled = true; ta.classList.remove("on"); ta.classList.add("done"); b.classList.add("done"); found++; selA = null;
         if (found === pairs.length){ cancelAnimationFrame(raf); const t = (performance.now() - t0) / 1000, st = MS.get("who", {}); const rec = !miss && (!st.best || t < st.best); if (rec){ st.best = t; MS.set("who", st); }
-          W.insertAdjacentHTML("afterend", `<div class="sprintend wend"><span class="kicker">Round done</span><h2>${fmt(t, 1)} s · ${miss} mistake${miss === 1 ? "" : "s"}</h2><p class="muted">${rec ? "New best clean round." : miss ? "A clean round (no mistakes) can set a record." : "Clean round."}</p><div class="row"><button class="btn primary" type="button" data-wagain>Next round</button></div></div>`);
+          W.insertAdjacentHTML("afterend", `<div class="sprintend wend"><span class="kicker">Round done</span><h2>${fmt(t, 1)} s · ${miss} mistake${miss === 1 ? "" : "s"}</h2><p class="muted">${rec ? "New best clean round." : miss ? "A clean round (no mistakes) can set a record." : "Clean round."}</p><div class="row"><button class="btn primary" type="button" data-wagain>Next round</button></div></div>`); nudgeReview("lab");
           S("best").textContent = fmt(MS.get("who", {}).best || t, 1) + " s"; }
       } else { miss++; S("miss").textContent = miss; b.classList.add("shake", "nope"); setTimeout(() => b.classList.remove("shake", "nope"), 450); }
     }

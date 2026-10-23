@@ -35,9 +35,15 @@ Une page d'accueil (hub) qui liste les matières, et un « lab » par matière.
 
 - Étoiles 1 à 5, tags fixes (liste `TAGS` dans la fonction, à garder identique côté pages), commentaire obligatoire de 10 à 600 caractères, prénom facultatif (« BBA1 student » sinon). Liens refusés. Publication immédiate.
 - Labs acceptés par l'API : `flow` (Macroeconomics), `mgmt` (Management) et `sgc` (Societal and Global Challenges). Un nouveau lab = l'ajouter à `LABS` dans la fonction et dans l'objet `LABS` du hub.
-- Demandés sur la carte de bilan à la fin d'un cas (et de l'examen blanc en Management), et via « Write a review » sur l'accueil de chaque lab. Affichés sur l'accueil du lab et résumés sur le hub (section « From the class »).
+- Code commun : le « kit avis » `NXR` (JS entre `/* nxr:start` et `/* nxr:end */`, CSS entre `/* nxr-css:start` et `/* nxr-css:end */`), identique dans le hub et les labs. Source dans le dossier de travail `rv/` (`nx_reviews.js`, `nx_reviews.css`), copié par `rv/sync.py` dans la macro et le hub, puis dans Management et Global Challenges par `extract.py` + `build.py` / `build_sg.py`.
+- Demande d'avis, voulue par Alexi, avec le message « A review helps me a lot » signé Christo :
+  - à la fin d'un module, une petite carte en bas à droite (`nudgeReview(kind)`) : quiz fini, pile de flashcards vidée, chapitre entièrement coché, sprint, 15 drills, 3 questions d'examen auto-corrigées, exercice de TD, scène de lab, diagramme causal vérifié, etc. Un clic sur une étoile ouvre le formulaire avec cette note. Une fois par visite (`sessionStorage` `nexus-rv-nudge`), jamais si l'avis du lab a été donné dans les 24 h, et plus pendant 4 jours après deux « Not now » (`nexus-rv-later`) ;
+  - à la fin d'un cas et d'un examen blanc : formulaire dans la carte de bilan ;
+  - bouton étoile « Review » dans l'en-tête de chaque lab (formulaire dans une fenêtre, `NXR.sheet`) ;
+  - « Write a review » sur le mur (sur le hub, on choisit d'abord la matière).
+- Le mur (demande d'Alexi) : section « The class wall » sur le hub (tous les labs) et « What the class says » sur l'accueil de chaque lab. Chaque avis est un bout de copie quadrillée (marge rouge) scotché au mur, légèrement penché, la note écrite au stylo rouge et entourée à la main (le cercle se dessine à l'apparition). En tête : la moyenne entourée au stylo rouge, le nombre d'avis, les tags les plus cités, le message d'Alexi. Grille de colonnes décalées, dans l'ordre du plus récent. Après publication, le nouvel avis tombe sur le mur.
 - Anti-triche côté serveur : un avis par lab et par 24 h, à la fois par IP (hachée, jamais stockée en clair) et par appareil (`nexus-did`). Champ piège `website` contre les robots.
-- Mise en page volontairement différente du site de Zadig : pas d'histogramme de notes, pas de filtres en pastilles, pas de grille de cartes. Une ligne de résumé et des citations sur une colonne.
+- Mise en page volontairement différente du site de Zadig : pas d'histogramme de notes, pas de filtres en pastilles, pas de cartes en verre identiques : des copies d'examen scotchées.
 - Suppression : la variable d'environnement `ADMIN_KEY` (au moins 8 caractères) se règle dans Netlify. Ouvrir `/?admin`, saisir la clé une fois : un lien « Delete » apparaît sous chaque avis (hub et labs).
 - Ne jamais écrire de faux avis, même pour « amorcer » la section.
 
@@ -58,7 +64,7 @@ Une nouvelle matière = un dossier `/<matiere>/index.html` autonome, plus une li
 - Fond qui change de couleur au défilement (`scrollTint`, mélange en OKLab, inspiration keblow.com). Règle d'Alexi : 2 ou 3 couleurs au plus, transition lente sur toute la descente, la dernière couleur est nettement différente de la première et reste jusqu'en bas. Hub : bleu nuit → prune → écru en sombre (le texte passe en encre foncée sur l'écru, classe `tint-light`), papier → crème en clair. Macroeconomics : 3 couleurs, encre teal → crépuscule ambre → corail profond (sombre), menthe → crème → rose corail (clair).
 - Overview Macroeconomics : le circuit économique en particules WebGL (ménages ⇄ entreprises, injections I, G, X en ambre, fuites S, T, M en corail). Les particules s'écartent sous la souris. Survoler une lettre de la formule ou une étiquette allume le flux. Un halo de couleur suit la souris (teal → ambre → corail selon la position). Les cartes de cas montrent l'économie du cas au survol.
 - La vue d'un cas (exercice) garde un fond fixe et aucune animation.
-- Bloc auteur en bas du hub et de l'accueil de chaque lab : Christo Czysz, EDHEC BBA1 English track Lille, Instagram @christo.cz, LinkedIn, christo.czysz@edhec.com. Le lien LinkedIn est provisoire (recherche) tant qu'Alexi n'a pas donné l'adresse exacte de son profil.
+- Bloc auteur en bas du hub et de l'accueil de chaque lab : Christo Czysz, EDHEC BBA1 English track Lille, Instagram @christo.cz, LinkedIn (https://www.linkedin.com/in/christo-czysz-2a133a43a), christo.czysz@edhec.com.
 
 Chaque page est un fichier unique : CSS et JS dans la page. Seules dépendances externes autorisées : Google Fonts.
 
