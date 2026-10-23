@@ -208,7 +208,7 @@ Coordinatrice : Nuria Tolsá Caballero. 18 h, 2 ECTS, 9 séances (4 cours, 5 TD)
 - Spot it : ~100 scènes, les fausses réponses viennent de la même famille ; série et sprint de 60 s.
 - Labs : Kelley (scènes générées), équité (chiffres générés, ratios calculés par le code), Big Five (scores calculés avec les réponses), « Who said what ».
 - Quiz, Flashcards, Exam questions (toutes les self-check questions des slides + cas d'application, réponses modèles et points clés), examen blanc de 90 minutes.
-- Progression dans `mgmt-v1` : `learn`, `cases`, `lastcase`, `spot`, `labs`, `kel`, `eqlab`, `big5`, `who`, `quiz`, `cards`, `open`, `exam`.
+- Progression dans `mgmt-v1` : `learn`, `cases`, `lastcase`, `spot`, `labs`, `kel`, `eqlab`, `big5`, `who`, `quiz`, `cards`, `open`, `exam`, `examHist` (20 derniers examens blancs, affichés sur la page de départ de l'examen), `project` (cases cochées de la checklist du projet).
 
 ## Modules de révision du lab Macroeconomics (en place)
 

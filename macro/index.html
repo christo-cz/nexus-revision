@@ -2841,7 +2841,7 @@ function viewMock(){
     if (phase === "write"){
       if (p.kind === "num") body = `<div class="ans"><label class="field"><input inputmode="decimal" autocomplete="off" aria-label="Your answer to ${p.n}" data-mnum="${k}" value="${esc(E.nums[k] || "")}">${p.unit ? `<span class="unit">${p.unit}</span>` : ""}</label></div>`;
       if (p.kind === "mcq") body = `<div class="opts">${p.opts.map((o, j) => `<button class="opt${E.picks[k] === j ? " sel" : ""}" type="button" data-mpick="${k}" data-j="${j}" aria-pressed="${E.picks[k] === j}"><span class="k">${L[j]}</span><span>${o}</span></button>`).join("")}</div>`;
-      if (p.kind === "explain") body = `<textarea class="tdta" data-ans="b${k}" placeholder="Write your explanation as in the exam.">${esc(E.ans["b" + k] || "")}</textarea>`;
+      if (p.kind === "explain") body = `<textarea class="tdta" data-ans="b${k}" placeholder="Write your explanation as in the exam." aria-label="Your explanation for ${p.n}">${esc(E.ans["b" + k] || "")}</textarea>`;
     } else {
       if (p.kind === "num"){
         const raw = String(E.nums[k] || "").trim(), good = mockRight(E, p, k), d = p.unit === "" ? 2 : Number.isInteger(Math.round(p.ans * 100) / 100) ? 0 : 2;
@@ -2901,7 +2901,7 @@ function viewMock(){
         <div class="exqs">
           <h2 class="mkpart">Part A: open questions</h2>
           ${qs.map((o, i) => `<section class="exq" style="--c:${CH[o.ch].c}"><p class="kicker">Question ${i + 1} · ${CH[o.ch].title} · about ${o.min} min</p><h2>${o.q}</h2>
-            ${phase === "write" ? `<textarea class="tdta" data-ans="${o.id}" placeholder="Your answer">${esc(E.ans[o.id] || "")}</textarea><span class="muted small" data-wc="${o.id}"></span>` : marked(o.id, E.ans[o.id], o.points, o.model)}</section>`).join("")}
+            ${phase === "write" ? `<textarea class="tdta" data-ans="${o.id}" placeholder="Your answer" aria-label="Your answer to question ${i + 1}">${esc(E.ans[o.id] || "")}</textarea><span class="muted small" data-wc="${o.id}"></span>` : marked(o.id, E.ans[o.id], o.points, o.model)}</section>`).join("")}
           <h2 class="mkpart">Part B: exercise</h2>
           ${partB(phase)}
         </div>

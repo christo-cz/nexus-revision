@@ -1013,6 +1013,11 @@ details.oans summary{cursor:pointer;font-family:var(--f-display);font-weight:700
 details.oans[open] summary{margin-bottom:8px}
 .exend{border:1px solid var(--glass-line);background:var(--glass);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:12px;max-width:980px}
 .exend h2{font-size:1.8rem}
+.mkhist{display:flex;flex-direction:column;gap:8px;max-width:680px}
+.mkhist h2{font-size:1.1rem}
+.mkhist ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.mkhist li{display:grid;grid-template-columns:4.5em 7em 1fr;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:.9rem;color:var(--muted)}
+.mkhist li b{color:var(--fg)}
 /* tilt and light on the Management tiles (the shared block covers .modt and .chtile) */
 :is(.ccard,.labt)::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s;background:radial-gradient(340px circle at var(--gx,50%) var(--gy,50%),rgb(255 255 255 / .22),transparent 62%)}
 :is(.ccard,.labt):hover::after{opacity:1}
@@ -3516,10 +3521,10 @@ function viewExam(){
       ${mhead("Management and Organizations", "Mock exam", phase === "ready" ? `${Q.length} questions in ${EXAM_MIN} minutes: one per lecture, then an application case. The real exam tests understanding and application; its exact format is not in the syllabus, so treat this as training, not a prediction.` : phase === "write" ? "Write in full sentences. Your answers are saved on this device as you type." : "Time to mark yourself. Tick only what your answer states clearly.")}
       ${phase === "ready" ? `<div class="exready"><ol class="exlist">${Q.map(o => `<li><span class="osrc ${o.src === "apply" ? "ap" : ""}" style="--c:${CH[o.ch].c}">${o.src === "apply" ? "Application case" : CH[o.ch].short}</span>${o.q}</li>`).join("")}</ol>
           <div class="row"><button class="btn primary big" type="button" data-start>Start the clock: ${EXAM_MIN} minutes</button><button class="btn glassy big" type="button" data-new>Draw other questions</button></div>
-          <p class="muted small">Suggested split: about 15 minutes per lecture question, 25 for the case, 5 to reread.</p></div>`
+          <p class="muted small">Suggested split: about 15 minutes per lecture question, 25 for the case, 5 to reread.</p>${histHtml()}</div>`
       : `<div class="exbar is-${phase}"><div><b class="num" data-clock>${phase === "write" ? fmtT(E.start + EXAM_MIN * 60000 - Date.now()) : "Done"}</b><span>${phase === "write" ? "left" : `${E.score}% of key points`}</span></div><div class="mbar"><i data-tbar></i></div>${phase === "write" ? `<button class="btn primary small" type="button" data-finish>Finish and mark</button>` : `<button class="btn glassy small" type="button" data-new>New mock exam</button>`}</div>
         <div class="exqs">${Q.map((o, i) => `<section class="exq" data-q="${o.id}" style="--c:${CH[o.ch].c}"><p class="kicker">Question ${i + 1} · ${o.src === "apply" ? "application case" : CH[o.ch].title} · about ${o.min} min</p><h2>${o.q}</h2>
-          ${phase === "write" ? `<textarea class="tdta" data-ans="${o.id}" placeholder="Your answer">${esc(E.ans[o.id] || "")}</textarea><span class="muted small" data-wc="${o.id}"></span>`
+          ${phase === "write" ? `<textarea class="tdta" data-ans="${o.id}" placeholder="Your answer" aria-label="Your answer to question ${i + 1}">${esc(E.ans[o.id] || "")}</textarea><span class="muted small" data-wc="${o.id}"></span>`
           : `<div class="exmine"><p class="lbl">Your answer</p><p>${esc(E.ans[o.id] || "(no answer)").replace(/\n/g, "<br>")}</p></div>
              <div class="tdmodel"><div class="ochk"><h3>Key points <span>${(E.ticks[o.id] || []).length}/${o.points.length}</span></h3><ul>${o.points.map((p, k) => `<li><label><input type="checkbox" data-xt="${o.id}" data-k="${k}" ${(E.ticks[o.id] || []).includes(k) ? "checked" : ""}><span>${p}</span></label></li>`).join("")}</ul></div><details class="oans"><summary>Model answer</summary>${o.model.map(p => `<p>${p}</p>`).join("")}</details></div>`}
         </section>`).join("")}</div>
@@ -3532,8 +3537,13 @@ function viewExam(){
     }
     if (phase === "mark"){ const bar = root.querySelector("[data-tbar]"); bar.style.width = E.score + "%"; const slot = root.querySelector("[data-rvslot]"); if (slot) mountReviewSlot(slot); }
   }
-  function finish(){ root.querySelectorAll("[data-ans]").forEach(ta => { E.ans[ta.dataset.ans] = ta.value; }); E.end = Date.now(); E.score = 0; save(); paint(); window.scrollTo({ top: 0, behavior: "smooth" }); }
-  function rescore(){ const got = Object.values(E.ticks).reduce((a, t) => a + t.length, 0); E.score = Math.round(got / total * 100); save(); const b = root.querySelector(".exbar span"); if (b) b.textContent = `${E.score}% of key points`; const h2 = root.querySelector(".exend h2"); if (h2) h2.textContent = `${E.score}% of the key points`; const bar = root.querySelector("[data-tbar]"); if (bar) bar.style.width = E.score + "%"; }
+  function histHtml(){
+    const H = MS.get("examHist", []).slice(-5).reverse();
+    if (!H.length) return "";
+    return `<section class="mkhist"><h2>Your last mock exams</h2><ol>${H.map(x => `<li><span class="num">${new Date(x.t).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</span><span>${x.n} questions</span><span><b class="num">${x.score}%</b> key points</span></li>`).join("")}</ol></section>`;
+  }
+  function finish(){ root.querySelectorAll("[data-ans]").forEach(ta => { E.ans[ta.dataset.ans] = ta.value; }); E.end = Date.now(); E.score = 0; save(); const H = MS.get("examHist", []); H.push({ t: E.end, n: Q.length, score: 0 }); MS.set("examHist", H.slice(-20)); paint(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+  function rescore(){ const got = Object.values(E.ticks).reduce((a, t) => a + t.length, 0); E.score = Math.round(got / total * 100); save(); const H = MS.get("examHist", []), last = H.find(x => x.t === E.end); if (last){ last.score = E.score; MS.set("examHist", H); } const b = root.querySelector(".exbar span"); if (b) b.textContent = `${E.score}% of key points`; const h2 = root.querySelector(".exend h2"); if (h2) h2.textContent = `${E.score}% of the key points`; const bar = root.querySelector("[data-tbar]"); if (bar) bar.style.width = E.score + "%"; }
   root.addEventListener("click", e => {
     if (e.target.closest("[data-start]")){ E.start = Date.now(); save(); paint(); }
     if (e.target.closest("[data-new]")){ E = newExam(); save(); render(); }
