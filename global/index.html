@@ -1274,6 +1274,21 @@ details.oans[open] summary{margin-bottom:8px}
 .mklen button span{font-size:.8rem;color:var(--muted)}
 .mklen button:hover{transform:translateY(-2px);border-color:var(--line-2)}
 .mklen button[aria-pressed="true"]{border-color:var(--pri);background:color-mix(in srgb,var(--pri) 14%,transparent)}
+/* studio: from a text to the variables */
+.cldtext{margin:0;padding:16px 20px;border-left:3px solid var(--c,var(--pri));background:var(--glass);border-radius:4px 14px 14px 4px;font-size:1.02rem;line-height:1.65;max-width:72ch}
+.varpick{display:flex;flex-wrap:wrap;gap:8px}
+.vp{border:1.5px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:8px 12px;font:inherit;font-size:.9rem;font-weight:600;cursor:pointer;text-align:left;transition:border-color .15s,background-color .15s}
+.vp.on{border-color:var(--pri);background:color-mix(in srgb,var(--pri) 16%,transparent)}
+.vp.ok{border-color:var(--ok);background:var(--ok-soft)}
+.vp.bad{border-color:var(--bad);background:var(--bad-soft);text-decoration:line-through}
+.vp.miss{border-style:dashed;border-color:var(--c4)}
+.vp.dim{opacity:.45}
+.vp:disabled{cursor:default}
+.vpwhy{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.vpwhy li{display:flex;flex-direction:column;gap:2px;padding:8px 12px;border-radius:10px;background:var(--glass);border:1px solid var(--line);font-size:.92rem}
+.vpwhy li.bad{border-color:var(--bad)}
+.vpwhy li.miss{border-color:var(--c4)}
+.vpwhy span{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -2711,6 +2726,29 @@ const CLD = [
 ];
 const CLDI = Object.fromEntries(CLD.map(d => [d.id, d]));
 
+/* ---------- from a text to a diagram: the exam skill. Each text states every link of the diagram;
+   the decoys are words from the text that are not variables (a place, an event, a thing, something vague) or not part of this system. ---------- */
+const CLD_TEXT = {
+  heat: { text: "Greenhouse gases are accumulating in the atmosphere, which raises the global average temperature. A warmer climate makes heatwaves in France more frequent and more severe. Heatwaves dry out soils. Dry soils stress vegetation, and stressed plants absorb less CO₂, which leaves more of it in the atmosphere. Dry soils also feed forest fires, which emit CO₂. Inside buildings, heatwaves raise indoor temperatures, so people use air conditioning. Air conditioning cools rooms, but it adds emissions directly and runs on electricity. More electricity consumption means more CO₂ emissions where power is not decarbonized, and it pushes the electricity price up; a higher price in turn makes people consume less. A higher price and hotter homes increase energy poverty, which is also higher where monetary poverty is high. Hot homes cause health problems.",
+    decoys: [["France", "A place: it cannot rise or fall."], ["The 2003 heatwave", "One event, not a variable. The variable is the frequency and severity of heatwaves."], ["Climate", "Too vague to rise or fall. Name the measurable part: the global average temperature."], ["Electricity", "A thing, not a quantity. Say what rises or falls: consumption, price."], ["Number of tourists on the coast", "Not in the text: do not add what the text does not support."]] },
+  forest: { text: "In 18th-century Saxony, more and more timber was cut to feed the silver mines. Von Carlowitz observed that the more timber was harvested, the less was left available for future harvests. Scarcer timber became more expensive. A higher timber price hurt the profitability of the industries that used timber, and made it harder for the population to meet essential needs such as heating and building.",
+    decoys: [["Saxony", "A place: it cannot rise or fall."], ["Hans Carl von Carlowitz", "A person, not a variable."], ["The silver mines", "A thing. The diagram starts from the quantity of timber harvested."], ["The forest", "Too vague. Name the quantity: the timber available for harvesting."], ["Quality of the wood", "Not in the text."]] },
+  cocoa: { text: "About 60% of the world's cocoa comes from Côte d'Ivoire and Ghana. A rise in the global average temperature brings more extreme weather events, torrential rains and droughts, which help viral diseases and fungi spread on cocoa trees. These diseases cut cocoa production, and so does the ageing of cocoa trees. Lower production raises the cocoa price; a higher cocoa price raises the price of chocolate, so people buy less chocolate. Warming also means hotter summers in the countries that eat chocolate, and people eat less chocolate when it is hot.",
+    decoys: [["Côte d'Ivoire and Ghana", "Places, not quantities."], ["Chocolate", "A thing. Say what rises or falls: its price, its consumption."], ["The weather", "Too vague. The text names extreme weather events."], ["Lindt", "A firm, not a variable."], ["Coffee consumption", "Not in the text."]] },
+  popul: { text: "The Meadows team (1972) explains the world population with two loops. The higher the average fertility, the more births per year. Births add to the population, and a larger population has more births. A larger population also has more deaths per year, and deaths reduce the population. Deaths also rise with average mortality.",
+    decoys: [["The Meadows report", "A document, not a variable."], ["People", "Too vague. The variable is the population."], ["1972", "A date."], ["Food per person", "Not in this text: the two loops only involve births and deaths."], ["Life", "Too vague to rise or fall."]] },
+  homicide: { text: "In 2021 the US homicide rate was 6.8 per 100,000, six times France's. Unemployment and a large share of low-paid jobs raise the poverty rate, while a well-developed welfare system reduces it. Poverty feeds organised crime, drug addiction and homicide directly. Drug addiction also fuels organised crime and homicides, and organised crime raises the homicide rate. Finally, permissive gun laws increase gun ownership, and more guns mean more homicides.",
+    decoys: [["The United States", "A place."], ["France", "A point of comparison, not part of the system."], ["Guns", "A thing. The variable is the gun ownership rate."], ["Crime", "Too vague: the text speaks of organised crime, and homicide is itself a crime."], ["Police budget", "Not in the text."]] },
+  paygap: { text: "In 2024, women's average net wage income in the private sector was 21.8% lower than men's (Insee). Having children brings career breaks and more time spent by women on unpaid domestic and care work; gender stereotypes push the same way. More time on care work means more women working part time, which widens the gap. Stereotypes in education and career choices also concentrate women in lower-paid jobs and sectors, which widens it too. Career breaks after a birth reduce the share of women in senior positions, and fewer women at the top widen the gap. Finally, part of the gap comes from pay discrimination.",
+    decoys: [["Women", "A group of people, not a quantity."], ["Insee", "The source of the figure."], ["2024", "A date."], ["Equality", "Too vague. The outcome is the pay gap between women and men."], ["Average wage in France", "Not a cause of the gap in this text."]] },
+  fish: { text: "A regulator can set fishing quotas: the stricter they are, the fewer fish are caught. A bigger fishing fleet catches more fish each year, and every fish caught reduces the fish stock. The stock renews itself: more fish mean more new fish born each year, which add to the stock. A larger stock also means a better catch per boat, which makes fishing more profitable, and profitable fishing brings more boats into the fleet.",
+    decoys: [["The sea", "A place."], ["The regulator", "An actor. The variable is the strictness of the quotas."], ["Fishermen", "A group. The variable is the size of the fishing fleet."], ["Fish", "A thing. Say which quantity: the stock, the catch, the births."], ["Price of fish in restaurants", "Not in the text."]] },
+  lez: { text: "A city bans older vehicles from its centre to cut air pollution. The stricter the ban, the fewer older vehicles drive in the centre, so air pollution falls, and with it respiratory health problems. But the ban raises the cost of getting around for low-income households, who often own older cars, and this increases their social exclusion. It also encourages purchases of new cars, and making new cars emits greenhouse gases.",
+    decoys: [["The city centre", "A place."], ["The mayor", "An actor, not a variable."], ["Older cars", "A thing. The variable is the number of older vehicles in the centre."], ["Pollution", "Too vague. The text means air pollution in the city."], ["Number of bicycles", "Plausible, but not in the text."]] },
+  amazon: { text: "Demand for farmland for cattle and soy drives deforestation, which reduces forest cover. Trees recycle much of the rain: more forest cover means more moisture recycled into the air and more rainfall over the Amazon, and less rainfall means more frequent droughts. Droughts bring forest fires, which destroy forest cover. The forest also absorbs CO₂: less forest means less CO₂ absorbed, more greenhouse gases in the atmosphere, a higher global average temperature, and more frequent droughts.",
+    decoys: [["Brazil", "A place."], ["Trees", "A thing. The variable is the forest cover."], ["The tipping point", "A threshold, not a variable."], ["Rain", "Too vague. Name the quantity: rainfall over the Amazon."], ["Tourism in the Amazon", "Not in the text."]] }
+};
+
 /* KEY FIGURES: the empirical findings shown in class. The exam asks you to understand the lessons of this
    research. [chapter, figure, what it measures, source, the lesson to draw] */
 const FIGS = [
@@ -3379,7 +3417,7 @@ function viewStudio(){
   <section class="sec"><div class="sec-h"><h2>Six steps to draw one</h2></div><ol class="steps six">${STUDIO_STEPS.map(([a, b]) => `<li><b>${a}</b><span>${b}</span></li>`).join("")}</ol></section>
   <div class="studio-top"><a class="tdfull stfree" href="#studio-free"><span><b>Free board</b><span>Your own diagram: add variables, link them, sign them. Loops and effects appear as you build. Download it as an image.</span></span>${ICO.arrow}</a>
     <a class="tdfull stdrill" href="#studio-drills"><span><b>Diagram drills</b><span>Endless: sign a link, name a loop, predict an effect through the diagram. Streaks and a 60-second sprint.</span></span>${ICO.arrow}</a></div>
-  <section class="sec"><div class="sec-h"><h2>The course's diagrams</h2><p>The diagrams from the slides and the tutorial. Fill in the signs first, then draw the links yourself.</p></div>
+  <section class="sec"><div class="sec-h"><h2>The course's diagrams</h2><p>The diagrams from the slides and the tutorial. Read the text and pick the variables, fill in the signs, then draw the links yourself, as in the exam.</p></div>
     <div class="csgrid">${CLD.filter(d => d.src === "slides").map(card).join("")}</div></section>
   <section class="sec"><div class="sec-h"><h2>Practice cases</h2><p>Built for Nexus in the course's spirit, to train on situations you have not seen.</p></div>
     <div class="csgrid">${CLD.filter(d => d.src !== "slides").map(card).join("")}</div></section>
@@ -3395,18 +3433,20 @@ function miniGlyph(m){
 /* ---------- one case: fill the signs, draw the links, or explore the course diagram ---------- */
 function viewStudioCase(id){
   const d = CLDI[id] || CLD[0], M = cldModel(d), st = studioState()[d.id] || {};
-  let mode = st.mode || "signs", guess = Object.assign({}, st.guess || {}), mine = (st.mine || []).map(l => ({ ...l })), sel = null, checked = false, push = null, showLoops = false;
+  let mode = st.mode || (CLD_TEXT[d.id] ? "text" : "signs"), pick = new Set(st.pick || []), guess = Object.assign({}, st.guess || {}), mine = (st.mine || []).map(l => ({ ...l })), sel = null, checked = false, push = null, showLoops = false;
   const loops = findLoops(M);
   const root = h("div", { class: "mod studio-case", style: `--c:${CH[d.ch].c}`, html: `<a class="tocback" href="#studio">${ICO.back}Causal studio</a>
     ${mhead(`Causal studio · ${d.where}`, d.title, d.story)}
-    <div class="seg stmode" role="group" aria-label="Exercise"><button type="button" data-mode="signs">1. Fill in the signs</button><button type="button" data-mode="links">2. Draw the links</button><button type="button" data-mode="model">The course's answer</button></div>
+    <div class="seg stmode" role="group" aria-label="Exercise">${CLD_TEXT[d.id] ? `<button type="button" data-mode="text">1. Pick the variables</button>` : ""}<button type="button" data-mode="signs">${CLD_TEXT[d.id] ? "2" : "1"}. Fill in the signs</button><button type="button" data-mode="links">${CLD_TEXT[d.id] ? "3" : "2"}. Draw the links</button><button type="button" data-mode="model">The course's answer</button></div>
     <p class="sthint" aria-live="polite"></p>
     <div class="boardwrap"><div class="boardin"></div></div>
     ${legendHtml()}
     <div class="stpanel"></div>` });
   const bin = root.querySelector(".boardin"), hint = root.querySelector(".sthint"), panel = root.querySelector(".stpanel");
-  const save = () => studioSave(d.id, { mode, guess, mine });
+  const save = () => studioSave(d.id, { mode, guess, mine, pick: [...pick] });
+  const TX = CLD_TEXT[d.id], CAND = TX ? (() => { const a = M.nodes.map(n => ({ id: n.id, label: n.label, real: 1 })).concat(TX.decoys.map((x, i) => ({ id: "x" + i, label: x[0], why: x[1] }))); let s = 0; for (const c of d.id) s = (s * 31 + c.charCodeAt(0)) >>> 0; return a.map(x => { s = (s * 1103515245 + 12345) >>> 0; return [s, x]; }).sort((p, q) => p[0] - q[0]).map(p => p[1]); })() : [];
   const HINTS = {
+    text: "Read the text, then pick the variables of the diagram. A variable is something that can rise or fall.",
     signs: "All the arrows are drawn. Tap each sign to choose + or −, then check.",
     links: "Tap a variable, then the variable it influences: an arrow appears with +. Tap a sign to switch it to −, tap again to remove the arrow.",
     model: "The diagram from the course. Tap a variable to push it up and see what rises and what falls, all else being equal."
@@ -3414,6 +3454,8 @@ function viewStudioCase(id){
   function draw(){
     root.querySelectorAll("[data-mode]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === mode)));
     hint.textContent = HINTS[mode];
+    root.querySelector(".boardwrap").hidden = mode === "text"; root.querySelector(".cldleg").hidden = mode === "text";
+    if (mode === "text"){ bin.innerHTML = ""; drawPanel(); return; }
     let svg;
     if (mode === "signs"){
       svg = boardSVG(M, { label: d.title, focusable: true, sign: l => checked ? (guess[linkKey(l)] || 0) : (guess[linkKey(l)] || 0), cls: l => !checked ? (guess[linkKey(l)] ? "n" : "dim") : guess[linkKey(l)] === l.sign ? "ok" : "bad" });
@@ -3437,6 +3479,17 @@ function viewStudioCase(id){
   const linksTable = (status) => `<ol class="lklist">${M.links.map(l => { const s = status ? status(l) : ""; return `<li class="${s}"><span class="lk-ft">${esc(nodeLabel(M, l.from))} <b class="sgn-mini ${l.sign > 0 ? "p" : "m"}">${signTxt(l.sign)}</b> ${esc(nodeLabel(M, l.to))}</span><span class="lk-why">${l.why}</span></li>`; }).join("")}</ol>`;
   const loopsHtml = () => loops.length ? `<ul class="lplist">${loops.map((L, k) => `<li class="${L.kind}"><b>${L.kind === "R" ? "Reinforcing" : "Balancing"} loop ${loops.length > 1 ? (L.kind) + (k + 1) : ""}</b><span>${esc(loopName(M, L))}</span><em>${loopWhy(L)} → ${L.kind === "R" ? "positive (reinforcing)" : "negative (balancing)"}</em></li>`).join("")}</ul>` : `<p class="muted">No feedback loop in this diagram: every arrow leads away from the causes (a cause tree).</p>`;
   function drawPanel(){
+    if (mode === "text"){
+      const real = CAND.filter(x => x.real), found = real.filter(x => pick.has(x.id)).length, wrong = CAND.filter(x => !x.real && pick.has(x.id)).length;
+      panel.innerHTML = `<blockquote class="cldtext">${esc(TX.text)}</blockquote>
+        <h3 class="sth">Which of these are variables of the diagram?</h3>
+        <div class="varpick">${CAND.map(x => { const on = pick.has(x.id), cls = !checked ? (on ? "on" : "") : x.real ? (on ? "ok" : "miss") : on ? "bad" : "dim"; return `<button type="button" class="vp ${cls}" data-vp="${x.id}" aria-pressed="${on}"${checked ? " disabled" : ""}>${esc(x.label)}</button>`; }).join("")}</div>
+        ${!checked ? `<div class="strow"><span class="muted">${pick.size} picked</span><div class="row"><button class="btn quiet small" type="button" data-reset>Clear</button><button class="btn primary" type="button" data-check ${pick.size ? "" : "disabled"}>Check my variables</button></div></div>`
+        : `<div class="stscore ${found === real.length && !wrong ? "ok" : "bad"}"><b>${found}/${real.length}</b><span>variables found${wrong ? ` · ${wrong} picked that are not variables of this diagram` : ""}</span><div class="row"><button class="btn glassy small" type="button" data-again>Try again</button><button class="btn primary small" type="button" data-mode="links">Next: draw the links</button></div></div>
+          <ul class="vpwhy">${CAND.filter(x => !x.real).map(x => `<li class="${pick.has(x.id) ? "bad" : ""}"><b>${esc(x.label)}</b><span>${esc(x.why)}</span></li>`).join("")}${(() => { const m = real.filter(x => !pick.has(x.id)); return m.length ? `<li class="miss"><b>Missed: ${m.map(x => esc(x.label)).join(", ")}</b><span>Each is a quantity that rises or falls, and the text gives at least one link for it.</span></li>` : ""; })()}</ul>`}`;
+      if (checked && found === real.length && !wrong) burst(panel.querySelector(".stscore b"), ["--ok", "--pri", "--c4"]);
+      return;
+    }
     if (mode === "signs"){
       const n = M.links.filter(l => guess[linkKey(l)]).length;
       if (!checked){
@@ -3486,10 +3539,11 @@ function viewStudioCase(id){
     if (sg && !checked){ const i = +sg.dataset.sl;
       if (mode === "signs"){ const k = linkKey(M.links[i]), v = guess[k]; guess[k] = v === 1 ? -1 : 1; save(); draw(); return; }
       if (mode === "links"){ const l = mine[i]; if (l.sign === 1) l.sign = -1; else mine.splice(i, 1); save(); draw(); return; } }
+    const vp = e.target.closest("[data-vp]"); if (vp && !checked){ const k = vp.dataset.vp; if (pick.has(k)) pick.delete(k); else pick.add(k); save(); draw(); return; }
     const nd = e.target.closest(".nd"); if (nd){ nodeTap(nd.dataset.n); return; }
     if (e.target.closest("[data-check]")){ checked = true; draw(); panel.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
     if (e.target.closest("[data-again]")){ checked = false; draw(); return; }
-    if (e.target.closest("[data-reset]")){ if (mode === "signs") guess = {}; else mine = []; save(); draw(); return; }
+    if (e.target.closest("[data-reset]")){ if (mode === "text") pick = new Set(); else if (mode === "signs") guess = {}; else mine = []; save(); draw(); return; }
     const gs = e.target.closest("[data-gs]"); if (gs){ guess[linkKey(M.links[+gs.dataset.gs])] = +gs.dataset.v; save(); draw(); return; }
     const ms = e.target.closest("[data-ms]"); if (ms){ mine[+ms.dataset.ms].sign = +ms.dataset.v; save(); draw(); return; }
     const md = e.target.closest("[data-mdel]"); if (md){ mine.splice(+md.dataset.mdel, 1); save(); draw(); return; }
@@ -4064,7 +4118,7 @@ function viewExam(){
     } else {
       html += `<div class="exbar is-${phase}"><div><b class="num" data-clock>${phase === "write" ? fmtT(E.start + E.min * 60000 - Date.now()) : "Done"}</b><span>${phase === "write" ? "left" : `${E.score}% of key points`}</span></div><div class="mbar"><i data-tbar></i></div>${phase === "write" ? `<button class="btn primary small" type="button" data-finish>Finish and mark</button>` : `<button class="btn glassy small" type="button" data-new>New mock exam</button>`}</div>
         <div class="exqs">${blocks().map((o, i) => { const isD = o === d; return `<section class="exq" style="--c:${isD ? "var(--c4)" : CH[o.ch].c}"><p class="kicker">Question ${i + 1} · ${isD ? "causal diagram" : CH[o.ch].title} · about ${o.min} min</p><h2>${o.q}</h2>
-          ${isD ? `<div class="dgbox">${dgEditor(phase)}</div>` : ""}
+          ${isD && CLD_TEXT[o.cld] ? `<blockquote class="cldtext">${esc(CLD_TEXT[o.cld].text)}</blockquote>` : ""}${isD ? `<div class="dgbox">${dgEditor(phase)}</div>` : ""}
           ${phase === "write" ? `<textarea class="tdta" data-ans="${o.id}" placeholder="${isD ? "Explain your diagram: the main chains, the loops and their polarity" : "Your answer"}" aria-label="Your answer to question ${i + 1}">${esc(E.ans[o.id] || "")}</textarea><span class="muted small" data-wc="${o.id}"></span>`
           : `<div class="exmine"><p class="lbl">Your answer</p><p>${esc(E.ans[o.id] || "(no answer)").replace(/\n/g, "<br>")}</p></div>
              <div class="tdmodel"><div class="ochk"><h3>Key points <span>${(E.ticks[o.id] || []).length}/${o.points.length}</span></h3><ul>${o.points.map((p, k) => `<li><label><input type="checkbox" data-xt="${o.id}" data-k="${k}" ${(E.ticks[o.id] || []).includes(k) ? "checked" : ""}><span>${p}</span></label></li>`).join("")}</ul></div><details class="oans"><summary>Model answer</summary>${o.model.map(p => `<p>${p}</p>`).join("")}</details></div>`}</section>`; }).join("")}</div>
