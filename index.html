@@ -1304,10 +1304,10 @@ const NXR = (() => {
     { t: "Societal and Global Challenges", d: "Causal diagrams, sustainable development, planetary boundaries, the Doughnut, poverty and growth.", href: "/global/", cta: "Open the lab", lq: "#3C7A20", c: "var(--sgc)", label: "Global Challenges", sub: "BBA1 · S1", st: () => txt("sgcStatus") },
     { t: "What our users say", d: "Reviews pinned as they were written, nothing edited or invented. Yours would help me a lot.", href: "#reviews", cta: "Read the reviews", lq: "#E3A82B", ink: true, c: "var(--star)", label: "What our users say", sub: "Reviews", st: () => wallStat, wall: true },
     { t: "How it works", d: "Built from the slides and the tutorial sheets. The code computes every number, so answers are always right and practice never runs out.", href: "#how", cta: "See how", lq: "#2F3B8F", c: "var(--acc)", label: "How it works", sub: "Nexus" },
-    { t: "Who made this", d: "Christo Czysz, EDHEC BBA1, English track, Lille. A question, an idea, a mistake spotted? Write to me.", href: "#about", cta: "Get in touch", lq: "#B8362A", c: "var(--bad)", label: "Who made this", sub: "The author" }
+    { t: "Communication and Composition Skills", chip: "Communication", d: "The next lab, on its way: the course in short cards, practice and model answers, like the others.", soon: true, lq: "#B8362A", c: "var(--bad)", label: "Communication Skills", sub: "Coming soon", st: () => "Coming soon" }
   ];
   const N = F.length, STEP = 360 / N;
-  chips.innerHTML = F.map((x, i) => `<button type="button" data-go="${i}" style="--lq:${x.lq}" aria-pressed="false">${x.t === "Management and Organizations" ? "Management" : x.t === "Societal and Global Challenges" ? "Global Challenges" : x.t}</button>`).join("");
+  chips.innerHTML = F.map((x, i) => `<button type="button" data-go="${i}" style="--lq:${x.lq}" aria-pressed="false">${x.chip || (x.t === "Management and Organizations" ? "Management" : x.t === "Societal and Global Challenges" ? "Global Challenges" : x.t)}</button>`).join("");
   let A = 0, V = 0, target = null, dragging = false, raf = 0, active = -1, fct = [], cone = [], W = 0, touched = false;
   function build(){
     W = stage.clientWidth;
@@ -1334,7 +1334,7 @@ const NXR = (() => {
     chips.querySelectorAll("button").forEach((b, i) => b.setAttribute("aria-pressed", String(i === active)));
     card.style.setProperty("--c", x.c);
     card.innerHTML = `<div class="swap"><h2>${x.t}</h2><p>${x.d}</p>${st ? `<span class="pst">${st}</span>` : ""}</div>
-      <div class="go swap">${x.links ? x.links.map(l => `<a class="sub" href="${l[1]}" style="--lc:${l[2]}">${l[0]}</a>`).join("") : `<a class="main" href="${x.href}">${x.cta}${ARROW}</a>`}</div>`;
+      <div class="go swap">${x.soon ? "" : x.links ? x.links.map(l => `<a class="sub" href="${l[1]}" style="--lc:${l[2]}">${l[0]}</a>`).join("") : `<a class="main" href="${x.href}">${x.cta}${ARROW}</a>`}</div>`;
   }
   function loop(){
     raf = 0;
@@ -1351,17 +1351,15 @@ const NXR = (() => {
   const heading = () => target != null ? ((Math.round(target / STEP) % N) + N) % N : active;
   const local = () => A - 360 * Math.floor((A + STEP / 2) / 360);
 
-  /* the wheel turns the pencil one face per notch; on the first face going up, or the last going down, the page scrolls as usual */
+  /* the wheel turns the pencil one face per notch, round and round without a stop (Alexi, Oct 24); the page scrolls when the pointer is off the pencil */
   let wacc = 0, wlock = 0;
   stage.addEventListener("wheel", e => {
     if (e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
-    const dir = e.deltaY > 0 ? 1 : -1, i = heading();
-    if ((dir < 0 && i === 0) || (dir > 0 && i === N - 1)){ wacc = 0; return; }
     e.preventDefault();
-    const now = performance.now();
+    const dir = e.deltaY > 0 ? 1 : -1, i = heading(), now = performance.now();
     wacc += e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * 800 : e.deltaY;
     if (now < wlock || Math.abs(wacc) < 40) return;
-    wacc = 0; wlock = now + 140; goTo(i + dir);
+    wacc = 0; wlock = now + 140; goTo((i + dir + N) % N);
   }, { passive: false });
 
   /* drag to turn: up and down with a mouse; on a touch screen a vertical swipe turns it too, and past the first or last face it scrolls the page */

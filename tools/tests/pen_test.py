@@ -28,7 +28,11 @@ async def run():
         out["page scrolled while turning"] = y0
         await page.mouse.wheel(0, 100); await page.wait_for_timeout(500)
         y1 = await page.evaluate("scrollY")
-        out["last face + wheel down scrolls the page"] = {"face": await page.evaluate(act), "scrollY": y1}
+        out["last face + wheel down goes round to the first, page still"] = {"face": await page.evaluate(act), "scrollY": y1}
+        out["soon card"] = await page.evaluate("(() => { document.querySelector('.pen-chips [data-go=\"5\"]').click(); return null; })()")
+        await page.wait_for_timeout(1400)
+        out["soon card"] = await page.evaluate("document.querySelector('.pen-card h2').textContent + ' | links ' + document.querySelectorAll('.pen-card a').length + ' | ' + (document.querySelector('.pen-card .pst') || {}).textContent")
+        await page.click(".pen-chips [data-go='0']"); await page.wait_for_timeout(1400)
         await page.evaluate("scrollTo(0, 0)"); await page.wait_for_timeout(400)
         bb = await st.bounding_box(); cx, cy = bb["x"] + bb["width"] / 2, bb["y"] + bb["height"] / 2; await page.mouse.move(cx, cy)
         back = []
@@ -37,7 +41,8 @@ async def run():
             back.append(await page.evaluate(act))
         out["wheel up x5"] = back
         await page.mouse.wheel(0, -100); await page.wait_for_timeout(400)
-        out["first face + wheel up keeps the face"] = await page.evaluate(act)
+        out["first face + wheel up goes round to the last"] = {"face": await page.evaluate(act), "scrollY": await page.evaluate("scrollY")}
+        await page.click(".pen-chips [data-go='0']"); await page.wait_for_timeout(1400)
         # drag with the mouse, chips, arrows, click on the front face
         await page.mouse.move(cx, cy); await page.mouse.down()
         for k in range(10): await page.mouse.move(cx, cy - 12 * (k + 1)); await page.wait_for_timeout(16)
@@ -49,7 +54,7 @@ async def run():
         await page.click("[data-next]"); await page.wait_for_timeout(1400)
         out["next"] = await page.evaluate(act)
         await page.click("[data-next]"); await page.wait_for_timeout(1400)
-        out["next 2"] = await page.evaluate(act + " + ' | ' + document.querySelector('.pen-card a').getAttribute('href')")
+        out["next 2"] = await page.evaluate(act + " + ' | links ' + document.querySelectorAll('.pen-card a').length")
         await page.click(".pen-chips [data-go='2']"); await page.wait_for_timeout(1500)
         await page.mouse.click(cx, cy); await page.wait_for_timeout(1500)
         out["click front"] = page.url
