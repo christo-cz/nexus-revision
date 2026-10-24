@@ -1,0 +1,26 @@
+/* Management and Organizations lab: people, groups and structures.
+   Colour carries the course: berry --pri = the individual (and the lab), violet --c1 = organizations and structure,
+   orange --c3 = decisions and groups, sky --c4 = motivation. Dark is the default; light only on request. */
+:root{
+  color-scheme:dark;
+  --bg:#120D14; --surface:#1B141E; --sunk:#251C29; --line:#33283A; --line-2:#47394F; --fg:#F4EDF2; --muted:#B7A9B6; --faint:#85778A;
+  --pri:#FF7FB2; --pri-2:#FF9DC5; --pri-soft:#3A1729; --on-pri:#1C0812;
+  --c1:#A99BFF; --c1-soft:#221D45; --c2:#FF7FB2; --c2-soft:#3A1729; --c3:#FFA45E; --c3-soft:#3A2311; --c4:#6EC1FF; --c4-soft:#112C42;
+  --ok:#6FD39C; --ok-soft:#12301F; --bad:#FF8A80; --bad-soft:#3A1B1A;
+  --shadow:0 1px 2px rgb(0 0 0 / .3),0 8px 24px rgb(0 0 0 / .28);
+  --glass:rgb(255 255 255 / .045); --glass-line:rgb(255 255 255 / .1);
+  --f-display:"Familjen Grotesk","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"Public Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --hdr:56px; --gut:max(16px,env(safe-area-inset-left,0px)); --gut-r:max(16px,env(safe-area-inset-right,0px));
+  padding-top:env(safe-area-inset-top,0px);
+}
+:root[data-theme="light"]{
+  color-scheme:light;
+  --bg:#FAF5F7; --surface:#FFFFFF; --sunk:#F2E9EF; --line:#E7DAE2; --line-2:#D5C3CE; --fg:#1E1420; --muted:#685666; --faint:#998797;
+  --pri:#B5386F; --pri-2:#992B5C; --pri-soft:#F9E1EC; --on-pri:#FFFFFF;
+  --c1:#5B4BC4; --c1-soft:#ECE9FB; --c2:#B5386F; --c2-soft:#F9E1EC; --c3:#B85614; --c3-soft:#FBEADB; --c4:#1D6FB8; --c4-soft:#E1EEFA;
+  --ok:#23794E; --ok-soft:#DFF2E6; --bad:#B4372E; --bad-soft:#F9E3E0;
+  --shadow:0 1px 2px rgb(30 20 32 / .05),0 6px 20px rgb(30 20 32 / .07);
+  --glass:rgb(255 255 255 / .62); --glass-line:rgb(30 20 32 / .1);
+}

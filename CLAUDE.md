@@ -9,6 +9,14 @@ Une page d'accueil (hub) qui liste les matières, et un « lab » par matière.
 - Seule exception côté serveur, validée par Alexi : la fonction Netlify des avis (`netlify/functions/reviews.mjs`, route `/api/reviews`), qui stocke dans Netlify Blobs (store `reviews`). Dépendance unique : `@netlify/blobs`, déclarée dans `package.json`.
 - Modèle d'inspiration : le site d'un camarade (midterms-work.netlify.app), en particulier son « IT-4U Ledger Lab ». On s'en inspire pour l'ergonomie, sans copier ni son code ni son identité visuelle.
 
+## Projet commun avec Zadig (décidé le 24 octobre)
+
+- Alexi et Zadig (auteur de midterms-work.netlify.app) s'associent. Chacun garde son site et sa DA. Une **homepage commune** (nouveau site Netlify, à faire par Alexi) présentera le projet et les deux auteurs, et mènera aux deux sites. Un abonnement payant (Stripe ou autre) viendra plus tard, depuis cette homepage.
+- Répartition des matières : **Alexi** = Management, Societal and Global Challenges, Communication and Composition Skills, Marketing (après les vacances). **Zadig** = Macroeconomics, Political Science, Business Software, Financial Accounting.
+- Le lab Macroeconomics de Nexus reste en ligne pour l'instant ; il sera retiré quand celui de Zadig sera prêt (ne pas le retirer sans l'accord d'Alexi).
+- Zadig prépare un sondage Google Form (données à montrer à l'EDHEC).
+- Principe produit retenu : **moins de modules par lab**. Trop d'outils perdent les élèves : regrouper, et compacter le contenu de Learn en gardant l'essentiel pour l'examen.
+
 ## Façon de travailler avec Alexi
 
 - Réponds en français, de façon directe, sans flatterie. Signale clairement ce qui est incertain.
@@ -29,13 +37,16 @@ Une page d'accueil (hub) qui liste les matières, et un « lab » par matière.
 /CLAUDE.md         ce fichier
 /package.json      dépendance de la fonction des avis
 /netlify/functions/reviews.mjs   API des avis (GET liste + résumé, POST avis, POST suppression admin)
+/tools/            sources des pages générées (Management, Global Challenges), kit avis, serveur et tests locaux : voir tools/README.md
 ```
+
+**Management et Global Challenges sont générés** : ne jamais éditer `management/index.html` ni `global/index.html` à la main. Éditer les sources dans `tools/`, puis lancer, depuis la racine : `python3 tools/rv/sync.py && python3 tools/mg/extract.py && python3 tools/mg/build.py && python3 tools/sg/build_sg.py`. Tests : `node tools/revtest/server.mjs` (port 8770) puis les scripts de `tools/tests/`.
 
 ## Avis des étudiants
 
 - Étoiles 1 à 5, tags fixes (liste `TAGS` dans la fonction, à garder identique côté pages), commentaire obligatoire de 10 à 600 caractères, prénom facultatif (« BBA1 student » sinon). Liens refusés. Publication immédiate.
 - Labs acceptés par l'API : `flow` (Macroeconomics), `mgmt` (Management) et `sgc` (Societal and Global Challenges). Un nouveau lab = l'ajouter à `LABS` dans la fonction et dans l'objet `LABS` du hub.
-- Code commun : le « kit avis » `NXR` (JS entre `/* nxr:start` et `/* nxr:end */`, CSS entre `/* nxr-css:start` et `/* nxr-css:end */`), identique dans le hub et les labs. Source dans le dossier de travail `rv/` (`nx_reviews.js`, `nx_reviews.css`), copié par `rv/sync.py` dans la macro et le hub, puis dans Management et Global Challenges par `extract.py` + `build.py` / `build_sg.py`.
+- Code commun : le « kit avis » `NXR` (JS entre `/* nxr:start` et `/* nxr:end */`, CSS entre `/* nxr-css:start` et `/* nxr-css:end */`), identique dans le hub et les labs. Source dans `tools/rv/` (`nx_reviews.js`, `nx_reviews.css`), copiée par `tools/rv/sync.py` dans la macro et le hub, puis dans Management et Global Challenges par `tools/mg/extract.py` + `tools/mg/build.py` / `tools/sg/build_sg.py` (voir `tools/README.md`).
 - Demande d'avis, voulue par Alexi, avec le message « A review helps me a lot » signé Christo :
   - à la fin d'un module, une petite carte en bas à droite (`nudgeReview(kind)`) : quiz fini, pile de flashcards vidée, chapitre entièrement coché, sprint, 15 drills, 3 questions d'examen auto-corrigées, exercice de TD, scène de lab, diagramme causal vérifié, etc. Un clic sur une étoile ouvre le formulaire avec cette note. Une fois par visite (`sessionStorage` `nexus-rv-nudge`), jamais si l'avis du lab a été donné dans les 24 h, et plus pendant 4 jours après deux « Not now » (`nexus-rv-later`) ;
   - à la fin d'un cas et d'un examen blanc : formulaire dans la carte de bilan ;
@@ -241,7 +252,7 @@ Neuf séances de 2 h (dont l'atelier 2tonnes). **Évaluation :** 20 % travail de
 - Learn : 89 fiches et 18 modèles interactifs (lire un lien, règle de polarité avec simulation, diagramme des canicules, forêt et MSY, deux boucles de population, trois piliers, bille et point de bascule avec hystérésis, Grande Accélération, roue des limites par année, facteurs IPBES, cacao, Doughnut, calculateur de niveau de vie et seuil de pauvreté, courbe de Lorenz avec Gini et Palma, quatre mots, quatre positions sur la croissance, scénarios ADEME côte à côte, homicides).
 - Sort it (classements, ~130 items), Key figures (33 chiffres avec source et leçon, mode « cacher les chiffres »), Quiz, Flashcards, Exam questions (définir, expliquer, appliquer, dessiner : réponses modèles et points clés, diagramme modèle), examen blanc 60 ou 90 min (notions + un diagramme construit flèche par flèche, comparé au diagramme du cours).
 - Progression dans `sgc-v1` : `learn`, `studio`, `board`, `cdrill`, `spot`, `figs`, `quiz`, `cards`, `open`, `exam`, `examHist`.
-- Le fichier est généré par `build_sg.py` (dossier de travail de la session, comme `build.py` pour Management) à partir des pièces communes extraites de la macro et des pièces propres au lab.
+- Le fichier est généré par `tools/sg/build_sg.py` (comme `tools/mg/build.py` pour Management) à partir des pièces communes extraites de la macro et des pièces propres au lab.
 
 ## Modules de révision du lab Macroeconomics (en place)
 

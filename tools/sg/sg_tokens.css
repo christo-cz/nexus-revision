@@ -1,0 +1,27 @@
+/* Societal and Global Challenges lab: the Earth system and the societies that live on it.
+   Colour carries the course and the slides' own legend: leaf --pri = environmental variables (and the lab),
+   rose --c3 = social variables, blue --c1 = economic variables, ochre --c4 = loops and systems thinking,
+   violet --c2 = sustainable development, cyan --c5 = ecology. Dark is the default; light only on request. */
+:root{
+  color-scheme:dark;
+  --bg:#0B120F; --surface:#121B17; --sunk:#18241F; --line:#24332C; --line-2:#344A3F; --fg:#EEF4EE; --muted:#A9B9AF; --faint:#7A8C81;
+  --pri:#8EE26B; --pri-2:#A8EC8C; --pri-soft:#1B3317; --on-pri:#0B1A08;
+  --c1:#6FB4FF; --c1-soft:#10263F; --c2:#B79BFF; --c2-soft:#241D45; --c3:#FF7F96; --c3-soft:#3A1820; --c4:#F2C14E; --c4-soft:#36290C; --c5:#4FD6D0; --c5-soft:#0E2F2E;
+  --ok:#6FD39C; --ok-soft:#12301F; --bad:#FF8A80; --bad-soft:#3A1B1A;
+  --shadow:0 1px 2px rgb(0 0 0 / .3),0 8px 24px rgb(0 0 0 / .28);
+  --glass:rgb(255 255 255 / .045); --glass-line:rgb(255 255 255 / .1);
+  --f-display:"Familjen Grotesk","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"Public Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --hdr:56px; --gut:max(16px,env(safe-area-inset-left,0px)); --gut-r:max(16px,env(safe-area-inset-right,0px));
+  padding-top:env(safe-area-inset-top,0px);
+}
+:root[data-theme="light"]{
+  color-scheme:light;
+  --bg:#F4F7F1; --surface:#FFFFFF; --sunk:#E9EFE6; --line:#DAE3D5; --line-2:#C3D0BD; --fg:#14201A; --muted:#55665C; --faint:#87968C;
+  --pri:#3B7A18; --pri-2:#2F6612; --pri-soft:#E3F1D9; --on-pri:#FFFFFF;
+  --c1:#1E63B4; --c1-soft:#E1ECF9; --c2:#5B45C2; --c2-soft:#ECE8FB; --c3:#B83250; --c3-soft:#F9E2E7; --c4:#986800; --c4-soft:#F7EDD4; --c5:#0B7A75; --c5-soft:#DDF2F0;
+  --ok:#23794E; --ok-soft:#DFF2E6; --bad:#B4372E; --bad-soft:#F9E3E0;
+  --shadow:0 1px 2px rgb(20 32 26 / .05),0 6px 20px rgb(20 32 26 / .07);
+  --glass:rgb(255 255 255 / .62); --glass-line:rgb(20 32 26 / .1);
+}

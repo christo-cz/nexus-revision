@@ -1,0 +1,52 @@
+/* ---------- overview & case list: the living circular flow ---------- */
+#app{position:relative;z-index:1}
+.aura{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(640px circle at var(--ax,70%) var(--ay,40%),color-mix(in srgb,var(--ac,var(--flow)) 20%,transparent),transparent 70%);transition:opacity .4s}
+:root[data-theme="light"] .aura{opacity:.8}
+.ov{--surface:var(--glass)}
+.ov :is(.casecard,.stat,.exam,.credit,.rv-form){backdrop-filter:blur(12px) saturate(1.2);-webkit-backdrop-filter:blur(12px) saturate(1.2);border-color:var(--glass-line)}
+.fhero{position:relative;overflow:hidden;isolation:isolate;min-height:calc(100svh - var(--hdr) - env(safe-area-inset-top,0px));display:flex;align-items:center}
+.fhero.compact{min-height:min(62svh,560px)}
+.fhero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1;touch-action:pan-y}
+.fl-labels{position:absolute;inset:0;z-index:1;pointer-events:none}
+.fl{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;cursor:default;white-space:nowrap;font-size:.8rem;font-weight:600;color:var(--muted);padding:3px 9px;border-radius:99px;transition:color .25s,background-color .25s,transform .25s}
+.fl b{font-family:var(--f-mono);font-weight:700}
+.fl.node{font-family:var(--f-display);font-size:.98rem;font-weight:700;color:var(--fg);background:var(--glass);border:1px solid var(--glass-line);padding:8px 14px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.fl.inj b{color:var(--inj)} .fl.leak b{color:var(--leak)}
+.fl.arc{font-size:.74rem;color:var(--faint)}
+.fl.lit{color:var(--fg);transform:translate(-50%,-50%) scale(1.12)}
+.fl.inj.lit{background:var(--inj-soft)} .fl.leak.lit{background:var(--leak-soft)} .fl.node.lit{border-color:var(--flow)}
+.fh-in{position:relative;z-index:2;width:100%;max-width:1240px;margin:0 auto;padding-block:48px 64px;padding-left:var(--gut);padding-right:var(--gut-r);display:flex;flex-direction:column;gap:20px;pointer-events:none}
+.fh-in > *{pointer-events:auto;max-width:560px}
+.fh-in::before{content:"";position:absolute;z-index:-1;left:-10%;top:0;bottom:0;width:70%;pointer-events:none;background:radial-gradient(ellipse 70% 60% at 30% 50%,color-mix(in srgb,var(--bg) 82%,transparent),transparent 75%)}
+.kicker{font-size:.95rem;font-weight:600;color:var(--flow)}
+.ov-title{font-size:clamp(3rem,8.4vw,6.6rem);font-weight:700;letter-spacing:-.05em;line-height:.92;max-width:none!important}
+.ov-title .w{display:inline-block;transform:translateY(105%);animation:rise .9s cubic-bezier(.2,.75,.15,1) forwards}
+.ov-title .clip{display:block;overflow:hidden;padding-bottom:.08em}
+@keyframes rise{to{transform:none}}
+.ov-eq{font-family:var(--f-display);font-weight:700;font-size:clamp(1.5rem,3.2vw,2.3rem);letter-spacing:-.02em;display:flex;flex-wrap:wrap;gap:0 .28em;align-items:baseline}
+.ov-eq [data-hl]{cursor:default;border-radius:8px;padding:0 .08em;transition:background-color .2s,transform .2s;display:inline-block}
+.ov-eq [data-hl]:hover{transform:translateY(-3px)}
+.ov-eq .y{color:var(--flow)} .ov-eq .i{color:var(--inj)} .ov-eq .l{color:var(--leak)}
+.ov-eq .i:hover{background:var(--inj-soft)} .ov-eq .l:hover{background:var(--leak-soft)} .ov-eq .y:hover,.ov-eq .c:hover{background:var(--flow-soft)}
+.ov-eq .hint{font-family:var(--f-body);font-size:.78rem;font-weight:500;color:var(--faint);letter-spacing:0;width:100%;margin-top:2px}
+.fh-in .lede{color:var(--muted);font-size:1.08rem;max-width:46ch}
+.btn.big{padding:14px 22px;font-size:1.02rem;border-radius:13px}
+.btn.primary{box-shadow:0 14px 32px -14px var(--flow)}
+.btn.glassy{background:var(--glass);border-color:var(--glass-line);color:var(--fg);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.btn.glassy:hover{border-color:var(--fg)}
+.mystats{display:flex;flex-wrap:wrap;gap:8px 26px}
+.mystats div{display:flex;flex-direction:column}
+.mystats b{font-family:var(--f-display);font-size:1.5rem;line-height:1.1}
+.mystats span{font-size:.82rem;color:var(--muted)}
+.ov .page{max-width:1180px;gap:96px;padding-block:24px 64px}
+.ov .sec-h h2{font-size:clamp(1.7rem,3.6vw,2.5rem);letter-spacing:-.03em}
+@media (max-width:820px){
+  .fhero{min-height:auto;align-items:flex-start}
+  .fh-in{padding-block:28px 470px}
+  .fhero.compact .fh-in{padding-bottom:440px}
+  .fh-in::before{width:120%;left:-10%;height:62%;bottom:auto}
+  .ov-title{font-size:10.4vw}
+  .fl{font-size:.74rem;padding:2px 7px}
+  .fl.node{font-size:.86rem;padding:6px 11px}
+  .ov .page{gap:72px}
+}
