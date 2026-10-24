@@ -32,6 +32,7 @@
   --bg:#F5F6FB; --surface:#FFFFFF; --sunk:#E9EBF5; --line:#D9DCEA; --line-2:#C2C6DB;
   --fg:#12142B; --muted:#565B78; --faint:#8A8FA8;
   --grid:70 92 190; --grid-a:.16; --grid-major:.30;
+  --grid-gl:40 58 165; --grid-gl-a:.34; --grid-gl-major:.58;
   --b1:#3B5BFF; --b2:#8E6CFF; --b3:#FF5FA2; --b4:#22C4D6;
   --macro:#0B7472; --acc:#4453D0; --mgmt:#B5386F; --sgc:#3B7A18; --on-c:#FFFFFF;
   --star:#B06F07; --bad:#B4372E;
@@ -46,14 +47,14 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0D1024; --surface:#161A3A; --sunk:#1D2248; --line:#2A3060; --line-2:#3A4178;
   --fg:#ECEDFA; --muted:#A8ADD2; --faint:#7177A0;
-  --grid:150 165 255; --grid-a:.2; --grid-major:.4;
+  --grid:150 165 255; --grid-a:.2; --grid-major:.4; --grid-gl:150 165 255; --grid-gl-a:.25; --grid-gl-major:.5;
   --macro:#4CC2BC; --acc:#8F9AFF; --mgmt:#FF7FB2; --sgc:#8EE26B; --on-c:#0D1024;
   --star:#E9AE4C; --bad:#F08A80; --scrim:13 16 36; color-scheme:dark;
 }}
 :root[data-theme="dark"]{
   --bg:#0D1024; --surface:#161A3A; --sunk:#1D2248; --line:#2A3060; --line-2:#3A4178;
   --fg:#ECEDFA; --muted:#A8ADD2; --faint:#7177A0;
-  --grid:150 165 255; --grid-a:.2; --grid-major:.4;
+  --grid:150 165 255; --grid-a:.2; --grid-major:.4; --grid-gl:150 165 255; --grid-gl-a:.25; --grid-gl-major:.5;
   --macro:#4CC2BC; --acc:#8F9AFF; --mgmt:#FF7FB2; --sgc:#8EE26B; --on-c:#0D1024;
   --star:#E9AE4C; --bad:#F08A80; --scrim:13 16 36; color-scheme:dark;
 }
@@ -234,7 +235,7 @@ html.theme-vt::view-transition-new(root){animation:themeReveal .65s cubic-bezier
 @media (prefers-reduced-motion:reduce){.fsinv{transition:none}.fs-pulse{animation:none}}
 /* ---------- the pencil: a hexagonal pencil you turn to choose (replaces the tiles when 3D and motion are allowed) ---------- */
 .pen-ui{margin-top:6px;display:flex;flex-direction:column;gap:14px;opacity:0;animation:fade .6s ease .55s forwards}
-.pen-stage{position:relative;height:var(--stage-h,210px);perspective:1500px;perspective-origin:50% 44%;cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none;outline:none}
+.pen-stage{position:relative;height:var(--stage-h,210px);perspective:1500px;perspective-origin:50% 44%;cursor:grab;touch-action:none;overscroll-behavior:contain;-webkit-user-select:none;user-select:none;outline:none}
 .pen-stage.drag{cursor:grabbing}
 .pen-stage:focus-visible{outline:2px dashed var(--acc);outline-offset:6px;border-radius:14px}
 .pen-shadow{position:absolute;left:12%;right:8%;top:calc(50% + var(--apo) * 1.25);height:30px;border-radius:50%;background:radial-gradient(closest-side,rgb(0 0 0 / .5),transparent);filter:blur(7px);transform:rotate(-3deg);pointer-events:none}
@@ -545,7 +546,7 @@ html:has(dialog.nx-sheet[open]){overflow:hidden}
     </nav>
     <div class="pen-ui" id="penUI" hidden>
       <div class="pen-stage" aria-hidden="true"><div class="pen-shadow"></div><div class="pen"><div class="drum"></div></div>
-        <p class="pen-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/></svg><span class="desk">Drag the pencil to turn it</span><span class="touch">Swipe the pencil sideways to turn it</span></p></div>
+        <p class="pen-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/></svg><span class="desk">Scroll or drag the pencil to turn it</span><span class="touch">Swipe the pencil to turn it</span></p></div>
       <div class="pen-bar"><div class="pen-chips" role="group" aria-label="Choose what to open"></div>
         <div class="pen-arrows"><button type="button" data-prev aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg></button><button type="button" data-next aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button></div></div>
       <div class="pen-card" aria-live="polite"></div>
@@ -573,12 +574,12 @@ html:has(dialog.nx-sheet[open]){overflow:hidden}
   </section>
 
   <section class="wrap" id="reviews" aria-labelledby="voicesH">
-    <div class="sh"><h2 id="voicesH">The class wall</h2><p>Every review, pinned as it was written. Nothing is edited or invented.</p></div>
+    <div class="sh"><h2 id="voicesH">What our users say</h2><p>Every review, pinned as it was written. Nothing is edited or invented.</p></div>
     <div id="voicesBody"><p class="empty">Loading reviews…</p></div>
     <div id="adminSlot"></div>
   </section>
 
-  <footer class="wrap" aria-label="About">
+  <footer class="wrap" id="about" aria-label="About">
     <div class="credit">
       <div class="who"><b>Made by Christo Czysz</b><span id="myClass"></span></div>
       <div class="links" id="myLinks"></div>
@@ -843,9 +844,10 @@ void main(){
   let PAL = [[.23, .36, 1], [.56, .42, 1], [1, .37, .64], [.13, .77, .84]], darkMode = true;
   function colors(){
     const cs = getComputedStyle(document.documentElement);
-    gl.uniform3fv(u.line, cs.getPropertyValue("--grid").trim().split(/[\s,]+/).map(x => +x / 255));
-    gl.uniform1f(u.a, +cs.getPropertyValue("--grid-a") * 1.25);
-    gl.uniform1f(u.aMajor, +cs.getPropertyValue("--grid-major") * 1.25);
+    /* the WebGL sheet has its own line tokens: in light mode the base grid is drawn darker and stronger so it reads on white paper */
+    gl.uniform3fv(u.line, cs.getPropertyValue("--grid-gl").trim().split(/[\s,]+/).map(x => +x / 255));
+    gl.uniform1f(u.a, +cs.getPropertyValue("--grid-gl-a"));
+    gl.uniform1f(u.aMajor, +cs.getPropertyValue("--grid-gl-major"));
     const b1 = hex(cs.getPropertyValue("--b1")), b2 = hex(cs.getPropertyValue("--b2")), b3 = hex(cs.getPropertyValue("--b3")), b4 = hex(cs.getPropertyValue("--b4") || "#22C4D6");
     gl.uniform3fv(u.b1, b1); gl.uniform3fv(u.b2, b2); gl.uniform3fv(u.b3, b3);
     PAL = [b1, b2, b3, b4];
@@ -1267,7 +1269,7 @@ const NXR = (() => {
 
   /* a lab home: the section heading, then the wall */
   function section(sec, o){
-    sec.innerHTML = `<div class="sec-h"><h2>What the class says</h2></div><div class="nx-host"></div>`;
+    sec.innerHTML = `<div class="sec-h"><h2>What our users say</h2></div><div class="nx-host"></div>`;
     wall(sec.querySelector(".nx-host"), o);
   }
   return { load, reviewed, form, sheet, nudge, slot, wall, section, stars, PEN };
@@ -1300,9 +1302,9 @@ const NXR = (() => {
     { t: "Management and Organizations", d: "People, decisions and biases, motivation, the classic schools. Cases, labs and a 90-minute mock exam.", href: "/management/", cta: "Open the lab", lq: "#A92D67", c: "var(--mgmt)", label: "Management", sub: "BBA1 · S1", st: () => txt("mgmtStatus") },
     { t: "Macroeconomics", d: "GDP three ways, consumption and saving, the multiplier, growth. Ten full cases, the tutorials and a mock exam.", href: "/macro/", cta: "Open the lab", lq: "#11807A", c: "var(--macro)", label: "Macroeconomics", sub: "BBA1 · S1", st: () => txt("macroStatus") },
     { t: "Societal and Global Challenges", d: "Causal diagrams, sustainable development, planetary boundaries, the Doughnut, poverty and growth.", href: "/global/", cta: "Open the lab", lq: "#3C7A20", c: "var(--sgc)", label: "Global Challenges", sub: "BBA1 · S1", st: () => txt("sgcStatus") },
-    { t: "Mock exams", d: "Sit a timed exam in each subject. Nothing is marked before the end; then every answer is explained.", lq: "#B8362A", c: "var(--bad)", label: "Mock exams", sub: "Timed", links: [["Management", "/management/#exam", "var(--mgmt)"], ["Macroeconomics", "/macro/#mock", "var(--macro)"], ["Global Challenges", "/global/#exam", "var(--sgc)"]] },
-    { t: "The class wall", d: "Reviews from the class, pinned as they were written. Yours would help me a lot.", href: "#reviews", cta: "Read the wall", lq: "#E3A82B", ink: true, c: "var(--star)", label: "Class wall", sub: "Reviews", st: () => wallStat },
-    { t: "How it works", d: "Built from the slides and the tutorial sheets. The code computes every number, so answers are always right and practice never runs out.", href: "#how", cta: "See how", lq: "#2F3B8F", c: "var(--acc)", label: "How it works", sub: "Nexus" }
+    { t: "What our users say", d: "Reviews pinned as they were written, nothing edited or invented. Yours would help me a lot.", href: "#reviews", cta: "Read the reviews", lq: "#E3A82B", ink: true, c: "var(--star)", label: "What our users say", sub: "Reviews", st: () => wallStat, wall: true },
+    { t: "How it works", d: "Built from the slides and the tutorial sheets. The code computes every number, so answers are always right and practice never runs out.", href: "#how", cta: "See how", lq: "#2F3B8F", c: "var(--acc)", label: "How it works", sub: "Nexus" },
+    { t: "Who made this", d: "Christo Czysz, EDHEC BBA1, English track, Lille. A question, an idea, a mistake spotted? Write to me.", href: "#about", cta: "Get in touch", lq: "#B8362A", c: "var(--bad)", label: "Who made this", sub: "The author" }
   ];
   const N = F.length, STEP = 360 / N;
   chips.innerHTML = F.map((x, i) => `<button type="button" data-go="${i}" style="--lq:${x.lq}" aria-pressed="false">${x.t === "Management and Organizations" ? "Management" : x.t === "Societal and Global Challenges" ? "Global Challenges" : x.t}</button>`).join("");
@@ -1312,8 +1314,8 @@ const NXR = (() => {
     const T = Math.min(W * (W < 700 ? 0.92 : 0.84), 1040), h = T * 0.14, L = T - h, f = Math.max(34, Math.min(62, T * 0.062)), apo = f * Math.sqrt(3) / 2, x0 = -T / 2;
     const slant = Math.hypot(h, apo), phi = Math.atan2(apo, h) * 180 / Math.PI;
     stage.style.setProperty("--stage-h", Math.round(f * 3 + 30) + "px"); stage.style.setProperty("--apo", apo + "px");
-    drum.innerHTML = F.map((x, i) => `<div class="fct${x.ink ? " ink" : ""}" data-i="${i}" style="--lq:${x.lq};--f:${f}px;--er:${f * 0.9}px;--fe:${f * 0.72}px;left:${x0}px;top:${-f / 2}px;width:${L + 1}px;height:${f + 0.6}px;transform:rotateX(${i * STEP}deg) translateZ(${apo}px)"><span class="er"></span><span class="fe"></span><span class="lq"><b>${x.label}</b><span>${x.sub}</span><i></i></span></div>`).join("")
-      + F.map((x, i) => `<div class="cone" data-i="${i}" style="left:${x0 + L}px;top:${-f / 2}px;width:${slant}px;height:${f + 0.6}px;transform-origin:0 50%;transform:rotateX(${i * STEP}deg) translateZ(${apo}px) rotateY(${phi}deg)"></div>`).join("")
+    drum.innerHTML = F.map((x, i) => `<div class="fct${x.ink ? " ink" : ""}" data-i="${i}" style="--lq:${x.lq};--f:${f}px;--er:${f * 0.9}px;--fe:${f * 0.72}px;left:${x0}px;top:${-f / 2}px;width:${L + 1}px;height:${f + 0.6}px;transform:rotateX(${-i * STEP}deg) translateZ(${apo}px)"><span class="er"></span><span class="fe"></span><span class="lq"><b>${x.label}</b><span>${x.sub}</span><i></i></span></div>`).join("")
+      + F.map((x, i) => `<div class="cone" data-i="${i}" style="left:${x0 + L}px;top:${-f / 2}px;width:${slant}px;height:${f + 0.6}px;transform-origin:0 50%;transform:rotateX(${-i * STEP}deg) translateZ(${apo}px) rotateY(${phi}deg)"></div>`).join("")
       + `<div class="cap" style="left:${x0 - apo}px;top:${-f}px;width:${2 * apo}px;height:${2 * f}px;transform:rotateY(-90deg)"></div>`;
     fct = [...drum.querySelectorAll(".fct")]; cone = [...drum.querySelectorAll(".cone")];
     set();
@@ -1321,10 +1323,10 @@ const NXR = (() => {
   function set(){
     drum.style.setProperty("--a", A.toFixed(2) + "deg");
     for (let i = 0; i < N; i++){
-      const th = (i * STEP + A) * Math.PI / 180, lit = Math.max(0, Math.cos(th - 0.5)), dk = (0.74 * Math.pow(1 - lit, 1.1)).toFixed(3), sp = Math.pow(Math.max(0, Math.cos(th - 0.42)), 5).toFixed(3);
+      const th = (A - i * STEP) * Math.PI / 180, lit = Math.max(0, Math.cos(th - 0.5)), dk = (0.74 * Math.pow(1 - lit, 1.1)).toFixed(3), sp = Math.pow(Math.max(0, Math.cos(th - 0.42)), 5).toFixed(3);
       fct[i].style.setProperty("--dk", dk); fct[i].style.setProperty("--sp", sp); cone[i].style.setProperty("--dk", dk);
     }
-    const k = ((Math.round(-A / STEP) % N) + N) % N;
+    const k = ((Math.round(A / STEP) % N) + N) % N;
     if (k !== active){ active = k; paint(); }
   }
   function paint(){
@@ -1344,13 +1346,30 @@ const NXR = (() => {
     set(); raf = requestAnimationFrame(loop);
   }
   const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
-  function goTo(i){ const base = -i * STEP, k = Math.round((A - base) / 360); target = base + 360 * k; touched = true; kick(); }
+  function goTo(i){ const base = i * STEP, k = Math.round((A - base) / 360); target = base + 360 * k; touched = true; kick(); }
+  /* the face the pencil is on or heading to, and its angle measured from the first face (first face 0, last face (N-1)·STEP) */
+  const heading = () => target != null ? ((Math.round(target / STEP) % N) + N) % N : active;
+  const local = () => A - 360 * Math.floor((A + STEP / 2) / 360);
 
-  /* drag to turn: up and down with a mouse, sideways on a touch screen (vertical swipes still scroll the page) */
-  let lx = 0, ly = 0, moved = 0, downOn = null;
+  /* the wheel turns the pencil one face per notch; on the first face going up, or the last going down, the page scrolls as usual */
+  let wacc = 0, wlock = 0;
+  stage.addEventListener("wheel", e => {
+    if (e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+    const dir = e.deltaY > 0 ? 1 : -1, i = heading();
+    if ((dir < 0 && i === 0) || (dir > 0 && i === N - 1)){ wacc = 0; return; }
+    e.preventDefault();
+    const now = performance.now();
+    wacc += e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * 800 : e.deltaY;
+    if (now < wlock || Math.abs(wacc) < 40) return;
+    wacc = 0; wlock = now + 140; goTo(i + dir);
+  }, { passive: false });
+
+  /* drag to turn: up and down with a mouse; on a touch screen a vertical swipe turns it too, and past the first or last face it scrolls the page */
+  let lx = 0, ly = 0, moved = 0, downOn = null, axis = "", sv = 0, coast = 0;
+  const scrollPage = dy => { window.scrollBy(0, -dy); sv = sv * 0.5 - dy * 0.5; };
   stage.addEventListener("pointerdown", e => {
     if (e.button !== 0) return;
-    dragging = true; moved = 0; lx = e.clientX; ly = e.clientY; V = 0; target = null; touched = true; downOn = e.target.closest("[data-i]");
+    dragging = true; moved = 0; lx = e.clientX; ly = e.clientY; V = 0; target = null; touched = true; downOn = e.target.closest("[data-i]"); axis = e.pointerType === "mouse" ? "y" : ""; sv = 0; cancelAnimationFrame(coast);
     try { stage.setPointerCapture(e.pointerId); } catch (err) {}
     stage.classList.add("drag", "used"); kick();
   });
@@ -1358,13 +1377,25 @@ const NXR = (() => {
     const r = stage.getBoundingClientRect(); pen.style.setProperty("--tilt", ((e.clientX - r.left) / r.width - 0.5).toFixed(3));
     if (!dragging) return;
     const dx = e.clientX - lx, dy = e.clientY - ly; lx = e.clientX; ly = e.clientY; moved += Math.abs(dx) + Math.abs(dy);
-    const d = -(dy * 0.55 + dx * (e.pointerType === "mouse" ? 0.22 : 0.27));
+    if (e.pointerType === "mouse"){ const d = -(dy * 0.55 + dx * 0.22); A += d; V = V * 0.4 + d * 0.6; return; }
+    if (!axis){ if (moved < 8) return; axis = Math.abs(dy) >= Math.abs(dx) ? "y" : "x"; }
+    if (axis === "x"){ const d = -dx * 0.27; A += d; V = V * 0.4 + d * 0.6; return; }
+    /* vertical swipe: the face under the finger follows it; at either end the rest of the swipe scrolls the page */
+    let d = -dy * 0.55;
+    const l = local(), lo = 0, hi = (N - 1) * STEP;
+    if (d < 0 && l + d < lo){ const keep = Math.min(0, lo - l); scrollPage((d - keep) / -0.55); d = keep; }
+    else if (d > 0 && l + d > hi){ const keep = Math.max(0, hi - l); scrollPage((d - keep) / -0.55); d = keep; }
     A += d; V = V * 0.4 + d * 0.6;
   });
   const up = e => {
     if (!dragging) return;
     dragging = false; stage.classList.remove("drag");
     if (moved < 6 && downOn){ const i = +downOn.dataset.i; if (i === active){ const a = card.querySelector("a.main"); if (a) a.click(); } else goTo(i); }
+    else if (axis === "y" && e.pointerType !== "mouse"){
+      /* no throw past the ends: settle on the nearest face, and let a page scroll that was under way coast on */
+      const l = local(); if (l < 0 || l > (N - 1) * STEP || Math.abs(sv) > 1){ V = 0; target = null; goTo(Math.max(0, Math.min(N - 1, Math.round(l / STEP)))); }
+      if (Math.abs(sv) > 1){ let v = sv; const step = () => { window.scrollBy(0, v); v *= 0.93; if (Math.abs(v) > 0.5) coast = requestAnimationFrame(step); }; coast = requestAnimationFrame(step); }
+    }
     kick();
   };
   stage.addEventListener("pointerup", up); stage.addEventListener("pointercancel", up);
@@ -1390,7 +1421,7 @@ const NXR = (() => {
   if (window.NXR) NXR.load(null).then(d => {
     if (!d) return; let n = 0, s = 0; ["flow", "mgmt", "sgc"].forEach(k => { const x = d.labs[k]; if (x && x.count){ n += x.count; s += x.avg * x.count; } });
     wallStat = n ? `${(s / n).toFixed(1)} out of 5, from ${n} review${n > 1 ? "s" : ""}` : "No reviews yet. Yours could be the first.";
-    if (active === 4) paint();
+    if (F[active] && F[active].wall) paint();
   });
 })();
 </script>

@@ -248,7 +248,7 @@ const NXR = (() => {
 
   /* a lab home: the section heading, then the wall */
   function section(sec, o){
-    sec.innerHTML = `<div class="sec-h"><h2>What the class says</h2></div><div class="nx-host"></div>`;
+    sec.innerHTML = `<div class="sec-h"><h2>What our users say</h2></div><div class="nx-host"></div>`;
     wall(sec.querySelector(".nx-host"), o);
   }
   return { load, reviewed, form, sheet, nudge, slot, wall, section, stars, PEN };
