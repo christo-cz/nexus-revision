@@ -4,7 +4,7 @@ R = {
  "/": [""],
  "/macro/": ["#home","#learn","#learn-thought","#learn-activity","#learn-determinants","#learn-growth","#cases","#case1","#case5","#drills","#spot","#quiz","#quiz-growth","#cards","#cards-activity","#open","#open-o1","#mock","#recap","#td","#td-all"],
  "/management/": ["#home","#learn","#learn-org","#learn-person","#learn-decide","#learn-motiv","#cases","#spot","#labs","#lab-kelley","#lab-equity","#lab-bigfive","#lab-who","#quiz","#cards","#open","#exam","#recap"],
- "/global/": ["#home","#learn","#learn-systems","#learn-sd","#learn-ecology","#learn-bounds","#learn-social","#learn-economy","#learn-method","#studio","#studio-free","#studio-drills","#sort","#figures","#quiz","#cards","#open","#exam","#recap"],
+ "/global/": ["#home","#learn","#learn-systems","#learn-sd","#learn-ecology","#learn-bounds","#learn-social","#learn-economy","#learn-method","#studio","#studio-free","#studio-drills","#figures","#practice","#practice-bounds","#practice-cards","#practice-cards-social","#practice-open","#open-x1","#exam","#recap","#sort","#quiz-sd","#cards","#open"],
  "/404.html": [""],
 }
 async def run():

@@ -1002,6 +1002,19 @@ html.theme-vt::view-transition-new(root){animation:themeReveal .65s cubic-bezier
 .spotq .scene{font-family:var(--f-display);font-size:clamp(1.25rem,2.6vw,1.6rem);font-weight:600;line-height:1.35;letter-spacing:-.01em}
 .spotq .qzprog{justify-content:space-between}
 .dq .opt:hover:not(:disabled){border-color:var(--c,var(--pri))}
+/* practice: tabs, and the merged questions */
+.prtabs{display:flex;gap:3px;flex-wrap:wrap;width:max-content;max-width:100%;margin:-4px 0 24px;padding:4px;border:1px solid var(--glass-line);background:var(--glass);border-radius:14px}
+.prtabs a{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:10px;font-weight:700;font-size:.92rem;color:var(--muted);text-decoration:none;transition:color .2s,background .2s}
+.prtabs a span{font:500 .74rem/1 var(--f-mono,"JetBrains Mono",monospace);opacity:.65}
+.prtabs a:hover:not([aria-current="page"]){color:var(--fg)}
+.prtabs a[aria-current="page"]{background:var(--fg);color:var(--bg)}
+@media (max-width:560px){.prtabs{width:100%}.prtabs a{flex:1;justify-content:center;padding:9px 6px;font-size:.84rem}.prtabs a span{display:none}}
+.qprompt{margin:4px 0 2px;font-weight:700;font-size:.9rem;color:var(--c,var(--pri))}
+.prq{max-width:760px}
+.prback{margin-top:14px}
+.mods .modt.wide{grid-column:span 2}
+.mods.dense{grid-auto-flow:dense}
+.modt .msub{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;color:var(--muted)}
 /* exam questions and mock */
 .osrc{font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:99px;background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--c)}
 .osrc.ap{background:var(--c3-soft);color:var(--c3)} .osrc.cr{background:var(--sunk);color:var(--muted)}
@@ -1298,11 +1311,8 @@ details.oans[open] summary{margin-bottom:8px}
     <a href="#home" data-route="home">Overview</a>
     <a href="#learn" data-route="learn">Learn</a>
     <a href="#studio" data-route="studio">Causal studio</a>
-    <a href="#sort" data-route="sort">Sort it</a>
     <a href="#figures" data-route="figures">Key figures</a>
-    <a href="#quiz" data-route="quiz">Quiz</a>
-    <a href="#cards" data-route="cards">Flashcards</a>
-    <a href="#open" data-route="open">Exam questions</a>
+    <a href="#practice" data-route="practice">Practice</a>
   </nav>
   <span class="grow"></span>
   <button class="theme" id="rvBtn" type="button" aria-label="Write a review"></button>
@@ -1759,407 +1769,313 @@ const AURA = (() => {
 
 const RI = (a, b, s = 1) => a + s * Math.floor(Math.random() * ((b - a) / s + 1));
 const PICK = a => a[Math.floor(Math.random() * a.length)];
+const PR_LEDE = "Exam-style multiple choice and fast sorting (environmental, social or economic; macro, meso or micro; which boundary, which scenario), mixed. Every answer comes with its explanation.";
 
 /* =====================================================================
    COURSE CONTENT — Societal and Global Challenges (BBA1, S1).
-   Written from the slides of sessions 1 to 6 and the session 7 tutorial, reworded.
+   Written from the slides of sessions 1 to 6 and the session 7 tutorial, reworded, then compacted (Oct 24):
+   every definition, author, date, figure and causal link kept, redundant cards merged.
    Each card: title, line (the idea in one line), points, formula, example, trap, exam.
    ===================================================================== */
 const COURSE = [
 { id: "systems", n: 1, title: "Systems thinking and causal diagrams", short: "Systems thinking", c: "var(--c4)",
-  intro: "Heatwaves as a complex challenge: many causes and consequences that act on each other. The tool of the course to see them: the causal diagram, with its feedback loops and unintended consequences.",
+  intro: "Heatwaves as a complex challenge, and the tool to see it whole: the causal diagram, with its feedback loops and unintended consequences.",
   sections: [
   { title: "The course and the exam", cards: [
-    { id: "s-course", title: "What the course is for",
-      line: "Understand the main environmental and social challenges, how they influence each other, and how the economy affects them and is affected by them.",
-      points: ["Nine two-hour sessions (18 hours), one of them the \"2tonnes workshop\".", "Key concepts (sustainable development) and frameworks (Doughnut Economics) to see the challenges as a whole.", "Two tools a 21st-century manager needs: systems thinking, and critical analysis of sources and data."] },
-    { id: "s-exam", title: "How you are graded",
-      line: "Group work in class counts for 20%. An individual exam organized by the Hub counts for 80%.",
-      points: ["The exam covers all the slides of sessions 1 to 8.", "You must be able to define the key concepts.", "You must understand the lessons drawn from the empirical research shown in class (figures, studies, reports).", "A causal diagram is very likely to be asked: practise drawing one in the Causal studio."],
-      exam: "Learn each definition word for word in its logic (what it is, what it is not, one example). Most questions ask you to define, explain or apply a notion." }
+    { id: "s-course", title: "The course and the exam",
+      line: "How environmental and social challenges influence each other, and how the economy affects them and is affected by them.",
+      points: ["Nine two-hour sessions, one of them the \"2tonnes workshop\". Tools: systems thinking, critical analysis of sources and data.", "Grading: group work in class 20%, individual exam organized by the Hub 80%, on all the slides of sessions 1 to 8.", "Expect to define the key concepts and explain the lessons of the empirical research shown in class (figures, studies, reports).", "A causal diagram is very likely: practise in the Causal studio."],
+      exam: "For each definition, learn its logic: what it is, what it is not, one example." }
   ] },
   { title: "Heatwaves: a complex challenge", cards: [
     { id: "s-heatterms", title: "Heat spike, heatwave, severe heatwave",
       line: "Météo-France distinguishes three \"heat events\" by intensity and duration.",
-      points: ["Heat spike: 24 to 48 hours with temperatures well above seasonal norms, locally or nationwide.", "Heatwave: a prolonged period of abnormally high temperatures nationwide. National thermal indicator ≥ 25.3°C for 1 day, or ≥ 23.4°C for at least 3 days.", "Severe heatwave (canicule): at least 3 consecutive days of very high temperatures, day and night. Thresholds vary by department: Lille max > 33°C and min > 18°C; Toulouse max > 36°C and min > 21°C."],
-      example: "June 24, 2026 was the hottest day recorded in France since 1947: national thermal indicator of 30°C.",
+      points: ["Heat spike: 24 to 48 hours well above seasonal norms, locally or nationwide.", "Heatwave: prolonged abnormal heat nationwide. National thermal indicator ≥ 25.3°C for 1 day, or ≥ 23.4°C for at least 3 days.", "Severe heatwave (canicule): at least 3 consecutive very hot days and nights. Thresholds by department: Lille max > 33°C and min > 18°C; Toulouse max > 36°C and min > 21°C."],
+      example: "June 24, 2026: hottest day recorded in France since 1947, national thermal indicator of 30°C.",
       trap: "The national thermal indicator is the average of daily minimum and maximum temperatures over 30 stations, not the hottest temperature measured." },
-    { id: "s-heattrend", title: "More frequent, earlier, longer, more severe",
-      line: "Heatwaves are becoming more frequent and intense, and climatologists expect the trend to grow.",
-      points: ["Of the 54 heatwaves recorded in France since 1947, two-thirds happened in the 21st century and more than half since 2010.", "Since 2000, a heatwave almost every year (sometimes several), against one summer in five before 1989.", "By 2050, the number of heatwave days should be multiplied by five; heatwaves will start earlier and be more severe."] },
-    { id: "s-warming", title: "Global warming and climate change",
-      line: "Global warming is the rise in the planet's average temperature, caused by rising concentrations of greenhouse gases (GHG) such as CO₂.",
-      points: ["Climate change is broader: all transformations of the climate, not only temperature but humidity, precipitation and the frequency of extreme events.", "It is the cause of more frequent and severe heatwaves."],
-      trap: "Do not use the two terms as synonyms: global warming is one part of climate change." },
+    { id: "s-heattrend", title: "Heatwaves and climate change",
+      line: "Heatwaves are becoming more frequent, earlier, longer and more severe, because of climate change.",
+      points: ["54 heatwaves in France since 1947: two-thirds in the 21st century, more than half since 2010.", "Since 2000, a heatwave almost every year, against one summer in five before 1989. By 2050, five times more heatwave days.", "Global warming: the rise in the planet's average temperature, caused by rising greenhouse gas (GHG) concentrations such as CO₂.", "Climate change is broader: temperature, humidity, precipitation and the frequency of extreme events."],
+      trap: "Not synonyms: global warming is one part of climate change." },
     { id: "s-conseq", title: "Consequences of more frequent heatwaves",
-      line: "The consequences are numerous and of three kinds: environmental, social and economic.",
-      points: ["Environmental: marine heatwaves, soil drying, water scarcity, forest fires, vegetation stress (stomata close), biodiversity loss, worse air quality.", "Social: disrupted daily life, physical and mental health, higher mortality, some forms of poverty worsen, pressure on health services, worse working conditions.", "Economic: lower agricultural yields, lower productivity at work, higher prices (food, energy, water, insurance), disrupted tourism and new destinations, transport disruption."],
-      exam: "Many consequences are linked: soil drying feeds forest fires, which emit CO₂, which feeds warming. Showing these links is the point of a causal diagram." }
+      line: "Three kinds of consequences: environmental, social and economic.",
+      points: ["Environmental: marine heatwaves, soil drying, water scarcity, forest fires, vegetation stress (stomata close), biodiversity loss, worse air quality.", "Social: disrupted daily life, physical and mental health, higher mortality, worse poverty, pressure on health services, worse working conditions.", "Economic: lower crop yields and labour productivity, higher prices (food, energy, water, insurance), tourism and transport disrupted."],
+      exam: "The consequences are linked (soil drying → fires → CO₂ → warming): showing these links is the point of a causal diagram." }
   ] },
   { title: "The causal diagram", widget: "sign", cards: [
-    { id: "s-system", title: "System",
-      line: "A set of interacting elements. The causes and consequences of a phenomenon such as heatwaves can be seen as one system.",
-      exam: "Systems thinking is a holistic approach: it looks at the phenomenon as a whole, with its many causes and effects." },
-    { id: "s-cld", title: "Causal diagram (causal loop diagram)",
-      line: "A visual representation of the variables of a system and of the cause-and-effect relationships between them.",
-      points: ["Variables are things that can go up or down (a rate, a level, a quantity).", "Arrows show influences; each arrow carries a sign.", "It can be expanded with more factors, or detailed with intermediate variables."],
+    { id: "s-system", title: "System and causal diagram",
+      line: "A system is a set of interacting elements. A causal (loop) diagram shows its variables and the cause-and-effect links between them.",
+      points: ["Systems thinking is holistic: the phenomenon as a whole, with its many causes and effects.", "Variables can go up or down (a rate, a level, a quantity). Each arrow is an influence and carries a sign.", "A diagram can be expanded with more factors or detailed with intermediate variables."],
       example: "Attention in class → (+) mastery of the course → (+) grades. Study intensity → (+) mastery. Exam difficulty → (−) grades.",
       trap: "A variable is a quantity, not an event or an actor: \"air-conditioning use\", not \"air conditioners\"; \"electricity price\", not \"EDF\"." },
     { id: "s-link", title: "A causal link and its sign",
-      line: "An arrow from A to B means A influences B. The sign says whether they move in the same direction (+) or in opposite directions (−).",
+      line: "An arrow from A to B means A influences B. + : same direction. − : opposite directions.",
       formula: "A —(+)→ B : A rises → B rises (A falls → B falls)\nA —(−)→ B : A rises → B falls (A falls → B rises)",
-      points: ["Each link is read \"all else being equal\": the other variables that may influence B are held constant.", "In this course the sign does not change with the values of the variables (no bell-shaped relationships)."],
-      example: "\"All else being equal, the more attentive a student is in class, the higher their grades\": attention —(+)→ grades.",
-      trap: "+ does not mean \"good\" and − does not mean \"bad\". Electricity price —(−)→ electricity consumption is a perfectly normal link." }
+      points: ["Each link is read \"all else being equal\": the other influences on B are held constant.", "In this course a sign never changes with the values (no bell-shaped relationships)."],
+      trap: "+ does not mean \"good\", − does not mean \"bad\": electricity price —(−)→ electricity consumption is a normal link." }
   ] },
   { title: "Feedback loops and unintended consequences", widget: "loop", cards: [
-    { id: "s-feedback", title: "Feedback loop",
-      line: "A mechanism through which the consequences of a phenomenon act on its cause: A changes B, which in turn changes A.",
-      example: "Motivation → (+) attention in class → … → grades → (−) parental reprimands → (−) motivation." },
-    { id: "s-reinforce", title: "Positive (reinforcing) loop",
-      line: "Tends to amplify the change in the initial variable.",
-      example: "Global average temperature → (+) soil drying → (+) global average temperature: warming dries soils, and dry soils amplify warming.",
+    { id: "s-feedback", title: "Feedback loops: reinforcing and balancing",
+      line: "A feedback loop: the consequences of a phenomenon act on its cause (A changes B, which changes A).",
+      points: ["Positive (reinforcing) loop: amplifies the initial change. Global average temperature → (+) soil drying → (+) global average temperature.", "Negative (balancing) loop: attenuates it. Electricity consumption → (+) electricity price → (−) electricity consumption."],
+      example: "Motivation → (+) attention in class → … → grades → (−) parental reprimands → (−) motivation.",
       trap: "\"Positive\" says nothing about being desirable: a reinforcing loop can amplify a disaster." },
-    { id: "s-balance", title: "Negative (balancing) loop",
-      line: "Tends to attenuate the change in the initial variable, pulling it back.",
-      example: "Electricity consumption → (+) electricity price → (−) electricity consumption: when consumption rises, the price rises and dampens consumption." },
     { id: "s-polarity", title: "The loop polarity rule",
       line: "Count the minus signs around the loop.",
       formula: "Only + signs → positive (reinforcing) loop\nEven number of − → positive (reinforcing) loop\nOdd number of − → negative (balancing) loop",
-      example: "Indoor temperature → (+) air-conditioning use → (−) indoor temperature: one minus, so a balancing loop.",
-      exam: "Always state the rule when you name a loop: \"two minus signs, an even number, so the loop is reinforcing\"." },
+      example: "Indoor temperature → (+) air-conditioning use → (−) indoor temperature: one minus, a balancing loop.",
+      exam: "State the rule when you name a loop: \"two minus signs, an even number, so the loop is reinforcing\"." },
     { id: "s-unintended", title: "Unintended consequence (effet pervers)",
-      line: "An undesirable, problematic or even counterproductive effect of a behavior or measure adopted to adapt to a problem or to solve it.",
-      example: "Heat raises indoor temperatures, so people use air conditioning (desired effect: indoor temperature falls). But AC uses electricity and emits CO₂, which raises the global average temperature: the problem is fed by its own fix.",
-      exam: "To show an unintended consequence on a diagram, mark the desired effect (a balancing loop) and the unwanted path that brings the problem back (a reinforcing loop)." }
+      line: "An undesirable, even counterproductive effect of a behaviour or measure adopted to adapt to a problem or solve it.",
+      example: "Heat → people use air conditioning (indoor temperature falls, as wanted). But AC uses electricity and emits CO₂, which raises the global average temperature: the fix feeds the problem.",
+      exam: "On a diagram: the desired effect (a balancing loop) and the unwanted path that brings the problem back (a reinforcing loop)." }
   ] },
   { title: "The heatwave system", widget: "heatmap", cards: [
     { id: "s-heatcld", title: "The heatwave causal diagram (non-exhaustive)",
       line: "GHG concentration → (+) global average temperature → (+) heatwave frequency and severity, which spreads to soils, forests, homes, energy and health.",
       points: ["Heatwaves → (+) soil drying → (+) vegetation stress → (−) CO₂ absorption → (−) GHG concentration.", "Soil drying → (+) forest fires → (+) CO₂ emissions → (+) GHG concentration.", "Heatwaves → (+) indoor temperatures → (+) AC use → (−) indoor temperatures.", "AC use → (+) electricity consumption → (+) CO₂ emissions; consumption → (+) electricity price → (−) consumption.", "Indoor temperatures → (+) health problems and (+) energy poverty; electricity price → (+) energy poverty; monetary poverty → (+) energy poverty."],
       exam: "Colour or label each variable as environmental, social or economic, as the slides do." },
-    { id: "s-measures", title: "Measures against heatwaves, and their drawbacks",
-      line: "A causal diagram helps imagine measures, and their side effects.",
-      points: ["Subsidize air conditioners to limit health risks, but it reinforces the unintended rise in CO₂ emissions.", "Guidance on AC use (\"cool to 26°C at most\").", "Lower-emission alternatives to AC: insulation, urban greening, solar shading.", "Help low-income households with energy bills (energy vouchers, chèques énergie) against energy poverty.", "Prevent and fight forest fires.", "Keep decarbonizing electricity (comparatively low-carbon in France, much less elsewhere)."],
-      exam: "These are macro measures (society, governments). Measures also exist at the meso level (organizations) and the micro level (individuals)." },
-    { id: "s-linear", title: "Systems thinking versus linear thinking",
-      line: "We tend to look for one main cause and one fix. That is reassuring and fast, but inadequate, even counterproductive, for complex challenges.",
-      points: ["The complexity comes from the variety of environmental, social and economic causes and consequences, and from their interactions.", "Systems thinking accounts for this complexity, so we can design measures, or combinations of measures, that fit.", "The causal diagram is its essential tool."] }
+    { id: "s-measures", title: "Measures, and systems versus linear thinking",
+      line: "A causal diagram helps imagine measures, and their side effects. Looking for one cause and one fix is reassuring but inadequate, even counterproductive.",
+      points: ["Subsidize air conditioners (health), but it feeds the unintended rise in CO₂. Guidance on AC use (\"cool to 26°C at most\").", "Low-emission alternatives: insulation, urban greening, solar shading. Energy vouchers (chèques énergie) against energy poverty.", "Prevent forest fires; keep decarbonizing electricity (fairly low-carbon in France, much less elsewhere).", "Complexity comes from the variety of environmental, social and economic causes and consequences and their interactions: systems thinking designs combinations of measures that fit."],
+      exam: "These are macro measures (governments). Measures also exist at meso (organizations) and micro (individuals) levels." }
   ] }
   ] },
 
 { id: "sd", n: 2, title: "Sustainable development and why it is hard", short: "Sustainable development", c: "var(--c2)",
-  intro: "Where sustainability comes from (a forest in 18th-century Saxony), the Meadows report and its simulations, the Brundtland definition, and why our societies still struggle to be sustainable.",
+  intro: "Where sustainability comes from, the Meadows report and its simulations, the Brundtland definition, and why our societies still struggle to be sustainable.",
   sections: [
-  { title: "An overused word", cards: [
-    { id: "d-overused", title: "\"Sustainable\": an overused term",
-      line: "The word is now used widely and often uncritically as a positive label for anything that looks green, which dilutes its meaning.",
-      points: ["This use hides the fact that sustainability comes from a rigorous tradition of thought.", "Feix, Gruban and de Fauconberg (2026) call actions that do not lead to their purported impact \"Type II greenwashing\", a barrier to sustainability."],
-      example: "Dropping clothes at a collection point, recyclable packaging, banning old cars in a city centre: each sounds sustainable, but the answer is \"not that simple\" once you follow the consequences." }
-  ] },
   { title: "Origins: a forest in Saxony", widget: "msy", cards: [
-    { id: "d-carlowitz", title: "Von Carlowitz and Sylvicultura oeconomica (1713)",
-      line: "The father of modern forestry and of the idea of sustainability: harvest no more wood than the forest can regrow.",
-      points: ["After the Thirty Years' War (1618–1648), logging in Saxony grew to supply the silver mines.", "Early 18th century: a timber shortage, a problem for the mining industry (prices rose) and for the population (wood was essential).", "Hans Carl von Carlowitz (1645–1714) recommended keeping logging below a threshold so timber stays available over the long term: \"sustainable yield\" (nachhaltige Nutzung)."] },
-    { id: "d-msy", title: "Maximum sustainable yield (MSY)",
-      line: "The largest quantity of a specific renewable natural resource that can be extracted from an ecosystem on a lasting basis.",
-      points: ["Beyond the MSY, the resource is overexploited: a forest above its MSY shrinks.", "MSY is a key concept in every sector that harvests living resources: forestry, hunting, fishing, aquaculture."],
-      example: "Von Carlowitz in a causal diagram: quantity of timber harvested → (−) timber available → (−) timber price → (−) profitability of the industry and (−) the population's ability to meet essential needs. But this dynamic only appears beyond the MSY threshold.",
-      trap: "MSY concerns renewable resources. For a non-renewable resource (oil, ore), there is no regrowth and no lasting yield." },
-    { id: "d-principles", title: "The three principles of sustainability-oriented thinking",
-      line: "Since Sylvicultura oeconomica, sustainability thinking rests on three ideas.",
-      points: ["A long-term perspective.", "A systems approach integrating environmental, social and economic factors.", "The existence of limits that must not be exceeded to preserve an ecosystem's capacity to regenerate."],
-      exam: "Use these three principles to judge whether a practice is truly sustainable." }
+    { id: "d-carlowitz", title: "Von Carlowitz (1713) and maximum sustainable yield",
+      line: "Hans Carl von Carlowitz (1645–1714), Sylvicultura oeconomica (1713): harvest no more wood than the forest regrows. The father of modern forestry and of sustainability.",
+      points: ["After the Thirty Years' War (1618–1648), logging for the Saxon silver mines caused a timber shortage: higher prices for the mines, hardship for the population.", "He recommended keeping logging below a threshold: \"sustainable yield\" (nachhaltige Nutzung).", "Maximum sustainable yield (MSY): the largest quantity of a renewable resource that can be extracted from an ecosystem on a lasting basis. Beyond it, overexploitation. Used in forestry, hunting, fishing, aquaculture."],
+      example: "Timber harvested → (−) timber available → (−) timber price → (−) industry profitability and (−) the population's ability to meet essential needs. This dynamic only appears beyond the MSY.",
+      trap: "MSY concerns renewable resources: a non-renewable resource (oil, ore) has no regrowth and no lasting yield." },
+    { id: "d-principles", title: "Is it really sustainable? The three principles",
+      line: "Since Sylvicultura oeconomica: a long-term perspective, a systems approach (environmental, social, economic), and limits not to exceed so an ecosystem can regenerate.",
+      points: ["\"Sustainable\" is now an overused positive label for anything that looks green, which dilutes its rigorous meaning.", "Actions that do not lead to their purported impact: \"Type II greenwashing\" (Feix, Gruban and de Fauconberg, 2026)."],
+      exam: "Use the three principles to judge whether a practice is truly sustainable." }
   ] },
   { title: "The Meadows report (1972)", widget: "popul", cards: [
-    { id: "d-meadows", title: "The Limits to Growth (the Meadows report)",
-      line: "A 1972 study commissioned by the Club of Rome and run by four MIT scientists, warning of a risk of collapse if demographic and economic growth continue unchanged.",
-      points: ["Authors: Dennis and Donella Meadows, Jørgen Randers, William Behrens.", "The first study to project global conditions with simulations built on a causal diagram.", "A major impact: millions of copies, new editions in 1992, 2004 and 2022, awareness of what we now call planetary boundaries, and the debate on whether infinite growth is possible."] },
-    { id: "d-five", title: "Five interdependent variables",
-      line: "The study evaluates the long-term global evolution of population, agricultural production, industrial production, non-renewable resources and pollution." },
-    { id: "d-carrying", title: "Carrying capacity",
-      line: "The maximum number of individuals of a species that an ecosystem can sustain over time.",
-      points: ["For the MIT team: the species is humankind, the ecosystem is the whole Earth system (the biosphere).", "A population can approach its carrying capacity smoothly, oscillate around it, or overshoot it and collapse."] },
+    { id: "d-meadows", title: "The Limits to Growth (Meadows report, 1972)",
+      line: "Commissioned by the Club of Rome, run by four MIT scientists: a risk of collapse if demographic and economic growth continue unchanged.",
+      points: ["Dennis and Donella Meadows, Jørgen Randers, William Behrens. First global projections by simulation built on a causal diagram.", "Five interdependent variables: population, agricultural production, industrial production, non-renewable resources, pollution.", "Carrying capacity: the maximum number of individuals of a species an ecosystem can sustain over time (here humankind and the whole Earth system). A population can approach it smoothly, oscillate, or overshoot and collapse.", "Millions of copies, new editions 1992, 2004, 2022; it raised awareness of what we now call planetary boundaries and the debate on infinite growth."] },
     { id: "d-poploops", title: "The two loops that drive population",
       line: "Population depends on a positive loop (births) and a negative loop (deaths).",
       formula: "Population → (+) births per year → (+) population      positive loop\nPopulation → (+) deaths per year → (−) population      negative loop",
-      points: ["If (+) >> (−): the population grows exponentially.", "If (+) ≈ (−): it stays stable.", "If (−) >> (+): it declines.", "Average fertility drives births; average mortality drives deaths."] },
-    { id: "d-method", title: "The Meadows method: diagram, parameters, simulation",
-      line: "First a causal loop diagram (World3), then parameterization with historical data, then simulations of the five variables.",
-      points: ["Parameterization sets the form of each relationship (linear or not, with or without thresholds), its strength, and causal delays (the time a cause takes to produce its effect).", "Under the \"standard\" scenario, resources fall, population and industrial output peak, then collapse in the 21st century."] },
-    { id: "d-recos", title: "The report's recommendations, and their reception",
-      line: "Stabilize the world population (births = deaths) and halt economic growth (investment = capital depreciation).",
-      points: ["Ideally with services rather than goods and more environmentally responsible agriculture.", "Criticisms: some assumptions proved wrong (non-renewable resource depletion overestimated, climate change barely anticipated); some found the recommendations too radical.", "Legacy: it opened increasingly fine modelling of human impact; its method (diagram → parameters → simulation) and premises (feedback loops, delays, carrying capacity) still guide research; its collapse scenario is still considered plausible."] }
+      points: ["(+) >> (−): exponential growth. (+) ≈ (−): stable. (−) >> (+): decline.", "Average fertility drives births; average mortality drives deaths."] },
+    { id: "d-method", title: "Meadows: method, recommendations, criticisms",
+      line: "Method: a causal loop diagram (World3), then parameterization with historical data, then simulations of the five variables.",
+      points: ["Parameters: the form of each relationship (linear or not, thresholds), its strength, and causal delays.", "\"Standard\" scenario: resources fall, population and industrial output peak, then collapse in the 21st century.", "Recommendations: stabilize population (births = deaths) and halt growth (investment = capital depreciation), favouring services and greener agriculture.", "Criticisms: resource depletion overestimated, climate change barely anticipated, recommendations too radical for some.", "Legacy: the method and premises (loops, delays, carrying capacity) still guide research; the collapse scenario is still considered plausible."] }
   ] },
   { title: "Sustainable development", widget: "venn", cards: [
     { id: "d-sd", title: "Sustainable development (Brundtland, 1987)",
       line: "\"Development that meets the needs of the present without compromising the ability of future generations to meet their own needs.\"",
-      points: ["First documented use: 1980 (World Conservation Strategy by IUCN, UNEP, WWF, FAO, UNESCO).", "Popularized in 1987 by the World Commission on Environment and Development in \"Our Common Future\", the Brundtland Report.", "A shift from Meadows: instead of ending growth, development that respects the environment and ensures intra- and intergenerational social justice."],
+      points: ["First used in 1980 (World Conservation Strategy: IUCN, UNEP, WWF, FAO, UNESCO).", "Popularized in 1987 by the World Commission on Environment and Development, \"Our Common Future\" (the Brundtland Report).", "Shift from Meadows: not ending growth, but development that respects the environment and ensures intra- and intergenerational social justice."],
       exam: "Quote the definition, then say what it changed compared with the Meadows report." },
     { id: "d-pillars", title: "The three pillars",
-      line: "Sustainable development rests on an environmental, a social and an economic pillar, drawn as three overlapping circles.",
-      points: ["Environment and social: bearable.", "Environment and economic: viable.", "Social and economic: equitable.", "All three: sustainable."],
+      line: "Environmental, social and economic pillars, drawn as three overlapping circles.",
+      points: ["Environment + social: bearable. Environment + economic: viable. Social + economic: equitable. All three: sustainable."],
       trap: "Viable is environment + economic, equitable is social + economic. Students often swap them." },
-    { id: "d-milestones", title: "How sustainable development was institutionalized",
-      line: "From the 1980s, the term entered conferences, agreements, school programmes and everyday language.",
-      points: ["1980 first use · 1987 Brundtland Report · 1988 IPCC created.", "1992 Rio conference (Agenda 21) · 1999 Global Compact speech · 2000 Millennium Development Goals.", "2002 Johannesburg summit (Rio+10) · 2005 Kyoto Protocol in force · 2006 Stern Review.", "2007 Nobel Peace Prize to the IPCC and Al Gore · 2012 Rio+20 · 2015 Paris Agreement and the SDGs (Agenda 2030)."] },
-    { id: "d-sdgs", title: "The Sustainable Development Goals (SDGs)",
-      line: "17 goals and 169 targets at the heart of the 2030 Agenda, adopted by the 193 UN member states.",
-      example: "Target 1.1: by 2030, eradicate extreme poverty, measured as living on less than $2.15 a day (now $3.00)." }
+    { id: "d-milestones", title: "From Brundtland to the SDGs",
+      line: "From the 1980s, the term entered conferences, agreements, schools and everyday language.",
+      points: ["1980 first use · 1987 Brundtland · 1988 IPCC · 1992 Rio (Agenda 21) · 1999 Global Compact · 2000 Millennium Development Goals · 2002 Johannesburg (Rio+10) · 2005 Kyoto in force · 2006 Stern Review · 2007 Nobel to the IPCC and Al Gore · 2012 Rio+20 · 2015 Paris Agreement and SDGs.", "SDGs: 17 goals and 169 targets, the 2030 Agenda, adopted by the 193 UN member states. Target 1.1: end extreme poverty (under $2.15 a day, now $3.00).", "Far off track: of 139 targets with enough data, only 15% are on track for 2030 (UN, 2026)."] }
   ] },
   { title: "Why it has not happened yet", cards: [
-    { id: "d-offtrack", title: "Far off track",
-      line: "Of the 139 SDG targets with enough data, only 15% appear on track for 2030 (UN, 2026)." },
     { id: "d-obstacles", title: "Obstacles at three levels",
       line: "Macro (states and their cooperation), meso (businesses), micro (individuals).",
-      points: ["Macro: international competition (a country with strict environmental standards becomes less attractive); weak international commitments without enforcement.", "Meso: business models that depend on sales volumes; choosing communication over action (greenwashing).", "Micro: budget and social constraints; no accessible alternative (e.g. transport)."],
-      exam: "When asked why sustainability is hard, organize your answer by level, with one example per obstacle." }
+      points: ["Macro: international competition (strict standards make a country less attractive); weak commitments without enforcement.", "Meso: business models that depend on sales volumes; communication instead of action (greenwashing).", "Micro: budget and social constraints; no accessible alternative (e.g. transport)."],
+      exam: "Organize the answer by level, with one example per obstacle." }
   ] }
   ] },
 
 { id: "ecology", n: 3, title: "Introduction to ecology", short: "Ecology", c: "var(--c5)",
-  intro: "The vocabulary of scientific ecology, the two mechanisms that explain how systems hold or break (resilience and tipping points), and the Great Acceleration that may have opened the Anthropocene.",
+  intro: "The vocabulary of scientific ecology, resilience and tipping points, and the Great Acceleration that may have opened the Anthropocene.",
   sections: [
   { title: "Basic concepts", cards: [
-    { id: "e-ecology", title: "Ecology",
-      line: "The branch of biology that studies the interactions among living beings, and between living beings and their environment.",
-      points: ["From the Greek oikos (house, habitat) and logos (science).", "Coined by the zoologist Ernst Haeckel in 1866.", "Scientific ecology (the focus of the course) is not political ecology."] },
-    { id: "e-biosphere", title: "Biosphere",
-      line: "The thin envelope around the Earth (about 20 km thick) where all life has developed: the set of all ecosystems on Earth.",
-      points: ["It includes the upper lithosphere, the hydrosphere and cryosphere, and the lower atmosphere.", "Term coined in 1875 by the geologist Eduard Suess."] },
-    { id: "e-ecosystem", title: "Ecosystem",
-      line: "Living organisms (plants, animals, bacteria) and non-living elements (air, water, rocks, weather, sunlight) that interact: a biocenosis plus its biotope.",
-      points: ["Biocenosis: living beings in reciprocal dependence, complex and balanced enough to be somewhat autonomous.", "Biotope: an area with relatively homogeneous conditions (pressure, light, rainfall, humidity, temperature, soil, relief) and enough resources for life.", "Contraction of \"ecological system\", coined in 1935 by the botanist Arthur George Tansley.", "Examples: a forest, a river, a meadow."],
-      exam: "One sentence that links them: ecology studies interactions within ecosystems (biocenosis + biotope), and the biosphere is the set of all ecosystems on Earth." },
-    { id: "e-global", title: "Global ecology and Vernadsky",
-      line: "The concept of ecosystem works at every scale, so the biosphere itself is an ecosystem. Global ecology studies its functioning at planetary scale.",
-      points: ["Vladimir Vernadsky laid its foundations in \"The Biosphere\" (1926): the father of global ecology and biogeochemistry."] },
-    { id: "e-vernadsky", title: "The Vernadskian revolution",
-      line: "Living matter is not just embedded in the non-living world: it is a geological force, comparable to natural forces.",
-      points: ["Example: the Great Oxidation Event, a change of the atmosphere caused by life.", "Biogeochemical cycles: chemical elements circulate and transform between the living (bio) and the non-living (geo).", "Some of these cycles are now strongly disrupted by humanity, which has become a major geological force."] }
+    { id: "e-ecology", title: "Ecology, ecosystem, biosphere",
+      line: "Ecology studies interactions within ecosystems (biocenosis + biotope); the biosphere is the set of all ecosystems on Earth.",
+      points: ["Ecology: the branch of biology that studies interactions among living beings and with their environment. Greek oikos (house) + logos (science); Ernst Haeckel, 1866. Scientific ecology, not political ecology.", "Ecosystem: living organisms and non-living elements (air, water, rocks, weather, sunlight) that interact. Arthur George Tansley, 1935. Examples: a forest, a river, a meadow.", "Biocenosis: the living beings in reciprocal dependence. Biotope: an area with fairly homogeneous conditions (light, rainfall, temperature, soil…) and enough resources for life.", "Biosphere: the thin envelope (~20 km) where life developed: upper lithosphere, hydrosphere and cryosphere, lower atmosphere. Eduard Suess, 1875."] },
+    { id: "e-global", title: "Global ecology: Vernadsky (1926)",
+      line: "The ecosystem concept works at every scale, so the biosphere is itself an ecosystem. Vladimir Vernadsky, \"The Biosphere\" (1926): father of global ecology and biogeochemistry.",
+      points: ["The Vernadskian revolution: living matter is a geological force, comparable to natural forces (e.g. the Great Oxidation Event).", "Biogeochemical cycles: elements circulate between the living (bio) and the non-living (geo). Humanity now strongly disrupts some of them: it has become a major geological force."] }
   ] },
   { title: "Resilience and tipping points", widget: "basin", cards: [
-    { id: "e-resilience", title: "Resilience",
-      line: "The capacity of an (eco)system to absorb a pressure or disturbance without a major change in its structure, and to return to its initial state once the disturbance has gone.",
-      points: ["It depends on feedback loops that stabilize the system's key variables (balancing loops)."] },
-    { id: "e-tipping", title: "Tipping point",
-      line: "A level of pressure beyond which the (eco)system reorganizes, often fast and non-linearly, and does not return to its initial state even if the pressure is reduced.",
-      points: ["Beyond a critical threshold, the balance between amplifying and regulating loops breaks (some loops may even disappear).", "The system shifts quickly to a new equilibrium state."],
-      trap: "A tipping point is not just \"a lot of damage\": the defining feature is that removing the pressure does not bring the system back." },
-    { id: "e-climate", title: "The climate system and its tipping elements",
-      line: "Atmosphere, hydrosphere and cryosphere, lithosphere and biosphere, and their interactions, determine the climate. It is resilient to warming, but only up to climate tipping points.",
-      points: ["Tipping elements can be ecosystems (Greenland ice sheet, Amazon rainforest) or climate phenomena (thermohaline circulation in the Atlantic, Indian summer monsoon).", "Identified by Lenton et al. (2008)."] },
-    { id: "e-cascade", title: "Tipping cascades",
-      line: "Tipping points are hard to locate precisely, and a domino effect cannot be ruled out from 1.5 to 2.0°C of warming.",
-      example: "Greenland ice sheet melts → massive freshwater inflow into the North Atlantic → slowdown of the Atlantic thermohaline circulation (Wunderling et al., 2024).",
+    { id: "e-resilience", title: "Resilience versus tipping point",
+      line: "Resilience: the capacity of an (eco)system to absorb a disturbance without a major change in structure, and to return to its initial state once it has gone.",
+      points: ["Resilience depends on balancing loops that stabilize the key variables.", "Tipping point: a level of pressure beyond which the system reorganizes, often fast and non-linearly, and does not return even if the pressure is reduced.", "Beyond the threshold, the balance between amplifying and regulating loops breaks; the system shifts to a new equilibrium."],
+      trap: "A tipping point is not just \"a lot of damage\": removing the pressure does not bring the system back." },
+    { id: "e-climate", title: "Climate tipping elements and cascades",
+      line: "The climate system (atmosphere, hydrosphere, cryosphere, lithosphere, biosphere) is resilient to warming, but only up to tipping points.",
+      points: ["Tipping elements (Lenton et al., 2008): ecosystems (Greenland ice sheet, Amazon rainforest) or phenomena (Atlantic thermohaline circulation, Indian summer monsoon).", "Cascades: thresholds are hard to locate, and a domino effect cannot be ruled out from 1.5 to 2.0°C."],
+      example: "Greenland melts → freshwater into the North Atlantic → slower thermohaline circulation (Wunderling et al., 2024).",
       exam: "The more warming, the higher the risk of several tipping events in quick succession." }
   ] },
   { title: "The Great Acceleration and the Anthropocene", widget: "accel", cards: [
     { id: "e-acceleration", title: "The Great Acceleration",
-      line: "The sharp amplification of human-driven processes causing global environmental change in the industrial age, especially since the mid-20th century.",
-      points: ["Socio-economic trends shoot up together after 1950: population, real GDP, energy use, fertilizers, water use, dams, transport, telecommunications, tourism…", "Earth system trends follow: CO₂, methane and nitrous oxide concentrations, surface temperature, ocean acidification, fish capture, tropical forest loss, domesticated land…"] },
-    { id: "e-anthropocene", title: "The Anthropocene",
-      line: "A proposed new geological epoch in which the processes and conditions of life on Earth are profoundly changed by human activities.",
-      points: ["Coined in the 1980s by the biologist Eugene Stoermer, popularized in 2000 by the chemist Paul Crutzen.", "Not formally recognized as an official stratigraphic unit by the International Commission on Stratigraphy, but widely accepted and used by climate scientists and geologists."] },
-    { id: "e-holocene", title: "The Holocene",
-      line: "The geological epoch of relative climatic stability of the last ~11,700 years, which the Anthropocene would follow.",
-      points: ["Without human disturbance it would have lasted several thousand more years.", "It allowed agriculture and great civilizations to develop: environmental stability is a key factor of human development.", "Hence the question: what level of human-driven change could take us out of a Holocene-like state? Answer: the planetary boundaries."] }
+      line: "The sharp amplification of human-driven processes causing global environmental change in the industrial age, especially since 1950.",
+      points: ["Socio-economic trends: population, real GDP, energy use, fertilizers, water use, dams, transport, telecommunications, tourism…", "Earth system trends: CO₂, methane and nitrous oxide, surface temperature, ocean acidification, fish capture, tropical forest loss, domesticated land…"] },
+    { id: "e-anthropocene", title: "Holocene and Anthropocene",
+      line: "Holocene: ~11,700 years of relative climatic stability. Anthropocene: a proposed new epoch in which human activities profoundly change the conditions of life on Earth.",
+      points: ["The Holocene allowed agriculture and civilizations: environmental stability is a key factor of human development. Undisturbed, it would have lasted thousands more years.", "Anthropocene: coined in the 1980s by Eugene Stoermer, popularized in 2000 by Paul Crutzen. Not an official stratigraphic unit, but widely used by scientists.", "Hence the question: what level of change takes us out of a Holocene-like state? The planetary boundaries."] }
   ] }
   ] },
 
 { id: "bounds", n: 4, title: "Planetary boundaries, warming and biodiversity", short: "Planetary boundaries", c: "var(--pri)",
-  intro: "The nine planetary boundaries and how many are crossed, the two core ones (global warming and biodiversity loss), and what warming means for a business, with the case of cocoa.",
+  intro: "The nine planetary boundaries and how many are crossed, the two core ones (warming and biodiversity), and what warming means for a business: cocoa.",
   sections: [
   { title: "The planetary boundaries", widget: "pb", cards: [
-    { id: "b-question", title: "Which limits keep the Earth Holocene-like?",
-      line: "Limits are inherent to ecology. The Holocene is the only state we know for sure is favourable to humanity, so which limits must we not exceed?",
-      points: ["Meadows (1972) already said we do not know the precise limits, but we know there is an upper limit.", "In 2009, a team linked to the Stockholm Resilience Centre set out to quantify them (Rockström et al., 2009)."] },
-    { id: "b-pb", title: "Planetary boundaries",
-      line: "Nine quantified boundaries linked to Earth-system processes. Below them, humanity stays in a \"safe operating space\"; the further a boundary is crossed, the higher the risk of lasting damage to living conditions.",
-      points: ["1 Biodiversity loss (biosphere integrity).", "2 Global warming (climate change).", "3 Biogeochemical cycles disrupted by fertilizers (nitrogen, phosphorus).", "4 Ocean acidification.", "5 Ozone layer depletion.", "6 Freshwater cycle.", "7 Land-use change.", "8 Aerosols in the atmosphere.", "9 Release of novel entities (e.g. plastics, chemicals)."],
-      trap: "The exact wording of the nine boundaries varies between reports. Learn the processes, not one exact phrasing." },
-    { id: "b-upstream", title: "Boundaries are set before the tipping points",
-      line: "A boundary is not the tipping point itself: it is placed upstream of it, leaving a buffer.",
-      points: ["Green zone: the safe operating space. Yellow: a zone of uncertainty with increasing risk. Red: high risk of serious impacts.", "The buffer accounts for uncertainty about where the threshold lies, and gives society time to react to early warning signs (Steffen et al., 2015)."] },
-    { id: "b-core", title: "Core boundaries",
-      line: "The boundaries are linked, so crossing one can threaten the others. Two are connected to all the others: global warming and biodiversity loss.",
-      points: ["Scientists call them \"core boundaries\" (Steffen et al., 2015)."] },
+    { id: "b-question", title: "Planetary boundaries (Rockström et al., 2009)",
+      line: "Nine quantified boundaries linked to Earth-system processes. Below them, a \"safe operating space\"; the further one is crossed, the higher the risk of lasting damage.",
+      points: ["Why: the Holocene is the only state known to suit humanity. Meadows (1972) said the precise limits are unknown but exist; the Stockholm Resilience Centre team quantified them in 2009.", "1 Biodiversity loss (biosphere integrity) · 2 Global warming · 3 Biogeochemical cycles (nitrogen, phosphorus) · 4 Ocean acidification · 5 Ozone depletion · 6 Freshwater · 7 Land-use change · 8 Aerosols · 9 Novel entities (plastics, chemicals)."],
+      trap: "The wording of the nine boundaries varies between reports: learn the processes, not one phrasing." },
+    { id: "b-upstream", title: "Buffer zone and core boundaries",
+      line: "A boundary is placed upstream of the tipping point, leaving a buffer (Steffen et al., 2015).",
+      points: ["Green: safe operating space. Yellow: uncertainty, increasing risk. Red: high risk of serious impacts.", "The buffer covers uncertainty about the threshold and gives society time to react to early warnings.", "Core boundaries: global warming and biodiversity loss, connected to all the others (Steffen et al., 2015)."] },
     { id: "b-status", title: "Seven of nine boundaries are crossed",
-      line: "2009: three crossed (biodiversity, climate, nitrogen cycle). 2015: land-use change. 2022: novel entities. 2023: freshwater. 2025: ocean acidification.",
-      points: ["Still within: ozone layer depletion and atmospheric aerosols.", "We are close to a \"high-risk line\".", "Living conditions will almost certainly change profoundly in the coming decades, but the scale depends on our pressures: \"every degree, even every tenth of a degree, counts\"."],
-      exam: "Learn the order of the crossings with their years: it is typical of the empirical facts the exam asks for." }
+      line: "2009: biodiversity, climate, nitrogen cycle. 2015: land-use change. 2022: novel entities. 2023: freshwater. 2025: ocean acidification.",
+      points: ["Still within: ozone depletion and aerosols. We are close to a \"high-risk line\".", "Living conditions will change profoundly; the scale depends on our pressures: \"every tenth of a degree counts\"."],
+      exam: "Learn the order of the crossings with their years: typical of the empirical facts the exam asks for." }
   ] },
   { title: "Global warming", cards: [
-    { id: "b-weather", title: "Weather and climate",
-      line: "Weather is the state of the atmosphere at a given moment; climate is its average state over a long period (e.g. 30 years).",
-      example: "A 5°C drop during the day is nothing. A 5°C drop in the average temperature would mean a very different world.",
-      trap: "A cold winter does not disprove global warming: one moment of weather says nothing about the climate." },
-    { id: "b-figures", title: "How much warmer",
-      line: "Over 2018–2022, the global average temperature was 1.17 ± 0.13°C above the pre-industrial era (1850–1900), and it rises about +0.26°C per decade." },
-    { id: "b-process", title: "Where warming comes from",
-      line: "Human economic activity emits GHG (fossil fuels, industry, land use) → concentrations of CO₂, methane and nitrous oxide rise → the greenhouse effect strengthens → temperatures rise.",
-      points: ["The consequences are many and depend on the extent of warming (IPCC, 6th report)."] }
+    { id: "b-weather", title: "Global warming: weather, figures, mechanism",
+      line: "Weather is the state of the atmosphere at a moment; climate is its average over a long period (e.g. 30 years).",
+      points: ["2018–2022: 1.17 ± 0.13°C above pre-industrial (1850–1900), rising about +0.26°C per decade.", "Economic activity emits GHG (fossil fuels, industry, land use) → more CO₂, methane, nitrous oxide → stronger greenhouse effect → higher temperatures. Consequences depend on the extent of warming (IPCC, 6th report)."],
+      trap: "A cold winter does not disprove warming: a 5°C drop in a day is nothing, a 5°C drop in the average would be another world." }
   ] },
   { title: "Biodiversity loss", widget: "drivers", cards: [
-    { id: "b-bio3", title: "Three types of biodiversity",
-      line: "Genetic diversity (genes within a species), species diversity, and ecosystem diversity (living environments). All three are falling because of human activity." },
-    { id: "b-sixth", title: "A sixth mass extinction",
-      line: "The global extinction rate is at least tens to hundreds of times higher than the average of the last 10 million years, and it is accelerating.",
-      points: ["Consequences: less resilient ecosystems, disrupted pollination, fewer food resources, spread of diseases."] },
+    { id: "b-bio3", title: "Biodiversity: three types, a sixth extinction",
+      line: "Genetic, species and ecosystem diversity are all falling because of human activity.",
+      points: ["Extinction rate at least tens to hundreds of times the average of the last 10 million years, and accelerating: a sixth mass extinction.", "Consequences: less resilient ecosystems, disrupted pollination, fewer food resources, spread of diseases."] },
     { id: "b-drivers", title: "The five direct drivers (IPBES)",
       line: "Land- and sea-use change, direct exploitation of organisms, climate change, pollution, invasive alien species.",
-      points: ["Behind them, indirect drivers: demographic and sociocultural, economic and technological, institutions and governance, conflicts and epidemics.", "IPBES examples of decline: natural ecosystems down 47% on average; about 25% of species threatened with extinction; wild mammal biomass down 82%."] }
+      points: ["Indirect drivers behind them: demographic and sociocultural, economic and technological, institutions and governance, conflicts and epidemics.", "IPBES: natural ecosystems down 47% on average; about 25% of species threatened; wild mammal biomass down 82%."] }
   ] },
   { title: "Warming and business: cocoa", widget: "cocoa", cards: [
-    { id: "b-cocoa", title: "How warming hits the chocolate industry",
+    { id: "b-cocoa", title: "Cocoa and Lindt & Sprüngli",
       line: "About 60% of the world's cocoa comes from Côte d'Ivoire and Ghana, where extreme weather spreads diseases and cuts harvests.",
-      formula: "Global average temperature → (+) extreme weather (torrential rains, droughts) → (+) viral diseases and fungi → (−) cocoa production → (−) cocoa price → (+) chocolate price → (−) chocolate consumption",
-      points: ["Age of cocoa trees → (−) cocoa production.", "Global average temperature → (+) summer temperatures in chocolate-consuming countries → (−) chocolate consumption."] },
-    { id: "b-lindt", title: "What a company can do: Lindt & Sprüngli",
-      line: "\"Climate change is a strategic risk that requires action across our business\" (Climate Transition Plan, 2025).",
-      points: ["Reduce the company's carbon footprint.", "Hedge, where possible, against sudden rises in cocoa purchase prices.", "Develop agroforestry.", "Innovate in products."],
+      formula: "Global average temperature → (+) extreme weather → (+) viral diseases and fungi → (−) cocoa production → (−) cocoa price → (+) chocolate price → (−) chocolate consumption",
+      points: ["Age of cocoa trees → (−) cocoa production. Temperature → (+) summer heat in consuming countries → (−) chocolate consumption.", "Lindt: \"Climate change is a strategic risk that requires action across our business\" (Climate Transition Plan, 2025). Cut its carbon footprint, hedge against cocoa price spikes, agroforestry, product innovation."],
       exam: "For any company, split measures into mitigation (cut its own emissions) and adaptation (protect supply, prices, products)." }
   ] }
   ] },
 
 { id: "social", n: 5, title: "The Doughnut, poverty and inequality", short: "Social challenges", c: "var(--c3)",
-  intro: "The Doughnut adds a social floor to the planetary boundaries. Then the two social challenges of the course: poverty, absolute and relative, and inequality, with the ways they are measured.",
+  intro: "The Doughnut adds a social floor to the planetary boundaries. Then poverty, absolute and relative, and inequality, with the ways they are measured.",
   sections: [
   { title: "The Doughnut model", widget: "doughnut", cards: [
     { id: "o-doughnut", title: "The Doughnut (Kate Raworth, 2012)",
-      line: "A framework that combines the planetary boundaries with social justice: an ecological ceiling not to exceed, and a social foundation not to fall below.",
-      points: ["Between the two lies the ring-shaped \"safe and just space for humanity\".", "The social foundation had 11, then 12 dimensions, inspired by the social priorities of Rio+20.", "Published as an Oxfam paper: \"A safe and just space for humanity: can we live within the doughnut?\""] },
-    { id: "o-dims", title: "The two boundaries of the Doughnut",
-      line: "Social foundation (12): food, health, education, income and work, peace and justice, political voice, social equity, gender equality, housing, networks, energy, water.",
-      points: ["Ecological ceiling (9): climate change, ocean acidification, chemical pollution, nitrogen and phosphorus loading, freshwater withdrawals, land conversion, biodiversity loss, air pollution, ozone layer depletion.", "Inside the ring: shortfall (below the foundation). Outside: overshoot (beyond the ceiling)."] },
+      line: "Planetary boundaries plus social justice: an ecological ceiling not to exceed and a social foundation not to fall below. Between them, the \"safe and just space for humanity\".",
+      points: ["Oxfam paper: \"A safe and just space for humanity: can we live within the doughnut?\"", "Social foundation (11, then 12, from Rio+20 priorities): food, health, education, income and work, peace and justice, political voice, social equity, gender equality, housing, networks, energy, water.", "Ecological ceiling (9): climate change, ocean acidification, chemical pollution, nitrogen and phosphorus loading, freshwater withdrawals, land conversion, biodiversity loss, air pollution, ozone depletion.", "Below the foundation: shortfall. Beyond the ceiling: overshoot."] },
     { id: "o-2025", title: "The Doughnut in 2025 (Doughnut 3.0)",
-      line: "Seven of nine planetary boundaries crossed, and shortfalls, sometimes large, on every dimension of the social foundation. Progress exists but is \"modest\".",
-      points: ["No country operates within the safe and just space.", "The richest 20% of countries (15% of the world population) cause over 40% of ecological overshoot.", "The poorest 40% of countries (42% of the population) bear over 60% of social shortfalls (Fanning and Raworth, 2025)."],
+      line: "Seven of nine boundaries crossed, and shortfalls on every social dimension. Progress is \"modest\".",
+      points: ["No country operates within the safe and just space.", "The richest 20% of countries (15% of people) cause over 40% of overshoot; the poorest 40% (42% of people) bear over 60% of shortfalls (Fanning and Raworth, 2025)."],
       exam: "Use these figures against the claim \"our economy has at least solved the main social problems\"." }
   ] },
   { title: "Poverty", widget: "living", cards: [
-    { id: "o-poverty", title: "Poverty",
-      line: "A state of deprivation in which a person lacks the resources needed to live adequately.",
-      points: ["The two most common definitions: absolute monetary poverty (the World Bank's extreme poverty) and relative monetary poverty (France, EU).", "Others exist: multidimensional poverty (Amartya Sen), poverty as dependence on assistance (Georg Simmel), and indicators such as poverty intensity."] },
-    { id: "o-absolute", title: "Absolute monetary poverty: extreme poverty",
-      line: "Living on less than the international poverty line of US$3.00 a day in PPP terms (raised in May 2024 from $2.15): the estimated income needed for vital goods.",
-      points: ["Two more thresholds: $4.20 and $8.30 a day.", "2025: 10.1% of the world, about 831 million people.", "Since 1950 it has fallen sharply almost everywhere, but it stays very high in Sub-Saharan Africa (about 44%)."],
-      trap: "Absolute poverty ignores context: the same $3.00 line applies everywhere, whatever the cost of a decent life in that society." },
-    { id: "o-relative", title: "Relative monetary poverty",
-      line: "A person is poor if their standard of living is below the country's poverty line, usually 60% of the median standard of living.",
-      points: ["It measures the inability to buy the goods needed for a normal life in that context.", "Used by Eurostat and most European countries.", "France, 2024: poverty line €1,337 a month; poverty rate 15.4%."],
-      example: "Absolute = vital goods, regardless of context. Relative = essential goods for a decent life in a given society." },
+    { id: "o-poverty", title: "Poverty and absolute poverty",
+      line: "Poverty: lacking the resources needed to live adequately. Absolute monetary poverty (extreme poverty): under US$3.00 a day in PPP (since May 2024, from $2.15).",
+      points: ["Other thresholds: $4.20 and $8.30 a day. 2025: 10.1% of the world, about 831 million people; sharply down since 1950, still about 44% in Sub-Saharan Africa.", "Other definitions: multidimensional poverty (Amartya Sen), dependence on assistance (Georg Simmel), poverty intensity."],
+      trap: "Absolute poverty ignores context: the same line everywhere, whatever a decent life costs there." },
+    { id: "o-relative", title: "Relative poverty and the poverty line",
+      line: "Poor if your standard of living is below 60% of the country's median: unable to buy what a normal life requires in that society (Eurostat, most of Europe).",
+      points: ["France, 2024: median €2,228 a month, line €1,337, poverty rate 15.4%. Lower than in the early 1970s; fell sharply, then stabilized (Insee method changed in 1996).", "Most affected: single-parent families; least: older people and homeowners (Insee, Centre-Val de Loire, 2021, same in rural and urban areas)."],
+      example: "Absolute = vital goods, whatever the context. Relative = essential goods for a decent life in a given society." },
     { id: "o-living", title: "Standard of living and consumption units",
-      line: "Standard of living = household disposable income ÷ number of consumption units (CU). Everyone in the household has the same standard of living.",
+      line: "Standard of living = household disposable income ÷ consumption units (CU). Everyone in the household has the same.",
       formula: "Disposable income = income − mandatory payments (income tax, CSG, CRDS…)\nCU: 1 for the first adult, 0.5 per other person aged 14+, 0.3 per child under 14\nStandard of living = disposable income ÷ CU",
-      points: ["Income counts earnings, asset income (interest, dividends, rents), pensions and unemployment benefits, and social benefits."],
-      example: "2 adults and a 9-year-old: €3,000 − €300 = €2,700; CU = 1 + 0.5 + 0.3 = 1.8; standard of living = €1,500 a month, above the €1,337 line." },
-    { id: "o-line", title: "The poverty line",
-      line: "60% of the median standard of living: the level that splits the population in two halves.",
-      points: ["France: median €2,228 a month, so the line is about €1,337.", "Poverty in France is lower than in the early 1970s; it fell sharply in the 1970s, then stabilized (Insee changed its method in 1996)."] },
-    { id: "o-drivers", title: "Who is poor? Drivers of poverty",
-      line: "In Centre-Val de Loire (Insee, 2021), the drivers are largely the same in rural and urban areas.",
-      points: ["Single-parent families are the most affected.", "The chart compares household types: single-parent families, people living alone, tenants and owners, large households, young and old households.", "Older people and homeowners are less affected."] }
+      points: ["Income: earnings, asset income (interest, dividends, rents), pensions, unemployment and social benefits."],
+      example: "2 adults and a 9-year-old: €3,000 − €300 = €2,700; CU = 1.8; standard of living €1,500, above the €1,337 line." }
   ] },
   { title: "Inequality", widget: "lorenz", cards: [
-    { id: "o-ineq", title: "Poverty is not inequality",
-      line: "Poverty is about the situation of the people at the bottom. Inequality is about the gaps across the whole distribution.",
-      example: "Everyone can get richer while inequality rises; poverty can fall while the top captures most of the growth." },
-    { id: "o-palma", title: "Palma index",
-      line: "The income of the richest 10% divided by the income of the poorest 40%.",
-      formula: "Palma = income share of the top decile ÷ income share of the bottom 40%",
-      example: "France 1.08 (2019); United States 1.63 (2021)." },
-    { id: "o-gini", title: "Gini coefficient",
-      line: "From 0 (perfect equality) to 1 (perfect inequality).",
-      points: ["It measures how far the Lorenz curve (cumulative share of income held by the cumulative share of people) is from the line of perfect equality."],
-      example: "France 0.292 (2019); United States 0.375 (2021)." },
+    { id: "o-ineq", title: "Inequality and its measures",
+      line: "Poverty is about the bottom; inequality is about gaps across the whole distribution. Everyone can get richer while inequality rises.",
+      formula: "Palma = income share of the top 10% ÷ income share of the bottom 40%\nGini: 0 = perfect equality, 1 = perfect inequality",
+      points: ["Palma: France 1.08 (2019), United States 1.63 (2021).", "Gini: how far the Lorenz curve (cumulative income share by cumulative share of people) is from equality. France 0.292 (2019), United States 0.375 (2021)."] },
     { id: "o-paygap", title: "Gaps between groups: the gender pay gap",
-      line: "In France's private sector (2022), women earn 24% less across all working hours, 15% less for the same working hours, and 4% less for comparable hours and jobs.",
-      exam: "Read the three figures as a decomposition: working time explains part of the gap, differences in jobs another part, and about 4% remains at equal hours and jobs." },
-    { id: "o-trend", title: "Inequality since 1980",
-      line: "The income share of the top 10% has risen in most major regions since 1980.",
-      points: ["Around 2018: India about 55%, United States and Russia about 46–48%, China about 41%, Europe about 34% (the lowest)."] },
-    { id: "o-why", title: "Why care about inequality, not only poverty?",
-      line: "Across rich countries, more unequal societies have worse health and social problems.",
-      points: ["The index combines life expectancy, numeracy and literacy, infant mortality, homicides, imprisonment, teenage births, trust, obesity, mental health and addiction, and social mobility.", "The USA and Portugal are at the unequal, worse end; Japan and the Nordic countries at the equal, better end."],
-      trap: "This is a correlation across countries. It corroborates a link, it does not prove that inequality causes every problem." }
+      line: "France's private sector (2022): women earn 24% less across all hours, 15% less at equal hours, 4% less at equal hours and comparable jobs.",
+      exam: "A decomposition: working time explains part, job differences another part, about 4% remains at equal hours and jobs." },
+    { id: "o-why", title: "Inequality since 1980, and why it matters",
+      line: "The top 10% income share has risen in most regions since 1980. Across rich countries, more unequal societies have worse health and social problems.",
+      points: ["Around 2018: India ~55%, United States and Russia ~46–48%, China ~41%, Europe ~34% (lowest).", "Index: life expectancy, literacy, infant mortality, homicides, imprisonment, teenage births, trust, obesity, mental health, social mobility. USA and Portugal worst; Japan and the Nordics best."],
+      trap: "A correlation across countries: it corroborates a link, it does not prove inequality causes every problem." }
   ] }
   ] },
 
 { id: "economy", n: 6, title: "Our economic model", short: "Economic model", c: "var(--c1)",
-  intro: "The third pillar: what an economy, a market, capitalism and a market economy are, why growth divides sustainability thinkers, and four scenarios for France in 2050.",
+  intro: "What an economy, a market, capitalism and a market economy are, why growth divides sustainability thinkers, and four scenarios for France in 2050.",
   sections: [
   { title: "Four words not to confuse", widget: "words", cards: [
     { id: "c-economy", title: "Economy",
-      line: "From the Greek oikos (house, property) and nomos (law, rule): household management. All human activities that produce, store and distribute goods and services.",
-      points: ["Several economic models exist: traditional economy, feudal economy, capitalism… Capitalism is one model among others.", "By extension, \"economics\" studies how economies work (e.g. the law of supply and demand), with several schools of thought."] },
-    { id: "c-market", title: "Market",
-      line: "A place, physical or virtual, where actors exchange goods, capital or labour for money.",
-      points: ["Different from the abstract \"Market\" (capital M): the idea that prices and quantities emerge from competitive supply and demand, the Market as an institution (Gomez, 2022).", "Market exchanges are older than capitalism.", "They are one way among others to obtain goods: production for one's own use, or the gift economy (give, receive, return)."] },
+      line: "Greek oikos (house) + nomos (rule): household management. All activities that produce, store and distribute goods and services.",
+      points: ["Several models exist (traditional, feudal, capitalism…): capitalism is one among others.", "\"Economics\" studies how economies work, with several schools of thought."] },
+    { id: "c-market", title: "Market, market economy, planned and mixed economies",
+      line: "A market: a place, physical or virtual, where actors exchange goods, capital or labour for money.",
+      points: ["The abstract \"Market\": prices and quantities emerge from competitive supply and demand, the Market as an institution (Gomez, 2022).", "Market exchange is older than capitalism, and one way among others to get goods (own production, gift economy: give, receive, return).", "Market economy: supply and prices set by free market forces, not the state. Planned economy: the state decides output and prices. Mixed: both."] },
     { id: "c-capitalism", title: "Capitalism",
-      line: "An economic system in which market exchanges coexist with the possibility of investing money in the hope of making more money (Fulcher, 2015).",
-      points: ["Merchant capitalism from the 17th century: the English East India Company, joint-stock companies, stock exchanges.", "Industrial capitalism from the early 19th century, with cotton mills in England: a bourgeoisie owning the means of production, and a proletariat.", "Its rise goes with economic growth, measured by GDP. Some argue growth is inherent to it: a \"growth imperative\"."],
-      trap: "Markets alone are not capitalism: the defining addition is investing money to make more money." },
-    { id: "c-marketeco", title: "Market, mixed and planned economies",
-      line: "In a market economy, the supply of goods and their prices are set by free market forces, not by the state.",
-      points: ["Planned economy: the state decides what to produce, plans volumes and sets prices.", "Mixed economy: elements of both."] }
+      line: "Market exchanges plus the possibility of investing money in the hope of making more money (Fulcher, 2015).",
+      points: ["Merchant capitalism (17th century): English East India Company, joint-stock companies, stock exchanges.", "Industrial capitalism (early 19th century, English cotton mills): a bourgeoisie owning the means of production, and a proletariat.", "Its rise goes with GDP growth; some see a \"growth imperative\" inherent to it."],
+      trap: "Markets alone are not capitalism: the defining addition is investing money to make more money." }
   ] },
   { title: "The growth debate", widget: "growth", cards: [
-    { id: "c-gdp", title: "Growth and its pressure",
-      line: "World GDP was almost flat for 2,000 years, then exploded, above all after 1950.",
-      points: ["This growth went with the Great Acceleration: seven of nine boundaries crossed, while shortfalls remain on all social dimensions of the Doughnut.", "Some actors must already adapt (the chocolate industry), governments reform (decarbonizing energy), but changes must scale up a lot."] },
-    { id: "c-meadowsvbrund", title: "Meadows versus Brundtland on growth",
-      line: "Meadows (1972) proposed a non-growing state of constant population and capital, called \"equilibrium\". Brundtland (1987) called for a new era of growth, socially and environmentally sustainable, seen as essential to relieve poverty." },
+    { id: "c-gdp", title: "Growth: the pressure, and Meadows versus Brundtland",
+      line: "World GDP was almost flat for 2,000 years, then exploded, above all after 1950, with the Great Acceleration.",
+      points: ["Result: seven of nine boundaries crossed, shortfalls on every social dimension. Some actors adapt (chocolate), governments reform (energy), but change must scale up.", "Meadows (1972): a non-growing \"equilibrium\" of constant population and capital. Brundtland (1987): a new era of sustainable growth, seen as essential against poverty."] },
     { id: "c-four", title: "Four positions on growth",
       line: "Brown growth, green growth, selective growth, degrowth.",
-      points: ["Brown growth: growth continues as now, on fossil fuels and a linear economy. Foundations: climate scepticism, economic libertarianism, techno-solutionism (\"Drill, baby, drill\").", "Green growth: growth decoupled from environmental pressure enough to stay within the boundaries. Techno-optimism, economic liberalism, weak sustainability (OECD, 2011).", "Selective growth: growth differentiated by countries' wealth and by sectors. Techno-scepticism, reformist environmentalism, strong sustainability (Jackson, 2009).", "Degrowth: abandon growth as a primary goal, or deliberately reduce production and consumption where needed. Techno-criticism, anti-capitalism, strong sustainability (Latouche, 2024)."],
-      exam: "Weak sustainability assumes natural capital can be replaced by produced capital; strong sustainability holds that critical natural capital cannot be replaced. (These two terms are named on the slides; this gloss is ours.)" }
+      points: ["Brown: growth as now, fossil fuels, linear economy. Climate scepticism, economic libertarianism, techno-solutionism (\"Drill, baby, drill\").", "Green: growth decoupled from environmental pressure enough to stay within boundaries. Techno-optimism, economic liberalism, weak sustainability (OECD, 2011).", "Selective: growth differentiated by countries' wealth and by sectors. Techno-scepticism, reformist environmentalism, strong sustainability (Jackson, 2009).", "Degrowth: drop growth as a primary goal, or deliberately cut production and consumption where needed. Techno-criticism, anti-capitalism, strong sustainability (Latouche, 2024)."],
+      exam: "Weak sustainability: natural capital can be replaced by produced capital; strong: critical natural capital cannot. (Terms on the slides; this gloss is ours.)" }
   ] },
   { title: "Four scenarios for 2050 (ADEME)", widget: "ademe", cards: [
     { id: "c-ademe", title: "ADEME's Transition(s) 2050",
-      line: "The French Agency for Ecological Transition built four contrasting paths to carbon neutrality, from sobriety to technology.",
-      points: ["S1 Frugal generation: frugality chosen but also imposed, local, low-tech, meat ÷3, mobility −⅓, little international cooperation, new prosperity indicators.", "S2 Regional cooperation: sharing economy, fairness, meat halved, managed mobility (−17%), environmental taxation, qualitative growth.", "S3 Green technologies: new technologies rather than less consumption, meat −30%, demolition and rebuilding, data centres ×10, targeted carbon tax, green growth.", "S4 Restoration gamble: mass consumption kept, nature a resource, bet on repairing damage (carbon capture and storage), mobility +28%, carbon-based growth."],
-      exam: "One way to use them in an answer (our reading, not the slides'): S1 is closest to degrowth, S2 to selective growth, S3 to green growth, and S4 bets on technology to keep a carbon-based growth." },
-    { id: "c-friction", title: "Changing behaviours",
-      line: "Even a good scenario needs people to change behaviour: find the barriers (cost, habits, no alternative) and reduce the friction (infrastructure, price signals, rules, norms)." }
+      line: "Four contrasting paths to carbon neutrality for France, from sobriety to technology.",
+      points: ["S1 Frugal generation: frugality chosen and imposed, local, low-tech, meat ÷3, mobility −⅓, little international cooperation, new prosperity indicators.", "S2 Regional cooperation: sharing economy, fairness, meat halved, mobility −17%, environmental taxation, qualitative growth.", "S3 Green technologies: technology rather than less consumption, meat −30%, demolish and rebuild, data centres ×10, targeted carbon tax, green growth.", "S4 Restoration gamble: mass consumption kept, nature a resource, bet on repair (carbon capture and storage), mobility +28%, carbon-based growth.", "Any scenario needs behaviour change: find the barriers (cost, habits, no alternative), reduce the friction (infrastructure, prices, rules, norms)."],
+      exam: "Our reading, not the slides': S1 is closest to degrowth, S2 to selective growth, S3 to green growth, S4 bets on technology to keep carbon-based growth." }
   ] }
   ] },
 
 { id: "method", n: 7, title: "Building a cause tree (tutorial)", short: "Cause tree", c: "var(--c4)",
-  intro: "The graded group exercise: explain a social fact (the gender pay gap) with a causal diagram, present it clearly, then corroborate or refute each link with reliable sources.",
+  intro: "The graded group exercise: explain the gender pay gap with a causal diagram, present it clearly, then corroborate or refute each link with reliable sources.",
   sections: [
   { title: "The gender pay gap", cards: [
     { id: "m-facts", title: "The facts",
       line: "Insee (2026): in 2024, women's average net wage income in the private sector was 21.8% lower than men's.",
-      points: ["It is a gap between two averages: it does not mean every woman earns less than every man.", "It only covers people in employment. The gender overall earnings gap (GOEG), which includes those without a job, is higher: about 29.6% in France in 2023, over 40% in some countries."] },
+      points: ["A gap between two averages: not every woman earns less than every man.", "It covers only people in employment. The gender overall earnings gap (GOEG), including those without a job, is higher: about 29.6% in France in 2023, over 40% in some countries."] },
     { id: "m-tree", title: "Cause tree",
-      line: "A causal diagram that explains a social phenomenon or an empirical observation: it maps the causes, not the consequences.",
-      points: ["Start from the phenomenon (on the right) and go back to the variables that influence it directly, then indirectly.", "Each arrow carries a sign; each variable is a quantity that can rise or fall."] },
-    { id: "m-steps", title: "The three steps of the assignment",
-      line: "Build (20 min), present (45 min), test with evidence (20 min).",
-      points: ["Build: think alone (~5 min), share ideas (~5 min), turn them into a causal diagram (~10 min).", "Present: ~5 minutes per group, then questions.", "Evidence: revise, then corroborate or refute the hypotheses; share one finding and one uncertainty with the class."] }
+      line: "A causal diagram that explains a social phenomenon or an observation: it maps the causes, not the consequences.",
+      points: ["Start from the phenomenon (on the right), go back to its direct, then indirect causes.", "Each arrow carries a sign; each variable is a quantity that can rise or fall."] },
+    { id: "m-steps", title: "The assignment, and presenting well",
+      line: "Build (20 min: alone ~5, share ~5, diagram ~10), present (45 min, ~5 per group), test with evidence (20 min).",
+      points: ["Evidence step: corroborate or refute the hypotheses; share one finding and one uncertainty.", "Presenting: overview first (\"the gap depends on four mechanisms…\"), understandable without the visual, say why each link is plausible, refer to other groups, answer briefly."] }
   ] },
   { title: "An example: homicides in the United States", widget: "homicide", cards: [
     { id: "m-homicide", title: "Explaining the US homicide rate",
-      line: "In 2021 the US homicide rate was 6.8 per 100,000, six times France's. The illustrative cause tree maps direct and indirect causes.",
-      points: ["Unemployment → (+) poverty; share of low-paid jobs → (+) poverty; development of the welfare system → (−) poverty.", "Poverty → (+) organised crime, (+) drug addiction, (+) homicides directly.", "Drug addiction → (+) organised crime and (+) homicides; organised crime → (+) homicides.", "Permissiveness of gun legislation → (+) gun ownership → (+) homicides."] }
-  ] },
-  { title: "Presenting it well", cards: [
-    { id: "m-present", title: "What makes a good presentation",
-      line: "Summarize first, stay understandable without the visual, explain each link, refer to other groups, answer briefly.",
-      points: ["Overview first: \"we think the gap depends on four main mechanisms…\".", "Independence from the visual: people at the back cannot read your sheet.", "For each link, say why it is plausible: naming the link is not enough.", "Refer to other presentations: \"like groups 2 and 4, but our reasoning differs…\".", "Answer questions clearly and concisely."] }
+      line: "2021: 6.8 homicides per 100,000 in the US, six times France's. The illustrative cause tree maps direct and indirect causes.",
+      points: ["Unemployment → (+) poverty; share of low-paid jobs → (+) poverty; welfare system → (−) poverty.", "Poverty → (+) organised crime, (+) drug addiction, (+) homicides.", "Drug addiction → (+) organised crime and (+) homicides; organised crime → (+) homicides.", "Permissive gun legislation → (+) gun ownership → (+) homicides."] }
   ] },
   { title: "Corroborate or refute", cards: [
-    { id: "m-corroborate", title: "Corroborating a causal link",
-      line: "A causal link is rarely proved with certainty, but evidence can make it more or less plausible: corroborate (support) or refute it.",
-      example: "Studies on the disinhibiting effects of some drugs, or a correlation between drug use and crime (Martel-Perron; Poullot et al., 2008), do not prove drug addiction causes homicides, but they corroborate it.",
-      points: ["Mark each link: corroborated, refuted, or uncertain."] },
-    { id: "m-sources", title: "Reliable sources",
-      line: "Evidence must be credible: trace each piece of information back to its primary source and check that source.",
-      points: ["Reliable: statistics and polling institutes (Insee, ONS, Gallup), academic articles (Google Scholar), books by recognized authors or publishers, established media (The New York Times, The Guardian, Le Monde), government websites (.gov, .gouv.fr).", "Unreliable: social media posts, personal blogs, conspiracy websites or channels, pseudoscientific books and magazines."] }
+    { id: "m-corroborate", title: "Corroborate with reliable sources",
+      line: "A causal link is rarely proved, but evidence makes it more or less plausible: corroborate or refute it, and mark each link corroborated, refuted or uncertain.",
+      points: ["Trace each piece of information back to its primary source and check it.", "Reliable: statistics and polling institutes (Insee, ONS, Gallup), academic articles (Google Scholar), recognized books and publishers, established media (NYT, The Guardian, Le Monde), government sites (.gov, .gouv.fr).", "Unreliable: social media posts, personal blogs, conspiracy sites, pseudoscientific books and magazines."],
+      example: "Studies on disinhibiting drugs, or a drug–crime correlation (Martel-Perron; Poullot et al., 2008), do not prove addiction causes homicides, but corroborate it." }
   ] }
   ] }
 ];
+/* cards merged on Oct 24: a merged card counts as known if every card it replaced was known */
+const LEARN_MERGED = {
+  "s-course": ["s-course", "s-exam"], "s-heattrend": ["s-heattrend", "s-warming"], "s-system": ["s-system", "s-cld"],
+  "s-feedback": ["s-feedback", "s-reinforce", "s-balance"], "s-measures": ["s-measures", "s-linear"],
+  "d-carlowitz": ["d-carlowitz", "d-msy"], "d-principles": ["d-principles", "d-overused"], "d-meadows": ["d-meadows", "d-five", "d-carrying"],
+  "d-method": ["d-method", "d-recos"], "d-milestones": ["d-milestones", "d-sdgs", "d-offtrack"],
+  "e-ecology": ["e-ecology", "e-biosphere", "e-ecosystem"], "e-global": ["e-global", "e-vernadsky"], "e-resilience": ["e-resilience", "e-tipping"],
+  "e-climate": ["e-climate", "e-cascade"], "e-anthropocene": ["e-anthropocene", "e-holocene"],
+  "b-question": ["b-question", "b-pb"], "b-upstream": ["b-upstream", "b-core"], "b-weather": ["b-weather", "b-figures", "b-process"],
+  "b-bio3": ["b-bio3", "b-sixth"], "b-cocoa": ["b-cocoa", "b-lindt"],
+  "o-doughnut": ["o-doughnut", "o-dims"], "o-poverty": ["o-poverty", "o-absolute"], "o-relative": ["o-relative", "o-line", "o-drivers"],
+  "o-ineq": ["o-ineq", "o-palma", "o-gini"], "o-why": ["o-trend", "o-why"],
+  "c-market": ["c-market", "c-marketeco"], "c-gdp": ["c-gdp", "c-meadowsvbrund"], "c-ademe": ["c-ademe", "c-friction"],
+  "m-steps": ["m-steps", "m-present"], "m-corroborate": ["m-corroborate", "m-sources"]
+};
 
 /* Exam-style multiple choice. The right answer is o[0] in the data; options are shuffled on screen. */
 const QUIZ = [
@@ -2843,7 +2759,7 @@ function viewLearn(){
   <section class="sec"><div class="sec-h"><h2>A good order to revise</h2></div>
     <ol class="steps">
       <li><b>Read a session</b><span>Card by card, and play with each model. Tick what you could explain to a friend.</span></li>
-      <li><b>Test it</b><span>Run the session quiz and read every explanation, even when you are right.</span></li>
+      <li><b>Test it</b><span>In Practice, run the session's questions and read every explanation, even when you are right.</span></li>
       <li><b>Draw the diagram</b><span>In the Causal studio, draw the session's diagram and get each link checked.</span></li>
       <li><b>Explain one notion</b><span>Write it as in the exam, then compare with the model answer and tick the key points.</span></li>
     </ol></section>
@@ -2873,12 +2789,12 @@ function viewChapter(id){
       <div class="toc-h"><span class="chn">${String(c.n).padStart(2, "0")}</span><b>${c.title}</b></div>
       <div class="mprog sm"><div class="mbar"><i data-chbar style="width:${s.known / s.total * 100}%"></i></div><span data-chcount>${s.known}/${s.total} known</span></div>
       <nav class="toc-l">${c.sections.map((sec, i) => `<button type="button" data-sec="${i}"><span>${sec.title}</span><em data-seccount="${i}"></em></button>`).join("")}</nav>
-      <div class="toc-act"><a class="btn primary small" href="#quiz-${c.id}">Quiz this session</a><a class="btn glassy small" href="#cards-${c.id}">Flashcards</a><a class="btn glassy small" href="#recap">Recap</a></div>
+      <div class="toc-act"><a class="btn primary small" href="#practice-${c.id}">Practise this session</a><a class="btn glassy small" href="#practice-cards-${c.id}">Flashcards</a><a class="btn glassy small" href="#recap">Recap</a></div>
     </aside>
     <div class="chbody">
       ${mhead(`Session ${c.n}`, c.title, c.intro)}
       ${c.sections.map((sec, i) => `<section class="nsec" data-seci="${i}"><h2>${sec.title}</h2>${[].concat(sec.widget || []).map(w => `<div class="widget" data-widget="${w}"></div>`).join("")}${sec.cards.map(k => noteCard(k, known[k.id])).join("")}</section>`).join("")}
-      <nav class="chnext">${prev ? `<a class="btn glassy" href="#learn-${prev.id}">${ICO.back}${prev.title}</a>` : "<span></span>"}<a class="btn primary" href="#quiz-${c.id}">Test this session</a>${next ? `<a class="btn glassy" href="#learn-${next.id}">${next.title}${ICO.arrow}</a>` : "<span></span>"}</nav>
+      <nav class="chnext">${prev ? `<a class="btn glassy" href="#learn-${prev.id}">${ICO.back}${prev.title}</a>` : "<span></span>"}<a class="btn primary" href="#practice-${c.id}">Test this session</a>${next ? `<a class="btn glassy" href="#learn-${next.id}">${next.title}${ICO.arrow}</a>` : "<span></span>"}</nav>
     </div>
   </div>` });
   const counts = () => {
@@ -3869,20 +3785,178 @@ function mountSystem(hero, o = {}){
   return () => { dead = true; cancelAnimationFrame(raf); io.disconnect(); document.removeEventListener("visibilitychange", onVis); removeEventListener("resize", onResize); removeEventListener("nexus-theme", onTheme); host.removeEventListener("pointermove", onMove); };
 }
 
+/* =====================================================================
+   PRACTICE: one module with three tabs (Questions, Flashcards, Exam questions).
+   Questions merges the multiple-choice quiz (QUIZ, right answer at o[a] in the data)
+   and the classification items (SPOT, the right option is the item's category;
+   wrong options come from the same family). Three ways to play: a scored quiz, a streak, a 60 s sprint.
+   ===================================================================== */
+function spotItem(it){
+  const [fam, text, right, why] = it, F = FAMILIES[fam];
+  let opts = F.opts.slice();
+  if (opts.length > 4){ const others = shuffle(opts.filter(o => o !== right)).slice(0, 3); opts = shuffle([right, ...others]); }
+  else if (opts.length > 2) opts = shuffle(opts);
+  return { fam, ch: F.ch, q: F.q, text, opts, right: opts.indexOf(right), why, label: right };
+}
+const prPool = sel => [...QUIZ.filter(q => sel.has(q.ch)).map(d => ({ quiz: d })), ...SPOT.filter(it => sel.has(FAMILIES[it[0]].ch)).map(d => ({ sort: d }))];
+function prBuild(x){
+  if (x.quiz){ const q = x.quiz, order = shuffle(q.o.map((_, j) => j)); return { ch: q.ch, prompt: "", text: q.q, opts: order.map(j => q.o[j]), right: order.indexOf(q.a), why: q.why, label: q.o[q.a] }; }
+  const s = spotItem(x.sort); return { ch: s.ch, prompt: s.q, text: s.text, opts: s.opts, right: s.right, why: s.why, label: s.label, scene: true };
+}
+const PR_MODES = [["quiz", "Quiz", "A set of questions, your score at the end, your mistakes to retry."], ["streak", "Streak", "Questions without end: how long can you go without a mistake?"], ["sprint", "Sprint 60 s", "As many right answers as you can in one minute."]];
+function viewQuestions(pre){
+  const sel = new Set(pre && CH[pre] ? [pre] : COURSE.map(c => c.id));
+  const root = h("div", { class: "mod", html: `${mhead(LAB_NAME, "Questions", PR_LEDE)}<div class="qzwrap"></div>` });
+  const W = root.querySelector(".qzwrap");
+  let mode = "quiz", len = 10, Qs = [], i = 0, score = 0, wrong = [], cur = null, streak = 0, ok = 0, tot = 0, deck = [], sprintOn = false, t0 = 0, tick = 0;
+  const L = "ABCD";
+  const qHtml = (q, head) => `<div class="qzq spotq" style="--c:${CH[q.ch].c}"><div class="qzprog">${head}<span class="tag">${CH[q.ch].short}</span></div>${q.prompt ? `<p class="qprompt">${q.prompt}</p>` : ""}<p class="dqt${q.scene ? " scene" : ""}">${q.text}</p><div class="opts">${q.opts.map((o, j) => `<button class="opt" type="button" data-o="${j}"><span class="k">${L[j]}</span><span>${o}</span></button>`).join("")}</div><div class="dout"></div></div>`;
+  function setup(){
+    sprintOn = false; cur = null; cancelAnimationFrame(tick);
+    const qz = MS.get("quiz", {}), sp = MS.get("spot", { best: 0, sprint: 0 });
+    const rec = [qz.last ? `Last quiz: ${qz.last.score}/${qz.last.n} (${Math.round(qz.last.score / qz.last.n * 100)}%)` : "", sp.best ? `best streak ${sp.best}` : "", sp.sprint ? `best sprint ${sp.sprint}` : ""].filter(Boolean).join(" · ");
+    W.innerHTML = `<div class="qzsetup"><h2>Choose your questions</h2>
+      <div class="mchips">${COURSE.map(c => chipCh(c, sel.has(c.id))).join("")}</div>
+      <div class="seg" role="group" aria-label="Mode">${PR_MODES.map(([k, l]) => `<button type="button" data-mode="${k}" aria-pressed="${k === mode}">${l}</button>`).join("")}</div>
+      <p class="muted small" data-mdesc>${PR_MODES.find(m => m[0] === mode)[2]}</p>
+      <div class="seg" role="group" aria-label="Length" data-lens style="${mode === "quiz" ? "" : "display:none"}">${[10, 20, 0].map(n => `<button type="button" data-len="${n}" aria-pressed="${n === len}">${n || "All"} questions</button>`).join("")}</div>
+      <p class="muted" data-avail></p>
+      <button class="btn primary big" type="button" data-start>Start</button>
+      ${rec ? `<p class="muted small">${rec}.</p>` : ""}</div>`;
+    avail();
+  }
+  const avail = () => { const el = W.querySelector("[data-avail]"); if (el) el.textContent = `${prPool(sel).length} questions available.`; };
+  /* scored quiz */
+  function start(list){ Qs = list; i = 0; score = 0; wrong = []; show(); }
+  function show(){ cur = Qs[i]; cur.done = false; W.innerHTML = qHtml(cur, `<span>${i + 1} / ${Qs.length}</span><div class="mbar"><i style="width:${i / Qs.length * 100}%"></i></div>`); }
+  function end(){
+    cur = null;
+    const pct = Math.round(score / Qs.length * 100), hist = MS.get("quiz", {}); hist.last = { score, n: Qs.length }; hist.count = (hist.count || 0) + 1; MS.set("quiz", hist);
+    const byCh = COURSE.map(c => { const qs = Qs.filter(q => q.ch === c.id); return qs.length ? `<div class="bs" style="--c:${c.c}"><b>${qs.filter(q => !wrong.includes(q)).length}/${qs.length}</b><span>${c.short}</span></div>` : ""; }).join("");
+    W.innerHTML = `<div class="qzend"><span class="kicker">Quiz finished</span><h2>${pct}% · ${score} of ${Qs.length} right</h2><div class="blocks-sum">${byCh}</div>
+      <div class="row">${wrong.length ? `<button class="btn primary" type="button" data-retry>Retry my ${wrong.length} mistake${wrong.length > 1 ? "s" : ""}</button>` : ""}<button class="btn glassy" type="button" data-setup>New questions</button><a class="btn glassy" href="#learn">Back to the course</a></div>
+      ${wrong.length ? `<h3>Review</h3><ul class="review">${wrong.map(q => `<li><p class="rq">${q.prompt ? q.prompt + " " : ""}${q.text}</p><p class="ra">${ICO.check}<span>${q.label}</span></p><p class="muted">${q.why}</p></li>`).join("")}</ul>` : ""}</div>`;
+    nudgeReview("quiz");
+  }
+  /* streak and sprint */
+  const S = k => W.querySelector(`[data-s="${k}"]`);
+  const stats = () => { const s = MS.get("spot", { best: 0, sprint: 0 }); if (!S("streak")) return; S("streak").textContent = streak; S("score").textContent = `${ok}/${tot}`; S("best").textContent = s.best; S("sprint").textContent = s.sprint; };
+  function play(){
+    streak = 0; ok = 0; tot = 0; deck = [];
+    W.innerHTML = `<div class="drillstats"><div><b data-s="streak">0</b><span>streak</span></div><div><b data-s="best">0</b><span>best streak</span></div><div><b data-s="score">0/0</b><span>this session</span></div><div><b data-s="sprint">0</b><span>best sprint</span></div></div>
+      <div class="timer"${mode === "sprint" ? "" : " hidden"}><i></i></div><div class="prq"></div><div class="row prback"><button class="btn quiet small" type="button" data-setup>${ICO.back}Change the questions</button></div>`;
+    stats();
+    if (mode === "sprint"){ sprintOn = true; t0 = performance.now(); cancelAnimationFrame(tick); tick = requestAnimationFrame(run); }
+    nextPlay();
+  }
+  function nextPlay(){
+    if (!deck.length) deck = shuffle(prPool(sel));
+    cur = prBuild(deck.pop()); cur.done = false;
+    W.querySelector(".prq").innerHTML = qHtml(cur, `<span>${mode === "sprint" ? "Sprint" : "Streak"}</span>`);
+  }
+  function run(){
+    if (!root.isConnected || !sprintOn) return;
+    const left = 1 - (performance.now() - t0) / 60000, bar = W.querySelector(".timer i"); if (bar) bar.style.width = Math.max(0, left * 100) + "%";
+    if (left > 0){ tick = requestAnimationFrame(run); return; }
+    sprintOn = false; cur = null;
+    const s = MS.get("spot", { best: 0, sprint: 0 }), rec = ok > s.sprint; if (rec){ s.sprint = ok; MS.set("spot", s); } stats();
+    W.querySelector(".prq").innerHTML = `<div class="sprintend"><span class="kicker">Time</span><h2>${ok} right out of ${tot}</h2><p class="muted">${rec ? "New personal best." : `Your best is ${s.sprint}.`}</p><div class="row"><button class="btn primary" type="button" data-again>Go again</button></div></div>`;
+    nudgeReview("sprint");
+  }
+  /* an answer, in any mode */
+  function pick(j){
+    if (!cur || cur.done) return;
+    cur.done = true; const good = j === cur.right, box = W.querySelector(".qzq");
+    box.querySelectorAll(".opt").forEach((b, k) => { b.disabled = true; if (k === cur.right) b.classList.add("right"); else if (k === j) b.classList.add("wrong"); });
+    if (good) burst(box.querySelectorAll(".opt")[j]);
+    box.classList.add(good ? "ok" : "bad");
+    let nxt = "Next";
+    if (mode === "quiz"){ if (good) score++; else wrong.push(cur); nxt = i + 1 < Qs.length ? "Next question" : "See my score"; }
+    else {
+      tot++; if (good){ ok++; streak++; } else streak = 0;
+      const s = MS.get("spot", { best: 0, sprint: 0 }); if (streak > s.best){ s.best = streak; MS.set("spot", s); }
+      stats(); if (good) bump(S("streak"));
+      if (tot === 15 && mode === "streak") nudgeReview("spot");
+    }
+    box.querySelector(".dout").innerHTML = `<div class="verdict ${good ? "ok" : "bad"}"><div class="vh"><b>${good ? "Correct" : "Not quite"}</b>${good ? "" : `<span>It is <b>${cur.label}</b>.</span>`}</div><p>${cur.why}</p></div><button class="btn quiet small next" type="button" data-next>${nxt} ${ICO.arrow}<kbd>Enter</kbd></button>`;
+    box.querySelector("[data-next]").focus({ preventScroll: true });
+    if (mode === "sprint" && sprintOn){ const c0 = cur; setTimeout(() => { if (cur === c0 && sprintOn) nextPlay(); }, good ? 500 : 1500); }
+  }
+  function advance(){ if (mode === "quiz"){ i++; if (i < Qs.length) show(); else end(); } else if (mode === "streak" || sprintOn) nextPlay(); }
+  root.addEventListener("click", e => {
+    const cb = e.target.closest("[data-ch]");
+    if (cb){ const k = cb.dataset.ch; if (sel.has(k) && sel.size > 1) sel.delete(k); else sel.add(k); cb.classList.toggle("on", sel.has(k)); cb.setAttribute("aria-pressed", String(sel.has(k))); avail(); return; }
+    const mb = e.target.closest("[data-mode]");
+    if (mb){ mode = mb.dataset.mode; W.querySelectorAll("[data-mode]").forEach(b => b.setAttribute("aria-pressed", String(b === mb))); W.querySelector("[data-mdesc]").textContent = PR_MODES.find(m => m[0] === mode)[2]; W.querySelector("[data-lens]").style.display = mode === "quiz" ? "" : "none"; return; }
+    const lb = e.target.closest("[data-len]");
+    if (lb){ len = +lb.dataset.len; W.querySelectorAll("[data-len]").forEach(b => b.setAttribute("aria-pressed", String(b === lb))); return; }
+    if (e.target.closest("[data-start]")){ if (mode === "quiz"){ const pool = shuffle(prPool(sel)); start((len ? pool.slice(0, len) : pool).map(prBuild)); } else play(); return; }
+    const ob = e.target.closest("[data-o]"); if (ob){ pick(+ob.dataset.o); return; }
+    if (e.target.closest("[data-next]")){ advance(); return; }
+    if (e.target.closest("[data-retry]")){ start(shuffle(wrong.map(q => ({ ...q, done: false })))); return; }
+    if (e.target.closest("[data-again]")){ play(); return; }
+    if (e.target.closest("[data-setup]")) setup();
+  });
+  const onKey = e => {
+    if (!root.isConnected){ document.removeEventListener("keydown", onKey); return; }
+    if (!cur || (e.target.matches && e.target.matches("input,textarea")) || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === "Enter" && cur.done){ e.preventDefault(); advance(); return; }
+    const k = { a: 0, b: 1, c: 2, d: 3, "1": 0, "2": 1, "3": 2, "4": 3 }[e.key.toLowerCase()];
+    if (k != null && !cur.done && k < cur.opts.length){ e.preventDefault(); pick(k); }
+  };
+  document.addEventListener("keydown", onKey);
+  setup();
+  return root;
+}
+
+/* the module: one heading, three tabs; each tab keeps its own view (and its listeners) */
+const PR_TABS = [["q", "Questions", "#practice"], ["cards", "Flashcards", "#practice-cards"], ["open", "Exam questions", "#practice-open"]];
+function viewPractice(tab, ch){
+  const view = tab === "cards" ? viewCards(ch) : tab === "open" ? viewOpen() : viewQuestions(ch);
+  MS.set("practice", tab);
+  const mh = view.querySelector(".mhead"), k = mh && mh.querySelector(".kicker");
+  if (k) k.textContent = `${LAB_NAME} · Practice`;
+  const n = { q: QUIZ.length + SPOT.length, cards: CARDS.length, open: OPEN.length };
+  const tabs = `<nav class="prtabs" aria-label="Practice">${PR_TABS.map(([t, l, href]) => `<a href="${href}${t !== "open" && ch && CH[ch] ? "-" + ch : ""}" aria-current="${t === tab ? "page" : "false"}">${l}<span>${n[t]}</span></a>`).join("")}</nav>`;
+  if (mh) mh.insertAdjacentHTML("afterend", tabs); else view.insertAdjacentHTML("afterbegin", tabs);
+  return view;
+}
+/* old links (#sort, #spot, #quiz, #cards, #open, with or without a chapter) lead to the right tab */
+function practiceHash(hs){
+  let m = hs.match(/^(?:sort|spot|quiz)(?:-(\w+))?$/); if (m) return "practice" + (m[1] ? "-" + m[1] : "");
+  m = hs.match(/^cards(?:-(\w+))?$/); if (m) return "practice-cards" + (m[1] ? "-" + m[1] : "");
+  if (hs === "open") return "practice-open";
+  return null;
+}
+function practiceRoute(hs){
+  if (hs === "practice") return { view: "practice", id: { tab: "q" } };
+  if (hs === "practice-open") return { view: "practice", id: { tab: "open" } };
+  let m = hs.match(/^practice-cards(?:-(\w+))?$/); if (m) return { view: "practice", id: { tab: "cards", ch: m[1] } };
+  m = hs.match(/^practice-(\w+)$/); if (m) return { view: "practice", id: { tab: "q", ch: m[1] } };
+  return null;
+}
+
+/* ---------- Learn was compacted (89 → 52 cards): carry the ticks over once ---------- */
+(function migrateLearn(){
+  if (MS.get("learnV", 1) >= 2) return;
+  const k = { ...MS.get("learn", {}) };
+  Object.entries(LEARN_MERGED).forEach(([id, src]) => { const all = src.every(s => k[s]); src.forEach(s => delete k[s]); if (all) k[id] = 1; });
+  MS.set("learn", k); MS.set("learnV", 2);
+})();
+
 /* ---------- routing ---------- */
 function route(){
-  const hs = location.hash.slice(1);
+  let hs = location.hash.slice(1);
+  const moved = practiceHash(hs);
+  if (moved){ hs = moved; history.replaceState(null, "", "#" + hs); }
+  const pr = practiceRoute(hs); if (pr) return pr;
   if (hs === "learn") return { view: "learn" };
   if (/^learn-\w+$/.test(hs)) return { view: "chapter", id: hs.slice(6) };
   if (hs === "studio") return { view: "studio" };
   if (hs === "studio-free") return { view: "free" };
   if (hs === "studio-drills") return { view: "cdrills" };
   if (/^studio-\w+$/.test(hs)) return { view: "case", id: hs.slice(7) };
-  if (hs === "sort" || /^sort-\w+$/.test(hs)) return { view: "sort", id: hs.slice(5) };
   if (hs === "figures") return { view: "figures" };
-  if (hs === "quiz" || /^quiz-\w+$/.test(hs)) return { view: "quiz", id: hs.slice(5) };
-  if (hs === "cards" || /^cards-\w+$/.test(hs)) return { view: "cards", id: hs.slice(6) };
-  if (hs === "open") return { view: "open" };
   if (/^open-\w+$/.test(hs)) return { view: "openq", id: hs.slice(5) };
   if (hs === "exam") return { view: "exam" };
   if (hs === "recap") return { view: "recap" };
@@ -3896,28 +3970,23 @@ const RND = (a, b) => a + Math.random() * (b - a);
 const MOD_ICONS = {
   learn: '<path d="M4 5h7a3 3 0 0 1 3 3v11a2 2 0 0 0-2-2H4zM20 5h-5a3 3 0 0 0-3 3v11a2 2 0 0 1 2-2h6z"/>',
   studio: '<circle cx="6" cy="6" r="2.6"/><circle cx="18" cy="8" r="2.6"/><circle cx="10" cy="18" r="2.6"/><path d="M8.5 6.6 15.4 7.6M16.6 10.3l-4.8 5.6M8.8 15.6 6.8 8.5"/>',
-  sort: '<path d="M4 6h10M4 12h7M4 18h4M17 4v16M14 17l3 3 3-3"/>',
   figures: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
-  quiz: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17v.5"/>',
-  cards: '<rect x="3" y="6" width="14" height="12" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v10"/>',
-  open: '<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/>',
+  practice: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17v.5"/>',
   exam: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>'
 };
 function modulesHtml(){
   const L = learnStats(), st = studioState(), sp = MS.get("spot", { best: 0, sprint: 0 }), qz = MS.get("quiz", {}), fk = Object.keys(MS.get("cards", {})).length, op = Object.values(openState().ticks || {}).filter(t => t.length).length, ex = MS.get("exam", null), fg = Object.keys(MS.get("figs", {})).length;
   const done = CLD.filter(d => (st[d.id] || {}).best != null).length;
+  const prSub = [qz.last ? `last quiz ${Math.round(qz.last.score / qz.last.n * 100)}%` : `${QUIZ.length + SPOT.length} questions`, sp.best ? `best streak ${sp.best}` : "", `${fk}/${CARDS.length} flashcards`, `${op}/${OPEN.length} exam questions tried`].filter(Boolean);
   const M = [
     ["#learn", "Learn", "The six sessions and the tutorial in short cards, with eighteen interactive models.", `${L.known}/${L.total} cards known`, "var(--pri)", "learn"],
     ["#studio", "Causal studio", "Draw the course's causal diagrams and get each link checked. Free board, loops found for you, drills.", done ? `${done}/${CLD.length} diagrams drawn` : `${CLD.length} diagrams`, "var(--c4)", "studio"],
-    ["#sort", "Sort it", "Environmental, social or economic? Macro, meso or micro? Which scenario, which boundary? Streaks and a sprint.", sp.best ? `best streak ${sp.best}` : `${SPOT.length} items`, "var(--c5)", "sort"],
     ["#figures", "Key figures", "Every number and study shown in class, with the lesson to draw. Hide the numbers and test yourself.", `${fg}/${FIGS.length} known`, "var(--c3)", "figures"],
-    ["#quiz", "Quiz", "Exam-style multiple choice on every session, each answer explained.", qz.last ? `last ${Math.round(qz.last.score / qz.last.n * 100)}%` : `${QUIZ.length} questions`, "var(--c1)", "quiz"],
-    ["#cards", "Flashcards", "Definitions, authors, dates and models to flip.", `${fk}/${CARDS.length} known`, "var(--c2)", "cards"],
-    ["#open", "Exam questions", "Define and explain the key notions, and draw the diagrams, with model answers and key points.", `${op}/${OPEN.length} tried`, "var(--pri)", "open"],
+    ["#practice", "Practice", "Questions (multiple choice and sorting, as a quiz, a streak or a sprint), flashcards, and exam questions with model answers.", prSub.map(s => `<span>${s}</span>`).join(""), "var(--c1)", "practice", "wide"],
     ["#exam", "Mock exam", "Timed: explain notions, then draw a causal diagram, marked against the key points.", ex && ex.score != null ? `last ${ex.score}%` : "60 or 90 min", "var(--c4)", "exam"]
   ];
   return `<section class="sec"><div class="sec-h"><h2>Revise</h2><p>Learn the notions, then practise the three things the exam asks: define, explain with evidence, draw the causal diagram.</p></div>
-    <div class="mods mods4">${M.map(m => `<a class="modt" href="${m[0]}" style="--c:${m[4]}"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${MOD_ICONS[m[5]]}</svg></span><b>${m[1]}</b><span class="md">${m[2]}</span><span class="ms">${m[3]}</span></a>`).join("")}</div></section>`;
+    <div class="mods dense">${M.map(m => `<a class="modt${m[6] ? " " + m[6] : ""}" href="${m[0]}" style="--c:${m[4]}"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${MOD_ICONS[m[5]]}</svg></span><b>${m[1]}</b><span class="md">${m[2]}</span><span class="ms${m[6] ? " msub" : ""}">${m[3]}</span></a>`).join("")}</div></section>`;
 }
 
 /* ---------- overview ---------- */
@@ -3969,79 +4038,6 @@ function viewFigures(){
 }
 
 /* =====================================================================
-   SPOT IT: name what you see. Wrong options come from the same family (all biases, all justice types...).
-   ===================================================================== */
-function spotItem(it){
-  const [fam, text, right, why] = it, F = FAMILIES[fam];
-  let opts = F.opts.slice();
-  if (opts.length > 4){ const others = shuffle(opts.filter(o => o !== right)).slice(0, 3); opts = shuffle([right, ...others]); }
-  else if (opts.length > 2) opts = shuffle(opts);
-  return { fam, ch: F.ch, q: F.q, text, opts, right: opts.indexOf(right), why, label: right };
-}
-function viewSpot(pre){
-  const sel = new Set(pre && CH[pre] ? [pre] : COURSE.map(c => c.id));
-  const st0 = MS.get("spot", { best: 0, sprint: 0 });
-  const root = h("div", { class: "mod", html: `
-  ${mhead("Societal and Global Challenges", "Sort it", "Classify what you read: environmental, social or economic; macro, meso or micro; which boundary, which scenario, which measure. Fast sorting makes the notions automatic.")}
-  <div class="drillbar"><div class="mchips">${COURSE.map(c => chipCh(c, sel.has(c.id))).join("")}</div>
-    <div class="seg" role="group" aria-label="Mode"><button type="button" data-mode="practice" aria-pressed="true">Practice</button><button type="button" data-mode="sprint" aria-pressed="false">Sprint 60 s</button></div></div>
-  <div class="drillstats"><div><b data-s="streak">0</b><span>streak</span></div><div><b data-s="best">${st0.best}</b><span>best streak</span></div><div><b data-s="score">0/0</b><span>this session</span></div><div><b data-s="sprint">${st0.sprint}</b><span>best sprint</span></div></div>
-  <div class="timer" hidden><i></i></div>
-  <article class="dq spotq" aria-live="polite"></article>` });
-  let mode = "practice", streak = 0, ok = 0, tot = 0, cur = null, t0 = 0, tick = 0, sprintOn = false, deck = [];
-  const dq = root.querySelector(".dq"), S = k => root.querySelector(`[data-s="${k}"]`), timer = root.querySelector(".timer");
-  const stats = () => { const s = MS.get("spot", { best: 0, sprint: 0 }); S("streak").textContent = streak; S("score").textContent = `${ok}/${tot}`; S("best").textContent = s.best; S("sprint").textContent = s.sprint; };
-  const refill = () => { deck = shuffle(SPOT.filter(it => sel.has(FAMILIES[it[0]].ch))); };
-  function next(){
-    if (!deck.length) refill();
-    if (!deck.length){ dq.innerHTML = `<p class="muted">Pick at least one session.</p>`; return; }
-    cur = spotItem(deck.pop()); cur.done = false; dq.classList.remove("ok", "bad");
-    const c = CH[cur.ch], L = "ABCD";
-    dq.style.setProperty("--c", c.c);
-    dq.innerHTML = `<div class="qzprog"><span class="tag">${c.short}</span><span>${cur.q}</span></div><p class="dqt scene">${cur.text}</p><div class="opts">${cur.opts.map((o, j) => `<button class="opt" type="button" data-o="${j}"><span class="k">${L[j]}</span><span>${o}</span></button>`).join("")}</div><div class="dout"></div>`;
-  }
-  function verdict(good){
-    cur.done = true; tot++; if (good){ ok++; streak++; } else streak = 0;
-    const s = MS.get("spot", { best: 0, sprint: 0 }); if (streak > s.best){ s.best = streak; MS.set("spot", s); }
-    stats(); if (good) bump(S("streak"));
-    if (tot === 15 && mode === "practice") nudgeReview("spot");
-    dq.classList.add(good ? "ok" : "bad");
-    dq.querySelector(".dout").innerHTML = `<div class="verdict ${good ? "ok" : "bad"}"><div class="vh"><b>${good ? "Correct" : "Not quite"}</b>${good ? "" : `<span>It is <b>${cur.label}</b>.</span>`}</div><p>${cur.why}</p></div><button class="btn quiet small next" type="button" data-next>Next ${ICO.arrow}<kbd>Enter</kbd></button>`;
-    dq.querySelector("[data-next]").focus({ preventScroll: true });
-    if (mode === "sprint" && sprintOn) setTimeout(() => { if (cur.done && sprintOn) next(); }, good ? 500 : 1500);
-  }
-  root.addEventListener("click", e => {
-    const cb = e.target.closest("[data-ch]");
-    if (cb){ const k = cb.dataset.ch; if (sel.has(k) && sel.size > 1) sel.delete(k); else sel.add(k); cb.classList.toggle("on", sel.has(k)); cb.setAttribute("aria-pressed", String(sel.has(k))); refill(); next(); }
-    const mb = e.target.closest("[data-mode]");
-    if (mb){ mode = mb.dataset.mode; root.querySelectorAll("[data-mode]").forEach(b => b.setAttribute("aria-pressed", String(b === mb))); streak = 0; ok = 0; tot = 0; stats(); if (mode === "sprint") startSprint(); else { sprintOn = false; timer.hidden = true; next(); } }
-    const ob = e.target.closest("[data-o]");
-    if (ob && cur && !cur.done){ const j = +ob.dataset.o; if (j === cur.right) burst(ob); dq.querySelectorAll(".opt").forEach((b, i) => { b.disabled = true; if (i === cur.right) b.classList.add("right"); else if (i === j) b.classList.add("wrong"); }); verdict(j === cur.right); }
-    if (e.target.closest("[data-next]")) next();
-    if (e.target.closest("[data-again]")) startSprint();
-  });
-  const onKey = e => {
-    if (!root.isConnected){ document.removeEventListener("keydown", onKey); return; }
-    if (!cur || (e.target.matches && e.target.matches("input,textarea"))) return;
-    if (e.key === "Enter" && cur.done){ e.preventDefault(); next(); return; }
-    const k = { a: 0, b: 1, c: 2, d: 3, "1": 0, "2": 1, "3": 2, "4": 3 }[e.key.toLowerCase()];
-    if (k != null && !cur.done){ const b = dq.querySelectorAll(".opt")[k]; if (b){ e.preventDefault(); b.click(); } }
-  };
-  document.addEventListener("keydown", onKey);
-  function startSprint(){
-    sprintOn = true; ok = 0; tot = 0; streak = 0; stats(); timer.hidden = false; t0 = performance.now(); refill(); next();
-    cancelAnimationFrame(tick);
-    const run = () => { if (!root.isConnected){ sprintOn = false; return; } const left = 1 - (performance.now() - t0) / 60000; timer.firstChild.style.width = Math.max(0, left * 100) + "%";
-      if (left <= 0){ sprintOn = false; const s = MS.get("spot", { best: 0, sprint: 0 }), rec = ok > s.sprint; if (rec){ s.sprint = ok; MS.set("spot", s); } stats();
-        dq.classList.remove("ok", "bad"); cur = null; dq.innerHTML = `<div class="sprintend"><span class="kicker">Time</span><h2>${ok} right out of ${tot}</h2><p class="muted">${rec ? "New personal best." : `Your best is ${s.sprint}.`}</p><div class="row"><button class="btn primary" type="button" data-again>Go again</button></div></div>`; nudgeReview("sprint"); return; }
-      tick = requestAnimationFrame(run); };
-    tick = requestAnimationFrame(run);
-  }
-  refill(); requestAnimationFrame(next);
-  return root;
-}
-
-/* =====================================================================
    EXAM QUESTIONS (define, explain, apply, draw) and the timed MOCK EXAM.
    ===================================================================== */
 function openState(){ return MS.get("open", { ans: {}, ticks: {} }); }
@@ -4064,7 +4060,7 @@ function viewOpenQ(id){
   const o = OPEN.find(x => x.id === id) || OPEN[0], c = CH[o.ch], s = openState(), idx = OPEN.indexOf(o), nx = OPEN[idx + 1], pv = OPEN[idx - 1], sr = SRC[o.src] || SRC.explain;
   const ticks = new Set(s.ticks[o.id] || []), M = o.cld ? cldModel(CLDI[o.cld]) : null;
   const root = h("div", { class: "mod oq-page", style: `--c:${c.c}`, html: `
-    <a class="tocback" href="#open">${ICO.back}All exam questions</a>
+    <a class="tocback" href="#practice-open">${ICO.back}All exam questions</a>
     <header class="mhead"><p class="kicker">${c.n}. ${c.short} · about ${o.min} minutes · ${sr[0].toLowerCase()}</p><h1 class="oqt">${o.q}</h1></header>
     ${M ? `<div class="dgtip"><p>Draw it first, on paper or in the studio, then explain it in words below. ${o.cld && CLDI[o.cld].src === "nexus" ? "This is a practice case built for Nexus." : "This diagram comes from the course."}</p><a class="btn glassy small" href="#studio-${o.cld}">Draw it in the Causal studio</a></div>` : ""}
     <div class="owrite"><label for="oans" class="lbl">Your answer</label><textarea id="oans" placeholder="Write as you would in the exam. Your text is saved on this device.">${esc(s.ans[o.id] || "")}</textarea>
@@ -4125,7 +4121,7 @@ function viewExam(){
   function paint(){
     cancelAnimationFrame(tick);
     const phase = E.end ? "mark" : E.start ? "write" : "ready", qs = Q(), d = D();
-    let html = `<a class="tocback" href="#open">${ICO.back}Exam questions</a>${mhead("Societal and Global Challenges", "Mock exam", phase === "ready" ? "Notions to define and explain, then a causal diagram. The exam's exact length and format are not in the slides you have: pick a length and treat this as training, not a prediction." : phase === "write" ? "Write in full sentences, back each answer with a figure or a study from class. Your answers are saved on this device." : "Time to mark yourself. Tick only what your answer states clearly.")}`;
+    let html = `<a class="tocback" href="#practice-open">${ICO.back}Exam questions</a>${mhead("Societal and Global Challenges", "Mock exam", phase === "ready" ? "Notions to define and explain, then a causal diagram. The exam's exact length and format are not in the slides you have: pick a length and treat this as training, not a prediction." : phase === "write" ? "Write in full sentences, back each answer with a figure or a study from class. Your answers are saved on this device." : "Time to mark yourself. Tick only what your answer states clearly.")}`;
     if (phase === "ready"){
       html += `<div class="exready"><div class="mklen" role="group" aria-label="Length">${Object.keys(EXAM_FMT).map(Number).map(m => `<button type="button" data-len="${m}" aria-pressed="${E.min === m}"><b>${m} minutes</b><span>${EXAM_FMT[m].q} notions and 1 diagram</span></button>`).join("")}</div>
         <ol class="exlist">${qs.map(o => `<li><span class="osrc" style="--c:${CH[o.ch].c}">${CH[o.ch].short}</span>${o.q}</li>`).join("")}<li><span class="osrc dg">Causal diagram</span>${d.q}</li></ol>
@@ -4176,6 +4172,7 @@ function focusCard(card, instant){
 
 /* search and recap settings for this lab */
 const LAB_NAME = "Societal and Global Challenges";
+const CARDS_HREF = "#practice-cards-";
 const SEARCH_HINT = "Search: a concept, an author, a figure…";
 const SEARCH_TRY = ["tipping point", "Doughnut", "MSY", "Brundtland", "Gini", "feedback loop"];
 const SEARCH_EXTRA = () => [
@@ -4183,8 +4180,10 @@ const SEARCH_EXTRA = () => [
   ...FIGS.map(f => ({ kind: "Figure", t: `${f[1]}: ${f[2]}`, s: f[3] + " " + f[4], href: "#figures", c: CH[f[0]].c, where: `Key figures · ${f[3]}` })),
   { kind: "Page", t: "Free board", s: "draw your own causal diagram loops variables download image", href: "#studio-free", c: "var(--c4)", where: "Causal studio" },
   { kind: "Page", t: "Diagram drills", s: "sign loop polarity effect reinforcing balancing sprint", href: "#studio-drills", c: "var(--c4)", where: "Causal studio" },
-  { kind: "Page", t: "Sort it", s: "classify environmental social economic macro meso micro scenario boundary", href: "#sort", c: "var(--c5)", where: "Sort it" },
-  { kind: "Page", t: "Mock exam", s: "timed exam practice define explain diagram 60 90 minutes", href: "#exam", c: "var(--pri)", where: "Exam questions" },
+  { kind: "Page", t: "Questions", s: "quiz multiple choice sort it classify environmental social economic macro meso micro scenario boundary streak sprint", href: "#practice", c: "var(--c1)", where: "Practice" },
+  { kind: "Page", t: "Flashcards", s: "cards flip definitions authors dates", href: "#practice-cards", c: "var(--c2)", where: "Practice" },
+  { kind: "Page", t: "Exam questions", s: "open questions define explain apply draw model answers key points", href: "#practice-open", c: "var(--pri)", where: "Practice" },
+  { kind: "Page", t: "Mock exam", s: "timed exam practice define explain diagram 60 90 minutes", href: "#exam", c: "var(--pri)", where: "Practice · Exam questions" },
   { kind: "Page", t: "Recap", s: "one page summary cheat sheet all cards", href: "#recap", c: "var(--c2)", where: "Learn" }
 ];
 
@@ -4198,7 +4197,7 @@ function searchIndex(){
   const out = [];
   COURSE.forEach(c => c.sections.forEach(sec => sec.cards.forEach(k => out.push({ kind: "Card", t: k.title, s: [k.line, ...(k.points || []), k.example || "", k.formula || "", k.trap || ""].join(" "), href: "#learn-" + c.id, note: k.id, c: c.c, where: `${c.short} · ${sec.title}` }))));
   OPEN.forEach(o => out.push({ kind: "Exam question", t: o.q, s: o.points.join(" "), href: "#open-" + o.id, c: CH[o.ch].c, where: CH[o.ch].short }));
-  CARDS.forEach(([ch, f, bk]) => out.push({ kind: "Definition", t: f, s: bk, href: "#cards-" + ch, c: CH[ch].c, where: bk }));
+  CARDS.forEach(([ch, f, bk]) => out.push({ kind: "Definition", t: f, s: bk, href: (typeof CARDS_HREF === "string" ? CARDS_HREF : "#cards-") + ch, c: CH[ch].c, where: bk }));
   SEARCH_EXTRA().forEach(x => out.push(x));
   out.forEach(x => { x.nt = norm(x.t); x.ns = norm(x.s); });
   return (SEARCH_INDEX = out);
@@ -4290,11 +4289,12 @@ function viewRecap(){
 
 document.addEventListener("click", e => { if (e.target.closest("[data-search]")) openSearch(); });
 /* ---------- render ---------- */
-const MODVIEWS = { learn: viewLearn, chapter: viewChapter, studio: viewStudio, case: viewStudioCase, free: viewStudioFree, cdrills: viewStudioDrills, sort: viewSpot, figures: viewFigures, quiz: viewQuiz, cards: viewCards, open: viewOpen, openq: viewOpenQ, exam: viewExam, recap: viewRecap };
-const TITLES = { learn: "Learn", chapter: "Learn", studio: "Causal studio", case: "Causal studio", free: "Free board", cdrills: "Diagram drills", sort: "Sort it", figures: "Key figures", quiz: "Quiz", cards: "Flashcards", open: "Exam questions", openq: "Exam questions", exam: "Mock exam", recap: "Recap" };
+const MODVIEWS = { learn: viewLearn, chapter: viewChapter, studio: viewStudio, case: viewStudioCase, free: viewStudioFree, cdrills: viewStudioDrills, figures: viewFigures, practice: o => viewPractice(o.tab, o.ch), openq: viewOpenQ, exam: viewExam, recap: viewRecap };
+const TITLES = { learn: "Learn", chapter: "Learn", studio: "Causal studio", case: "Causal studio", free: "Free board", cdrills: "Diagram drills", figures: "Key figures", practice: "Practice", openq: "Exam questions", exam: "Mock exam", recap: "Recap" };
 /* a small living diagram in the header of each module: a different system of the course each time */
 const MINI = {
-  learn: "heat", recap: "heat", studio: "amazon", cdrills: "popul", sort: "fish", figures: "cocoa", quiz: "lez", cards: "fish", open: "homicide",
+  learn: "heat", recap: "heat", studio: "amazon", cdrills: "popul", figures: "cocoa", openq: null,
+  practice: o => ({ q: "fish", cards: "lez", open: "homicide" })[o.tab],
   chapter: id => ({ systems: "heat", sd: "fish", ecology: "amazon", bounds: "cocoa", social: "paygap", economy: "lez", method: "homicide" })[id] || "heat"
 };
 new ResizeObserver(() => document.documentElement.style.setProperty("--hdr", document.querySelector(".hdr").offsetHeight + "px")).observe(document.querySelector(".hdr"));
@@ -4305,13 +4305,13 @@ function render(){
   STAGE.stops.forEach(f => f && f()); STAGE.stops = [];
   STAGE.view = r.view; AURA.set(!QUIET.has(r.view)); TINT();
   document.body.dataset.view = r.view;
-  const NAVOF = { chapter: "learn", case: "studio", free: "studio", cdrills: "studio", openq: "open", exam: "open", recap: "learn" };
+  const NAVOF = { chapter: "learn", case: "studio", free: "studio", cdrills: "studio", openq: "practice", exam: "practice", recap: "learn" };
   document.querySelectorAll(".nav a").forEach(a => { const on = a.dataset.route === (NAVOF[r.view] || r.view); a.setAttribute("aria-current", on ? "page" : "false"); if (on) a.scrollIntoView({ block: "nearest", inline: "nearest" }); });
   const app = $("#app");
   if (MODVIEWS[r.view]){
     const view = MODVIEWS[r.view](r.id);
     app.replaceChildren(view);
-    const t = r.view === "case" ? (CLDI[r.id] || CLD[0]).title : TITLES[r.view] || "Societal and Global Challenges";
+    const t = r.view === "case" ? (CLDI[r.id] || CLD[0]).title : r.view === "practice" ? PR_TABS.find(x => x[0] === r.id.tab)[1] + " · Practice" : TITLES[r.view] || "Societal and Global Challenges";
     document.title = t + " · Societal and Global Challenges";
     window.scrollTo(0, 0);
     const mini = typeof MINI[r.view] === "function" ? MINI[r.view](r.id) : MINI[r.view];

@@ -1048,6 +1048,19 @@ html.theme-vt::view-transition-new(root){animation:themeReveal .65s cubic-bezier
 .spotq .scene{font-family:var(--f-display);font-size:clamp(1.25rem,2.6vw,1.6rem);font-weight:600;line-height:1.35;letter-spacing:-.01em}
 .spotq .qzprog{justify-content:space-between}
 .dq .opt:hover:not(:disabled){border-color:var(--c,var(--pri))}
+/* practice: tabs, and the merged questions */
+.prtabs{display:flex;gap:3px;flex-wrap:wrap;width:max-content;max-width:100%;margin:-4px 0 24px;padding:4px;border:1px solid var(--glass-line);background:var(--glass);border-radius:14px}
+.prtabs a{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:10px;font-weight:700;font-size:.92rem;color:var(--muted);text-decoration:none;transition:color .2s,background .2s}
+.prtabs a span{font:500 .74rem/1 var(--f-mono,"JetBrains Mono",monospace);opacity:.65}
+.prtabs a:hover:not([aria-current="page"]){color:var(--fg)}
+.prtabs a[aria-current="page"]{background:var(--fg);color:var(--bg)}
+@media (max-width:560px){.prtabs{width:100%}.prtabs a{flex:1;justify-content:center;padding:9px 6px;font-size:.84rem}.prtabs a span{display:none}}
+.qprompt{margin:4px 0 2px;font-weight:700;font-size:.9rem;color:var(--c,var(--pri))}
+.prq{max-width:760px}
+.prback{margin-top:14px}
+.mods .modt.wide{grid-column:span 2}
+.mods.dense{grid-auto-flow:dense}
+.modt .msub{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;color:var(--muted)}
 /* labs */
 .labgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;perspective:1100px}
 @media (max-width:760px){.labgrid{grid-template-columns:1fr}}
@@ -3977,7 +3990,7 @@ function searchIndex(){
   const out = [];
   COURSE.forEach(c => c.sections.forEach(sec => sec.cards.forEach(k => out.push({ kind: "Card", t: k.title, s: [k.line, ...(k.points || []), k.example || "", k.formula || "", k.trap || ""].join(" "), href: "#learn-" + c.id, note: k.id, c: c.c, where: `${c.short} · ${sec.title}` }))));
   OPEN.forEach(o => out.push({ kind: "Exam question", t: o.q, s: o.points.join(" "), href: "#open-" + o.id, c: CH[o.ch].c, where: CH[o.ch].short }));
-  CARDS.forEach(([ch, f, bk]) => out.push({ kind: "Definition", t: f, s: bk, href: "#cards-" + ch, c: CH[ch].c, where: bk }));
+  CARDS.forEach(([ch, f, bk]) => out.push({ kind: "Definition", t: f, s: bk, href: (typeof CARDS_HREF === "string" ? CARDS_HREF : "#cards-") + ch, c: CH[ch].c, where: bk }));
   SEARCH_EXTRA().forEach(x => out.push(x));
   out.forEach(x => { x.nt = norm(x.t); x.ns = norm(x.s); });
   return (SEARCH_INDEX = out);

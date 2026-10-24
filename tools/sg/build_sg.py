@@ -45,20 +45,20 @@ learn = sub(recolor(m('js_learn.js')), [
     ('<li><b>Test it</b><span>Run the chapter quiz and read every explanation, even when you are right.</span></li>', '<li><b>Test it</b><span>Run the session quiz and read every explanation, even when you are right.</span></li>'),
     ('<li><b>Drill the numbers</b><span>Short exercises until the formulas are automatic.</span></li>', '<li><b>Draw the diagram</b><span>In the Causal studio, draw the session\'s diagram and get each link checked.</span></li>'),
     ('<li><b>Write one open answer</b><span>Then compare with the model answer and tick the key points.</span></li>', '<li><b>Explain one notion</b><span>Write it as in the exam, then compare with the model answer and tick the key points.</span></li>'),
-    ('All chapters', 'All sessions'), ('Quiz this chapter', 'Quiz this session'), ('mhead(`Chapter ${c.n}`', 'mhead(`Session ${c.n}`'), ('>Test this chapter<', '>Test this session<'),
+    ('All chapters', 'All sessions'), ('>Quiz this chapter<', '>Practise this session<'), ('href="#quiz-${c.id}"', 'href="#practice-${c.id}"'), ('href="#cards-${c.id}"', 'href="#practice-cards-${c.id}"'),
+    ('mhead(`Chapter ${c.n}`', 'mhead(`Session ${c.n}`'), ('>Test this chapter<', '>Test this session<'),
+    ('<span>Run the session quiz and read every explanation, even when you are right.</span>', '<span>In Practice, run the session\'s questions and read every explanation, even when you are right.</span>'),
 ], 'learn')
 qc = recolor(m('js_quizcards.js')).replace('mhead("Macroeconomics"', 'mhead("Societal and Global Challenges"')
 focus = sub(m('js_focus.js'), [('card.querySelector("input:not([disabled]), .opt:not([disabled])")', 'card.querySelector("input:not([disabled]), .opt:not([disabled]), textarea")')], 'focus')
-spot = sub(m('mg_spot.js'), [
-    ('mhead("Management and Organizations", "Spot it", "Short workplace scenes. Name the bias, the need, the factor or the type of justice. The exam asks you to apply concepts: this is the reflex to train.")',
-     'mhead("Societal and Global Challenges", "Sort it", "Classify what you read: environmental, social or economic; macro, meso or micro; which boundary, which scenario, which measure. Fast sorting makes the notions automatic.")'),
-    ('Pick at least one lecture.', 'Pick at least one session.')], 'spot')
+practice = m('mg_practice.js')
 helpers = '''const RI = (a, b, s = 1) => a + s * Math.floor(Math.random() * ((b - a) / s + 1));
 const PICK = a => a[Math.floor(Math.random() * a.length)];
+const PR_LEDE = "Exam-style multiple choice and fast sorting (environmental, social or economic; macro, meso or micro; which boundary, which scenario), mixed. Every answer comes with its explanation.";
 '''
 js = '\n'.join([util, m('js_credit.js'), reviews, m('js_tint.js'), aura, helpers,
                 r('s_course.js'), r('s_quiz.js'), r('s_open.js'), r('s_sort.js'), r('s_cld.js'), r('s_figures.js'),
-                m('js_ms.js'), learn, qc, r('sg_engine.js'), r('sg_widgets.js'), r('sg_studio.js'), r('sg_hero.js'), r('sg_home.js'), spot, r('sg_exam.js'), focus,
+                m('js_ms.js'), learn, qc, r('sg_engine.js'), r('sg_widgets.js'), r('sg_studio.js'), r('sg_hero.js'), practice, r('sg_home.js'), r('sg_exam.js'), focus,
                 r('sg_search_consts.js'), m('nx_search.js'), 'document.addEventListener("click", e => { if (e.target.closest("[data-search]")) openSearch(); });', r('sg_render.js')])
 B = 'https://nexus-revision-bba1.netlify.app'
 head = f'''<!doctype html>
@@ -95,11 +95,8 @@ body = '''</style>
     <a href="#home" data-route="home">Overview</a>
     <a href="#learn" data-route="learn">Learn</a>
     <a href="#studio" data-route="studio">Causal studio</a>
-    <a href="#sort" data-route="sort">Sort it</a>
     <a href="#figures" data-route="figures">Key figures</a>
-    <a href="#quiz" data-route="quiz">Quiz</a>
-    <a href="#cards" data-route="cards">Flashcards</a>
-    <a href="#open" data-route="open">Exam questions</a>
+    <a href="#practice" data-route="practice">Practice</a>
   </nav>
   <span class="grow"></span>
   <button class="theme" id="rvBtn" type="button" aria-label="Write a review"></button>

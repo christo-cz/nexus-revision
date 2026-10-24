@@ -3,7 +3,7 @@ from playwright.async_api import async_playwright
 async def run():
     async with async_playwright() as p:
         b = await p.chromium.launch(); out = {}
-        for lab, q, q2 in [("management", "halo", "kelley"), ("macro", "multiplier", "big mac")]:
+        for lab, q, q2 in [("management", "halo", "kelley"), ("macro", "multiplier", "big mac"), ("global", "tipping point", "gini")]:
             for vw, vh, tag in [(1440, 900, "d"), (390, 844, "m")]:
                 ctx = await b.new_context(viewport={"width": vw, "height": vh})
                 await ctx.add_init_script("try{sessionStorage.setItem('nexus-fs-inv','1')}catch(e){}")

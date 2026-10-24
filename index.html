@@ -536,7 +536,7 @@ html:has(dialog.nx-sheet[open]){overflow:hidden}
         <div class="info">
           <h3>Societal and Global Challenges</h3>
           <p class="what">Causal diagrams, planetary boundaries, the Doughnut, poverty, growth</p>
-          <p class="status" id="sgcStatus">9 causal diagrams · 89 cards</p>
+          <p class="status" id="sgcStatus">9 causal diagrams · 52 cards</p>
         </div>
         <span class="open" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
         <span class="glare" aria-hidden="true"></span>
@@ -732,6 +732,14 @@ scrollTint(dark => dark ? ["#0D1024", "#3A2140", "#EEE3CC"] : ["#F5F6FB", "#F1E6
 applyTheme();
 
 /* ---------- course tiles: progress, 3D tilt, centred tile on phones ---------- */
+/* cards known in a lab whose Learn was compacted: until the lab migrates the ticks (learnV 2), a merged card counts once all the cards it replaced are ticked */
+const SGC_LEARN = { total: 52, merged: "s-course s-exam|s-heattrend s-warming|s-system s-cld|s-feedback s-reinforce s-balance|s-measures s-linear|d-carlowitz d-msy|d-principles d-overused|d-meadows d-five d-carrying|d-method d-recos|d-milestones d-sdgs d-offtrack|e-ecology e-biosphere e-ecosystem|e-global e-vernadsky|e-resilience e-tipping|e-climate e-cascade|e-anthropocene e-holocene|b-question b-pb|b-upstream b-core|b-weather b-figures b-process|b-bio3 b-sixth|b-cocoa b-lindt|o-doughnut o-dims|o-poverty o-absolute|o-relative o-line o-drivers|o-ineq o-palma o-gini|o-trend o-why|c-market c-marketeco|c-gdp c-meadowsvbrund|c-ademe c-friction|m-steps m-present|m-corroborate m-sources" };
+function learnKnown(st, L){
+  const k = st.learn || {};
+  if (!L || (st.learnV || 1) >= 2) return Object.keys(k).length;
+  const groups = L.merged.split("|").map(g => g.split(" ")), inGroup = new Set(groups.flat());
+  return Object.keys(k).filter(id => !inGroup.has(id)).length + groups.filter(g => g.every(id => k[id])).length;
+}
 (function(){
   try {
     const st = JSON.parse(localStorage.getItem("flow-v1")) || {}, cases = st.cases || {};
@@ -740,8 +748,8 @@ applyTheme();
     if (ans) document.getElementById("macroStatus").innerHTML = `<span class="track" aria-hidden="true"><i style="width:${ans / 300 * 100}%"></i></span>${done} of 10 cases finished`;
     const mg = JSON.parse(localStorage.getItem("mgmt-v1")) || {}, known = Object.keys(mg.learn || {}).length, mc = Object.values(mg.cases || {}).filter(c => c && c.ans && Object.keys(c.ans).length).length;
     if (known || mc) document.getElementById("mgmtStatus").innerHTML = `<span class="track" aria-hidden="true"><i style="width:${Math.min(100, known / 79 * 100)}%"></i></span>${known} of 79 cards known`;
-    const sg = JSON.parse(localStorage.getItem("sgc-v1")) || {}, sk = Object.keys(sg.learn || {}).length, sd = Object.values(sg.studio || {}).filter(x => x && x.best != null).length;
-    if (sk || sd) document.getElementById("sgcStatus").innerHTML = `<span class="track" aria-hidden="true"><i style="width:${Math.min(100, sk / 89 * 100)}%"></i></span>${sk} of 89 cards · ${sd} of 9 diagrams`;
+    const sg = JSON.parse(localStorage.getItem("sgc-v1")) || {}, sk = learnKnown(sg, SGC_LEARN), sd = Object.values(sg.studio || {}).filter(x => x && x.best != null).length, sn = SGC_LEARN.total;
+    if (sk || sd) document.getElementById("sgcStatus").innerHTML = `<span class="track" aria-hidden="true"><i style="width:${Math.min(100, sk / sn * 100)}%"></i></span>${sk} of ${sn} cards · ${sd} of 9 diagrams`;
   } catch (e) {}
   const tiles = [...document.querySelectorAll(".tile")], fine = matchMedia("(hover: hover) and (pointer: fine)");
   tiles.forEach(t => {
@@ -982,8 +990,8 @@ heroTilt(document.getElementById("hero"));
   const lc = mg.lastcase;
   if (lc && MC[lc] && mAns(lc) > 0 && mAns(lc) < MC[lc][1]) rows.push({ c: "var(--mgmt)", nm: "Management", dt: `${MC[lc][0]}: ${mAns(lc)} of ${MC[lc][1]} steps done`, p: mAns(lc) / MC[lc][1], lbl: `${mAns(lc)}/${MC[lc][1]}`, href: `/management/#case-${lc}` });
   else if (mSolved || mKnown) rows.push({ c: "var(--mgmt)", nm: "Management", dt: `${mSolved} of 8 cases solved · ${mKnown} of 79 cards known`, p: mKnown / 79, lbl: `${mKnown}/79`, href: mKnown < 79 ? "/management/#learn" : "/management/#cases" });
-  { const sv = get("sgc-v1"), sk = Object.keys(sv.learn || {}).length, sd = Object.values(sv.studio || {}).filter(x => x && x.best != null).length;
-    if (sk || sd) rows.push({ c: "var(--sgc)", nm: "Global Challenges", dt: `${sk} of 89 cards known · ${sd} of 9 causal diagrams drawn`, p: sk / 89, lbl: `${sk}/89`, href: sk < 89 ? "/global/#learn" : "/global/#studio" }); }
+  { const sv = get("sgc-v1"), sk = learnKnown(sv, SGC_LEARN), sn = SGC_LEARN.total, sd = Object.values(sv.studio || {}).filter(x => x && x.best != null).length;
+    if (sk || sd) rows.push({ c: "var(--sgc)", nm: "Global Challenges", dt: `${sk} of ${sn} cards known · ${sd} of 9 causal diagrams drawn`, p: sk / sn, lbl: `${sk}/${sn}`, href: sk < sn ? "/global/#learn" : "/global/#studio" }); }
   /* a mock exam on the clock comes first */
   const clock = (E, min, nm, c, href) => { if (!E || !E.start || E.end) return; const left = E.start + min * 60000 - Date.now(), m = Math.max(0, Math.ceil(left / 60000));
     rows.unshift({ c, nm, dt: left > 0 ? `Mock exam on the clock: ${m} minute${m > 1 ? "s" : ""} left` : "Mock exam: time is up. Open it to mark your answers", p: Math.min(1, Math.max(0, 1 - left / (min * 60000))), lbl: `${m}m`, href }); };

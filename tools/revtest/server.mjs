@@ -1,6 +1,6 @@
-import http from "node:http"; import { readFile } from "node:fs/promises"; import path from "node:path";
+import http from "node:http"; import { readFile } from "node:fs/promises"; import path from "node:path"; import { fileURLToPath } from "node:url";
 import { handle } from "./reviews.mjs"; import { mockStore } from "./mockstore.mjs";
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..", ".."), store = mockStore(), env = { ADMIN_KEY: "local-admin-key" };
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", ".."), store = mockStore(), env = { ADMIN_KEY: "local-admin-key" };
 const TYPES = { ".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".js": "text/javascript", ".css": "text/css" };
 http.createServer(async (req, res) => {
   const u = new URL(req.url, "http://x");

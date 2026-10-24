@@ -7,7 +7,7 @@ function searchIndex(){
   const out = [];
   COURSE.forEach(c => c.sections.forEach(sec => sec.cards.forEach(k => out.push({ kind: "Card", t: k.title, s: [k.line, ...(k.points || []), k.example || "", k.formula || "", k.trap || ""].join(" "), href: "#learn-" + c.id, note: k.id, c: c.c, where: `${c.short} · ${sec.title}` }))));
   OPEN.forEach(o => out.push({ kind: "Exam question", t: o.q, s: o.points.join(" "), href: "#open-" + o.id, c: CH[o.ch].c, where: CH[o.ch].short }));
-  CARDS.forEach(([ch, f, bk]) => out.push({ kind: "Definition", t: f, s: bk, href: "#cards-" + ch, c: CH[ch].c, where: bk }));
+  CARDS.forEach(([ch, f, bk]) => out.push({ kind: "Definition", t: f, s: bk, href: (typeof CARDS_HREF === "string" ? CARDS_HREF : "#cards-") + ch, c: CH[ch].c, where: bk }));
   SEARCH_EXTRA().forEach(x => out.push(x));
   out.forEach(x => { x.nt = norm(x.t); x.ns = norm(x.s); });
   return (SEARCH_INDEX = out);

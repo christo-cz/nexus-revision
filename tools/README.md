@@ -24,6 +24,10 @@ Toujours lancer les quatre dans cet ordre après avoir touché une pièce commun
 node tools/revtest/server.mjs            # sert le dépôt sur http://localhost:8770, avec une fausse API d'avis (clé admin : local-admin-key)
 python3 tools/tests/route_sweep.py      # toutes les vues, PC + 390 px, clair + sombre : erreurs et débordement
 python3 tools/tests/sg_test.py           # (et mg_test, mac_test, mgexam_test, mock_test, resume_test, search_test, theme_test, rv_test, pen_test, spot_test, text_test, del_test)
+python3 tools/tests/practice_test.py global   # module Practice : anciens liens, quiz jusqu'au score, streak, sprint, onglets
 ```
 
-Playwright + Chromium requis. Captures dans `tools/_shots/` (ignoré par git).
+Playwright + Chromium requis. Captures dans `tools/_shots/` (ignoré par git) ; certains tests écrivent dans `shots/` relatif au dossier courant : les lancer depuis `tools/_shots/` (avec un sous-dossier `shots/`).
+Sous Windows : `python` au lieu de `python3`, et `PYTHONUTF8=1` (les scripts ouvrent les fichiers sans préciser l'encodage).
+
+- `mg/mg_practice.js` : module Practice commun (Questions = QCM + classements, onglets Flashcards et Exam questions, redirection des anciens liens).

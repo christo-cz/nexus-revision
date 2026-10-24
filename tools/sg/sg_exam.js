@@ -21,7 +21,7 @@ function viewOpenQ(id){
   const o = OPEN.find(x => x.id === id) || OPEN[0], c = CH[o.ch], s = openState(), idx = OPEN.indexOf(o), nx = OPEN[idx + 1], pv = OPEN[idx - 1], sr = SRC[o.src] || SRC.explain;
   const ticks = new Set(s.ticks[o.id] || []), M = o.cld ? cldModel(CLDI[o.cld]) : null;
   const root = h("div", { class: "mod oq-page", style: `--c:${c.c}`, html: `
-    <a class="tocback" href="#open">${ICO.back}All exam questions</a>
+    <a class="tocback" href="#practice-open">${ICO.back}All exam questions</a>
     <header class="mhead"><p class="kicker">${c.n}. ${c.short} · about ${o.min} minutes · ${sr[0].toLowerCase()}</p><h1 class="oqt">${o.q}</h1></header>
     ${M ? `<div class="dgtip"><p>Draw it first, on paper or in the studio, then explain it in words below. ${o.cld && CLDI[o.cld].src === "nexus" ? "This is a practice case built for Nexus." : "This diagram comes from the course."}</p><a class="btn glassy small" href="#studio-${o.cld}">Draw it in the Causal studio</a></div>` : ""}
     <div class="owrite"><label for="oans" class="lbl">Your answer</label><textarea id="oans" placeholder="Write as you would in the exam. Your text is saved on this device.">${esc(s.ans[o.id] || "")}</textarea>
@@ -82,7 +82,7 @@ function viewExam(){
   function paint(){
     cancelAnimationFrame(tick);
     const phase = E.end ? "mark" : E.start ? "write" : "ready", qs = Q(), d = D();
-    let html = `<a class="tocback" href="#open">${ICO.back}Exam questions</a>${mhead("Societal and Global Challenges", "Mock exam", phase === "ready" ? "Notions to define and explain, then a causal diagram. The exam's exact length and format are not in the slides you have: pick a length and treat this as training, not a prediction." : phase === "write" ? "Write in full sentences, back each answer with a figure or a study from class. Your answers are saved on this device." : "Time to mark yourself. Tick only what your answer states clearly.")}`;
+    let html = `<a class="tocback" href="#practice-open">${ICO.back}Exam questions</a>${mhead("Societal and Global Challenges", "Mock exam", phase === "ready" ? "Notions to define and explain, then a causal diagram. The exam's exact length and format are not in the slides you have: pick a length and treat this as training, not a prediction." : phase === "write" ? "Write in full sentences, back each answer with a figure or a study from class. Your answers are saved on this device." : "Time to mark yourself. Tick only what your answer states clearly.")}`;
     if (phase === "ready"){
       html += `<div class="exready"><div class="mklen" role="group" aria-label="Length">${Object.keys(EXAM_FMT).map(Number).map(m => `<button type="button" data-len="${m}" aria-pressed="${E.min === m}"><b>${m} minutes</b><span>${EXAM_FMT[m].q} notions and 1 diagram</span></button>`).join("")}</div>
         <ol class="exlist">${qs.map(o => `<li><span class="osrc" style="--c:${CH[o.ch].c}">${CH[o.ch].short}</span>${o.q}</li>`).join("")}<li><span class="osrc dg">Causal diagram</span>${d.q}</li></ol>

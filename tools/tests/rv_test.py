@@ -39,14 +39,14 @@ async def run():
         await ctx.add_init_script("try{sessionStorage.setItem('nexus-fs-inv','1')}catch(e){}")
         page = await ctx.new_page()
         page.on("pageerror", lambda e: errs.append("PAGEERROR " + str(e)))
-        await page.goto(B + "/global/#quiz"); await page.wait_for_timeout(900)
+        await page.goto(B + "/global/#practice"); await page.wait_for_timeout(900)
         await page.click("[data-start]") if await page.query_selector("[data-start]") else None
         await page.wait_for_timeout(400)
         for k in range(40):
             o = await page.query_selector(".qzq .opt:not([disabled])")
             if not o: break
             await o.click(); await page.wait_for_timeout(60)
-            nx = await page.query_selector("[data-nx]")
+            nx = await page.query_selector("[data-next]")
             if nx: await nx.click(); await page.wait_for_timeout(60)
         await page.wait_for_timeout(1800)
         out["quiz end"] = await page.evaluate("!!document.querySelector('.qzend')")

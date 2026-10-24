@@ -1,9 +1,10 @@
 /* ---------- render ---------- */
-const MODVIEWS = { learn: viewLearn, chapter: viewChapter, studio: viewStudio, case: viewStudioCase, free: viewStudioFree, cdrills: viewStudioDrills, sort: viewSpot, figures: viewFigures, quiz: viewQuiz, cards: viewCards, open: viewOpen, openq: viewOpenQ, exam: viewExam, recap: viewRecap };
-const TITLES = { learn: "Learn", chapter: "Learn", studio: "Causal studio", case: "Causal studio", free: "Free board", cdrills: "Diagram drills", sort: "Sort it", figures: "Key figures", quiz: "Quiz", cards: "Flashcards", open: "Exam questions", openq: "Exam questions", exam: "Mock exam", recap: "Recap" };
+const MODVIEWS = { learn: viewLearn, chapter: viewChapter, studio: viewStudio, case: viewStudioCase, free: viewStudioFree, cdrills: viewStudioDrills, figures: viewFigures, practice: o => viewPractice(o.tab, o.ch), openq: viewOpenQ, exam: viewExam, recap: viewRecap };
+const TITLES = { learn: "Learn", chapter: "Learn", studio: "Causal studio", case: "Causal studio", free: "Free board", cdrills: "Diagram drills", figures: "Key figures", practice: "Practice", openq: "Exam questions", exam: "Mock exam", recap: "Recap" };
 /* a small living diagram in the header of each module: a different system of the course each time */
 const MINI = {
-  learn: "heat", recap: "heat", studio: "amazon", cdrills: "popul", sort: "fish", figures: "cocoa", quiz: "lez", cards: "fish", open: "homicide",
+  learn: "heat", recap: "heat", studio: "amazon", cdrills: "popul", figures: "cocoa", openq: null,
+  practice: o => ({ q: "fish", cards: "lez", open: "homicide" })[o.tab],
   chapter: id => ({ systems: "heat", sd: "fish", ecology: "amazon", bounds: "cocoa", social: "paygap", economy: "lez", method: "homicide" })[id] || "heat"
 };
 new ResizeObserver(() => document.documentElement.style.setProperty("--hdr", document.querySelector(".hdr").offsetHeight + "px")).observe(document.querySelector(".hdr"));
@@ -14,13 +15,13 @@ function render(){
   STAGE.stops.forEach(f => f && f()); STAGE.stops = [];
   STAGE.view = r.view; AURA.set(!QUIET.has(r.view)); TINT();
   document.body.dataset.view = r.view;
-  const NAVOF = { chapter: "learn", case: "studio", free: "studio", cdrills: "studio", openq: "open", exam: "open", recap: "learn" };
+  const NAVOF = { chapter: "learn", case: "studio", free: "studio", cdrills: "studio", openq: "practice", exam: "practice", recap: "learn" };
   document.querySelectorAll(".nav a").forEach(a => { const on = a.dataset.route === (NAVOF[r.view] || r.view); a.setAttribute("aria-current", on ? "page" : "false"); if (on) a.scrollIntoView({ block: "nearest", inline: "nearest" }); });
   const app = $("#app");
   if (MODVIEWS[r.view]){
     const view = MODVIEWS[r.view](r.id);
     app.replaceChildren(view);
-    const t = r.view === "case" ? (CLDI[r.id] || CLD[0]).title : TITLES[r.view] || "Societal and Global Challenges";
+    const t = r.view === "case" ? (CLDI[r.id] || CLD[0]).title : r.view === "practice" ? PR_TABS.find(x => x[0] === r.id.tab)[1] + " · Practice" : TITLES[r.view] || "Societal and Global Challenges";
     document.title = t + " · Societal and Global Challenges";
     window.scrollTo(0, 0);
     const mini = typeof MINI[r.view] === "function" ? MINI[r.view](r.id) : MINI[r.view];

@@ -3,7 +3,7 @@ import asyncio, sys, json
 from playwright.async_api import async_playwright
 BASE = "http://localhost:8770/global/"
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "_shots") + "/"
-ROUTES = ["home", "learn", "learn-systems", "learn-sd", "learn-ecology", "learn-bounds", "learn-social", "learn-economy", "learn-method", "studio", "studio-heat", "studio-cocoa", "studio-free", "studio-drills", "sort", "figures", "quiz", "cards", "open", "open-x1", "open-d1", "exam", "recap"]
+ROUTES = ["home", "learn", "learn-systems", "learn-sd", "learn-ecology", "learn-bounds", "learn-social", "learn-economy", "learn-method", "studio", "studio-heat", "studio-cocoa", "studio-free", "studio-drills", "figures", "practice", "practice-sd", "practice-cards", "practice-open", "open-x1", "open-d1", "exam", "recap", "sort", "quiz", "cards", "open"]
 SHOTS = set(sys.argv[1].split(",")) if len(sys.argv) > 1 and sys.argv[1] else set()
 
 async def run():

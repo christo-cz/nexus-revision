@@ -1,17 +1,24 @@
+/* ---------- Learn was compacted (89 → 52 cards): carry the ticks over once ---------- */
+(function migrateLearn(){
+  if (MS.get("learnV", 1) >= 2) return;
+  const k = { ...MS.get("learn", {}) };
+  Object.entries(LEARN_MERGED).forEach(([id, src]) => { const all = src.every(s => k[s]); src.forEach(s => delete k[s]); if (all) k[id] = 1; });
+  MS.set("learn", k); MS.set("learnV", 2);
+})();
+
 /* ---------- routing ---------- */
 function route(){
-  const hs = location.hash.slice(1);
+  let hs = location.hash.slice(1);
+  const moved = practiceHash(hs);
+  if (moved){ hs = moved; history.replaceState(null, "", "#" + hs); }
+  const pr = practiceRoute(hs); if (pr) return pr;
   if (hs === "learn") return { view: "learn" };
   if (/^learn-\w+$/.test(hs)) return { view: "chapter", id: hs.slice(6) };
   if (hs === "studio") return { view: "studio" };
   if (hs === "studio-free") return { view: "free" };
   if (hs === "studio-drills") return { view: "cdrills" };
   if (/^studio-\w+$/.test(hs)) return { view: "case", id: hs.slice(7) };
-  if (hs === "sort" || /^sort-\w+$/.test(hs)) return { view: "sort", id: hs.slice(5) };
   if (hs === "figures") return { view: "figures" };
-  if (hs === "quiz" || /^quiz-\w+$/.test(hs)) return { view: "quiz", id: hs.slice(5) };
-  if (hs === "cards" || /^cards-\w+$/.test(hs)) return { view: "cards", id: hs.slice(6) };
-  if (hs === "open") return { view: "open" };
   if (/^open-\w+$/.test(hs)) return { view: "openq", id: hs.slice(5) };
   if (hs === "exam") return { view: "exam" };
   if (hs === "recap") return { view: "recap" };
@@ -25,28 +32,23 @@ const RND = (a, b) => a + Math.random() * (b - a);
 const MOD_ICONS = {
   learn: '<path d="M4 5h7a3 3 0 0 1 3 3v11a2 2 0 0 0-2-2H4zM20 5h-5a3 3 0 0 0-3 3v11a2 2 0 0 1 2-2h6z"/>',
   studio: '<circle cx="6" cy="6" r="2.6"/><circle cx="18" cy="8" r="2.6"/><circle cx="10" cy="18" r="2.6"/><path d="M8.5 6.6 15.4 7.6M16.6 10.3l-4.8 5.6M8.8 15.6 6.8 8.5"/>',
-  sort: '<path d="M4 6h10M4 12h7M4 18h4M17 4v16M14 17l3 3 3-3"/>',
   figures: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
-  quiz: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17v.5"/>',
-  cards: '<rect x="3" y="6" width="14" height="12" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v10"/>',
-  open: '<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/>',
+  practice: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17v.5"/>',
   exam: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>'
 };
 function modulesHtml(){
   const L = learnStats(), st = studioState(), sp = MS.get("spot", { best: 0, sprint: 0 }), qz = MS.get("quiz", {}), fk = Object.keys(MS.get("cards", {})).length, op = Object.values(openState().ticks || {}).filter(t => t.length).length, ex = MS.get("exam", null), fg = Object.keys(MS.get("figs", {})).length;
   const done = CLD.filter(d => (st[d.id] || {}).best != null).length;
+  const prSub = [qz.last ? `last quiz ${Math.round(qz.last.score / qz.last.n * 100)}%` : `${QUIZ.length + SPOT.length} questions`, sp.best ? `best streak ${sp.best}` : "", `${fk}/${CARDS.length} flashcards`, `${op}/${OPEN.length} exam questions tried`].filter(Boolean);
   const M = [
     ["#learn", "Learn", "The six sessions and the tutorial in short cards, with eighteen interactive models.", `${L.known}/${L.total} cards known`, "var(--pri)", "learn"],
     ["#studio", "Causal studio", "Draw the course's causal diagrams and get each link checked. Free board, loops found for you, drills.", done ? `${done}/${CLD.length} diagrams drawn` : `${CLD.length} diagrams`, "var(--c4)", "studio"],
-    ["#sort", "Sort it", "Environmental, social or economic? Macro, meso or micro? Which scenario, which boundary? Streaks and a sprint.", sp.best ? `best streak ${sp.best}` : `${SPOT.length} items`, "var(--c5)", "sort"],
     ["#figures", "Key figures", "Every number and study shown in class, with the lesson to draw. Hide the numbers and test yourself.", `${fg}/${FIGS.length} known`, "var(--c3)", "figures"],
-    ["#quiz", "Quiz", "Exam-style multiple choice on every session, each answer explained.", qz.last ? `last ${Math.round(qz.last.score / qz.last.n * 100)}%` : `${QUIZ.length} questions`, "var(--c1)", "quiz"],
-    ["#cards", "Flashcards", "Definitions, authors, dates and models to flip.", `${fk}/${CARDS.length} known`, "var(--c2)", "cards"],
-    ["#open", "Exam questions", "Define and explain the key notions, and draw the diagrams, with model answers and key points.", `${op}/${OPEN.length} tried`, "var(--pri)", "open"],
+    ["#practice", "Practice", "Questions (multiple choice and sorting, as a quiz, a streak or a sprint), flashcards, and exam questions with model answers.", prSub.map(s => `<span>${s}</span>`).join(""), "var(--c1)", "practice", "wide"],
     ["#exam", "Mock exam", "Timed: explain notions, then draw a causal diagram, marked against the key points.", ex && ex.score != null ? `last ${ex.score}%` : "60 or 90 min", "var(--c4)", "exam"]
   ];
   return `<section class="sec"><div class="sec-h"><h2>Revise</h2><p>Learn the notions, then practise the three things the exam asks: define, explain with evidence, draw the causal diagram.</p></div>
-    <div class="mods mods4">${M.map(m => `<a class="modt" href="${m[0]}" style="--c:${m[4]}"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${MOD_ICONS[m[5]]}</svg></span><b>${m[1]}</b><span class="md">${m[2]}</span><span class="ms">${m[3]}</span></a>`).join("")}</div></section>`;
+    <div class="mods dense">${M.map(m => `<a class="modt${m[6] ? " " + m[6] : ""}" href="${m[0]}" style="--c:${m[4]}"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${MOD_ICONS[m[5]]}</svg></span><b>${m[1]}</b><span class="md">${m[2]}</span><span class="ms${m[6] ? " msub" : ""}">${m[3]}</span></a>`).join("")}</div></section>`;
 }
 
 /* ---------- overview ---------- */
