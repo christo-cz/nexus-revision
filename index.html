@@ -240,7 +240,7 @@ html.theme-vt::view-transition-new(root){animation:themeReveal .65s cubic-bezier
 .pen-stage:focus-visible{outline:2px dashed var(--acc);outline-offset:6px;border-radius:14px}
 .pen-shadow{position:absolute;left:12%;right:8%;top:calc(50% + var(--apo) * 1.25);height:30px;border-radius:50%;background:radial-gradient(closest-side,rgb(0 0 0 / .5),transparent);filter:blur(7px);transform:rotate(-3deg);pointer-events:none}
 :root:not([data-theme="dark"]) .pen-shadow,.tint-light .pen-shadow{background:radial-gradient(closest-side,rgb(20 24 60 / .28),transparent)}
-.pen{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;transform:translateY(var(--py,0px)) rotateZ(-3deg) rotateY(calc(-15deg + var(--tilt,0) * 8deg))}
+.pen{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;transform:translateY(var(--py,0px)) rotateZ(-3deg) rotateY(-15deg)}
 .drum{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d;transform:rotateX(var(--a,0deg))}
 .fct,.cone,.cap{position:absolute;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .fct{display:flex;align-items:stretch;overflow:hidden}
@@ -982,7 +982,7 @@ void main(){
   const VS = "attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }";
   const FS = `
 precision highp float;
-uniform vec2 uRes; uniform float uT; uniform vec2 uP; uniform vec3 uC; uniform float uA;
+uniform vec2 uRes; uniform float uPx; uniform float uT; uniform vec2 uP; uniform vec3 uC; uniform float uA;
 mat2 turn(float a){ float c = cos(a), s = sin(a); return mat2(c, s, -s, c); }
 float strands(vec2 uv, float t){
   vec2 sum = vec2(0.0), bend = vec2(0.0);
@@ -997,8 +997,9 @@ float strands(vec2 uv, float t){
   return sum.x + sum.y;
 }
 void main(){
-  float asp = uRes.x / uRes.y;
-  vec2 st = gl_FragCoord.xy / uRes, uv = (st - 0.5) * vec2(asp, 1.0) * 0.5, p = (uP - 0.5) * vec2(asp, 1.0) * 0.5;
+  /* in CSS pixels from the top left of the sheet, at a fixed scale: when the window grows or shrinks (full screen), nothing already drawn moves */
+  vec2 css = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y) / uPx;
+  vec2 uv = (css - vec2(720.0, 450.0)) / 1800.0, p = (uP - vec2(720.0, 450.0)) / 1800.0;
   float d = length(uv - p);
   /* only right around the pointer (about a sixth of the screen height): the field is zoomed out and gently swirled,
      so more and finer strands gather there; the rest of the screen does not move with the pointer */
@@ -1018,27 +1019,29 @@ void main(){
   gl.useProgram(prog);
   const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
   const ap = gl.getAttribLocation(prog, "p"); gl.enableVertexAttribArray(ap); gl.vertexAttribPointer(ap, 2, gl.FLOAT, false, 0, 0);
-  const u = { res: gl.getUniformLocation(prog, "uRes"), t: gl.getUniformLocation(prog, "uT"), p: gl.getUniformLocation(prog, "uP"), c: gl.getUniformLocation(prog, "uC"), a: gl.getUniformLocation(prog, "uA") };
+  const u = { res: gl.getUniformLocation(prog, "uRes"), px: gl.getUniformLocation(prog, "uPx"), t: gl.getUniformLocation(prog, "uT"), p: gl.getUniformLocation(prog, "uP"), c: gl.getUniformLocation(prog, "uC"), a: gl.getUniformLocation(prog, "uA") };
   gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
   /* the same hot pink as the original component (Alexi: keep the video's colour), in both themes */
   gl.uniform3f(u.c, 0.98, 0.16, 0.47);
   const colors = () => { gl.uniform1f(u.a, 0.95); draw(); };
-  let W = 0, H = 0;
+  let W = 0, H = 0, dpr = 1;
   function size(){
-    const dpr = Math.min(devicePixelRatio || 1, 2) * (innerWidth < 700 ? 0.55 : 0.65);
-    W = Math.max(1, Math.round(cv.clientWidth * dpr)); H = Math.max(1, Math.round(cv.clientHeight * dpr));
-    cv.width = W; cv.height = H; gl.viewport(0, 0, W, H); gl.uniform2f(u.res, W, H); draw();
+    dpr = Math.min(devicePixelRatio || 1, 2) * (innerWidth < 700 ? 0.55 : 0.65);
+    const w = Math.max(1, Math.round(cv.clientWidth * dpr)), h = Math.max(1, Math.round(cv.clientHeight * dpr));
+    if (w === W && h === H) return;
+    W = w; H = h; cv.width = W; cv.height = H; gl.viewport(0, 0, W, H); gl.uniform2f(u.res, W, H); gl.uniform1f(u.px, dpr);
   }
   /* the strands follow the pointer, and drift on their own when it is away */
-  const P = { x: 0.6, y: 0.55, tx: 0.6, ty: 0.55, own: true, at: 0 };
-  hero.addEventListener("pointermove", e => { const r = cv.getBoundingClientRect(); P.tx = (e.clientX - r.left) / r.width; P.ty = 1 - (e.clientY - r.top) / r.height; P.own = false; P.at = performance.now(); }, { passive: true });
+  /* the pointer in CSS pixels on the sheet; when it is away, a slow path that does not depend on the window size either */
+  const P = { x: 860, y: 400, tx: 860, ty: 400, own: true, at: 0 };
+  hero.addEventListener("pointermove", e => { const r = cv.getBoundingClientRect(); P.tx = e.clientX - r.left; P.ty = e.clientY - r.top; P.own = false; P.at = performance.now(); }, { passive: true });
   let T = 0, prev = 0, raf = 0, visible = true;
-  function draw(){ gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform1f(u.t, T); gl.uniform2f(u.p, P.x, P.y); gl.drawArrays(gl.TRIANGLES, 0, 3); }
+  function draw(){ size(); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform1f(u.t, T); gl.uniform2f(u.p, P.x, P.y); gl.drawArrays(gl.TRIANGLES, 0, 3); }
   function frame(now){
     raf = 0;
     const dt = prev ? Math.min(0.05, (now - prev) / 1000) : 0; prev = now; T += dt * 0.55;
     if (!P.own && now - P.at > 4000) P.own = true;
-    if (P.own){ P.tx = 0.55 + 0.28 * Math.sin(T * 0.21) + 0.08 * Math.sin(T * 0.53); P.ty = 0.5 + 0.22 * Math.cos(T * 0.17); }
+    if (P.own){ P.tx = 790 + 400 * Math.sin(T * 0.21) + 115 * Math.sin(T * 0.53); P.ty = 450 + 200 * Math.cos(T * 0.17); }
     const ease = 1 - Math.exp(-dt / 0.55 * (P.own ? 3 : 9)); P.x += (P.tx - P.x) * ease; P.y += (P.ty - P.y) * ease;
     draw();
     if (visible && !document.hidden && !reduce.matches) raf = requestAnimationFrame(frame);
@@ -1046,10 +1049,11 @@ void main(){
   function wake(){ if (!raf && visible && !document.hidden && !reduce.matches){ prev = 0; raf = requestAnimationFrame(frame); } }
   new IntersectionObserver(es => { visible = es[0].intersectionRatio > 0.12; if (visible) wake(); }, { threshold: [0, 0.12, 0.3] }).observe(hero);
   document.addEventListener("visibilitychange", wake);
-  let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(size, 120); });
+  /* resized in the same frame as the window (no debounce), then drawn at once: no stretched frame during a full-screen transition */
+  new ResizeObserver(() => draw()).observe(cv);
   addEventListener("nexus-theme", colors);
   window.__nexusSpark = () => {};
-  size(); colors();
+  colors();
   if (reduce.matches){ T = 3.0; draw(); } else wake();
 })();
 
@@ -1419,7 +1423,7 @@ const NXR = (() => {
       fct[i].style.setProperty("--dk", dk); fct[i].style.setProperty("--sp", sp); cone[i].style.setProperty("--dk", dk);
     }
     const k = ((Math.round(A / STEP) % N) + N) % N;
-    if (k !== active){ active = k; paint(); }
+    if (k !== active){ active = k; if (spinning) chips.querySelectorAll("button").forEach((b, i) => b.setAttribute("aria-pressed", String(i === active))); else paint(); }
   }
   function paint(){
     const x = F[active], st = x.st ? x.st() : "";
@@ -1440,16 +1444,17 @@ const NXR = (() => {
   const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
   function goTo(i){ spinTok++; const base = i * STEP, k = Math.round((A - base) / 360); target = base + 360 * k; touched = true; kick(); }
   /* a showy spin: three full turns that slow down and stop on the same face (entering full screen on a computer, opening the site on a phone) */
-  let spinTok = 0;
+  /* while it spins, only the chips follow; the card (whose height changes from face to face, and would bob the whole centred block) is rewritten once at the end */
+  let spinTok = 0, spinning = false;
   function spin(turns = 3, dur = 2800){
     if (matchMedia("(prefers-reduced-motion: reduce)").matches || dragging) return;
     const tok = ++spinTok, from = Math.round(A / STEP) * STEP, to = from + 360 * turns, t0 = performance.now();
-    cancelAnimationFrame(raf); raf = 0; V = 0; target = null;
+    cancelAnimationFrame(raf); raf = 0; V = 0; target = null; spinning = true;
     (function step(t){
-      if (tok !== spinTok) return;
+      if (tok !== spinTok){ spinning = false; paint(); return; }
       const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 4);
       A = from + (to - from) * e; set();
-      if (p < 1) requestAnimationFrame(step); else { A = to; set(); }
+      if (p < 1) requestAnimationFrame(step); else { A = to; spinning = false; set(); paint(); }
     })(t0);
   }
   /* the face the pencil is on or heading to, and its angle measured from the first face (first face 0, last face (N-1)·STEP) */
@@ -1477,7 +1482,6 @@ const NXR = (() => {
     stage.classList.add("drag", "used"); kick();
   });
   stage.addEventListener("pointermove", e => {
-    const r = stage.getBoundingClientRect(); pen.style.setProperty("--tilt", ((e.clientX - r.left) / r.width - 0.5).toFixed(3));
     if (!dragging) return;
     const dx = e.clientX - lx, dy = e.clientY - ly; lx = e.clientX; ly = e.clientY; moved += Math.abs(dx) + Math.abs(dy);
     if (e.pointerType === "mouse"){ const d = -(dy * 0.55 + dx * 0.22); A += d; V = V * 0.4 + d * 0.6; return; }
@@ -1502,7 +1506,6 @@ const NXR = (() => {
     kick();
   };
   stage.addEventListener("pointerup", up); stage.addEventListener("pointercancel", up);
-  stage.addEventListener("pointerleave", () => pen.style.setProperty("--tilt", "0"));
   chips.addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) goTo(+b.dataset.go); });
   ui.querySelector("[data-prev]").addEventListener("click", () => goTo((active - 1 + N) % N));
   ui.querySelector("[data-next]").addEventListener("click", () => goTo((active + 1) % N));
