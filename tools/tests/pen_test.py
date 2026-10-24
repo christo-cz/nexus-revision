@@ -29,7 +29,7 @@ async def run():
         await page.mouse.wheel(0, 100); await page.wait_for_timeout(500)
         y1 = await page.evaluate("scrollY")
         out["last face + wheel down goes round to the first, page still"] = {"face": await page.evaluate(act), "scrollY": y1}
-        out["soon card"] = await page.evaluate("(() => { document.querySelector('.pen-chips [data-go=\"5\"]').click(); return null; })()")
+        out["soon card"] = await page.evaluate("(() => { document.querySelector('.pen-chips [data-go=\"1\"]').click(); return null; })()")
         await page.wait_for_timeout(1400)
         out["soon card"] = await page.evaluate("document.querySelector('.pen-card h2').textContent + ' | links ' + document.querySelectorAll('.pen-card a').length + ' | ' + (document.querySelector('.pen-card .pst') || {}).textContent")
         await page.click(".pen-chips [data-go='0']"); await page.wait_for_timeout(1400)
