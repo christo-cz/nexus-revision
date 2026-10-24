@@ -1,9 +1,10 @@
 /* ---------- render ---------- */
-const MODVIEWS = { learn: viewLearn, chapter: viewChapter, cases: viewCases, spot: viewSpot, labs: viewLabs, lab: viewLab, quiz: viewQuiz, cards: viewCards, open: viewOpen, openq: viewOpenQ, exam: viewExam, recap: viewRecap, project: viewProject };
-const TITLES = { learn: "Learn", chapter: "Learn", cases: "Cases", spot: "Spot it", labs: "Labs", lab: "Labs", quiz: "Quiz", cards: "Flashcards", open: "Exam questions", openq: "Exam questions", exam: "Mock exam", recap: "Recap", project: "Group project" };
+const MODVIEWS = { learn: viewLearn, chapter: viewChapter, cases: viewCases, practice: o => viewPractice(o.tab, o.ch), labs: viewLabs, lab: viewLab, openq: viewOpenQ, exam: viewExam, recap: viewRecap, project: viewProject };
+const TITLES = { learn: "Learn", chapter: "Learn", cases: "Cases", practice: "Practice", labs: "Labs", lab: "Labs", openq: "Exam questions", exam: "Mock exam", recap: "Recap", project: "Group project" };
 /* the formation that lives in the header of each module page (same people as on the overview) */
 const MINI = {
-  learn: { mode: 3 }, recap: { mode: 3 }, project: { mode: 2 }, cases: { mode: 2 }, spot: { mode: 1 }, labs: { mode: 0, vivid: true }, quiz: { mode: 3 }, cards: { mode: 1 }, open: { mode: 2 },
+  learn: { mode: 3 }, recap: { mode: 3 }, project: { mode: 2 }, cases: { mode: 2 }, labs: { mode: 0, vivid: true },
+  practice: o => ({ q: { mode: 1 }, cards: { mode: 3 }, open: { mode: 2 } })[o.tab],
   chapter: id => ({ org: { mode: 3 }, person: { mode: 0, vivid: true }, decide: { mode: 1 }, motiv: { mode: 2 } })[id] || { mode: 3 },
   lab: id => ({ kelley: { mode: 1 }, equity: { mode: 2 }, bigfive: { mode: 0, vivid: true }, who: { mode: 3 } })[id] || { mode: 0 }
 };
@@ -14,7 +15,7 @@ function render(){
   STAGE.stops.forEach(f => f && f()); STAGE.stops = [];
   STAGE.view = r.view; AURA.set(r.view !== "case"); TINT();
   document.body.dataset.view = r.view;
-  const NAVOF = { case: "cases", chapter: "learn", openq: "open", exam: "open", lab: "labs", recap: "learn" };
+  const NAVOF = { case: "cases", chapter: "learn", openq: "practice", exam: "practice", lab: "labs", recap: "learn" };
   document.querySelectorAll(".nav a").forEach(a => { const on = a.dataset.route === (NAVOF[r.view] || r.view); a.setAttribute("aria-current", on ? "page" : "false"); if (on) a.scrollIntoView({ block: "nearest", inline: "nearest" }); });
   const app = $("#app");
   if (r.view === "case"){
@@ -24,7 +25,7 @@ function render(){
   } else if (MODVIEWS[r.view]){
     const view = MODVIEWS[r.view](r.id);
     app.replaceChildren(view);
-    document.title = (TITLES[r.view] || "Management") + " · Management and Organizations";
+    document.title = (r.view === "practice" ? PR_TABS.find(x => x[0] === r.id.tab)[1] + " · Practice" : TITLES[r.view] || "Management") + " · Management and Organizations";
     window.scrollTo(0, 0);
     const mini = typeof MINI[r.view] === "function" ? MINI[r.view](r.id) : MINI[r.view];
     if (mini && view.classList.contains("mod")){

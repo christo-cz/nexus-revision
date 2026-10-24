@@ -33,19 +33,20 @@ learn = sub(recolor(r('js_learn.js')), [
     ('mhead("Macroeconomics", "Learn the course", "Four chapters, cut into short cards: the rule in one line, the formula, an example, the trap, and what the exam wants. Tick each card when you know it."',
      'mhead("Management and Organizations", "Learn the course", "Four lectures and two tutorials, cut into short cards: the idea in one line, the key points, an example, the trap, and what the exam wants. Tick each card when you know it."'),
     ('<li><b>Read a chapter</b><span>Card by card. Tick what you could explain to a friend.</span></li>', '<li><b>Read a lecture</b><span>Card by card. Tick what you could explain to a friend.</span></li>'),
-    ('<li><b>Test it</b><span>Run the chapter quiz and read every explanation, even when you are right.</span></li>', '<li><b>Test it</b><span>Run the lecture quiz and read every explanation, even when you are right.</span></li>'),
-    ('<li><b>Drill the numbers</b><span>Short exercises until the formulas are automatic.</span></li>', '<li><b>Apply it</b><span>Spot it scenes, then a case: name the concept, then use it.</span></li>'),
+    ('<li><b>Test it</b><span>Run the chapter quiz and read every explanation, even when you are right.</span></li>', '<li><b>Test it</b><span>In Practice, run the lecture\'s questions and read every explanation, even when you are right.</span></li>'),
+    ('<li><b>Drill the numbers</b><span>Short exercises until the formulas are automatic.</span></li>', '<li><b>Apply it</b><span>Workplace scenes in Practice, then a case: name the concept, then use it.</span></li>'),
     ('<li><b>Write one open answer</b><span>Then compare with the model answer and tick the key points.</span></li>', '<li><b>Write one exam answer</b><span>Then compare with the model answer and tick the key points.</span></li>'),
-    ('All chapters', 'All lectures'), ('Quiz this chapter', 'Quiz this lecture'), ('mhead(`Chapter ${c.n}`', 'mhead(`Lecture ${c.n}`'), ('>Test this chapter<', '>Test this lecture<'),
+    ('All chapters', 'All lectures'), ('>Quiz this chapter<', '>Practise this lecture<'), ('href="#quiz-${c.id}"', 'href="#practice-${c.id}"'), ('href="#cards-${c.id}"', 'href="#practice-cards-${c.id}"'), ('mhead(`Chapter ${c.n}`', 'mhead(`Lecture ${c.n}`'), ('>Test this chapter<', '>Test this lecture<'),
 ], 'learn')
 qc = recolor(r('js_quizcards.js')).replace('mhead("Macroeconomics"', 'mhead("Management and Organizations"')
 focus = sub(r('js_focus.js'), [('card.querySelector("input:not([disabled]), .opt:not([disabled])")', 'card.querySelector("input:not([disabled]), .opt:not([disabled]), textarea")')], 'focus')
 helpers = '''const RI = (a, b, s = 1) => a + s * Math.floor(Math.random() * ((b - a) / s + 1));
 const PICK = a => a[Math.floor(Math.random() * a.length)];
+const PR_LEDE = "Short workplace scenes to name (the bias, the need, the factor, the type of justice) and exam-style multiple choice, mixed. Every answer comes with its explanation.";
 '''
 js = '\n'.join([util, r('js_credit.js'), reviews, r('js_tint.js'), aura, helpers,
                 rs('m_course.js'), rs('m_quiz.js'), rs('m_open.js'), rs('m_spot.js'), rs('m_cases.js'),
-                r('js_ms.js'), learn, qc, r('mg_widgets.js'), r('mg_home.js'), r('mg_case.js'), r('mg_spot.js'), r('mg_labs.js'), r('mg_exam.js'), r('mg_project.js'), focus, r('mg_search_consts.js'), r('nx_search.js'), 'document.addEventListener("click", e => { if (e.target.closest("[data-search]")) openSearch(); });', r('mg_render.js')])
+                r('js_ms.js'), learn, qc, r('mg_widgets.js'), r('mg_home.js'), r('mg_case.js'), r('mg_practice.js'), r('mg_labs.js'), r('mg_exam.js'), r('mg_project.js'), focus, r('mg_search_consts.js'), r('nx_search.js'), 'document.addEventListener("click", e => { if (e.target.closest("[data-search]")) openSearch(); });', r('mg_render.js')])
 # the full-screen helper lives in the reviews cut (it sits between reviews and the tint in the macro file)
 head = '''<!doctype html>
 <html lang="en">
@@ -81,11 +82,8 @@ body = '''</style>
     <a href="#home" data-route="home">Overview</a>
     <a href="#learn" data-route="learn">Learn</a>
     <a href="#cases" data-route="cases">Cases</a>
-    <a href="#spot" data-route="spot">Spot it</a>
+    <a href="#practice" data-route="practice">Practice</a>
     <a href="#labs" data-route="labs">Labs</a>
-    <a href="#quiz" data-route="quiz">Quiz</a>
-    <a href="#cards" data-route="cards">Flashcards</a>
-    <a href="#open" data-route="open">Exam questions</a>
   </nav>
   <span class="grow"></span>
   <button class="theme" id="rvBtn" type="button" aria-label="Write a review"></button>

@@ -20,7 +20,7 @@ function viewOpenQ(id){
   const o = OPEN.find(x => x.id === id) || OPEN[0], c = CH[o.ch], s = openState(), idx = OPEN.indexOf(o), nx = OPEN[idx + 1], pv = OPEN[idx - 1];
   const ticks = new Set(s.ticks[o.id] || []);
   const root = h("div", { class: "mod oq-page", style: `--c:${c.c}`, html: `
-    <a class="tocback" href="#open">${ICO.back}All exam questions</a>
+    <a class="tocback" href="#practice-open">${ICO.back}All exam questions</a>
     <header class="mhead"><p class="kicker">${c.n}. ${c.short} · about ${o.min} minutes · ${o.src === "slides" ? "self-check question from the slides" : o.src === "apply" ? "application case" : "from the lecture"}</p><h1 class="oqt">${o.q}</h1></header>
     <div class="owrite"><label for="oans" class="lbl">Your answer</label><textarea id="oans" placeholder="Write as you would in the exam. Your text is saved on this device.">${esc(s.ans[o.id] || "")}</textarea>
       <div class="orow"><span class="muted" data-wc></span><button class="btn primary" type="button" data-reveal>Compare with the model answer</button></div></div>
@@ -59,7 +59,7 @@ function viewExam(){
   function paint(){
     cancelAnimationFrame(tick);
     const phase = E.end ? "mark" : E.start ? "write" : "ready";
-    root.innerHTML = `<a class="tocback" href="#open">${ICO.back}Exam questions</a>
+    root.innerHTML = `<a class="tocback" href="#practice-open">${ICO.back}Exam questions</a>
       ${mhead("Management and Organizations", "Mock exam", phase === "ready" ? `${Q.length} questions in ${EXAM_MIN} minutes: one per lecture, then an application case. The real exam tests understanding and application; its exact format is not in the syllabus, so treat this as training, not a prediction.` : phase === "write" ? "Write in full sentences. Your answers are saved on this device as you type." : "Time to mark yourself. Tick only what your answer states clearly.")}
       ${phase === "ready" ? `<div class="exready"><ol class="exlist">${Q.map(o => `<li><span class="osrc ${o.src === "apply" ? "ap" : ""}" style="--c:${CH[o.ch].c}">${o.src === "apply" ? "Application case" : CH[o.ch].short}</span>${o.q}</li>`).join("")}</ol>
           <div class="row"><button class="btn primary big" type="button" data-start>Start the clock: ${EXAM_MIN} minutes</button><button class="btn glassy big" type="button" data-new>Draw other questions</button></div>

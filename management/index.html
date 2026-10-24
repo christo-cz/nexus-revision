@@ -1230,11 +1230,8 @@ details.oans[open] summary{margin-bottom:8px}
     <a href="#home" data-route="home">Overview</a>
     <a href="#learn" data-route="learn">Learn</a>
     <a href="#cases" data-route="cases">Cases</a>
-    <a href="#spot" data-route="spot">Spot it</a>
+    <a href="#practice" data-route="practice">Practice</a>
     <a href="#labs" data-route="labs">Labs</a>
-    <a href="#quiz" data-route="quiz">Quiz</a>
-    <a href="#cards" data-route="cards">Flashcards</a>
-    <a href="#open" data-route="open">Exam questions</a>
   </nav>
   <span class="grow"></span>
   <button class="theme" id="rvBtn" type="button" aria-label="Write a review"></button>
@@ -1691,362 +1688,284 @@ const AURA = (() => {
 
 const RI = (a, b, s = 1) => a + s * Math.floor(Math.random() * ((b - a) / s + 1));
 const PICK = a => a[Math.floor(Math.random() * a.length)];
+const PR_LEDE = "Short workplace scenes to name (the bias, the need, the factor, the type of justice) and exam-style multiple choice, mixed. Every answer comes with its explanation.";
 
 /* =====================================================================
    COURSE CONTENT — Fundamentals of Management and Organizations (BBA1, S1).
-   Written from the four lectures and tutorials 1 and 2, reworded.
+   Written from the four lectures and tutorials 1 and 2, reworded, then compacted (Oct 24):
+   every definition, author, date, figure and study kept, redundant cards merged.
    Each card: title, line (the idea in one line), points, formula, example, trap, exam.
    ===================================================================== */
 const COURSE = [
 { id: "org", n: 1, title: "Organizations, management and theories", short: "Organizations", c: "var(--c1)",
-  intro: "What organizational behavior studies, why we need theories rather than intuition, what makes a social arrangement an organization, and how the schools of management answered the same question: how do we get controlled performance?",
+  intro: "What organizational behavior studies, why theories beat intuition, what makes a social arrangement an organization, and how the schools of management answered one question: how do we get controlled performance?",
   sections: [
   { title: "What the course is for", cards: [
     { id: "o-problem", title: "A people-related problem",
       line: "A problem is a gap between the desired outcome and the actual outcome. The course gives you tools to solve the ones caused by people.",
-      points: ["Step 1: define the problem (the gap, stated precisely).", "Step 2: identify its likely causes.", "Step 3: generate recommendations.", "At every step, use theories and evidence, not gut feeling."],
-      example: "Since a team went hybrid, output per full-time employee fell about 10%. The problem is the drop in productivity below target. \"People work from home\" is a possible cause, not the problem. Other candidate causes: skill gaps, low motivation, burnout, weak onboarding, meeting overload, poor leadership.",
-      trap: "Stating a cause or a solution as the problem (\"the problem is remote work\"). That closes the diagnosis before it starts.",
+      points: ["1. Define the problem (the gap, stated precisely). 2. Identify its likely causes. 3. Generate recommendations.", "At every step, use theories and evidence, not gut feeling."],
+      example: "Since a team went hybrid, output per full-time employee fell about 10%. The problem is the drop below target. \"People work from home\" is a possible cause, not the problem; others: skill gaps, low motivation, burnout, weak onboarding, meeting overload, poor leadership.",
+      trap: "Stating a cause or a solution as the problem (\"the problem is remote work\") closes the diagnosis before it starts.",
       exam: "For any case question, write the three steps explicitly: problem, causes, theory-based recommendations." },
-    { id: "o-ob", title: "Organizational behavior (OB)",
-      line: "The study of the actions, reactions and attitudes of individuals at work, in response to their environment, the rules and their social interactions.",
-      points: ["OB science asks how people behave in organizations, and how organizations use that knowledge to reach their goals.", "Six disciplines feed it: psychology, social psychology, sociology, anthropology, cognitive sciences, philosophy and ethics."],
-      exam: "If asked why managers need OB: organizations are made of people, and people's behavior is not obvious. Common sense is often wrong." },
-    { id: "o-disc", title: "The six disciplines behind OB",
-      line: "Each discipline asks a different kind of question about people at work.",
-      points: ["Psychology: personality, motivation, emotions, perception. Why does this person act this way?", "Social psychology: influence, conformity, group dynamics, biases. How does a group change individual behavior?", "Sociology: norms, roles, power, culture. How does the social context shape behavior?", "Anthropology: cultures, rituals, symbols. What meaning do people give to their actions?", "Cognitive sciences: attention, memory, the brain. How is information processed to decide?", "Philosophy and ethics: values, morality, justice. What should we do, and on what grounds?"] },
-    { id: "o-levels", title: "Three levels of analysis",
-      line: "People at work can be studied at the level of the individual, the group or team, and the organization.",
-      points: ["Individual: personality, values, perception, motivation.", "Group or team: roles, coordination, norms, collective decision-making.", "Organization: structure, rules, culture, power, responsibility."],
-      exam: "A strong diagnosis often names the level: is this an individual issue, a team issue or an organizational one?" }
+    { id: "o-ob", title: "Organizational behavior: six disciplines, three levels",
+      line: "OB studies the actions, reactions and attitudes of individuals at work, in response to their environment, the rules and their social interactions.",
+      points: ["It asks how people behave in organizations, and how organizations use that knowledge to reach their goals.", "Six disciplines: psychology (personality, motivation, emotions, perception), social psychology (influence, conformity, group dynamics, biases), sociology (norms, roles, power, culture), anthropology (cultures, rituals, symbols, meaning), cognitive sciences (attention, memory, information processing), philosophy and ethics (values, morality, justice).", "Three levels of analysis: individual (personality, values, perception, motivation), group or team (roles, coordination, norms, collective decisions), organization (structure, rules, culture, power, responsibility)."],
+      exam: "Why managers need OB: organizations are made of people, and common sense about behavior is often wrong. A strong diagnosis names the level: individual, team or organization." }
   ]},
   { title: "Why theories?", cards: [
-    { id: "o-intuition", title: "From intuition to evidence",
+    { id: "o-intuition", title: "From intuition to evidence, and why several theories",
       line: "Our assumptions feel obvious but are often flawed. Theory turns an intuition into something we can test.",
-      formula: "Intuition  →  Theory  →  Hypothesis  →  Evidence\n\"This seems true\" → structured explanation of how and why → testable prediction → data to judge the prediction and refine the theory",
-      points: ["Theories organize ideas, explain why things happen and generate testable hypotheses.", "So they help us understand, predict and influence behavior in organizations."],
-      example: "\"To motivate employees, give them a raise\", \"harmony is good for teams\", \"people need strong hands-on leaders\": each sounds right, and each is questionable once you look at the evidence.",
-      exam: "Why use theories? To diagnose a problem systematically and to choose a solution that addresses its real cause." },
+      formula: "Intuition  →  Theory  →  Hypothesis  →  Evidence\n\"This seems true\" → structured explanation of how and why → testable prediction → data to judge it and refine the theory",
+      points: ["Theories organize ideas, explain why things happen and generate testable hypotheses: they help understand, predict and influence behavior.", "Different theories give different diagnoses, so different solutions. Not washing hands: cleanliness not valued (values, Schwartz, 1992); never learned or modeled (social learning, Bandura, 1977); never reinforced (Skinner, 1953); they forget (attention and prospective memory, McDaniel & Einstein, 2000)."],
+      example: "\"To motivate employees, give them a raise\", \"harmony is good for teams\", \"people need strong hands-on leaders\": each sounds right, each is questionable once you look at the evidence.",
+      trap: "One favorite theory for everything. A good diagnosis tests several explanations against the facts of the case." },
     { id: "o-tpb", title: "Example: the Theory of Planned Behavior (Ajzen, 1991)",
-      line: "Used in class to analyze handwashing at work: behavior depends on what people think of it, what others expect, and whether they can easily do it.",
+      line: "Used in class on handwashing at work: behavior depends on what people think of it, what others expect, and whether they can easily do it.",
       points: ["Attitude: do employees think handwashing is important?", "Subjective norm: do they think it is expected of them?", "Perceived control: can they wash their hands easily (soap and water available)?"],
-      example: "If soap is missing, a poster about hygiene will not help: the barrier is control, not attitude." },
-    { id: "o-many", title: "Why several theories?",
-      line: "Different theories give different diagnoses of the same behavior, and so different solutions.",
-      points: ["Cleanliness is not important to the person: look at values (Schwartz, 1992).", "Hygiene was never learned or modeled around them: social learning (Bandura, 1977).", "The behavior was never reinforced: reinforcement (Skinner, 1953).", "Soap and water are there, but they forget: attention and prospective memory (McDaniel & Einstein, 2000)."],
-      trap: "Picking one favorite theory for everything. A good diagnosis tests several explanations against the facts of the case." }
+      example: "If soap is missing, a hygiene poster will not help: the barrier is control, not attitude." }
   ]},
   { title: "What is an organization?", widget: "orgtest", cards: [
-    { id: "o-def", title: "Definition",
+    { id: "o-def", title: "Definition: controlled performance, collective goals",
       line: "An organization is a social arrangement for achieving controlled performance in pursuit of collective goals.",
-      points: ["\"Organization\" does not mean company: associations, universities, NGOs, public administrations, a family running a project are organizations too.", "Every company is an organization; not every organization is a company."],
-      exam: "Quote the definition word for word if you can: social arrangement, controlled performance, collective goals." },
-    { id: "o-goals", title: "Different goals, different performance",
-      line: "Because organizations pursue different goals, they define performance differently.",
-      points: ["Financial performance.", "Well-being.", "Societal impact."],
-      example: "A hospital, a start-up and an NGO are all organizations, but \"performing\" means something different for each." },
-    { id: "o-control", title: "Why \"controlled\" performance?",
-      line: "Individuals working together also pursue their own goals, which can get in the way of the collective goal. Organizing means channeling individual efforts toward the common goal.",
-      example: "In a student association, one member wants a line on their CV, another wants to party, the association wants a successful event: roles, rules and coordination keep everyone on the shared goal." },
+      points: ["Not only companies: associations, universities, NGOs, public administrations, a family running a project. Every company is an organization; not every organization is a company.", "Different goals, different performance: financial performance, well-being, societal impact (a hospital, a start-up and an NGO perform differently).", "\"Controlled\": individuals also pursue their own goals, which can get in the way. Organizing channels individual efforts toward the common goal."],
+      example: "In a student association, one member wants a CV line, another wants to party, the association wants a successful event: roles, rules and coordination keep everyone on the shared goal.",
+      exam: "Quote the definition word for word: social arrangement, controlled performance, collective goals." },
     { id: "o-five", title: "Five criteria of an organization",
       line: "Common goals, coordination, roles, rules or norms, and a minimum of continuity.",
       points: ["Common goal(s): why are we gathering?", "Coordination: how is the work organized?", "Roles: who does what, who decides?", "Rules or norms: what is expected, allowed or forbidden?", "(Minimum) continuity: does it last beyond the moment and leave a mark?"],
-      exam: "To decide whether something is an organization, test it against the five criteria one by one." },
+      exam: "To decide whether something is an organization, test the five criteria one by one." },
     { id: "o-crowd", title: "Crowd, group, team, organization",
       line: "Each step adds something: co-presence, then interaction, then a common task, then stable institutionalized coordination.",
-      points: ["Crowd: co-presence only.", "Group: interactions and a sense of belonging.", "Team: a common task or goal, and interdependence.", "Organization: common goals, coordination, roles, rules, continuity."],
-      example: "People waiting for a bus: a crowd. Friends who meet every Friday: a group. Four students preparing one presentation: a team. The student association that runs events every year with a board, roles and statutes: an organization.",
-      trap: "A team becomes organizational only when pursuing its goals needs relatively stable, institutionalized coordination. A one-off team is not yet an organization." }
+      points: ["Crowd: co-presence only. Group: interactions and a sense of belonging. Team: a common task or goal, and interdependence. Organization: common goals, coordination, roles, rules, continuity."],
+      example: "People waiting for a bus: a crowd. Friends who meet every Friday: a group. Four students preparing one presentation: a team. The student association with a board, roles and statutes, running events every year: an organization.",
+      trap: "A team becomes organizational only when its goals need relatively stable, institutionalized coordination. A one-off team is not yet an organization." }
   ]},
   { title: "Schools of management thought", widget: "schools", cards: [
     { id: "o-schools", title: "Six schools, one question",
-      line: "Every school answers the same question in its own era: how do we manage effectively, that is, how do we get controlled performance?",
-      points: ["Administrative approach, 1910s: Fayol.", "Bureaucracy approach, 1920s: Weber.", "Efficiency approach, 1920s: Taylor, Ford.", "Humanistic approach, 1930s to 1960s: Mayo, Herzberg, McGregor.", "Contingency approach, 1950s to 1980s: Woodward, Chandler, Lawrence & Lorsch, Mintzberg.", "Contemporary approaches, 1980s to now: Drucker."],
-      exam: "The lecture develops four of them in detail: bureaucracy, efficiency, humanistic and contingency. Know their key question, their key idea and their limits." },
-    { id: "o-weber-auth", title: "Weber: three bases of legitimate authority",
-      line: "Authority is accepted for one of three reasons: tradition, charisma or legal-rational rules.",
-      points: ["Traditional: legitimacy rests on tradition and established custom.", "Charismatic: legitimacy rests on devotion to the leader's perceived qualities.", "Legal-rational: legitimacy rests on formal rules and the authority of the office. This is the basis of bureaucracy."],
-      example: "A monarch (traditional), a founder followers would follow anywhere (charismatic), a tax inspector obeyed because of their office (legal-rational)." },
+      line: "Every school answers the same question in its era: how do we manage effectively, that is, get controlled performance?",
+      points: ["Administrative, 1910s: Fayol. Bureaucracy, 1920s: Weber. Efficiency, 1920s: Taylor, Ford.", "Humanistic, 1930s–1960s: Mayo, Herzberg, McGregor. Contingency, 1950s–1980s: Woodward, Chandler, Lawrence & Lorsch, Mintzberg. Contemporary, 1980s–now: Drucker."],
+      exam: "Four are developed in detail: bureaucracy, efficiency, humanistic, contingency. Know their key question, key idea and limits." },
     { id: "o-weber", title: "Bureaucracy approach (Weber)",
-      line: "Key question: how can an organization be run in a stable, predictable and continuous way? Answer: legal-rational authority and rule-based administration.",
-      points: ["Hierarchy of authority: authority belongs to the position, in a clearly defined hierarchy.", "Clear division of labor and specialization.", "Formal rules and procedures: decisions follow rules, not personal discretion.", "Technical competence and merit: selection and promotion on qualifications.", "Impersonality and impartiality: general rules and objective criteria, not relationships or favoritism."],
-      exam: "Its strength: predictability, continuity, less dependence on particular individuals. Its gap: it says little about how people feel and behave." },
+      line: "Key question: how can an organization run in a stable, predictable, continuous way? Answer: legal-rational authority and rule-based administration.",
+      points: ["Three bases of legitimate authority: traditional (custom; a monarch), charismatic (devotion to the leader's qualities; a founder followers would follow anywhere), legal-rational (formal rules and the office; a tax inspector). Legal-rational is the basis of bureaucracy.", "Five traits: hierarchy of authority (it belongs to the position); division of labor and specialization; formal rules and procedures, not personal discretion; technical competence and merit; impersonality and impartiality, not favoritism."],
+      exam: "Strength: predictability, continuity, less dependence on individuals. Gap: it says little about how people feel and behave." },
     { id: "o-taylor", title: "Efficiency approach: scientific management (Taylor, Ford)",
-      line: "Key question: how can work be done as efficiently as possible? Answer: science can find the one best way to work, replacing rule-of-thumb methods.",
-      points: ["Scientific analysis of work: find the most efficient methods, tools and conditions.", "Scientific selection and training: match workers to tasks, train them in the method.", "Clear division of work: managers plan the methods, workers execute.", "Task specialization: small, clearly defined tasks done efficiently and consistently.", "Performance-based incentives: reward higher output."],
-      example: "Taylor developed scientific management; Ford adapted related principles to mass production on the assembly line.",
-      trap: "Both bureaucracy and efficiency treat work as a technical system. The lecture asks: is that enough to manage people? What is missing is the human side." },
-    { id: "o-hawthorne", title: "The Hawthorne experiments (Mayo)",
-      line: "In the 1920s at Western Electric, productivity rose when lights were brightened, and also when they were dimmed: almost every change raised output.",
-      points: ["Classic interpretation, the Hawthorne effect: people may change their behavior when they know they are observed.", "The lesson: attention shifts from the job as a technical system to the social context of work."],
-      exam: "Use Hawthorne to show why the humanistic approach was born." },
-    { id: "o-human", title: "Humanistic approach (human relations)",
+      line: "Key question: how can work be done as efficiently as possible? Answer: science finds the one best way, replacing rule-of-thumb methods.",
+      points: ["Scientific analysis of work (methods, tools, conditions); scientific selection and training; managers plan, workers execute; small specialized tasks; performance-based incentives.", "Taylor developed scientific management; Ford adapted it to mass production on the assembly line."],
+      trap: "Bureaucracy and efficiency both treat work as a technical system. What is missing is the human side." },
+    { id: "o-human", title: "Humanistic approach and the Hawthorne experiments",
       line: "Key question: how can we improve performance by understanding the human side of work? Answer: performance is shaped by the social and psychological context.",
-      points: ["Social relationships: informal groups, peer norms and interactions shape behavior and performance.", "Worker attitudes and morale: recognition and feelings about work influence effort and engagement.", "Management and supervision: attention, support and the way managers supervise affect motivation."],
-      example: "Authors: Mayo, Herzberg (whose two-factor theory returns in lecture 4) and McGregor." },
+      points: ["Hawthorne (Mayo, 1920s, Western Electric): productivity rose when lights were brightened, and also when dimmed. Hawthorne effect: people change behavior when they know they are observed. Attention shifts to the social context of work.", "Social relationships (informal groups, peer norms), attitudes and morale (recognition, feelings about work), management and supervision (attention, support) drive effort.", "Authors: Mayo, Herzberg (two-factor theory, lecture 4), McGregor."],
+      exam: "Use Hawthorne to show why the humanistic approach was born." },
     { id: "o-contingency", title: "Contingency approach",
-      line: "There is no single best way to manage. A management approach works when it fits the situation.",
+      line: "There is no single best way to manage: an approach works when it fits the situation.",
       points: ["Situational factors: the task and nature of the work, the people, technology, strategy, the external environment.", "Authors: Woodward, Chandler, Lawrence & Lorsch, Mintzberg."],
-      example: "Strict procedures suit a nuclear plant where errors are catastrophic; the same rules would stifle a creative agency where the work changes every week.",
-      exam: "Classic self-check: why might an approach that works in one organization fail in another? Answer with contingency and name one situational factor." }
+      example: "Strict procedures suit a nuclear plant where errors are catastrophic; they would stifle a creative agency where the work changes every week.",
+      exam: "Self-check: why might an approach that works in one organization fail in another? Contingency, plus one situational factor." }
   ]}
 ]},
 { id: "person", n: 2, title: "Personality, values and attitudes", short: "Personality", c: "var(--c2)",
   intro: "How people differ, how stable those differences are, how to measure personality and what tests can and cannot do. With tutorial 2: personality times situation gives behavior.",
   sections: [
-  { title: "Stable and malleable", cards: [
-    { id: "p-stable", title: "How stable are individual differences?",
-      line: "Personality and values are relatively stable. Attitudes are more malleable.",
-      points: ["Managers still care about stable traits: they help predict behavior, match people to jobs and understand relationships.", "Attitudes can change, so managers can act on them directly."] }
-  ]},
   { title: "Values", widget: "schwartz", cards: [
-    { id: "p-values", title: "What values are",
-      line: "Abstract ideals that guide our thinking and behavior across all situations.",
-      points: ["They help explain people's attitudes, sources of motivation and behavior.", "Managers manage better when they understand their employees' values.", "Employees find more meaning at work when they pursue goals consistent with their values."] },
-    { id: "p-schwartz", title: "Schwartz's value theory",
-      line: "Values are motivational: broad goals over time. They sit on a circle where neighbors are compatible and opposites conflict.",
-      points: ["Ten values: self-direction, stimulation, hedonism, achievement, power, security, conformity, tradition, benevolence, universalism.", "Four higher-order groups: openness to change, self-enhancement, conservation, self-transcendence.", "Adjacent values are complementary; bipolar (opposite) values are incongruent."],
-      example: "Achievement and power sit side by side (self-enhancement). Achievement and benevolence sit on opposite sides." },
-    { id: "p-bonus", title: "When values conflict: one bonus, two employees",
-      line: "Andrea closed the biggest deal of the month; Cameron spent hours onboarding colleagues. Only one bonus.",
-      points: ["Manager A values individual success and accomplishment (achievement): Andrea.", "Manager B values supporting others and the group (benevolence): Cameron.", "Opposing values make it hard to agree on what to reward. Adjacent values (achievement and power) make common ground easier."],
-      exam: "Value congruence makes joint decisions easier. Value conflict explains many disagreements between people who are both acting in good faith." }
+    { id: "p-values", title: "Values, and how stable we are",
+      line: "Values are abstract ideals that guide thinking and behavior across all situations. Personality and values are relatively stable; attitudes are more malleable.",
+      points: ["Values explain attitudes, sources of motivation and behavior. Managers manage better when they understand them; employees find more meaning pursuing goals consistent with their values.", "Stable traits help predict behavior, match people to jobs, understand relationships. Attitudes can change, so managers can act on them directly."] },
+    { id: "p-schwartz", title: "Schwartz's value theory, and one bonus for two",
+      line: "Values are motivational: broad goals over time, on a circle where neighbors are compatible and opposites conflict.",
+      points: ["Ten values: self-direction, stimulation, hedonism, achievement, power, security, conformity, tradition, benevolence, universalism. Four groups: openness to change, self-enhancement, conservation, self-transcendence.", "Adjacent values are complementary (achievement and power); bipolar values are incongruent (achievement and benevolence).", "The bonus dilemma: Andrea closed the biggest deal, Cameron spent hours onboarding colleagues. A manager who values achievement rewards Andrea; one who values benevolence rewards Cameron."],
+      exam: "Value congruence makes joint decisions easier; value conflict explains disagreements between people both acting in good faith." }
   ]},
   { title: "Attitudes", cards: [
     { id: "p-att", title: "The three components of an attitude",
-      line: "An attitude is how we think, feel and intend to act toward a person, object or situation.",
-      points: ["Cognitive: beliefs and evaluation. \"My supervisor is unfair.\"", "Affective: feelings and emotion. \"I feel angry with my supervisor.\"", "Behavioral intention: \"I am making plans to quit.\"", "Attitudes help predict behavior."],
+      line: "How we think, feel and intend to act toward a person, object or situation. Attitudes help predict behavior.",
+      points: ["Cognitive: beliefs and evaluation (\"my supervisor is unfair\"). Affective: feelings (\"I feel angry with my supervisor\"). Behavioral intention (\"I am making plans to quit\")."],
       example: "Trigger: my supervisor promoted a colleague who deserved it less than I did." },
     { id: "p-four", title: "Four key workplace attitudes",
       line: "Job satisfaction, employee engagement, organizational commitment, perceived organizational support.",
-      points: ["Job satisfaction: an emotional response to facets of one's job; how much you like your job. Linked to performance, citizenship behavior (OCB), motivation, lower turnover and stress, less counterproductive behavior (CWB).", "Engagement: how far employees give their all to their role, with urgency, focus, intensity, enthusiasm. Linked to customer loyalty, performance, well-being, financial results.", "Organizational commitment: how far an employee identifies with the organization and its goals. Linked to retention and effort toward organizational goals.", "Perceived organizational support (POS): the belief that the organization values your contribution and cares about your well-being. Linked to commitment, satisfaction, OCB, task performance, lower turnover."],
-      trap: "Satisfaction is about liking the job; engagement is about the energy put into it; commitment is about identifying with the organization; POS is about how the organization treats you." },
+      points: ["Job satisfaction: an emotional response to facets of the job, how much you like it. Linked to performance, OCB, motivation, lower turnover and stress, less CWB.", "Engagement: giving your all to the role, with urgency, focus, intensity, enthusiasm. Linked to customer loyalty, performance, well-being, financial results.", "Organizational commitment: identifying with the organization and its goals. Linked to retention and effort toward its goals.", "Perceived organizational support (POS): the belief that the organization values your contribution and cares about your well-being. Linked to commitment, satisfaction, OCB, performance, lower turnover."],
+      trap: "Satisfaction = liking the job; engagement = energy put in; commitment = identifying with the organization; POS = how the organization treats you." },
     { id: "p-dissonance", title: "Cognitive dissonance",
       line: "The discomfort we feel when our beliefs, attitudes, values or behavior are inconsistent.",
-      points: ["Reduce it by changing attitudes, behavior or both.", "Or by belittling the importance of the inconsistent behavior.", "Or by finding consonant elements that outweigh the dissonant ones."],
-      example: "An employee who values honesty joins an exaggerated sales pitch, then tells herself: \"lying is not that bad\" (change attitude), \"it was only once\" (belittle), \"I'm saving the project\" (add a consonant element)." }
+      points: ["Reduce it by changing attitudes, behavior or both; by belittling the inconsistent behavior; or by adding consonant elements that outweigh it."],
+      example: "An employee who values honesty joins an exaggerated sales pitch: \"lying is not that bad\" (change attitude), \"it was only once\" (belittle), \"I'm saving the project\" (consonant element)." }
   ]},
   { title: "Personality", cards: [
-    { id: "p-def", title: "What personality is",
-      line: "A person's unique pattern of thoughts, feelings and behaviors, enduring across situations and over time. Traits are the characteristics that make it up.",
-      points: ["Determinants: genetics, environment, situation.", "At work, traits help (1) predict how someone will act, (2) anticipate what jobs they may be good at, (3) understand relationships."],
-      example: "Bob is achievement-oriented. The trait summarizes his regular behavior (diligent, goal-oriented), predicts specific acts (on time, thorough), and explains them (difficult tasks are rewarding for him)." },
-    { id: "p-psycho", title: "Measuring personality: psychometrics",
-      line: "Standardized instruments: the same questions for everyone, the same administration conditions, so scores are testable and comparable.",
-      points: ["Self-administered tests or tests given by a third party.", "Two tests widely used in management: the MBTI and the Big Five (Five Factor Model)."] },
-    { id: "p-mbti", title: "The MBTI and its problems",
-      line: "Classifies people into 16 types from four either/or attributes. Fine for self-reflection, not reliable for selection.",
-      points: ["Extraversion or Introversion (E-I), Sensing or Intuition (S-N), Thinking or Feeling (T-F), Judging or Perceiving (J-P).", "Problems: it is either/or, not rooted in a scientific approach, and lacks predictive power for performance.", "Possible uses: encouraging self-reflection, discussing work and communication preferences in simple words."],
-      trap: "Never recommend the MBTI to select employees. That is the expected answer in a comparison with the Big Five." },
-    { id: "p-big5", title: "The Big Five (Five Factor Model)",
-      line: "Five traits, each scored along a continuum: a very good predictor of behavior and of performance at work.",
-      points: ["Extraversion: how much social interaction and stimulation do I seek?", "Emotional stability (vs neuroticism): how reactive and stress-resilient am I?", "Openness to experience: how open am I to new ideas and experiences?", "Conscientiousness: how organized, disciplined and goal-oriented am I?", "Agreeableness: how cooperative and considerate am I toward others?"],
-      exam: "Continuum, not types: that is the key contrast with the MBTI." },
+    { id: "p-def", title: "Personality and how to measure it",
+      line: "A person's unique pattern of thoughts, feelings and behaviors, enduring across situations and time. Traits are its characteristics.",
+      points: ["Determinants: genetics, environment, situation. At work, traits help predict how someone will act, what jobs they may be good at, and relationships.", "Psychometrics: standardized instruments (same questions, same conditions), so scores are testable and comparable; self-administered or given by a third party."],
+      example: "Bob is achievement-oriented: the trait summarizes his behavior (diligent), predicts specific acts (on time, thorough) and explains them (hard tasks reward him)." },
+    { id: "p-big5", title: "The MBTI versus the Big Five",
+      line: "The MBTI sorts people into 16 types; the Big Five (Five Factor Model) scores five traits along a continuum and predicts behavior and performance well.",
+      points: ["MBTI: E-I, S-N, T-F, J-P. Problems: either/or, not rooted in science, no predictive power for performance. Fine for self-reflection and talking about work preferences.", "Big Five: extraversion (social stimulation sought), emotional stability vs neuroticism (reactivity, stress resilience), openness to experience, conscientiousness (organized, disciplined, goal-oriented), agreeableness (cooperative, considerate)."],
+      trap: "Never recommend the MBTI to select employees. Continuum, not types: the key contrast." },
     { id: "p-tipi", title: "The 10-item test used in class",
       line: "Rate ten pairs of traits from 1 (disagree strongly) to 7 (agree strongly). Items 2, 4, 6, 8 and 10 are reverse-scored.",
       formula: "Reverse score: R = 8 − answer\nExtraversion           = (Q1 + Q6R) / 2\nAgreeableness          = (Q2R + Q7) / 2\nConscientiousness      = (Q3 + Q8R) / 2\nEmotional stability    = (Q4R + Q9) / 2\nOpenness to experience = (Q5 + Q10R) / 2",
       example: "Take the test in Labs: the page shows each calculation with your own answers." },
-    { id: "p-hilo", title: "Is a higher score always better?",
-      line: "No. Each end of each trait has strengths and risks.",
-      points: ["Extraversion. High: sociable, takes the lead, but may dominate or act impulsively. Low: reflective, good listener, but less visible in groups.", "Emotional stability. High: calm under pressure, but may be less vigilant about problems. Low: more sensitive to threats, but more prone to anxiety and stress.", "Openness. High: creative, curious, but may favor novelty over practicality or keep exploring when a quick decision is needed. Low: practical, comfortable with routine, but may resist change.", "Conscientiousness. High: disciplined, reliable, but may be rigid or perfectionistic. Low: spontaneous, but may be disorganized or procrastinate.", "Agreeableness. High: cooperative, empathetic, but may struggle with tough decisions and boundaries. Low: assertive, willing to challenge ideas, but more prone to conflict."] },
-    { id: "p-predict", title: "What traits predict (Barrick & Mount, 1991)",
-      line: "Conscientiousness is the best personality predictor of job performance.",
-      points: ["Extraversion: higher performance in jobs with a social component.", "Openness: better performance in learning situations; more willing to look for and learn a new job after downsizing.", "Extraversion, emotional stability and agreeableness together: managers more likely to complete an overseas assignment."] },
-    { id: "p-toomuch", title: "Too much of a good thing",
-      line: "Even where a trait helps performance, higher is not always better.",
-      points: ["Conscientiousness: diminishing returns at very high levels, especially in less complex jobs.", "Emotional stability: past a point, more stability no longer adds helping behavior or reduces harmful behavior.", "Extraversion in sales: moderate \"ambiverts\" outperformed both very low and very high extraverts (Grant, 2013)."] },
-    { id: "p-select", title: "Using personality tests to select people",
-      line: "Useful as one source of evidence, never the sole basis for a decision.",
-      points: ["Social desirability bias: people answer in the way that will be viewed favorably, and can fake.", "Traits are tendencies, not guarantees of behavior.", "Complement tests with past references, interviews and observation.", "Good uses of the Big Five: self-awareness, understanding likely behavior, fit between personality and job demands, one input in selection."],
-      exam: "Comparison question: MBTI for discussion and self-reflection only; Big Five as one predictor among others; always add references, interviews, observation." }
+    { id: "p-hilo", title: "Higher is not always better",
+      line: "Each end of each trait has strengths and risks, and even helpful traits show diminishing returns.",
+      points: ["Extraversion: sociable, takes the lead, may dominate / reflective, good listener, less visible. Emotional stability: calm, may be less vigilant / sensitive to threats, more anxious.", "Openness: creative, may favor novelty over practicality / practical, may resist change. Conscientiousness: reliable, may be rigid / spontaneous, may procrastinate. Agreeableness: cooperative, struggles with tough calls / assertive, more conflict.", "Too much of a good thing: conscientiousness has diminishing returns (especially in simple jobs); past a point emotional stability adds nothing; in sales, moderate \"ambiverts\" beat very low and very high extraverts (Grant, 2013)."] },
+    { id: "p-predict", title: "What traits predict, and using tests to select",
+      line: "Conscientiousness is the best personality predictor of job performance (Barrick & Mount, 1991). Tests are one source of evidence, never the sole basis.",
+      points: ["Extraversion: better in social jobs. Openness: better in learning situations, more willing to learn a new job after downsizing. Extraversion + emotional stability + agreeableness: more likely to complete an overseas assignment.", "Limits: social desirability bias (people answer to look good, can fake); traits are tendencies, not guarantees. Add references, interviews, observation."],
+      exam: "MBTI for discussion only; Big Five as one predictor among others (self-awareness, job fit, one input in selection); always add references, interviews, observation." }
   ]},
   { title: "Tutorial 2: personality at work", widget: "strength", cards: [
-    { id: "p-tat", title: "Trait Activation Theory (Tett & Burnett, 2003)",
-      line: "Personality × situation → behavior. Traits are tendencies; the situation decides which ones show.",
-      points: ["Situational cues make some traits more behaviorally relevant than others.", "The situation can also facilitate, constrain or channel how a trait is expressed.", "So the situation affects how much personality matters and which traits come out."],
-      example: "A highly agreeable analyst rarely shows it in solo reporting work, but it becomes visible (and useful) when she mediates a client conflict." },
-    { id: "p-strength", title: "Situation strength",
-      line: "How far task, social and organizational cues dictate the appropriate behavior.",
-      points: ["Weak situation: unclear rules, several acceptable ways to behave, ambiguous procedures and consequences. Personality has more room. Example: an open brainstorming session.", "Strong situation: clear rules and expectations, a narrow range of appropriate behavior, consistent procedures and consequences. The situation dominates and people behave alike. Example: strict exam rules.", "Strong situations involve the four Cs: clarity, consistency, constraints, consequences."],
-      exam: "Why can personality predict behavior without determining it? Because traits only show when the situation activates them, and strong situations leave little room for them." }
+    { id: "p-tat", title: "Trait Activation Theory and situation strength",
+      line: "Personality × situation → behavior (Tett & Burnett, 2003). Traits are tendencies; situational cues decide which ones show.",
+      points: ["The situation makes some traits relevant, and can facilitate, constrain or channel how they are expressed.", "Situation strength: how far task, social and organizational cues dictate behavior. Weak (unclear rules, several acceptable ways, e.g. open brainstorming): personality has room. Strong (clear rules, narrow range, e.g. strict exam rules): people behave alike.", "Strong situations have the four Cs: clarity, consistency, constraints, consequences."],
+      example: "A highly agreeable analyst rarely shows it in solo reporting, but it becomes visible (and useful) when she mediates a client conflict.",
+      exam: "Personality predicts without determining behavior: traits show only when the situation activates them, and strong situations leave little room." }
   ]}
 ]},
 { id: "decide", n: 3, title: "Decision-making and biases", short: "Decisions", c: "var(--c3)",
-  intro: "How individuals process information, when intuition can be trusted, the biases that distort judgment, how we perceive and explain other people, how groups bend our judgment, and the rational and bounded models of decision.",
+  intro: "How we process information, when intuition can be trusted, the biases that distort judgment, how we perceive and explain others, how groups bend our judgment, and the rational and bounded models.",
   sections: [
   { title: "What a decision is", cards: [
     { id: "d-def", title: "Decision-making",
-      line: "The process of choosing a course of action to deal with a problem or an opportunity. It is one truly distinctive part of a manager's job.",
-      points: ["Drucker: a decision is a judgment, rarely between right and wrong, at best between \"almost right\" and \"probably wrong\".", "Decisions get more complex when they are multidimensional (tasty, healthy and cheap, not just tasty) and when there are many choices."] }
+      line: "Choosing a course of action to deal with a problem or an opportunity: a truly distinctive part of a manager's job.",
+      points: ["Drucker: a decision is a judgment, rarely between right and wrong, at best between \"almost right\" and \"probably wrong\".", "More complex when multidimensional (tasty, healthy and cheap) and when there are many choices."] }
   ]},
   { title: "System 1 and System 2", widget: "puzzles", cards: [
     { id: "d-sys", title: "Two ways of thinking",
-      line: "System 1 is automatic, fast, effortless and feels involuntary. System 2 is attentional, slow, effortful and feels like a choice.",
-      example: "A bat and a ball cost $1.10; the bat costs $1.00 more than the ball. System 1 says 10 cents. System 2 checks: 0.10 + 1.10 = 1.20. The ball costs 5 cents (0.05 + 1.05 = 1.10)." },
-    { id: "d-when1", title: "When System 1 takes over",
-      line: "Under time pressure and cognitive depletion, System 2 is harder to activate.",
-      points: ["Depletion comes from suppressing emotions, trying to impress people, acting against your personality, stress, multitasking.", "Why we rely on System 1: evolution (fast thinking helped survival), efficiency (the brain saves energy), socialization (we absorb norms and habits from family, school, culture, media)."] },
+      line: "System 1: automatic, fast, effortless, feels involuntary. System 2: attentional, slow, effortful, feels like a choice.",
+      points: ["Under time pressure and cognitive depletion (suppressing emotions, impressing people, acting against your personality, stress, multitasking), System 2 is harder to activate.", "Why we rely on System 1: evolution (speed helped survival), efficiency (the brain saves energy), socialization (norms absorbed from family, school, culture, media)."],
+      example: "Bat and ball cost $1.10, the bat costs $1.00 more. System 1 says 10 cents; System 2 checks: 0.10 + 1.10 = 1.20. The ball costs 5 cents (0.05 + 1.05 = 1.10)." },
     { id: "d-intuition", title: "When intuition works (Dane et al., 2012)",
-      line: "Intuition works best when BOTH conditions hold: the task is non-decomposable, and the decision maker has high domain expertise.",
-      points: ["Non-decomposable: hard to break into separate steps; you need to see the whole pattern.", "High expertise: long experience has built meaningful patterns.", "Expert intuition develops through extensive domain experience, repeated exposure to patterns, deliberate practice and frequent, informative feedback."],
-      example: "An experienced surgeon who diagnoses a torn ligament after ten seconds of bending a knee: expertise plus a pattern-recognition task.",
-      trap: "\"Does intuition work? Yes or no?\" The expected answer is: it depends on the two conditions. A novice's gut feeling on a task that can be broken into steps is not reliable." }
+      line: "When BOTH hold: the task is non-decomposable, and the decision maker has high domain expertise.",
+      points: ["Non-decomposable: hard to break into steps, you need the whole pattern. Expertise: long experience has built meaningful patterns.", "Expert intuition grows through extensive experience, repeated exposure to patterns, deliberate practice, frequent informative feedback."],
+      example: "An experienced surgeon diagnosing a torn ligament after ten seconds of bending a knee.",
+      trap: "\"Does intuition work?\" It depends on the two conditions. A novice's gut feeling on a task that can be broken into steps is not reliable." }
   ]},
   { title: "Decision biases", widget: "framing", cards: [
-    { id: "d-bias", title: "What a cognitive bias is",
-      line: "A systematic, often unconscious, tendency in thinking that distorts judgments and decisions.",
-      points: ["Good news: because biases are systematic, they create predictable errors, so managers can design processes that reduce them."] },
-    { id: "d-confirm", title: "Confirmation bias",
-      line: "Seeking, interpreting and remembering information so that it confirms what we already believe, while discounting contrary evidence.",
-      example: "A manager convinced that a new hire is weak notices every mistake and forgets every success." },
-    { id: "d-over", title: "Overconfidence bias",
-      line: "Overestimating the accuracy of our judgments, predictions, knowledge or abilities.",
-      points: ["Fewer than 5% of MBA students expect to be below the median in most classes.", "94% of professors at a large university thought they were better than the average professor.", "Small-business owners put the success rate of small businesses at 50%, and their own at 90%."] },
-    { id: "d-anchor", title: "Anchoring bias",
-      line: "Relying too heavily on a first piece of information (the anchor) and adjusting too little from it, even when the anchor is arbitrary.",
-      example: "Students told about a 300 km river gave lower estimates of the Mississippi's length than students told about a 3,000 km river." },
-    { id: "d-avail", title: "Availability bias",
-      line: "Judging how likely or important something is by how easily examples come to mind.",
-      points: ["Recent, vivid or emotional events come to mind easily, so we overestimate them and underestimate common but forgettable ones."],
-      example: "The class was asked whether US citizens are more likely to die in a motor-vehicle accident or from an accidental opioid overdose. Most people answer with whichever case comes to mind first, not with the statistics.\nAt work: a manager rates the whole year on the one mistake made last week." },
-    { id: "d-loss", title: "Loss aversion",
-      line: "A loss weighs more than an equal gain: roughly twice as much." },
-    { id: "d-frame", title: "Framing bias",
-      line: "The same information leads to different decisions depending on how it is presented.",
-      points: ["Gain frame (\"saves 200 lives\"): the sure option feels attractive, people are risk-averse. 72% chose the sure treatment.", "Loss frame (\"400 people will die\"): the gamble feels like a chance to avoid the sure loss, people are risk-seeking. 78% chose the gamble.", "Same outcomes, different frame, different risk preference. Loss aversion is at work."],
-      exam: "Remember the rule: people take more risk when information is framed as losses." },
-    { id: "d-sunk", title: "Sunk cost fallacy and escalation of commitment",
-      line: "Letting past, unrecoverable investments (time, money, effort) drive a current decision. It can lead to escalation of commitment: sticking with, or increasing support for, a failing course of action.",
-      example: "\"We've already spent €2 million on this software, we can't stop now\", even though every new test shows it will not work." },
-    { id: "d-action", title: "Action bias",
-      line: "Favoring action over inaction, even when doing nothing would be better." },
-    { id: "d-fix", title: "Reducing biases",
-      line: "Be aware of your potential biases, get more eyes on the problem, and use System 2 for important decisions.",
-      exam: "For any biased decision in a case, name the bias, explain the mechanism, then give one of these remedies applied to the case." }
+    { id: "d-bias", title: "Cognitive biases, and how to reduce them",
+      line: "A systematic, often unconscious tendency in thinking that distorts judgments and decisions.",
+      points: ["Systematic means predictable: managers can design processes against them.", "Remedies: be aware of your biases, get more eyes on the problem, use System 2 for important decisions."],
+      exam: "For a biased decision in a case: name the bias, explain the mechanism, give a remedy applied to the case." },
+    { id: "d-confirm", title: "Confirmation and overconfidence",
+      line: "Confirmation bias: seeking, interpreting and remembering information that confirms what we already believe, discounting contrary evidence. Overconfidence: overestimating the accuracy of our judgments, knowledge or abilities.",
+      points: ["Fewer than 5% of MBA students expect to be below the median; 94% of professors think they are better than average; small-business owners give small businesses a 50% success rate, and themselves 90%."],
+      example: "A manager convinced a new hire is weak notices every mistake and forgets every success (confirmation)." },
+    { id: "d-anchor", title: "Anchoring and availability",
+      line: "Anchoring: relying too heavily on a first piece of information and adjusting too little, even when it is arbitrary. Availability: judging likelihood or importance by how easily examples come to mind.",
+      points: ["Recent, vivid or emotional events come to mind easily: we overestimate them and underestimate common, forgettable ones."],
+      example: "Told about a 300 km river, students estimated the Mississippi shorter than those told about a 3,000 km river (anchoring). Motor-vehicle accident or opioid overdose? People answer with what comes to mind first; a manager rates the year on last week's mistake (availability)." },
+    { id: "d-frame", title: "Loss aversion and framing",
+      line: "A loss weighs about twice as much as an equal gain. Framing: the same information leads to different decisions depending on how it is presented.",
+      points: ["Gain frame (\"saves 200 lives\"): risk-averse, 72% chose the sure treatment.", "Loss frame (\"400 people will die\"): risk-seeking, 78% chose the gamble. Same outcomes, different frame: loss aversion at work."],
+      exam: "Rule: people take more risk when information is framed as losses." },
+    { id: "d-sunk", title: "Sunk cost, escalation, action bias",
+      line: "Sunk cost fallacy: letting past, unrecoverable investments drive a current decision, which can lead to escalation of commitment to a failing course of action.",
+      points: ["Action bias: favoring action over inaction, even when doing nothing would be better."],
+      example: "\"We've already spent €2 million on this software, we can't stop now\", though every new test shows it will not work." }
   ]},
   { title: "Social perception", cards: [
-    { id: "d-perc", title: "Perception and social perception",
-      line: "Perception is the process by which we interpret our surroundings. Social perception is how we form impressions and judge other people from what we observe.",
-      points: ["Perception drives judgments, decisions and behavior.", "It is sometimes wrong and sometimes just different between people: same facts, different stories.", "Perception differs from reality, which creates biases."] },
-    { id: "d-person", title: "Biased person perception at work",
-      line: "Impressions distort hiring, appraisals and judgments of leaders.",
-      points: ["Hiring: first impressions and stereotypes (\"we have a similar background, they must be a good fit\").", "Halo effect: one overall impression colors ratings of specific aspects (\"she communicates confidently, so her work must be excellent\").", "Contrast effect: after rating an outstanding employee, a solid one looks poor.", "Leadership stereotypes: the same firm instructions called \"decisive\" from a man and \"bossy\" from a woman."] }
+    { id: "d-perc", title: "Social perception and its biases",
+      line: "Perception: how we interpret our surroundings. Social perception: how we form impressions and judge others from what we observe. It differs from reality, which creates biases.",
+      points: ["Hiring: first impressions and stereotypes (\"similar background, must be a good fit\").", "Halo effect: one overall impression colors specific ratings (\"she communicates confidently, so her work must be excellent\"). Contrast effect: after an outstanding employee, a solid one looks poor.", "Leadership stereotypes: the same firm instructions are \"decisive\" from a man and \"bossy\" from a woman."] }
   ]},
   { title: "Attribution theory", widget: "kelley", cards: [
     { id: "d-attr", title: "Three causal dimensions",
-      line: "When we explain behavior, we judge whether its cause is internal or external, stable or unstable, controllable or not.",
-      points: ["Internal (about the person, dispositional) vs external (about the situation).", "Stable (enduring across episodes) vs unstable (varies).", "Controllable (can be willfully influenced) vs uncontrollable."] },
-    { id: "d-ssb", title: "Self-serving bias",
-      line: "Judging ourselves, we attribute success to internal factors and failure to external ones.",
-      example: "\"I passed because I'm smart and worked hard.\" \"I failed because the test was hard and I had bad luck.\"" },
-    { id: "d-fae", title: "Fundamental attribution error",
-      line: "Judging others, we overestimate internal causes of their failures (and tend to put their successes down to external factors).",
-      points: ["Others' failure: \"they are lazy\", \"they are not very smart\". Others' success: \"they were lucky\", \"the test was easy\".", "Managerial risk: wrong attribution, wrong action. Underperformance read as lack of effort leads to punishment, as lack of ability to demotion; read as task difficulty it leads to training, as new competitors to a new strategy."] },
+      line: "Explaining behavior, we judge whether its cause is internal or external, stable or unstable, controllable or not.",
+      points: ["Internal (dispositional, the person) vs external (the situation); stable (enduring) vs unstable (varies); controllable vs uncontrollable."] },
+    { id: "d-fae", title: "Self-serving bias and the fundamental attribution error",
+      line: "Self-serving bias: our successes are internal, our failures external. Fundamental attribution error: we overestimate internal causes of others' failures (and put their successes down to luck).",
+      points: ["\"I passed because I'm smart; I failed because the test was hard.\" Others: \"they are lazy\", \"they were lucky\".", "Wrong attribution, wrong action: underperformance read as lack of effort → punishment, lack of ability → demotion; read as task difficulty → training, new competitors → new strategy."] },
     { id: "d-kelley", title: "Kelley's model: person or situation?",
       line: "Three questions decide between an internal and an external attribution: distinctiveness, consensus, consistency.",
       formula: "Distinctiveness: does the person behave differently in other situations?\nConsensus:       do other people behave the same way in this situation?\nConsistency:     does the person always act this way in this situation?\n\nHigh distinctiveness + high consensus + low consistency  →  EXTERNAL\nLow distinctiveness  + low consensus  + high consistency →  INTERNAL",
-      example: "Peter, a top sales rep for three years, has a bad quarter. His reports are still on time and excellent (high distinctiveness), most other reps' sales also fell (high consensus), and his past performance was high (low consistency). Attribution: external.",
-      trap: "Distinctiveness asks about the same person in other situations; consensus asks about other people in the same situation. Students often swap them." }
+      example: "Peter, a top sales rep for three years, has a bad quarter: reports still excellent (high distinctiveness), most reps' sales also fell (high consensus), past performance high (low consistency). External.",
+      trap: "Distinctiveness: same person, other situations. Consensus: other people, same situation. Students often swap them." }
   ]},
   { title: "Groups and social influence", cards: [
-    { id: "d-teams", title: "Assets and liabilities of team decisions",
+    { id: "d-teams", title: "Team decisions: assets, liabilities, protections",
       line: "Teams do better on complex tasks and bring more ideas, information and creativity; they do worse on simple tasks and cost time.",
-      points: ["Assets: better performance on complex tasks, divergent ideas, creativity, more information.", "Liabilities: worse on simple tasks, time, conflict, and social influence that can hinder the decision.", "Diverse groups can bring more information, perspectives and alternatives."] },
-    { id: "d-asch", title: "Asch: conformity",
-      line: "Shown three lines and asked which matches a reference line, many people gave the obviously wrong answer when a unanimous group did so first.",
-      points: ["Conformity: adjusting your judgment to match the group, even against clear evidence."] },
-    { id: "d-milgram", title: "Milgram: obedience to authority",
-      line: "Participants told by an experimenter to keep going gave what they believed were painful electric shocks to another person (an actor pretending to suffer).",
-      points: ["Beyond conformity: people follow orders from an authority figure against their own conscience."],
-      trap: "Asch is about pressure from peers (conformity); Milgram is about pressure from an authority (obedience)." },
+      points: ["Liabilities: time, conflict, social influence that hinders the decision. Diverse groups bring more information, perspectives and alternatives.", "Protections: be aware of social influence, collect independent judgments before discussion, assign a devil's advocate or external expert, encourage dissent, leaders do not signal a preference early, generate multiple alternatives."] },
+    { id: "d-asch", title: "Asch (conformity) and Milgram (obedience)",
+      line: "Asch: asked which line matches a reference, many gave the obviously wrong answer after a unanimous group did. Milgram: told to keep going, participants gave what they believed were painful shocks to an actor.",
+      points: ["Conformity: adjusting your judgment to the group, even against clear evidence.", "Obedience: following an authority figure's orders against your own conscience."],
+      trap: "Asch = pressure from peers (conformity); Milgram = pressure from an authority (obedience)." },
     { id: "d-groupthink", title: "Groupthink",
-      line: "The pressure for consensus discourages dissent and critical evaluation: keeping agreement becomes more important than evaluating alternatives.",
-      points: ["Result: relevant information and alternatives are overlooked, and members find it hard to disagree."] },
-    { id: "d-prevent", title: "Protecting group decisions",
-      line: "Make social influence visible and build dissent into the process.",
-      points: ["Be aware of social influence.", "Collect independent judgments before discussion.", "Assign a devil's advocate, critical evaluator or external expert.", "Encourage dissent.", "Leaders should not signal a preferred option too early.", "Generate multiple alternatives."] }
+      line: "The pressure for consensus discourages dissent and critical evaluation: keeping agreement matters more than evaluating alternatives.",
+      points: ["Relevant information and alternatives are overlooked, and members find it hard to disagree."] }
   ]},
   { title: "Decision models", cards: [
-    { id: "d-rational", title: "The rational decision-making model",
-      line: "Four stages: identify the problem or opportunity, generate alternative solutions, evaluate them and select one, implement and evaluate the chosen solution." },
-    { id: "d-simon", title: "Simon: bounded rationality and satisficing",
-      line: "Decision makers have limited time, information and cognitive capacity, so they cannot list every option and consequence. They consider a manageable set of options and stop once a solution is good enough.",
-      exam: "\"Can we always use rational decision-making?\" No: bounded rationality. The answer is to satisfice, and to reserve System 2 effort for important decisions." }
+    { id: "d-simon", title: "The rational model, and Simon's bounded rationality",
+      line: "Rational model, four stages: identify the problem or opportunity, generate alternatives, evaluate and select, implement and evaluate.",
+      points: ["Simon: limited time, information and cognitive capacity, so decision makers consider a manageable set of options and stop once one is good enough (satisficing)."],
+      exam: "\"Can we always decide rationally?\" No: bounded rationality. Satisfice, and keep System 2 effort for important decisions." }
   ]}
 ]},
 { id: "motiv", n: 4, title: "Motivation and engagement", short: "Motivation", c: "var(--c4)",
   intro: "What motivation is, the theories that explain it (needs, self-determination, two factors, job design, goals, fairness) and what managers can do with each.",
   sections: [
   { title: "What motivation is", cards: [
-    { id: "m-def", title: "Three dimensions",
-      line: "Motivation has a direction (what the person is trying to achieve), an intensity (how hard they try) and a persistence (how long they keep trying)." }
+    { id: "m-def", title: "Three dimensions; intrinsic and extrinsic",
+      line: "Motivation has a direction (what you try to achieve), an intensity (how hard) and a persistence (how long). Extrinsic: driven by outcomes separate from the activity. Intrinsic: by the activity itself.",
+      points: ["Extrinsic: less stable effort, rewards lose power, attention on the reward (and shortcuts); effective for short-term compliance.", "Intrinsic: self-sustaining effort, deeper engagement, learning, well-being, persistence. Most real motivation mixes both."],
+      example: "Going to class for the grade (extrinsic) or out of curiosity (intrinsic)." }
   ]},
   { title: "Maslow", cards: [
-    { id: "m-maslow", title: "Maslow's hierarchy of needs (1954)",
-      line: "Five needs, satisfied in a set order: physiological, safety, belonging and love, esteem, self-actualization.",
-      points: ["Basic needs: physiological (food, water, warmth, rest), safety (security, resources).", "Psychological needs: belonging (relationships, friends), esteem (prestige, accomplishment).", "Self-fulfillment: self-actualization (reaching your full potential, including creative activities)."] },
-    { id: "m-maslow2", title: "After 70 years of research",
-      line: "Confirmed: fulfilling each need contributes independently to well-being, across cultures. Not confirmed: the hierarchy itself.",
-      points: ["People often pursue higher-level goals even when basic needs are unmet."],
+    { id: "m-maslow", title: "Maslow's hierarchy of needs (1954), 70 years on",
+      line: "Five needs in a set order: physiological, safety, belonging and love, esteem, self-actualization.",
+      points: ["Basic: physiological (food, water, warmth, rest), safety. Psychological: belonging, esteem (prestige, accomplishment). Self-fulfillment: self-actualization.", "Research confirms each need contributes independently to well-being, across cultures; it does not confirm the hierarchy: people pursue higher goals with basic needs unmet."],
       example: "A student short of money and sleep who still pours energy into a project they believe in.",
-      exam: "Main criticism of Maslow: the order. The needs matter; the strict hierarchy does not hold." }
-  ]},
-  { title: "Intrinsic and extrinsic", cards: [
-    { id: "m-ie", title: "Two kinds of reasons",
-      line: "Extrinsic motivation is driven by outcomes separate from the activity. Intrinsic motivation is driven by the appeal of the activity itself.",
-      points: ["Extrinsic: effort less stable, rewards can lose their power, attention shifts to the reward (and to shortcuts). Effective for short-term compliance.", "Intrinsic: self-sustaining effort, deeper engagement, learning and well-being, attention on the task, more persistence.", "Most real motivation is a mix of both."],
-      example: "Going to class for the grade (extrinsic) or out of curiosity (intrinsic). Volunteering for your CV or because it is fun and meaningful." }
+      exam: "Main criticism: the order. The needs matter; the strict hierarchy does not hold." }
   ]},
   { title: "Self-Determination Theory", widget: "continuum", cards: [
     { id: "m-sdt", title: "Three basic psychological needs",
       line: "Competence, autonomy and relatedness. When work satisfies them, motivation, performance and well-being follow (Deci, Olafsen & Ryan, 2017).",
-      points: ["Competence: feeling capable and effective at a task.", "Autonomy: freedom and discretion over what you do and how.", "Relatedness: feeling connected to others and part of a group."] },
+      points: ["Competence: feeling capable and effective. Autonomy: freedom and discretion over what and how. Relatedness: feeling connected, part of a group."] },
     { id: "m-cont", title: "The internalization continuum (Ryan & Deci, 2000)",
-      line: "Extrinsic motivation is not all the same: it runs from controlled to autonomous.",
-      points: ["Amotivation: no driver. \"I don't see why I'm doing this.\"", "External regulation: rewards, punishments, being forced. Locus: external.", "Introjection: guilt, shame, ego, seeking approval. Locus: somewhat external.", "Identification: personal value and usefulness. \"I believe it is important.\" Locus: somewhat internal.", "Integration: full fit with your values and identity. Locus: internal.", "Intrinsic motivation: the activity itself is interesting or enjoyable. Locus: internal."],
-      example: "Two call-center agents. \"I answer calls because I'm paid and monitored\": controlled (external regulation). \"I answer calls because helping callers matters to me\": autonomous (identified or integrated).",
-      exam: "Can extrinsic motivation be autonomous? Yes: identification and integration are extrinsic but autonomous." },
+      line: "Extrinsic motivation runs from controlled to autonomous.",
+      points: ["Amotivation: no driver (\"I don't see why I'm doing this\").", "External regulation: rewards, punishments, being forced (external). Introjection: guilt, shame, ego, approval (somewhat external).", "Identification: personal value and usefulness (somewhat internal). Integration: full fit with values and identity (internal).", "Intrinsic motivation: the activity itself is interesting or enjoyable (internal)."],
+      example: "\"I answer calls because I'm paid and monitored\": controlled. \"Because helping callers matters to me\": autonomous (identified or integrated).",
+      exam: "Can extrinsic motivation be autonomous? Yes: identification and integration." },
     { id: "m-sdt-mgr", title: "What managers can do",
-      line: "Build a context that supports each need. Autonomy is the critical bridge from guilt-driven to autonomous commitment.",
-      points: ["Competence: confidence to take on goals; resources, time, contacts, coaching.", "Relatedness: the social willingness to take on goals; fun and camaraderie.", "Autonomy: empower people, delegate meaningful tasks.", "Autonomy-supportive supervision: meaningful choice, acknowledging the person's view, minimal unnecessary control. Controlling supervision undermines autonomy.", "Informational feedback (\"I liked how you structured the argument\") supports competence and keeps autonomy. No feedback gives little to competence; controlling feedback (\"keep doing it exactly this way\") undermines autonomy."],
-      example: "Gmail came out of Google's freedom to pursue side projects: progress in mastering skills (competence), choosing how to work (autonomy), working with people you like (relatedness), hence intrinsic or integrated motivation, creativity and persistence." }
+      line: "Build a context that supports each need. Autonomy is the bridge from guilt-driven to autonomous commitment.",
+      points: ["Competence: resources, time, contacts, coaching. Relatedness: fun and camaraderie. Autonomy: empower, delegate meaningful tasks.", "Autonomy-supportive supervision: meaningful choice, acknowledging the person's view, minimal control. Controlling supervision undermines autonomy.", "Informational feedback (\"I liked how you structured the argument\") supports competence and autonomy; no feedback gives little; controlling feedback (\"do it exactly this way\") undermines autonomy."],
+      example: "Gmail came out of Google's freedom for side projects: competence, autonomy, relatedness → intrinsic or integrated motivation, creativity, persistence." }
   ]},
   { title: "Designing motivating jobs", widget: "jcm", cards: [
     { id: "m-herz", title: "Herzberg's two-factor theory",
-      line: "Improving hygiene factors reduces dissatisfaction but does not create motivation or satisfaction. Motivators do.",
-      points: ["Motivators: achievement, recognition, the work itself, advancement, growth.", "Hygiene factors: relationships with peers, company policies, physical workspace, working conditions, salary, status, security, supervision."],
-      trap: "Salary is a hygiene factor here. A raise can remove dissatisfaction without making anyone more motivated." },
+      line: "Better hygiene factors reduce dissatisfaction but do not create motivation. Motivators do.",
+      points: ["Motivators: achievement, recognition, the work itself, advancement, growth.", "Hygiene factors: relations with peers, company policies, workspace, working conditions, salary, status, security, supervision."],
+      trap: "Salary is a hygiene factor: a raise can remove dissatisfaction without motivating anyone." },
     { id: "m-jcm", title: "The Job Characteristics Model (Hackman & Oldham)",
       line: "Five core job dimensions create three psychological states, which lead to motivation, satisfaction and effectiveness.",
-      points: ["Skill variety: the job uses many different skills.", "Task identity: you complete a whole, identifiable piece of work.", "Task significance: the job affects other people's lives or work.", "Autonomy: freedom to decide how the work is done.", "Feedback: the work itself tells you clearly how well you are doing.", "Variety, identity and significance → experienced meaningfulness. Autonomy → experienced responsibility for outcomes. Feedback → knowledge of actual results.", "Outcomes: high intrinsic motivation, growth satisfaction, job satisfaction, work effectiveness."],
-      exam: "Example of job enrichment: let a warehouse picker handle a client's whole order from receipt to dispatch (task identity) and see the client's rating (feedback)." },
-    { id: "m-mod", title: "JCM moderators",
-      line: "Not everyone wants a job with all five characteristics.",
-      points: ["Knowledge and skill.", "Growth need strength.", "Context satisfactions (pay, colleagues, supervision...).", "They moderate both the psychological states and the outcomes."] }
+      points: ["Skill variety, task identity (a whole piece of work), task significance (affects others) → experienced meaningfulness. Autonomy → responsibility for outcomes. Feedback (from the work itself) → knowledge of results.", "Outcomes: intrinsic motivation, growth satisfaction, job satisfaction, work effectiveness.", "Moderators (not everyone wants all five): knowledge and skill, growth need strength, context satisfactions (pay, colleagues, supervision)."],
+      exam: "Job enrichment: let a warehouse picker handle a client's whole order (task identity) and see the client's rating (feedback)." }
   ]},
   { title: "Goal setting", cards: [
     { id: "m-goal", title: "Goal-setting theory (Locke & Latham)",
-      line: "Specific, difficult goals lead to higher performance than vague or easy goals, or \"do your best\". When asked to do their best, people do not.",
-      points: ["Mediators (why it works): direction of attention, effort, persistence, strategies.", "Moderators (when it works): ability, resources, goal commitment, feedback."] },
-    { id: "m-goal2", title: "Performance goals and learning goals",
-      line: "Performance goals target an end result; learning goals target new skills or knowledge. The right choice depends on task complexity and the person's experience.",
-      example: "Performance: secure 3 new clients this month. Learning: learn to handle client objections confidently in sales calls." },
-    { id: "m-smart", title: "SMART goals",
-      line: "Specific, Measurable, Achievable, Relevant (results-oriented), Timely.",
-      example: "\"I'll study very hard for the exam\" becomes: \"By Sunday 6 pm, I will answer all the lecture 3 self-check questions in writing and score at least 80% on the decisions quiz.\"" }
+      line: "Specific, difficult goals beat vague, easy or \"do your best\" goals. Asked to do their best, people do not.",
+      points: ["Mediators (why): direction of attention, effort, persistence, strategies. Moderators (when): ability, resources, goal commitment, feedback.", "Performance goals target a result (secure 3 new clients this month); learning goals target skills (handle objections confidently). The choice depends on task complexity and experience.", "SMART: Specific, Measurable, Achievable, Relevant, Timely."],
+      example: "\"I'll study very hard\" becomes: \"By Sunday 6 pm, I will answer all lecture 3 self-check questions in writing and score at least 80% on the decisions quiz.\"" }
   ]},
   { title: "Fairness", widget: "equity", cards: [
     { id: "m-equity", title: "Equity theory",
-      line: "People compare their own outcomes-to-inputs ratio with a referent's. A gap creates tension that they are motivated to reduce.",
+      line: "People compare their outcomes-to-inputs ratio with a referent's. A gap creates tension they are motivated to reduce.",
       formula: "My outcomes / My inputs   vs   Other's outcomes / Other's inputs\nOutcomes: pay, promotion, recognition, flexibility\nInputs:   effort, skill, experience, time",
-      points: ["Six ways to reduce inequity: change inputs (less effort if underpaid), change outcomes (ask for a raise), distort perceptions of self, distort perceptions of others, choose a different referent, leave the field (quit)."],
-      example: "Hiring a financial analyst when the team earns $62 to 65k: offering the favorite candidate $70k may be fair to them and still trigger inequity among current analysts doing the same job." },
+      points: ["Six ways to reduce inequity: change inputs, change outcomes (ask for a raise), distort perceptions of self, distort perceptions of others, change referent, leave the field."],
+      example: "The team earns $62–65k: offering the favorite candidate $70k may be fair to them and still trigger inequity among current analysts." },
     { id: "m-justice", title: "Organizational justice",
       line: "The overall perception of fairness at work has three parts.",
-      points: ["Distributive: are the outcomes fair? Pay, promotion, recognition, workload. \"I got the raise I deserved.\"", "Procedural: was the process fair? Voice, consistency, unbiased decisions, accurate information. \"I had input and got a good explanation.\"", "Interactional: was I treated with respect and dignity, and given adequate explanations? \"My supervisor was kind when telling me.\""] }
+      points: ["Distributive: fair outcomes (pay, promotion, recognition, workload). \"I got the raise I deserved.\"", "Procedural: fair process (voice, consistency, unbiased decisions, accurate information). \"I had input and a good explanation.\"", "Interactional: respect, dignity, adequate explanations. \"My supervisor was kind when telling me.\""] }
   ]}
 ]}
 ];
+/* cards merged on Oct 24: a merged card counts as known if every card it replaced was known */
+const LEARN_MERGED = {
+  "o-ob": ["o-ob", "o-disc", "o-levels"], "o-intuition": ["o-intuition", "o-many"], "o-def": ["o-def", "o-goals", "o-control"],
+  "o-weber": ["o-weber-auth", "o-weber"], "o-human": ["o-hawthorne", "o-human"],
+  "p-values": ["p-stable", "p-values"], "p-schwartz": ["p-schwartz", "p-bonus"], "p-def": ["p-def", "p-psycho"], "p-big5": ["p-mbti", "p-big5"],
+  "p-hilo": ["p-hilo", "p-toomuch"], "p-predict": ["p-predict", "p-select"], "p-tat": ["p-tat", "p-strength"],
+  "d-sys": ["d-sys", "d-when1"], "d-bias": ["d-bias", "d-fix"], "d-confirm": ["d-confirm", "d-over"], "d-anchor": ["d-anchor", "d-avail"],
+  "d-frame": ["d-loss", "d-frame"], "d-sunk": ["d-sunk", "d-action"], "d-perc": ["d-perc", "d-person"], "d-fae": ["d-ssb", "d-fae"],
+  "d-teams": ["d-teams", "d-prevent"], "d-asch": ["d-asch", "d-milgram"], "d-simon": ["d-rational", "d-simon"],
+  "m-def": ["m-def", "m-ie"], "m-maslow": ["m-maslow", "m-maslow2"], "m-jcm": ["m-jcm", "m-mod"], "m-goal": ["m-goal", "m-goal2", "m-smart"]
+};
 
 /* Exam-style multiple choice. The right answer is o[0] in the data; options are shuffled on screen. */
 const QUIZ = [
@@ -2652,8 +2571,8 @@ function viewLearn(){
   <section class="sec"><div class="sec-h"><h2>A good order to revise</h2></div>
     <ol class="steps">
       <li><b>Read a lecture</b><span>Card by card. Tick what you could explain to a friend.</span></li>
-      <li><b>Test it</b><span>Run the lecture quiz and read every explanation, even when you are right.</span></li>
-      <li><b>Apply it</b><span>Spot it scenes, then a case: name the concept, then use it.</span></li>
+      <li><b>Test it</b><span>In Practice, run the lecture's questions and read every explanation, even when you are right.</span></li>
+      <li><b>Apply it</b><span>Workplace scenes in Practice, then a case: name the concept, then use it.</span></li>
       <li><b>Write one exam answer</b><span>Then compare with the model answer and tick the key points.</span></li>
     </ol></section>
   ${creditHtml()}` });
@@ -2682,12 +2601,12 @@ function viewChapter(id){
       <div class="toc-h"><span class="chn">${String(c.n).padStart(2, "0")}</span><b>${c.title}</b></div>
       <div class="mprog sm"><div class="mbar"><i data-chbar style="width:${s.known / s.total * 100}%"></i></div><span data-chcount>${s.known}/${s.total} known</span></div>
       <nav class="toc-l">${c.sections.map((sec, i) => `<button type="button" data-sec="${i}"><span>${sec.title}</span><em data-seccount="${i}"></em></button>`).join("")}</nav>
-      <div class="toc-act"><a class="btn primary small" href="#quiz-${c.id}">Quiz this lecture</a><a class="btn glassy small" href="#cards-${c.id}">Flashcards</a><a class="btn glassy small" href="#recap">Recap</a></div>
+      <div class="toc-act"><a class="btn primary small" href="#practice-${c.id}">Practise this lecture</a><a class="btn glassy small" href="#practice-cards-${c.id}">Flashcards</a><a class="btn glassy small" href="#recap">Recap</a></div>
     </aside>
     <div class="chbody">
       ${mhead(`Lecture ${c.n}`, c.title, c.intro)}
       ${c.sections.map((sec, i) => `<section class="nsec" data-seci="${i}"><h2>${sec.title}</h2>${[].concat(sec.widget || []).map(w => `<div class="widget" data-widget="${w}"></div>`).join("")}${sec.cards.map(k => noteCard(k, known[k.id])).join("")}</section>`).join("")}
-      <nav class="chnext">${prev ? `<a class="btn glassy" href="#learn-${prev.id}">${ICO.back}${prev.title}</a>` : "<span></span>"}<a class="btn primary" href="#quiz-${c.id}">Test this lecture</a>${next ? `<a class="btn glassy" href="#learn-${next.id}">${next.title}${ICO.arrow}</a>` : "<span></span>"}</nav>
+      <nav class="chnext">${prev ? `<a class="btn glassy" href="#learn-${prev.id}">${ICO.back}${prev.title}</a>` : "<span></span>"}<a class="btn primary" href="#practice-${c.id}">Test this lecture</a>${next ? `<a class="btn glassy" href="#learn-${next.id}">${next.title}${ICO.arrow}</a>` : "<span></span>"}</nav>
     </div>
   </div>` });
   const counts = () => {
@@ -3017,19 +2936,26 @@ const WIDGETS = {
   }
 };
 
+/* ---------- Learn was compacted (79 → 49 cards): carry the ticks over once ---------- */
+(function migrateLearn(){
+  if (MS.get("learnV", 1) >= 2) return;
+  const k = { ...MS.get("learn", {}) };
+  Object.entries(LEARN_MERGED).forEach(([id, src]) => { const all = src.every(s => k[s]); src.forEach(s => delete k[s]); if (all) k[id] = 1; });
+  MS.set("learn", k); MS.set("learnV", 2);
+})();
+
 /* ---------- routing ---------- */
 function route(){
-  const hs = location.hash.slice(1);
+  let hs = location.hash.slice(1);
+  const moved = practiceHash(hs);
+  if (moved){ hs = moved; history.replaceState(null, "", "#" + hs); }
+  const pr = practiceRoute(hs); if (pr) return pr;
   if (hs === "learn") return { view: "learn" };
   if (/^learn-\w+$/.test(hs)) return { view: "chapter", id: hs.slice(6) };
   if (hs === "cases") return { view: "cases" };
   if (/^case-\w+$/.test(hs)) return { view: "case", id: hs.slice(5) };
-  if (hs === "spot" || /^spot-\w+$/.test(hs)) return { view: "spot", id: hs.slice(5) };
   if (hs === "labs") return { view: "labs" };
   if (/^lab-\w+$/.test(hs)) return { view: "lab", id: hs.slice(4) };
-  if (hs === "quiz" || /^quiz-\w+$/.test(hs)) return { view: "quiz", id: hs.slice(5) };
-  if (hs === "cards" || /^cards-\w+$/.test(hs)) return { view: "cards", id: hs.slice(6) };
-  if (hs === "open") return { view: "open" };
   if (/^open-\w+$/.test(hs)) return { view: "openq", id: hs.slice(5) };
   if (hs === "exam") return { view: "exam" };
   if (hs === "recap") return { view: "recap" };
@@ -3051,27 +2977,22 @@ function nextCase(){ const last = MS.get("lastcase", null), c = CASES.find(x => 
 const MOD_ICONS = {
   learn: '<path d="M4 5h7a3 3 0 0 1 3 3v11a2 2 0 0 0-2-2H4zM20 5h-5a3 3 0 0 0-3 3v11a2 2 0 0 1 2-2h6z"/>',
   cases: '<rect x="3" y="4" width="8" height="16" rx="2"/><path d="M14 6h7M14 11h7M14 16h4"/>',
-  spot: '<circle cx="11" cy="11" r="6.5"/><path d="m16 16 5 5M11 8v3l2 2"/>',
   labs: '<path d="M9 3v6L4 18a2 2 0 0 0 1.8 3h12.4A2 2 0 0 0 20 18l-5-9V3M8 3h8M7 14h10"/>',
-  quiz: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17v.5"/>',
-  cards: '<rect x="3" y="6" width="14" height="12" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v10"/>',
-  open: '<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/>',
+  practice: '<circle cx="11" cy="11" r="6.5"/><path d="m16 16 5 5M11 8v3l2 2"/>',
   exam: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>'
 };
 function modulesHtml(){
   const L = learnStats(), o = caseOverall(), sp = MS.get("spot", { best: 0, sprint: 0 }), qz = MS.get("quiz", {}), fk = Object.keys(MS.get("cards", {})).length, op = Object.values(openState().ticks || {}).filter(t => t.length).length, ex = MS.get("exam", null), labs = MS.get("labs", {});
+  const prSub = [qz.last ? `last quiz ${Math.round(qz.last.score / qz.last.n * 100)}%` : `${QUIZ.length + SPOT.length} questions`, sp.best ? `best streak ${sp.best}` : "", `${fk}/${CARDS.length} flashcards`, `${op}/${OPEN.length} exam questions tried`].filter(Boolean);
   const M = [
     ["#learn", "Learn", "The four lectures and two tutorials in short cards, with ten interactive models.", `${L.known}/${L.total} cards known`, "var(--c1)", "learn"],
     ["#cases", "Cases", "Diagnose people problems: define the gap, find the cause, recommend with a theory.", o.fin ? `${o.fin}/${CASES.length} cases solved` : `${CASES.length} cases`, "var(--pri)", "cases"],
-    ["#spot", "Spot it", "Short workplace scenes. Which bias? Which need? Hygiene or motivator? Streaks and a 60-second sprint.", sp.best ? `best streak ${sp.best}` : `${SPOT.length} scenes`, "var(--c3)", "spot"],
-    ["#labs", "Labs", "Kelley's attribution trainer, the equity calculator, the Big Five test from class, who said what.", `${Object.keys(labs).length}/4 labs tried`, "var(--c4)", "labs"],
-    ["#quiz", "Quiz", "Exam-style multiple choice on every lecture, each answer explained.", qz.last ? `last ${Math.round(qz.last.score / qz.last.n * 100)}%` : `${QUIZ.length} questions`, "var(--pri)", "quiz"],
-    ["#cards", "Flashcards", "Definitions, authors and models to flip.", `${fk}/${CARDS.length} known`, "var(--c1)", "cards"],
-    ["#open", "Exam questions", "Every self-check question from the slides, with model answers and key points.", `${op}/${OPEN.length} tried`, "var(--c3)", "open"],
-    ["#exam", "Mock exam", "90 minutes, timed: explain the theories, then apply them to a case.", ex && ex.score != null ? `last ${ex.score}%` : "90 min", "var(--c4)", "exam"]
+    ["#exam", "Mock exam", "90 minutes, timed: explain the theories, then apply them to a case.", ex && ex.score != null ? `last ${ex.score}%` : "90 min", "var(--c4)", "exam"],
+    ["#practice", "Practice", "Questions (workplace scenes to spot and multiple choice, as a quiz, a streak or a sprint), flashcards, and every self-check question with a model answer.", prSub.map(s => `<span>${s}</span>`).join(""), "var(--c3)", "practice", "wide"],
+    ["#labs", "Labs", "Kelley's attribution trainer, the equity calculator, the Big Five test from class, who said what.", `${Object.keys(labs).length}/4 labs tried`, "var(--c4)", "labs"]
   ];
   return `<section class="sec"><div class="sec-h"><h2>Revise</h2><p>Learn the course, then train in every format the exam can take.</p></div>
-    <div class="mods mods4">${M.map(m => `<a class="modt" href="${m[0]}" style="--c:${m[4]}"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${MOD_ICONS[m[5]]}</svg></span><b>${m[1]}</b><span class="md">${m[2]}</span><span class="ms">${m[3]}</span></a>`).join("")}</div>
+    <div class="mods dense">${M.map(m => `<a class="modt${m[6] ? " " + m[6] : ""}" href="${m[0]}" style="--c:${m[4]}"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${MOD_ICONS[m[5]]}</svg></span><b>${m[1]}</b><span class="md">${m[2]}</span><span class="ms${m[6] ? " msub" : ""}">${m[3]}</span></a>`).join("")}</div>
     <a class="tdfull pjbanner" href="#project"><span><b>Group project, 40% of the grade</b><span>The brief from lecture 1, a theory finder for your problem, the expected structure, a checklist and the Q&amp;A to rehearse.</span></span>${ICO.arrow}</a></section>`;
 }
 
@@ -3441,7 +3362,10 @@ function stepCard(C, s, i, P){
 }
 
 /* =====================================================================
-   SPOT IT: name what you see. Wrong options come from the same family (all biases, all justice types...).
+   PRACTICE: one module with three tabs (Questions, Flashcards, Exam questions).
+   Questions merges the multiple-choice quiz (QUIZ, right answer at o[a] in the data)
+   and the classification items (SPOT, the right option is the item's category;
+   wrong options come from the same family). Three ways to play: a scored quiz, a streak, a 60 s sprint.
    ===================================================================== */
 function spotItem(it){
   const [fam, text, right, why] = it, F = FAMILIES[fam];
@@ -3450,67 +3374,142 @@ function spotItem(it){
   else if (opts.length > 2) opts = shuffle(opts);
   return { fam, ch: F.ch, q: F.q, text, opts, right: opts.indexOf(right), why, label: right };
 }
-function viewSpot(pre){
+const prPool = sel => [...QUIZ.filter(q => sel.has(q.ch)).map(d => ({ quiz: d })), ...SPOT.filter(it => sel.has(FAMILIES[it[0]].ch)).map(d => ({ sort: d }))];
+function prBuild(x){
+  if (x.quiz){ const q = x.quiz, order = shuffle(q.o.map((_, j) => j)); return { ch: q.ch, prompt: "", text: q.q, opts: order.map(j => q.o[j]), right: order.indexOf(q.a), why: q.why, label: q.o[q.a] }; }
+  const s = spotItem(x.sort); return { ch: s.ch, prompt: s.q, text: s.text, opts: s.opts, right: s.right, why: s.why, label: s.label, scene: true };
+}
+const PR_MODES = [["quiz", "Quiz", "A set of questions, your score at the end, your mistakes to retry."], ["streak", "Streak", "Questions without end: how long can you go without a mistake?"], ["sprint", "Sprint 60 s", "As many right answers as you can in one minute."]];
+function viewQuestions(pre){
   const sel = new Set(pre && CH[pre] ? [pre] : COURSE.map(c => c.id));
-  const st0 = MS.get("spot", { best: 0, sprint: 0 });
-  const root = h("div", { class: "mod", html: `
-  ${mhead("Management and Organizations", "Spot it", "Short workplace scenes. Name the bias, the need, the factor or the type of justice. The exam asks you to apply concepts: this is the reflex to train.")}
-  <div class="drillbar"><div class="mchips">${COURSE.map(c => chipCh(c, sel.has(c.id))).join("")}</div>
-    <div class="seg" role="group" aria-label="Mode"><button type="button" data-mode="practice" aria-pressed="true">Practice</button><button type="button" data-mode="sprint" aria-pressed="false">Sprint 60 s</button></div></div>
-  <div class="drillstats"><div><b data-s="streak">0</b><span>streak</span></div><div><b data-s="best">${st0.best}</b><span>best streak</span></div><div><b data-s="score">0/0</b><span>this session</span></div><div><b data-s="sprint">${st0.sprint}</b><span>best sprint</span></div></div>
-  <div class="timer" hidden><i></i></div>
-  <article class="dq spotq" aria-live="polite"></article>` });
-  let mode = "practice", streak = 0, ok = 0, tot = 0, cur = null, t0 = 0, tick = 0, sprintOn = false, deck = [];
-  const dq = root.querySelector(".dq"), S = k => root.querySelector(`[data-s="${k}"]`), timer = root.querySelector(".timer");
-  const stats = () => { const s = MS.get("spot", { best: 0, sprint: 0 }); S("streak").textContent = streak; S("score").textContent = `${ok}/${tot}`; S("best").textContent = s.best; S("sprint").textContent = s.sprint; };
-  const refill = () => { deck = shuffle(SPOT.filter(it => sel.has(FAMILIES[it[0]].ch))); };
-  function next(){
-    if (!deck.length) refill();
-    if (!deck.length){ dq.innerHTML = `<p class="muted">Pick at least one lecture.</p>`; return; }
-    cur = spotItem(deck.pop()); cur.done = false; dq.classList.remove("ok", "bad");
-    const c = CH[cur.ch], L = "ABCD";
-    dq.style.setProperty("--c", c.c);
-    dq.innerHTML = `<div class="qzprog"><span class="tag">${c.short}</span><span>${cur.q}</span></div><p class="dqt scene">${cur.text}</p><div class="opts">${cur.opts.map((o, j) => `<button class="opt" type="button" data-o="${j}"><span class="k">${L[j]}</span><span>${o}</span></button>`).join("")}</div><div class="dout"></div>`;
+  const root = h("div", { class: "mod", html: `${mhead(LAB_NAME, "Questions", PR_LEDE)}<div class="qzwrap"></div>` });
+  const W = root.querySelector(".qzwrap");
+  let mode = "quiz", len = 10, Qs = [], i = 0, score = 0, wrong = [], cur = null, streak = 0, ok = 0, tot = 0, deck = [], sprintOn = false, t0 = 0, tick = 0;
+  const L = "ABCD";
+  const qHtml = (q, head) => `<div class="qzq spotq" style="--c:${CH[q.ch].c}"><div class="qzprog">${head}<span class="tag">${CH[q.ch].short}</span></div>${q.prompt ? `<p class="qprompt">${q.prompt}</p>` : ""}<p class="dqt${q.scene ? " scene" : ""}">${q.text}</p><div class="opts">${q.opts.map((o, j) => `<button class="opt" type="button" data-o="${j}"><span class="k">${L[j]}</span><span>${o}</span></button>`).join("")}</div><div class="dout"></div></div>`;
+  function setup(){
+    sprintOn = false; cur = null; cancelAnimationFrame(tick);
+    const qz = MS.get("quiz", {}), sp = MS.get("spot", { best: 0, sprint: 0 });
+    const rec = [qz.last ? `Last quiz: ${qz.last.score}/${qz.last.n} (${Math.round(qz.last.score / qz.last.n * 100)}%)` : "", sp.best ? `best streak ${sp.best}` : "", sp.sprint ? `best sprint ${sp.sprint}` : ""].filter(Boolean).join(" · ");
+    W.innerHTML = `<div class="qzsetup"><h2>Choose your questions</h2>
+      <div class="mchips">${COURSE.map(c => chipCh(c, sel.has(c.id))).join("")}</div>
+      <div class="seg" role="group" aria-label="Mode">${PR_MODES.map(([k, l]) => `<button type="button" data-mode="${k}" aria-pressed="${k === mode}">${l}</button>`).join("")}</div>
+      <p class="muted small" data-mdesc>${PR_MODES.find(m => m[0] === mode)[2]}</p>
+      <div class="seg" role="group" aria-label="Length" data-lens style="${mode === "quiz" ? "" : "display:none"}">${[10, 20, 0].map(n => `<button type="button" data-len="${n}" aria-pressed="${n === len}">${n || "All"} questions</button>`).join("")}</div>
+      <p class="muted" data-avail></p>
+      <button class="btn primary big" type="button" data-start>Start</button>
+      ${rec ? `<p class="muted small">${rec}.</p>` : ""}</div>`;
+    avail();
   }
-  function verdict(good){
-    cur.done = true; tot++; if (good){ ok++; streak++; } else streak = 0;
-    const s = MS.get("spot", { best: 0, sprint: 0 }); if (streak > s.best){ s.best = streak; MS.set("spot", s); }
-    stats(); if (good) bump(S("streak"));
-    if (tot === 15 && mode === "practice") nudgeReview("spot");
-    dq.classList.add(good ? "ok" : "bad");
-    dq.querySelector(".dout").innerHTML = `<div class="verdict ${good ? "ok" : "bad"}"><div class="vh"><b>${good ? "Correct" : "Not quite"}</b>${good ? "" : `<span>It is <b>${cur.label}</b>.</span>`}</div><p>${cur.why}</p></div><button class="btn quiet small next" type="button" data-next>Next ${ICO.arrow}<kbd>Enter</kbd></button>`;
-    dq.querySelector("[data-next]").focus({ preventScroll: true });
-    if (mode === "sprint" && sprintOn) setTimeout(() => { if (cur.done && sprintOn) next(); }, good ? 500 : 1500);
+  const avail = () => { const el = W.querySelector("[data-avail]"); if (el) el.textContent = `${prPool(sel).length} questions available.`; };
+  /* scored quiz */
+  function start(list){ Qs = list; i = 0; score = 0; wrong = []; show(); }
+  function show(){ cur = Qs[i]; cur.done = false; W.innerHTML = qHtml(cur, `<span>${i + 1} / ${Qs.length}</span><div class="mbar"><i style="width:${i / Qs.length * 100}%"></i></div>`); }
+  function end(){
+    cur = null;
+    const pct = Math.round(score / Qs.length * 100), hist = MS.get("quiz", {}); hist.last = { score, n: Qs.length }; hist.count = (hist.count || 0) + 1; MS.set("quiz", hist);
+    const byCh = COURSE.map(c => { const qs = Qs.filter(q => q.ch === c.id); return qs.length ? `<div class="bs" style="--c:${c.c}"><b>${qs.filter(q => !wrong.includes(q)).length}/${qs.length}</b><span>${c.short}</span></div>` : ""; }).join("");
+    W.innerHTML = `<div class="qzend"><span class="kicker">Quiz finished</span><h2>${pct}% · ${score} of ${Qs.length} right</h2><div class="blocks-sum">${byCh}</div>
+      <div class="row">${wrong.length ? `<button class="btn primary" type="button" data-retry>Retry my ${wrong.length} mistake${wrong.length > 1 ? "s" : ""}</button>` : ""}<button class="btn glassy" type="button" data-setup>New questions</button><a class="btn glassy" href="#learn">Back to the course</a></div>
+      ${wrong.length ? `<h3>Review</h3><ul class="review">${wrong.map(q => `<li><p class="rq">${q.prompt ? q.prompt + " " : ""}${q.text}</p><p class="ra">${ICO.check}<span>${q.label}</span></p><p class="muted">${q.why}</p></li>`).join("")}</ul>` : ""}</div>`;
+    nudgeReview("quiz");
   }
+  /* streak and sprint */
+  const S = k => W.querySelector(`[data-s="${k}"]`);
+  const stats = () => { const s = MS.get("spot", { best: 0, sprint: 0 }); if (!S("streak")) return; S("streak").textContent = streak; S("score").textContent = `${ok}/${tot}`; S("best").textContent = s.best; S("sprint").textContent = s.sprint; };
+  function play(){
+    streak = 0; ok = 0; tot = 0; deck = [];
+    W.innerHTML = `<div class="drillstats"><div><b data-s="streak">0</b><span>streak</span></div><div><b data-s="best">0</b><span>best streak</span></div><div><b data-s="score">0/0</b><span>this session</span></div><div><b data-s="sprint">0</b><span>best sprint</span></div></div>
+      <div class="timer"${mode === "sprint" ? "" : " hidden"}><i></i></div><div class="prq"></div><div class="row prback"><button class="btn quiet small" type="button" data-setup>${ICO.back}Change the questions</button></div>`;
+    stats();
+    if (mode === "sprint"){ sprintOn = true; t0 = performance.now(); cancelAnimationFrame(tick); tick = requestAnimationFrame(run); }
+    nextPlay();
+  }
+  function nextPlay(){
+    if (!deck.length) deck = shuffle(prPool(sel));
+    cur = prBuild(deck.pop()); cur.done = false;
+    W.querySelector(".prq").innerHTML = qHtml(cur, `<span>${mode === "sprint" ? "Sprint" : "Streak"}</span>`);
+  }
+  function run(){
+    if (!root.isConnected || !sprintOn) return;
+    const left = 1 - (performance.now() - t0) / 60000, bar = W.querySelector(".timer i"); if (bar) bar.style.width = Math.max(0, left * 100) + "%";
+    if (left > 0){ tick = requestAnimationFrame(run); return; }
+    sprintOn = false; cur = null;
+    const s = MS.get("spot", { best: 0, sprint: 0 }), rec = ok > s.sprint; if (rec){ s.sprint = ok; MS.set("spot", s); } stats();
+    W.querySelector(".prq").innerHTML = `<div class="sprintend"><span class="kicker">Time</span><h2>${ok} right out of ${tot}</h2><p class="muted">${rec ? "New personal best." : `Your best is ${s.sprint}.`}</p><div class="row"><button class="btn primary" type="button" data-again>Go again</button></div></div>`;
+    nudgeReview("sprint");
+  }
+  /* an answer, in any mode */
+  function pick(j){
+    if (!cur || cur.done) return;
+    cur.done = true; const good = j === cur.right, box = W.querySelector(".qzq");
+    box.querySelectorAll(".opt").forEach((b, k) => { b.disabled = true; if (k === cur.right) b.classList.add("right"); else if (k === j) b.classList.add("wrong"); });
+    if (good) burst(box.querySelectorAll(".opt")[j]);
+    box.classList.add(good ? "ok" : "bad");
+    let nxt = "Next";
+    if (mode === "quiz"){ if (good) score++; else wrong.push(cur); nxt = i + 1 < Qs.length ? "Next question" : "See my score"; }
+    else {
+      tot++; if (good){ ok++; streak++; } else streak = 0;
+      const s = MS.get("spot", { best: 0, sprint: 0 }); if (streak > s.best){ s.best = streak; MS.set("spot", s); }
+      stats(); if (good) bump(S("streak"));
+      if (tot === 15 && mode === "streak") nudgeReview("spot");
+    }
+    box.querySelector(".dout").innerHTML = `<div class="verdict ${good ? "ok" : "bad"}"><div class="vh"><b>${good ? "Correct" : "Not quite"}</b>${good ? "" : `<span>It is <b>${cur.label}</b>.</span>`}</div><p>${cur.why}</p></div><button class="btn quiet small next" type="button" data-next>${nxt} ${ICO.arrow}<kbd>Enter</kbd></button>`;
+    box.querySelector("[data-next]").focus({ preventScroll: true });
+    if (mode === "sprint" && sprintOn){ const c0 = cur; setTimeout(() => { if (cur === c0 && sprintOn) nextPlay(); }, good ? 500 : 1500); }
+  }
+  function advance(){ if (mode === "quiz"){ i++; if (i < Qs.length) show(); else end(); } else if (mode === "streak" || sprintOn) nextPlay(); }
   root.addEventListener("click", e => {
     const cb = e.target.closest("[data-ch]");
-    if (cb){ const k = cb.dataset.ch; if (sel.has(k) && sel.size > 1) sel.delete(k); else sel.add(k); cb.classList.toggle("on", sel.has(k)); cb.setAttribute("aria-pressed", String(sel.has(k))); refill(); next(); }
+    if (cb){ const k = cb.dataset.ch; if (sel.has(k) && sel.size > 1) sel.delete(k); else sel.add(k); cb.classList.toggle("on", sel.has(k)); cb.setAttribute("aria-pressed", String(sel.has(k))); avail(); return; }
     const mb = e.target.closest("[data-mode]");
-    if (mb){ mode = mb.dataset.mode; root.querySelectorAll("[data-mode]").forEach(b => b.setAttribute("aria-pressed", String(b === mb))); streak = 0; ok = 0; tot = 0; stats(); if (mode === "sprint") startSprint(); else { sprintOn = false; timer.hidden = true; next(); } }
-    const ob = e.target.closest("[data-o]");
-    if (ob && cur && !cur.done){ const j = +ob.dataset.o; if (j === cur.right) burst(ob); dq.querySelectorAll(".opt").forEach((b, i) => { b.disabled = true; if (i === cur.right) b.classList.add("right"); else if (i === j) b.classList.add("wrong"); }); verdict(j === cur.right); }
-    if (e.target.closest("[data-next]")) next();
-    if (e.target.closest("[data-again]")) startSprint();
+    if (mb){ mode = mb.dataset.mode; W.querySelectorAll("[data-mode]").forEach(b => b.setAttribute("aria-pressed", String(b === mb))); W.querySelector("[data-mdesc]").textContent = PR_MODES.find(m => m[0] === mode)[2]; W.querySelector("[data-lens]").style.display = mode === "quiz" ? "" : "none"; return; }
+    const lb = e.target.closest("[data-len]");
+    if (lb){ len = +lb.dataset.len; W.querySelectorAll("[data-len]").forEach(b => b.setAttribute("aria-pressed", String(b === lb))); return; }
+    if (e.target.closest("[data-start]")){ if (mode === "quiz"){ const pool = shuffle(prPool(sel)); start((len ? pool.slice(0, len) : pool).map(prBuild)); } else play(); return; }
+    const ob = e.target.closest("[data-o]"); if (ob){ pick(+ob.dataset.o); return; }
+    if (e.target.closest("[data-next]")){ advance(); return; }
+    if (e.target.closest("[data-retry]")){ start(shuffle(wrong.map(q => ({ ...q, done: false })))); return; }
+    if (e.target.closest("[data-again]")){ play(); return; }
+    if (e.target.closest("[data-setup]")) setup();
   });
   const onKey = e => {
     if (!root.isConnected){ document.removeEventListener("keydown", onKey); return; }
-    if (!cur || (e.target.matches && e.target.matches("input,textarea"))) return;
-    if (e.key === "Enter" && cur.done){ e.preventDefault(); next(); return; }
+    if (!cur || (e.target.matches && e.target.matches("input,textarea")) || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === "Enter" && cur.done){ e.preventDefault(); advance(); return; }
     const k = { a: 0, b: 1, c: 2, d: 3, "1": 0, "2": 1, "3": 2, "4": 3 }[e.key.toLowerCase()];
-    if (k != null && !cur.done){ const b = dq.querySelectorAll(".opt")[k]; if (b){ e.preventDefault(); b.click(); } }
+    if (k != null && !cur.done && k < cur.opts.length){ e.preventDefault(); pick(k); }
   };
   document.addEventListener("keydown", onKey);
-  function startSprint(){
-    sprintOn = true; ok = 0; tot = 0; streak = 0; stats(); timer.hidden = false; t0 = performance.now(); refill(); next();
-    cancelAnimationFrame(tick);
-    const run = () => { if (!root.isConnected){ sprintOn = false; return; } const left = 1 - (performance.now() - t0) / 60000; timer.firstChild.style.width = Math.max(0, left * 100) + "%";
-      if (left <= 0){ sprintOn = false; const s = MS.get("spot", { best: 0, sprint: 0 }), rec = ok > s.sprint; if (rec){ s.sprint = ok; MS.set("spot", s); } stats();
-        dq.classList.remove("ok", "bad"); cur = null; dq.innerHTML = `<div class="sprintend"><span class="kicker">Time</span><h2>${ok} right out of ${tot}</h2><p class="muted">${rec ? "New personal best." : `Your best is ${s.sprint}.`}</p><div class="row"><button class="btn primary" type="button" data-again>Go again</button></div></div>`; nudgeReview("sprint"); return; }
-      tick = requestAnimationFrame(run); };
-    tick = requestAnimationFrame(run);
-  }
-  refill(); requestAnimationFrame(next);
+  setup();
   return root;
+}
+
+/* the module: one heading, three tabs; each tab keeps its own view (and its listeners) */
+const PR_TABS = [["q", "Questions", "#practice"], ["cards", "Flashcards", "#practice-cards"], ["open", "Exam questions", "#practice-open"]];
+function viewPractice(tab, ch){
+  const view = tab === "cards" ? viewCards(ch) : tab === "open" ? viewOpen() : viewQuestions(ch);
+  MS.set("practice", tab);
+  const mh = view.querySelector(".mhead"), k = mh && mh.querySelector(".kicker");
+  if (k) k.textContent = `${LAB_NAME} · Practice`;
+  const n = { q: QUIZ.length + SPOT.length, cards: CARDS.length, open: OPEN.length };
+  const tabs = `<nav class="prtabs" aria-label="Practice">${PR_TABS.map(([t, l, href]) => `<a href="${href}${t !== "open" && ch && CH[ch] ? "-" + ch : ""}" aria-current="${t === tab ? "page" : "false"}">${l}<span>${n[t]}</span></a>`).join("")}</nav>`;
+  if (mh) mh.insertAdjacentHTML("afterend", tabs); else view.insertAdjacentHTML("afterbegin", tabs);
+  return view;
+}
+/* old links (#sort, #spot, #quiz, #cards, #open, with or without a chapter) lead to the right tab */
+function practiceHash(hs){
+  let m = hs.match(/^(?:sort|spot|quiz)(?:-(\w+))?$/); if (m) return "practice" + (m[1] ? "-" + m[1] : "");
+  m = hs.match(/^cards(?:-(\w+))?$/); if (m) return "practice-cards" + (m[1] ? "-" + m[1] : "");
+  if (hs === "open") return "practice-open";
+  return null;
+}
+function practiceRoute(hs){
+  if (hs === "practice") return { view: "practice", id: { tab: "q" } };
+  if (hs === "practice-open") return { view: "practice", id: { tab: "open" } };
+  let m = hs.match(/^practice-cards(?:-(\w+))?$/); if (m) return { view: "practice", id: { tab: "cards", ch: m[1] } };
+  m = hs.match(/^practice-(\w+)$/); if (m) return { view: "practice", id: { tab: "q", ch: m[1] } };
+  return null;
 }
 
 /* =====================================================================
@@ -3790,7 +3789,7 @@ function viewOpenQ(id){
   const o = OPEN.find(x => x.id === id) || OPEN[0], c = CH[o.ch], s = openState(), idx = OPEN.indexOf(o), nx = OPEN[idx + 1], pv = OPEN[idx - 1];
   const ticks = new Set(s.ticks[o.id] || []);
   const root = h("div", { class: "mod oq-page", style: `--c:${c.c}`, html: `
-    <a class="tocback" href="#open">${ICO.back}All exam questions</a>
+    <a class="tocback" href="#practice-open">${ICO.back}All exam questions</a>
     <header class="mhead"><p class="kicker">${c.n}. ${c.short} · about ${o.min} minutes · ${o.src === "slides" ? "self-check question from the slides" : o.src === "apply" ? "application case" : "from the lecture"}</p><h1 class="oqt">${o.q}</h1></header>
     <div class="owrite"><label for="oans" class="lbl">Your answer</label><textarea id="oans" placeholder="Write as you would in the exam. Your text is saved on this device.">${esc(s.ans[o.id] || "")}</textarea>
       <div class="orow"><span class="muted" data-wc></span><button class="btn primary" type="button" data-reveal>Compare with the model answer</button></div></div>
@@ -3829,7 +3828,7 @@ function viewExam(){
   function paint(){
     cancelAnimationFrame(tick);
     const phase = E.end ? "mark" : E.start ? "write" : "ready";
-    root.innerHTML = `<a class="tocback" href="#open">${ICO.back}Exam questions</a>
+    root.innerHTML = `<a class="tocback" href="#practice-open">${ICO.back}Exam questions</a>
       ${mhead("Management and Organizations", "Mock exam", phase === "ready" ? `${Q.length} questions in ${EXAM_MIN} minutes: one per lecture, then an application case. The real exam tests understanding and application; its exact format is not in the syllabus, so treat this as training, not a prediction.` : phase === "write" ? "Write in full sentences. Your answers are saved on this device as you type." : "Time to mark yourself. Tick only what your answer states clearly.")}
       ${phase === "ready" ? `<div class="exready"><ol class="exlist">${Q.map(o => `<li><span class="osrc ${o.src === "apply" ? "ap" : ""}" style="--c:${CH[o.ch].c}">${o.src === "apply" ? "Application case" : CH[o.ch].short}</span>${o.q}</li>`).join("")}</ol>
           <div class="row"><button class="btn primary big" type="button" data-start>Start the clock: ${EXAM_MIN} minutes</button><button class="btn glassy big" type="button" data-new>Draw other questions</button></div>
@@ -3887,7 +3886,7 @@ const PJ_FINDER = [
   { s: "People leave, or do not fit", sub: "turnover, weak commitment, value mismatch", th: [
     ["Values and value congruence (Schwartz)", "Do the organization's priorities clash with what employees value?", "person", "p-schwartz"],
     ["Workplace attitudes", "Which attitude dropped: satisfaction, engagement, commitment, perceived support?", "person", "p-four"],
-    ["Personality and job fit", "Do the job's demands fit people's traits? Were they selected on a weak tool (MBTI)?", "person", "p-select"],
+    ["Personality and job fit", "Do the job's demands fit people's traits? Were they selected on a weak tool (MBTI)?", "person", "p-predict"],
     ["Equity theory", "Do people compare their outcomes/inputs ratio with someone else and feel short-changed?", "motiv", "m-equity"]] },
   { s: "Decisions are slow or poor", sub: "endless meetings, bad bets, nobody objects", th: [
     ["Groupthink and social influence", "Does the group value agreement over evaluation? Does the leader speak first?", "decide", "d-groupthink"],
@@ -3899,9 +3898,9 @@ const PJ_FINDER = [
     ["Organizational justice", "Is the problem the outcome (distributive), the process (procedural) or the treatment (interactional)?", "motiv", "m-justice"],
     ["Attribution errors", "Are managers blaming people (fundamental attribution error) for problems caused by the situation?", "decide", "d-fae"]] },
   { s: "Appraisals or hiring go wrong", sub: "biased ratings, the wrong people promoted or hired", th: [
-    ["Halo and contrast effects", "Does one impression, or the previous person, color the rating?", "decide", "d-person"],
+    ["Halo and contrast effects", "Does one impression, or the previous person, color the rating?", "decide", "d-perc"],
     ["Kelley's attribution model", "Distinctiveness, consensus, consistency: person or situation?", "decide", "d-kelley"],
-    ["Using personality tests", "MBTI for selection, social desirability, no interviews or references?", "person", "p-select"]] },
+    ["Using personality tests", "MBTI for selection, social desirability, no interviews or references?", "person", "p-predict"]] },
   { s: "Nobody knows who does what", sub: "duplicated work, inconsistent decisions, growth pains", th: [
     ["Five criteria of an organization", "Which is weak: goals, coordination, roles, rules, continuity?", "org", "o-five"],
     ["Bureaucracy (Weber)", "Would clearer roles, rules and merit-based promotion help, where predictability matters?", "org", "o-weber"],
@@ -3970,13 +3969,16 @@ function focusCard(card, instant){
 
 /* search and recap settings for this lab */
 const LAB_NAME = "Management and Organizations";
+const CARDS_HREF = "#practice-cards-";
 const SEARCH_HINT = "Search: a theory, an author, a bias…";
 const SEARCH_TRY = ["Kelley", "halo effect", "Herzberg", "Weber", "groupthink", "SMART"];
 const SEARCH_EXTRA = () => [
   ...CASES.map(c => ({ kind: "Case", t: c.title, s: [c.org, c.intro, ...c.sheet.map(b => b.h + " " + b.t)].join(" "), href: "#case-" + c.id, c: CH[c.ch[0]].c, where: c.org })),
   ...LABS.map(l => ({ kind: "Lab", t: l.title, s: l.sub + " " + l.what, href: "#lab-" + l.id, c: l.c, where: l.sub })),
-  { kind: "Page", t: "Mock exam", s: "90 minutes timed exam practice", href: "#exam", c: "var(--c4)", where: "Exam questions" },
-  { kind: "Page", t: "Spot it", s: "scenes bias need factor justice sprint", href: "#spot", c: "var(--c3)", where: "Practice" },
+  { kind: "Page", t: "Mock exam", s: "90 minutes timed exam practice", href: "#exam", c: "var(--c4)", where: "Practice · Exam questions" },
+  { kind: "Page", t: "Questions", s: "spot it scenes bias need factor justice quiz multiple choice streak sprint", href: "#practice", c: "var(--c3)", where: "Practice" },
+  { kind: "Page", t: "Flashcards", s: "cards flip definitions authors models", href: "#practice-cards", c: "var(--c1)", where: "Practice" },
+  { kind: "Page", t: "Exam questions", s: "self-check questions model answers key points", href: "#practice-open", c: "var(--c3)", where: "Practice" },
   { kind: "Page", t: "Group project", s: "presentation 40% session 9 structure checklist theory finder checkpoints Q&A", href: "#project", c: "var(--pri)", where: "Group presentation" },
   { kind: "Page", t: "Recap", s: "one page summary cheat sheet all cards", href: "#recap", c: "var(--c1)", where: "Learn" }
 ];
@@ -4082,11 +4084,12 @@ function viewRecap(){
 
 document.addEventListener("click", e => { if (e.target.closest("[data-search]")) openSearch(); });
 /* ---------- render ---------- */
-const MODVIEWS = { learn: viewLearn, chapter: viewChapter, cases: viewCases, spot: viewSpot, labs: viewLabs, lab: viewLab, quiz: viewQuiz, cards: viewCards, open: viewOpen, openq: viewOpenQ, exam: viewExam, recap: viewRecap, project: viewProject };
-const TITLES = { learn: "Learn", chapter: "Learn", cases: "Cases", spot: "Spot it", labs: "Labs", lab: "Labs", quiz: "Quiz", cards: "Flashcards", open: "Exam questions", openq: "Exam questions", exam: "Mock exam", recap: "Recap", project: "Group project" };
+const MODVIEWS = { learn: viewLearn, chapter: viewChapter, cases: viewCases, practice: o => viewPractice(o.tab, o.ch), labs: viewLabs, lab: viewLab, openq: viewOpenQ, exam: viewExam, recap: viewRecap, project: viewProject };
+const TITLES = { learn: "Learn", chapter: "Learn", cases: "Cases", practice: "Practice", labs: "Labs", lab: "Labs", openq: "Exam questions", exam: "Mock exam", recap: "Recap", project: "Group project" };
 /* the formation that lives in the header of each module page (same people as on the overview) */
 const MINI = {
-  learn: { mode: 3 }, recap: { mode: 3 }, project: { mode: 2 }, cases: { mode: 2 }, spot: { mode: 1 }, labs: { mode: 0, vivid: true }, quiz: { mode: 3 }, cards: { mode: 1 }, open: { mode: 2 },
+  learn: { mode: 3 }, recap: { mode: 3 }, project: { mode: 2 }, cases: { mode: 2 }, labs: { mode: 0, vivid: true },
+  practice: o => ({ q: { mode: 1 }, cards: { mode: 3 }, open: { mode: 2 } })[o.tab],
   chapter: id => ({ org: { mode: 3 }, person: { mode: 0, vivid: true }, decide: { mode: 1 }, motiv: { mode: 2 } })[id] || { mode: 3 },
   lab: id => ({ kelley: { mode: 1 }, equity: { mode: 2 }, bigfive: { mode: 0, vivid: true }, who: { mode: 3 } })[id] || { mode: 0 }
 };
@@ -4097,7 +4100,7 @@ function render(){
   STAGE.stops.forEach(f => f && f()); STAGE.stops = [];
   STAGE.view = r.view; AURA.set(r.view !== "case"); TINT();
   document.body.dataset.view = r.view;
-  const NAVOF = { case: "cases", chapter: "learn", openq: "open", exam: "open", lab: "labs", recap: "learn" };
+  const NAVOF = { case: "cases", chapter: "learn", openq: "practice", exam: "practice", lab: "labs", recap: "learn" };
   document.querySelectorAll(".nav a").forEach(a => { const on = a.dataset.route === (NAVOF[r.view] || r.view); a.setAttribute("aria-current", on ? "page" : "false"); if (on) a.scrollIntoView({ block: "nearest", inline: "nearest" }); });
   const app = $("#app");
   if (r.view === "case"){
@@ -4107,7 +4110,7 @@ function render(){
   } else if (MODVIEWS[r.view]){
     const view = MODVIEWS[r.view](r.id);
     app.replaceChildren(view);
-    document.title = (TITLES[r.view] || "Management") + " · Management and Organizations";
+    document.title = (r.view === "practice" ? PR_TABS.find(x => x[0] === r.id.tab)[1] + " · Practice" : TITLES[r.view] || "Management") + " · Management and Organizations";
     window.scrollTo(0, 0);
     const mini = typeof MINI[r.view] === "function" ? MINI[r.view](r.id) : MINI[r.view];
     if (mini && view.classList.contains("mod")){

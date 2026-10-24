@@ -734,6 +734,7 @@ applyTheme();
 /* ---------- course tiles: progress, 3D tilt, centred tile on phones ---------- */
 /* cards known in a lab whose Learn was compacted: until the lab migrates the ticks (learnV 2), a merged card counts once all the cards it replaced are ticked */
 const SGC_LEARN = { total: 52, merged: "s-course s-exam|s-heattrend s-warming|s-system s-cld|s-feedback s-reinforce s-balance|s-measures s-linear|d-carlowitz d-msy|d-principles d-overused|d-meadows d-five d-carrying|d-method d-recos|d-milestones d-sdgs d-offtrack|e-ecology e-biosphere e-ecosystem|e-global e-vernadsky|e-resilience e-tipping|e-climate e-cascade|e-anthropocene e-holocene|b-question b-pb|b-upstream b-core|b-weather b-figures b-process|b-bio3 b-sixth|b-cocoa b-lindt|o-doughnut o-dims|o-poverty o-absolute|o-relative o-line o-drivers|o-ineq o-palma o-gini|o-trend o-why|c-market c-marketeco|c-gdp c-meadowsvbrund|c-ademe c-friction|m-steps m-present|m-corroborate m-sources" };
+const MGMT_LEARN = { total: 49, merged: "o-ob o-disc o-levels|o-intuition o-many|o-def o-goals o-control|o-weber-auth o-weber|o-hawthorne o-human|p-stable p-values|p-schwartz p-bonus|p-def p-psycho|p-mbti p-big5|p-hilo p-toomuch|p-predict p-select|p-tat p-strength|d-sys d-when1|d-bias d-fix|d-confirm d-over|d-anchor d-avail|d-loss d-frame|d-sunk d-action|d-perc d-person|d-ssb d-fae|d-teams d-prevent|d-asch d-milgram|d-rational d-simon|m-def m-ie|m-maslow m-maslow2|m-jcm m-mod|m-goal m-goal2 m-smart" };
 function learnKnown(st, L){
   const k = st.learn || {};
   if (!L || (st.learnV || 1) >= 2) return Object.keys(k).length;
@@ -746,8 +747,8 @@ function learnKnown(st, L){
     let done = 0, ans = 0;
     for (let i = 1; i <= 10; i++){ const n = Object.keys((cases[i] || {}).ans || {}).length; ans += n; if (n === 30) done++; }
     if (ans) document.getElementById("macroStatus").innerHTML = `<span class="track" aria-hidden="true"><i style="width:${ans / 300 * 100}%"></i></span>${done} of 10 cases finished`;
-    const mg = JSON.parse(localStorage.getItem("mgmt-v1")) || {}, known = Object.keys(mg.learn || {}).length, mc = Object.values(mg.cases || {}).filter(c => c && c.ans && Object.keys(c.ans).length).length;
-    if (known || mc) document.getElementById("mgmtStatus").innerHTML = `<span class="track" aria-hidden="true"><i style="width:${Math.min(100, known / 79 * 100)}%"></i></span>${known} of 79 cards known`;
+    const mg = JSON.parse(localStorage.getItem("mgmt-v1")) || {}, known = learnKnown(mg, MGMT_LEARN), mn = MGMT_LEARN.total, mc = Object.values(mg.cases || {}).filter(c => c && c.ans && Object.keys(c.ans).length).length;
+    if (known || mc) document.getElementById("mgmtStatus").innerHTML = `<span class="track" aria-hidden="true"><i style="width:${Math.min(100, known / mn * 100)}%"></i></span>${known} of ${mn} cards known`;
     const sg = JSON.parse(localStorage.getItem("sgc-v1")) || {}, sk = learnKnown(sg, SGC_LEARN), sd = Object.values(sg.studio || {}).filter(x => x && x.best != null).length, sn = SGC_LEARN.total;
     if (sk || sd) document.getElementById("sgcStatus").innerHTML = `<span class="track" aria-hidden="true"><i style="width:${Math.min(100, sk / sn * 100)}%"></i></span>${sk} of ${sn} cards · ${sd} of 9 diagrams`;
   } catch (e) {}
@@ -986,10 +987,10 @@ heroTilt(document.getElementById("hero"));
   else if (fDone || fKnown) rows.push({ c: "var(--macro)", nm: "Macroeconomics", dt: `${fDone} of 10 cases finished · ${fKnown} of 65 cards known`, p: fDone ? fDone / 10 : fKnown / 65, lbl: fDone ? `${fDone}/10` : `${fKnown}/65`, href: fDone < 10 ? "/macro/#cases" : "/macro/#learn" });
   const MC = { hybrid: ["The hybrid slowdown", 6], bonus: ["One bonus, two camps", 6], callcenter: ["The call center that raised pay", 6], slump: ["The slump", 7], launch: ["The launch nobody questioned", 6], hiring: ["Hiring by type", 6], warehouse: ["The one best way", 6], scaleup: ["From team to organization", 5] };
   const mg = get("mgmt-v1"), mc = mg.cases || {}, mAns = id => Object.keys((mc[id] || {}).ans || {}).length;
-  const mKnown = Object.keys(mg.learn || {}).length, mSolved = Object.keys(MC).filter(id => mAns(id) >= MC[id][1]).length;
+  const mKnown = learnKnown(mg, MGMT_LEARN), mN = MGMT_LEARN.total, mSolved = Object.keys(MC).filter(id => mAns(id) >= MC[id][1]).length;
   const lc = mg.lastcase;
   if (lc && MC[lc] && mAns(lc) > 0 && mAns(lc) < MC[lc][1]) rows.push({ c: "var(--mgmt)", nm: "Management", dt: `${MC[lc][0]}: ${mAns(lc)} of ${MC[lc][1]} steps done`, p: mAns(lc) / MC[lc][1], lbl: `${mAns(lc)}/${MC[lc][1]}`, href: `/management/#case-${lc}` });
-  else if (mSolved || mKnown) rows.push({ c: "var(--mgmt)", nm: "Management", dt: `${mSolved} of 8 cases solved · ${mKnown} of 79 cards known`, p: mKnown / 79, lbl: `${mKnown}/79`, href: mKnown < 79 ? "/management/#learn" : "/management/#cases" });
+  else if (mSolved || mKnown) rows.push({ c: "var(--mgmt)", nm: "Management", dt: `${mSolved} of 8 cases solved · ${mKnown} of ${mN} cards known`, p: mKnown / mN, lbl: `${mKnown}/${mN}`, href: mKnown < mN ? "/management/#learn" : "/management/#cases" });
   { const sv = get("sgc-v1"), sk = learnKnown(sv, SGC_LEARN), sn = SGC_LEARN.total, sd = Object.values(sv.studio || {}).filter(x => x && x.best != null).length;
     if (sk || sd) rows.push({ c: "var(--sgc)", nm: "Global Challenges", dt: `${sk} of ${sn} cards known · ${sd} of 9 causal diagrams drawn`, p: sk / sn, lbl: `${sk}/${sn}`, href: sk < sn ? "/global/#learn" : "/global/#studio" }); }
   /* a mock exam on the clock comes first */

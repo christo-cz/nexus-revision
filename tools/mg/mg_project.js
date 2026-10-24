@@ -18,7 +18,7 @@ const PJ_FINDER = [
   { s: "People leave, or do not fit", sub: "turnover, weak commitment, value mismatch", th: [
     ["Values and value congruence (Schwartz)", "Do the organization's priorities clash with what employees value?", "person", "p-schwartz"],
     ["Workplace attitudes", "Which attitude dropped: satisfaction, engagement, commitment, perceived support?", "person", "p-four"],
-    ["Personality and job fit", "Do the job's demands fit people's traits? Were they selected on a weak tool (MBTI)?", "person", "p-select"],
+    ["Personality and job fit", "Do the job's demands fit people's traits? Were they selected on a weak tool (MBTI)?", "person", "p-predict"],
     ["Equity theory", "Do people compare their outcomes/inputs ratio with someone else and feel short-changed?", "motiv", "m-equity"]] },
   { s: "Decisions are slow or poor", sub: "endless meetings, bad bets, nobody objects", th: [
     ["Groupthink and social influence", "Does the group value agreement over evaluation? Does the leader speak first?", "decide", "d-groupthink"],
@@ -30,9 +30,9 @@ const PJ_FINDER = [
     ["Organizational justice", "Is the problem the outcome (distributive), the process (procedural) or the treatment (interactional)?", "motiv", "m-justice"],
     ["Attribution errors", "Are managers blaming people (fundamental attribution error) for problems caused by the situation?", "decide", "d-fae"]] },
   { s: "Appraisals or hiring go wrong", sub: "biased ratings, the wrong people promoted or hired", th: [
-    ["Halo and contrast effects", "Does one impression, or the previous person, color the rating?", "decide", "d-person"],
+    ["Halo and contrast effects", "Does one impression, or the previous person, color the rating?", "decide", "d-perc"],
     ["Kelley's attribution model", "Distinctiveness, consensus, consistency: person or situation?", "decide", "d-kelley"],
-    ["Using personality tests", "MBTI for selection, social desirability, no interviews or references?", "person", "p-select"]] },
+    ["Using personality tests", "MBTI for selection, social desirability, no interviews or references?", "person", "p-predict"]] },
   { s: "Nobody knows who does what", sub: "duplicated work, inconsistent decisions, growth pains", th: [
     ["Five criteria of an organization", "Which is weak: goals, coordination, roles, rules, continuity?", "org", "o-five"],
     ["Bureaucracy (Weber)", "Would clearer roles, rules and merit-based promotion help, where predictability matters?", "org", "o-weber"],

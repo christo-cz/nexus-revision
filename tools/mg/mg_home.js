@@ -1,16 +1,23 @@
+/* ---------- Learn was compacted (79 → 49 cards): carry the ticks over once ---------- */
+(function migrateLearn(){
+  if (MS.get("learnV", 1) >= 2) return;
+  const k = { ...MS.get("learn", {}) };
+  Object.entries(LEARN_MERGED).forEach(([id, src]) => { const all = src.every(s => k[s]); src.forEach(s => delete k[s]); if (all) k[id] = 1; });
+  MS.set("learn", k); MS.set("learnV", 2);
+})();
+
 /* ---------- routing ---------- */
 function route(){
-  const hs = location.hash.slice(1);
+  let hs = location.hash.slice(1);
+  const moved = practiceHash(hs);
+  if (moved){ hs = moved; history.replaceState(null, "", "#" + hs); }
+  const pr = practiceRoute(hs); if (pr) return pr;
   if (hs === "learn") return { view: "learn" };
   if (/^learn-\w+$/.test(hs)) return { view: "chapter", id: hs.slice(6) };
   if (hs === "cases") return { view: "cases" };
   if (/^case-\w+$/.test(hs)) return { view: "case", id: hs.slice(5) };
-  if (hs === "spot" || /^spot-\w+$/.test(hs)) return { view: "spot", id: hs.slice(5) };
   if (hs === "labs") return { view: "labs" };
   if (/^lab-\w+$/.test(hs)) return { view: "lab", id: hs.slice(4) };
-  if (hs === "quiz" || /^quiz-\w+$/.test(hs)) return { view: "quiz", id: hs.slice(5) };
-  if (hs === "cards" || /^cards-\w+$/.test(hs)) return { view: "cards", id: hs.slice(6) };
-  if (hs === "open") return { view: "open" };
   if (/^open-\w+$/.test(hs)) return { view: "openq", id: hs.slice(5) };
   if (hs === "exam") return { view: "exam" };
   if (hs === "recap") return { view: "recap" };
@@ -32,27 +39,22 @@ function nextCase(){ const last = MS.get("lastcase", null), c = CASES.find(x => 
 const MOD_ICONS = {
   learn: '<path d="M4 5h7a3 3 0 0 1 3 3v11a2 2 0 0 0-2-2H4zM20 5h-5a3 3 0 0 0-3 3v11a2 2 0 0 1 2-2h6z"/>',
   cases: '<rect x="3" y="4" width="8" height="16" rx="2"/><path d="M14 6h7M14 11h7M14 16h4"/>',
-  spot: '<circle cx="11" cy="11" r="6.5"/><path d="m16 16 5 5M11 8v3l2 2"/>',
   labs: '<path d="M9 3v6L4 18a2 2 0 0 0 1.8 3h12.4A2 2 0 0 0 20 18l-5-9V3M8 3h8M7 14h10"/>',
-  quiz: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17v.5"/>',
-  cards: '<rect x="3" y="6" width="14" height="12" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v10"/>',
-  open: '<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/>',
+  practice: '<circle cx="11" cy="11" r="6.5"/><path d="m16 16 5 5M11 8v3l2 2"/>',
   exam: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>'
 };
 function modulesHtml(){
   const L = learnStats(), o = caseOverall(), sp = MS.get("spot", { best: 0, sprint: 0 }), qz = MS.get("quiz", {}), fk = Object.keys(MS.get("cards", {})).length, op = Object.values(openState().ticks || {}).filter(t => t.length).length, ex = MS.get("exam", null), labs = MS.get("labs", {});
+  const prSub = [qz.last ? `last quiz ${Math.round(qz.last.score / qz.last.n * 100)}%` : `${QUIZ.length + SPOT.length} questions`, sp.best ? `best streak ${sp.best}` : "", `${fk}/${CARDS.length} flashcards`, `${op}/${OPEN.length} exam questions tried`].filter(Boolean);
   const M = [
     ["#learn", "Learn", "The four lectures and two tutorials in short cards, with ten interactive models.", `${L.known}/${L.total} cards known`, "var(--c1)", "learn"],
     ["#cases", "Cases", "Diagnose people problems: define the gap, find the cause, recommend with a theory.", o.fin ? `${o.fin}/${CASES.length} cases solved` : `${CASES.length} cases`, "var(--pri)", "cases"],
-    ["#spot", "Spot it", "Short workplace scenes. Which bias? Which need? Hygiene or motivator? Streaks and a 60-second sprint.", sp.best ? `best streak ${sp.best}` : `${SPOT.length} scenes`, "var(--c3)", "spot"],
-    ["#labs", "Labs", "Kelley's attribution trainer, the equity calculator, the Big Five test from class, who said what.", `${Object.keys(labs).length}/4 labs tried`, "var(--c4)", "labs"],
-    ["#quiz", "Quiz", "Exam-style multiple choice on every lecture, each answer explained.", qz.last ? `last ${Math.round(qz.last.score / qz.last.n * 100)}%` : `${QUIZ.length} questions`, "var(--pri)", "quiz"],
-    ["#cards", "Flashcards", "Definitions, authors and models to flip.", `${fk}/${CARDS.length} known`, "var(--c1)", "cards"],
-    ["#open", "Exam questions", "Every self-check question from the slides, with model answers and key points.", `${op}/${OPEN.length} tried`, "var(--c3)", "open"],
-    ["#exam", "Mock exam", "90 minutes, timed: explain the theories, then apply them to a case.", ex && ex.score != null ? `last ${ex.score}%` : "90 min", "var(--c4)", "exam"]
+    ["#exam", "Mock exam", "90 minutes, timed: explain the theories, then apply them to a case.", ex && ex.score != null ? `last ${ex.score}%` : "90 min", "var(--c4)", "exam"],
+    ["#practice", "Practice", "Questions (workplace scenes to spot and multiple choice, as a quiz, a streak or a sprint), flashcards, and every self-check question with a model answer.", prSub.map(s => `<span>${s}</span>`).join(""), "var(--c3)", "practice", "wide"],
+    ["#labs", "Labs", "Kelley's attribution trainer, the equity calculator, the Big Five test from class, who said what.", `${Object.keys(labs).length}/4 labs tried`, "var(--c4)", "labs"]
   ];
   return `<section class="sec"><div class="sec-h"><h2>Revise</h2><p>Learn the course, then train in every format the exam can take.</p></div>
-    <div class="mods mods4">${M.map(m => `<a class="modt" href="${m[0]}" style="--c:${m[4]}"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${MOD_ICONS[m[5]]}</svg></span><b>${m[1]}</b><span class="md">${m[2]}</span><span class="ms">${m[3]}</span></a>`).join("")}</div>
+    <div class="mods dense">${M.map(m => `<a class="modt${m[6] ? " " + m[6] : ""}" href="${m[0]}" style="--c:${m[4]}"><span class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${MOD_ICONS[m[5]]}</svg></span><b>${m[1]}</b><span class="md">${m[2]}</span><span class="ms${m[6] ? " msub" : ""}">${m[3]}</span></a>`).join("")}</div>
     <a class="tdfull pjbanner" href="#project"><span><b>Group project, 40% of the grade</b><span>The brief from lecture 1, a theory finder for your problem, the expected structure, a checklist and the Q&amp;A to rehearse.</span></span>${ICO.arrow}</a></section>`;
 }
 
