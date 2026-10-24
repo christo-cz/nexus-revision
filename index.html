@@ -1438,7 +1438,20 @@ const NXR = (() => {
     set(); raf = requestAnimationFrame(loop);
   }
   const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
-  function goTo(i){ const base = i * STEP, k = Math.round((A - base) / 360); target = base + 360 * k; touched = true; kick(); }
+  function goTo(i){ spinTok++; const base = i * STEP, k = Math.round((A - base) / 360); target = base + 360 * k; touched = true; kick(); }
+  /* a showy spin: three full turns that slow down and stop on the same face (entering full screen on a computer, opening the site on a phone) */
+  let spinTok = 0;
+  function spin(turns = 3, dur = 2800){
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches || dragging) return;
+    const tok = ++spinTok, from = Math.round(A / STEP) * STEP, to = from + 360 * turns, t0 = performance.now();
+    cancelAnimationFrame(raf); raf = 0; V = 0; target = null;
+    (function step(t){
+      if (tok !== spinTok) return;
+      const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 4);
+      A = from + (to - from) * e; set();
+      if (p < 1) requestAnimationFrame(step); else { A = to; set(); }
+    })(t0);
+  }
   /* the face the pencil is on or heading to, and its angle measured from the first face (first face 0, last face (N-1)·STEP) */
   const heading = () => target != null ? ((Math.round(target / STEP) % N) + N) % N : active;
   const local = () => A - 360 * Math.floor((A + STEP / 2) / 360);
@@ -1459,7 +1472,7 @@ const NXR = (() => {
   const scrollPage = dy => { window.scrollBy(0, -dy); sv = sv * 0.5 - dy * 0.5; };
   stage.addEventListener("pointerdown", e => {
     if (e.button !== 0) return;
-    dragging = true; moved = 0; lx = e.clientX; ly = e.clientY; V = 0; target = null; touched = true; downOn = e.target.closest("[data-i]"); axis = e.pointerType === "mouse" ? "y" : ""; sv = 0; cancelAnimationFrame(coast);
+    spinTok++; dragging = true; moved = 0; lx = e.clientX; ly = e.clientY; V = 0; target = null; touched = true; downOn = e.target.closest("[data-i]"); axis = e.pointerType === "mouse" ? "y" : ""; sv = 0; cancelAnimationFrame(coast);
     try { stage.setPointerCapture(e.pointerId); } catch (err) {}
     stage.classList.add("drag", "used"); kick();
   });
@@ -1499,13 +1512,19 @@ const NXR = (() => {
   /* the pencil rolls down the sheet onto the page, then flicks once to show it turns */
   build();
   let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { if (Math.abs(stage.clientWidth - W) > 2) build(); }, 150); });
+  const coarse = matchMedia("(pointer: coarse)").matches;
+  /* on a computer, entering full screen makes the pencil spin (the hub stays in place in full screen) */
+  const onFs = () => { if ((document.fullscreenElement || document.webkitFullscreenElement) && !coarse) setTimeout(spin, 350); };
+  document.addEventListener("fullscreenchange", onFs); document.addEventListener("webkitfullscreenchange", onFs);
   const t0 = performance.now() + 450, dur = 1500, A0 = 200;
   (function intro(t){
     const p = Math.max(0, Math.min(1, (t - t0) / dur)), e = 1 - Math.pow(1 - p, 3);
     if (touched){ pen.style.setProperty("--py", "0px"); shadow.style.opacity = 1; return; }
     pen.style.setProperty("--py", ((1 - e) * -150).toFixed(1) + "px"); shadow.style.opacity = e.toFixed(2);
     A = A0 * (1 - e); set();
-    if (p < 1) requestAnimationFrame(intro); else { A = 0; set(); setTimeout(() => { if (!touched){ V = -1.6; target = null; kick(); } }, 1600); }
+    if (p < 1) requestAnimationFrame(intro);
+    /* on a phone (no real full screen there) the pencil spins as the site opens; on a computer, a small flick shows it turns */
+    else { A = 0; set(); if (coarse) setTimeout(() => { if (!touched) spin(); }, 250); else setTimeout(() => { if (!touched){ V = -1.6; target = null; kick(); } }, 1600); }
   })(performance.now());
   setTimeout(paint, 600); setTimeout(paint, 1800);
   if (window.NXR) NXR.load(null).then(d => {
