@@ -769,11 +769,20 @@ function learnKnown(st, L){
   narrow.addEventListener("change", () => { if (!narrow.matches) tiles.forEach(t => t.classList.remove("on")); });
 })();
 
+/* ---------- test (Oct 24): a "neural noise" background in place of the exam paper ----------
+   On with ?bg=neural (remembered in this browser), back to the paper with ?bg=grid. */
+const NEURAL = (() => {
+  const q = new URLSearchParams(location.search).get("bg");
+  try { if (q === "neural") localStorage.setItem("nexus-bg", "neural"); else if (q === "grid") localStorage.removeItem("nexus-bg"); return localStorage.getItem("nexus-bg") === "neural"; }
+  catch (e) { return q === "neural"; }
+})();
+
 /* ---------- the exam paper (WebGL, no library) ----------
    Alive on its own: the well wanders on a path that never repeats (sum of slow sines with unrelated periods),
    coloured waves are born at random places, and now and then a small electric arc snaps across the squares.
    The pointer takes over the well; a click or a tap sends a wave. */
 (function(){
+  if (NEURAL) return;
   const hero = document.getElementById("hero"), cv = document.getElementById("paper");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
   let gl; try { gl = cv.getContext("webgl", { antialias: true, alpha: true, premultipliedAlpha: false }); } catch (e) {}
@@ -959,6 +968,83 @@ void main(){
   build(); colors();
   if (reduce.matches){ S.mx = halfW * 0.45; S.my = HALF_H * 0.1; S.well = 0.8; S.rx = -0.12; draw(); }
   else wake();
+})();
+
+/* ---------- the neural noise (test): glowing pink strands that drift and gather around the pointer ----------
+   A field of rotated, stacked sine layers: each layer bends the next, and the strands are where the sum peaks. */
+(function(){
+  if (!NEURAL) return;
+  const hero = document.getElementById("hero"), cv = document.getElementById("paper");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+  let gl; try { gl = cv.getContext("webgl", { alpha: true, premultipliedAlpha: false, antialias: false }); } catch (e) {}
+  if (!gl) return;
+  hero.classList.add("gl", "neural");
+  const VS = "attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }";
+  const FS = `
+precision highp float;
+uniform vec2 uRes; uniform float uT; uniform vec2 uP; uniform vec3 uC; uniform float uA;
+mat2 turn(float a){ float c = cos(a), s = sin(a); return mat2(c, s, -s, c); }
+float strands(vec2 uv, float t){
+  vec2 sum = vec2(0.0), bend = vec2(0.0);
+  float k = 8.0; mat2 r = turn(1.0);
+  for (int i = 0; i < 15; i++){
+    uv = r * uv; bend = r * bend;
+    vec2 q = uv * k + float(i) + bend - t;
+    bend += sin(q);
+    sum += (0.5 + 0.5 * cos(q)) / k;
+    k *= 1.2;
+  }
+  return sum.x + sum.y;
+}
+void main(){
+  float asp = uRes.x / uRes.y;
+  vec2 st = gl_FragCoord.xy / uRes, uv = (st - 0.5) * vec2(asp, 1.0) * 0.5, p = (uP - 0.5) * vec2(asp, 1.0) * 0.5;
+  float d = length(uv - p);
+  float n = strands(uv, uT);
+  n = 1.2 * pow(n, 3.0); n += pow(n, 10.0); n = max(0.0, n - 0.5);
+  n *= 0.75 + 1.4 * exp(-d * 9.0);
+  gl_FragColor = vec4(uC, clamp(n, 0.0, 1.0) * uA);
+}`;
+  const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
+  let prog;
+  try { prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog); if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw 0; }
+  catch (e) { hero.classList.remove("gl", "neural"); return; }
+  gl.useProgram(prog);
+  const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  const ap = gl.getAttribLocation(prog, "p"); gl.enableVertexAttribArray(ap); gl.vertexAttribPointer(ap, 2, gl.FLOAT, false, 0, 0);
+  const u = { res: gl.getUniformLocation(prog, "uRes"), t: gl.getUniformLocation(prog, "uT"), p: gl.getUniformLocation(prog, "uP"), c: gl.getUniformLocation(prog, "uC"), a: gl.getUniformLocation(prog, "uA") };
+  gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  /* the same hot pink as the original component (Alexi: keep the video's colour), in both themes */
+  gl.uniform3f(u.c, 0.98, 0.16, 0.47);
+  const colors = () => { gl.uniform1f(u.a, 0.95); draw(); };
+  let W = 0, H = 0;
+  function size(){
+    const dpr = Math.min(devicePixelRatio || 1, 2) * (innerWidth < 700 ? 0.55 : 0.65);
+    W = Math.max(1, Math.round(cv.clientWidth * dpr)); H = Math.max(1, Math.round(cv.clientHeight * dpr));
+    cv.width = W; cv.height = H; gl.viewport(0, 0, W, H); gl.uniform2f(u.res, W, H); draw();
+  }
+  /* the strands follow the pointer, and drift on their own when it is away */
+  const P = { x: 0.6, y: 0.55, tx: 0.6, ty: 0.55, own: true, at: 0 };
+  hero.addEventListener("pointermove", e => { const r = cv.getBoundingClientRect(); P.tx = (e.clientX - r.left) / r.width; P.ty = 1 - (e.clientY - r.top) / r.height; P.own = false; P.at = performance.now(); }, { passive: true });
+  let T = 0, prev = 0, raf = 0, visible = true;
+  function draw(){ gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform1f(u.t, T); gl.uniform2f(u.p, P.x, P.y); gl.drawArrays(gl.TRIANGLES, 0, 3); }
+  function frame(now){
+    raf = 0;
+    const dt = prev ? Math.min(0.05, (now - prev) / 1000) : 0; prev = now; T += dt * 0.55;
+    if (!P.own && now - P.at > 4000) P.own = true;
+    if (P.own){ P.tx = 0.55 + 0.28 * Math.sin(T * 0.21) + 0.08 * Math.sin(T * 0.53); P.ty = 0.5 + 0.22 * Math.cos(T * 0.17); }
+    P.x += (P.tx - P.x) * 0.06; P.y += (P.ty - P.y) * 0.06;
+    draw();
+    if (visible && !document.hidden && !reduce.matches) raf = requestAnimationFrame(frame);
+  }
+  function wake(){ if (!raf && visible && !document.hidden && !reduce.matches){ prev = 0; raf = requestAnimationFrame(frame); } }
+  new IntersectionObserver(es => { visible = es[0].intersectionRatio > 0.12; if (visible) wake(); }, { threshold: [0, 0.12, 0.3] }).observe(hero);
+  document.addEventListener("visibilitychange", wake);
+  let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(size, 120); });
+  addEventListener("nexus-theme", colors);
+  window.__nexusSpark = () => {};
+  size(); colors();
+  if (reduce.matches){ T = 3.0; draw(); } else wake();
 })();
 
 
