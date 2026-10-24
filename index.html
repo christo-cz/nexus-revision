@@ -1000,15 +1000,15 @@ void main(){
   float asp = uRes.x / uRes.y;
   vec2 st = gl_FragCoord.xy / uRes, uv = (st - 0.5) * vec2(asp, 1.0) * 0.5, p = (uP - 0.5) * vec2(asp, 1.0) * 0.5;
   float d = length(uv - p);
-  /* the field follows the pointer: it slides with it and is pulled toward it, like the well of the exam paper */
-  vec2 w = uv - p * 0.08 + (p - uv) * 0.3 * exp(-d * 6.0);
+  /* only right around the pointer (about a sixth of the screen height): the field is zoomed out and gently swirled,
+     so more and finer strands gather there; the rest of the screen does not move with the pointer */
+  float f = exp(-d * 12.0);
+  vec2 w = p + turn(0.9 * f) * (uv - p) * (1.0 + 1.1 * f);
   float n = strands(w, uT);
-  /* strands thicken around the pointer (about a quarter of the screen height), so the pink always gathers under it */
-  n += 0.32 * exp(-d * 7.0);
-  /* a lower threshold and more gain: about one and a half times more pink on screen */
-  /* capped before the powers: an overflow there turns the brightest spot (under the pointer) black on some GPUs */
-  n = 1.2 * pow(min(n, 1.3), 3.0); n = min(n, 1.6); n += pow(n, 10.0); n = min(max(0.0, n - 0.45) * 1.2, 1.0);
-  n *= 0.85 + 0.8 * exp(-d * 7.0);
+  /* a lower threshold: about one and a half times more pink on screen; near the pointer, a little brighter but thin */
+  /* capped before the powers: an overflow there turns the brightest spot black on some GPUs */
+  n = 1.2 * pow(min(n, 1.3), 3.0); n = min(n, 1.6); n += pow(n, 10.0);
+  n = min(max(0.0, n - 0.45 - 0.05 * f) * (1.2 + 0.9 * f), 1.0);
   gl_FragColor = vec4(uC, clamp(n, 0.0, 1.0) * uA);
 }`;
   const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
